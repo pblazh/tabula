@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/csv"
 	"flag"
 	"fmt"
 	"os"
@@ -44,5 +45,21 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(script)
+	csvFile, err := os.Open(args[0])
+	if err != nil {
+		_, _ = os.Stderr.WriteString(err.Error())
+		os.Exit(1)
+	}
+
+	reader := csv.NewReader(csvFile)
+	reader.LazyQuotes = true
+	reader.TrimLeadingSpace = true
+
+	records, err := reader.ReadAll()
+	if err != nil {
+		_, _ = os.Stderr.WriteString(err.Error())
+		os.Exit(1)
+	}
+
+	fmt.Println(records)
 }
