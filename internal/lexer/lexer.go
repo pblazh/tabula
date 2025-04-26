@@ -11,27 +11,27 @@ type Lexer struct {
 	Filename string
 }
 
-func (l *Lexer) Next() Token {
+func (l *Lexer) Next() Lexem {
 	tok := l.scanner.Scan()
 	literal := l.scanner.TokenText()
 
 	if tok == scanner.EOF {
-		return Token{
+		return Lexem{
 			Type:     EOF,
 			Position: l.scanner.Position,
 		}
 	}
 
 	if unicode.IsDigit(rune(literal[0])) {
-		return Token{
-			Type:     INT,
+		return Lexem{
+			Type:     NUMBER,
 			Literal:  literal,
 			Position: l.scanner.Position,
 		}
 	}
 
 	if unicode.IsLetter(rune(literal[0])) {
-		return Token{
+		return Lexem{
 			Type:     IDENT,
 			Literal:  literal,
 			Position: l.scanner.Position,
@@ -39,13 +39,13 @@ func (l *Lexer) Next() Token {
 	}
 
 	if t, ok := lexems[tok]; ok {
-		return Token{
+		return Lexem{
 			Type:     t,
 			Position: l.scanner.Position,
 		}
 	}
 
-	return Token{
+	return Lexem{
 		Type: ILLEGAL,
 	}
 }

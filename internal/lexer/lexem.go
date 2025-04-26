@@ -5,29 +5,23 @@ import (
 	"text/scanner"
 )
 
-type TokenPosition struct {
-	Filename string
-	Line     int
-	Column   int
-}
+type LexemType string
 
-type TokenType string
-
-type Token struct {
-	Type    TokenType
+type Lexem struct {
+	Type    LexemType
 	Literal string
 	scanner.Position
 }
 
-func (t Token) String() string {
-	return fmt.Sprintf("<Token %s:%s at %v>", t.Type, t.Literal, t.Position)
+func (t Lexem) String() string {
+	return fmt.Sprintf("<%s:%s at %v>", t.Type, t.Literal, t.Position)
 }
 
 const (
 	IDENT   = "IDENT"
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
-	INT     = "INT"
+	NUMBER  = "NUMBER"
 	ASSIGN  = "ASSIGN"
 	PLUS    = "PLUS"
 	MINUS   = "MINUS"
@@ -39,7 +33,7 @@ const (
 	COMA    = "COMA"
 )
 
-var lexems map[rune]TokenType = map[rune]TokenType{
+var lexems map[rune]LexemType = map[rune]LexemType{
 	'=': ASSIGN,
 	'+': PLUS,
 	'-': MINUS,

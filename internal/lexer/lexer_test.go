@@ -10,12 +10,12 @@ func TestLexer(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    string
-		expected []Token
+		expected []Lexem
 	}{
 		{
 			name:  "supported tokens",
 			input: "=+-*/()",
-			expected: []Token{
+			expected: []Lexem{
 				{
 					Type: ASSIGN,
 					Position: scanner.Position{
@@ -68,8 +68,8 @@ func TestLexer(t *testing.T) {
 		},
 		{
 			name:  "expression",
-			input: "A1=A2+34 * SUM(B1:B2, 9)",
-			expected: []Token{
+			input: "A1=A2+34 * SUM(B1:B2, 9.1)",
+			expected: []Lexem{
 				{
 					Type:    IDENT,
 					Literal: "A1",
@@ -97,7 +97,7 @@ func TestLexer(t *testing.T) {
 					},
 				},
 				{
-					Type:    INT,
+					Type:    NUMBER,
 					Literal: "34",
 					Position: scanner.Position{
 						Column: 7,
@@ -149,8 +149,8 @@ func TestLexer(t *testing.T) {
 					},
 				},
 				{
-					Type:    INT,
-					Literal: "9",
+					Type:    NUMBER,
+					Literal: "9.1",
 					Position: scanner.Position{
 						Column: 23,
 					},
@@ -158,13 +158,13 @@ func TestLexer(t *testing.T) {
 				{
 					Type: RPAREN,
 					Position: scanner.Position{
-						Column: 24,
+						Column: 26,
 					},
 				},
 				{
 					Type: EOF,
 					Position: scanner.Position{
-						Column: 25,
+						Column: 27,
 					},
 				},
 			},
@@ -175,14 +175,14 @@ func TestLexer(t *testing.T) {
 		r := strings.NewReader(test.input)
 		lexer := New(r, test.name)
 
-		for _, token := range test.expected {
-			nextToken := lexer.Next()
-			EqualTokens(t, nextToken, token)
+		for _, lexem := range test.expected {
+			next := lexer.Next()
+			EqualLexems(t, next, lexem)
 		}
 	}
 }
 
-func EqualTokens(t testing.TB, a, b Token) {
+func EqualLexems(t testing.TB, a, b Lexem) {
 	t.Helper()
 
 	if a.Type != b.Type ||
