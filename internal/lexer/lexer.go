@@ -22,6 +22,14 @@ func (l *Lexer) Next() Lexem {
 		}
 	}
 
+	if literal == "let" {
+		return Lexem{
+			Type:     LET,
+			Literal:  literal,
+			Position: l.scanner.Position,
+		}
+	}
+
 	if unicode.IsDigit(rune(literal[0])) {
 		return Lexem{
 			Type:     NUMBER,
@@ -41,12 +49,15 @@ func (l *Lexer) Next() Lexem {
 	if t, ok := lexems[tok]; ok {
 		return Lexem{
 			Type:     t,
+			Literal:  literal,
 			Position: l.scanner.Position,
 		}
 	}
 
 	return Lexem{
-		Type: ILLEGAL,
+		Type:     ILLEGAL,
+		Literal:  literal,
+		Position: l.scanner.Position,
 	}
 }
 

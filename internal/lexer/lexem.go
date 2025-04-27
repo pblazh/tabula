@@ -31,6 +31,8 @@ const (
 	RPAREN  = "RPAREN"
 	COLUMN  = "COLUMN"
 	COMA    = "COMA"
+	LET     = "LET"
+	SEMI    = "SEMI"
 )
 
 var lexems map[rune]LexemType = map[rune]LexemType{
@@ -43,4 +45,5 @@ var lexems map[rune]LexemType = map[rune]LexemType{
 	')': RPAREN,
 	':': COLUMN,
 	',': COMA,
+	';': SEMI,
 }

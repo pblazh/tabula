@@ -17,43 +17,50 @@ func TestLexer(t *testing.T) {
 			input: "=+-*/()",
 			expected: []Lexem{
 				{
-					Type: ASSIGN,
+					Type:    ASSIGN,
+					Literal: "=",
 					Position: scanner.Position{
 						Column: 1,
 					},
 				},
 				{
-					Type: PLUS,
+					Type:    PLUS,
+					Literal: "+",
 					Position: scanner.Position{
 						Column: 2,
 					},
 				},
 				{
-					Type: MINUS,
+					Type:    MINUS,
+					Literal: "-",
 					Position: scanner.Position{
 						Column: 3,
 					},
 				},
 				{
-					Type: MULT,
+					Type:    MULT,
+					Literal: "*",
 					Position: scanner.Position{
 						Column: 4,
 					},
 				},
 				{
-					Type: DIV,
+					Type:    DIV,
+					Literal: "/",
 					Position: scanner.Position{
 						Column: 5,
 					},
 				},
 				{
-					Type: LPAREN,
+					Type:    LPAREN,
+					Literal: "(",
 					Position: scanner.Position{
 						Column: 6,
 					},
 				},
 				{
-					Type: RPAREN,
+					Type:    RPAREN,
+					Literal: ")",
 					Position: scanner.Position{
 						Column: 7,
 					},
@@ -68,103 +75,124 @@ func TestLexer(t *testing.T) {
 		},
 		{
 			name:  "expression",
-			input: "A1=A2+34 * SUM(B1:B2, 9.1)",
+			input: "let A1=A2+34 * SUM(B1:B2, 9.1);",
 			expected: []Lexem{
 				{
-					Type:    IDENT,
-					Literal: "A1",
+					Type:    LET,
+					Literal: "let",
 					Position: scanner.Position{
 						Column: 1,
 					},
 				},
 				{
-					Type: ASSIGN,
+					Type:    IDENT,
+					Literal: "A1",
 					Position: scanner.Position{
-						Column: 3,
+						Column: 5,
+					},
+				},
+				{
+					Type:    ASSIGN,
+					Literal: "=",
+					Position: scanner.Position{
+						Column: 7,
 					},
 				},
 				{
 					Type:    IDENT,
 					Literal: "A2",
 					Position: scanner.Position{
-						Column: 4,
+						Column: 8,
 					},
 				},
 				{
-					Type: PLUS,
+					Type:    PLUS,
+					Literal: "+",
 					Position: scanner.Position{
-						Column: 6,
+						Column: 10,
 					},
 				},
 				{
 					Type:    NUMBER,
 					Literal: "34",
 					Position: scanner.Position{
-						Column: 7,
+						Column: 11,
 					},
 				},
 				{
-					Type: MULT,
+					Type:    MULT,
+					Literal: "*",
 					Position: scanner.Position{
-						Column: 10,
+						Column: 14,
 					},
 				},
 				{
 					Type:    IDENT,
 					Literal: "SUM",
 					Position: scanner.Position{
-						Column: 12,
+						Column: 16,
 					},
 				},
 				{
-					Type: LPAREN,
+					Type:    LPAREN,
+					Literal: "(",
 					Position: scanner.Position{
-						Column: 15,
+						Column: 19,
 					},
 				},
 				{
 					Type:    IDENT,
 					Literal: "B1",
 					Position: scanner.Position{
-						Column: 16,
+						Column: 20,
 					},
 				},
 				{
-					Type: COLUMN,
+					Type:    COLUMN,
+					Literal: ":",
 					Position: scanner.Position{
-						Column: 18,
+						Column: 22,
 					},
 				},
 				{
 					Type:    IDENT,
 					Literal: "B2",
 					Position: scanner.Position{
-						Column: 19,
+						Column: 23,
 					},
 				},
 				{
-					Type: COMA,
+					Type:    COMA,
+					Literal: ",",
 					Position: scanner.Position{
-						Column: 21,
+						Column: 25,
 					},
 				},
 				{
 					Type:    NUMBER,
 					Literal: "9.1",
 					Position: scanner.Position{
-						Column: 23,
+						Column: 27,
 					},
 				},
 				{
-					Type: RPAREN,
+					Type:    RPAREN,
+					Literal: ")",
 					Position: scanner.Position{
-						Column: 26,
+						Column: 30,
+					},
+				},
+				{
+					Type:    SEMI,
+					Literal: ";",
+					Position: scanner.Position{
+						Column: 31,
 					},
 				},
 				{
 					Type: EOF,
 					Position: scanner.Position{
-						Column: 27,
+						Column: 32,
 					},
 				},
 			},
@@ -172,13 +200,15 @@ func TestLexer(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		r := strings.NewReader(test.input)
-		lexer := New(r, test.name)
+		t.Run(test.name, func(t *testing.T) {
+			r := strings.NewReader(test.input)
+			lexer := New(r, test.name)
 
-		for _, lexem := range test.expected {
-			next := lexer.Next()
-			EqualLexems(t, next, lexem)
-		}
+			for _, lexem := range test.expected {
+				next := lexer.Next()
+				EqualLexems(t, next, lexem)
+			}
+		})
 	}
 }
 
@@ -189,5 +219,7 @@ func EqualLexems(t testing.TB, a, b Lexem) {
 		a.Literal != b.Literal ||
 		a.Column != b.Column {
 		t.Errorf("Expected %v to equal %v", a, b)
+		// fmt.Println(b)
+		// fmt.Println("b ->>", b.Literal)
 	}
 }
