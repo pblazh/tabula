@@ -1,4 +1,4 @@
-package parser
+package ast
 
 import (
 	"fmt"
@@ -14,24 +14,32 @@ type Statement interface {
 	Node
 }
 
-type AssignStatement struct {
+type LetStatement struct {
 	Statement
-	Identifier lexer.Token
+	Identifier IdentifierExpression
 	Value      Expression
 }
 
-func (s AssignStatement) Literal() string {
-	return fmt.Sprintf("%s = %s", s.Identifier.Literal, s.Value.Literal())
+func (s LetStatement) Literal() string {
+	return fmt.Sprintf("let %s = %s", s.Identifier.Literal(), s.Value.Literal())
 }
 
-type Expression struct {
+type Expression interface {
 	Node
-	Evaluate func()
+}
+
+type IdentifierExpression struct {
+	Expression
+	Value lexer.Lexem
+}
+
+func (s IdentifierExpression) Literal() string {
+	return s.Value.Literal
 }
 
 type NumberExpression struct {
 	Expression
-	Value lexer.Token
+	Value lexer.Lexem
 }
 
 func (s NumberExpression) Literal() string {
