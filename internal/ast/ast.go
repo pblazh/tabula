@@ -7,7 +7,7 @@ import (
 )
 
 type Node interface {
-	Literal() string
+	String() string
 }
 
 type Statement interface {
@@ -20,8 +20,18 @@ type LetStatement struct {
 	Value      Expression
 }
 
-func (s LetStatement) Literal() string {
-	return fmt.Sprintf("let %s = %s;", s.Identifier.Literal(), s.Value.Literal())
+func (s LetStatement) String() string {
+	return fmt.Sprintf("let %s = %s;", s.Identifier.String(), s.Value.String())
+}
+
+type ExpressionStatement struct {
+	Statement
+	Token lexer.Lexem
+	Value Expression
+}
+
+func (s ExpressionStatement) String() string {
+	return s.Value.String()
 }
 
 type Expression interface {
@@ -33,7 +43,7 @@ type IdentifierExpression struct {
 	Value lexer.Lexem
 }
 
-func (s IdentifierExpression) Literal() string {
+func (s IdentifierExpression) String() string {
 	return s.Value.Literal
 }
 
@@ -42,8 +52,18 @@ type NumberExpression struct {
 	Value lexer.Lexem
 }
 
-func (s NumberExpression) Literal() string {
+func (s NumberExpression) String() string {
 	return s.Value.Literal
+}
+
+type PrefixExpression struct {
+	Expression
+	Operator lexer.Lexem
+	Value    Expression
+}
+
+func (s PrefixExpression) String() string {
+	return fmt.Sprintf("%s%s", s.Operator.Literal, s.Value.String())
 }
 
 type SumExpression struct {
@@ -52,8 +72,8 @@ type SumExpression struct {
 	Right Expression
 }
 
-func (s SumExpression) Literal() string {
-	return fmt.Sprintf("%s + %s", s.Left.Literal(), s.Right.Literal())
+func (s SumExpression) String() string {
+	return fmt.Sprintf("%s + %s", s.Left.String(), s.Right.String())
 }
 
 type Program []Statement

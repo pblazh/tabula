@@ -219,7 +219,5 @@ func EqualLexems(t testing.TB, a, b Lexem) {
 		a.Literal != b.Literal ||
 		a.Column != b.Column {
 		t.Errorf("Expected %v to equal %v", a, b)
-		// fmt.Println(b)
-		// fmt.Println("b ->>", b.Literal)
 	}
 }

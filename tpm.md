@@ -8,3 +8,4 @@
   - [x] #05.01: Add a LET lexem
 - [x] #06: Setup a parser
   - [x] #06.01: Return errors
+  - [x] #06.02: Parse prefix expression

@@ -16,7 +16,7 @@ func TestPaser(t *testing.T) {
 	}{
 		{
 			name:  "simple assign",
-			input: "let A1 = 10;",
+			input: "let A1 = -10;",
 		},
 	}
 
@@ -31,7 +31,7 @@ func TestPaser(t *testing.T) {
 				return
 			}
 
-			literal := program[0].Literal()
+			literal := program[0].String()
 			if literal != tc.input {
 				t.Errorf("Expected '%s' to equal '%s'", literal, tc.input)
 			}

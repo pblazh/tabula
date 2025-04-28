@@ -33,6 +33,7 @@ const (
 	COMA    = "COMA"
 	LET     = "LET"
 	SEMI    = "SEMI"
+	NOT     = "NOT"
 )
 
 var lexems map[rune]LexemType = map[rune]LexemType{
@@ -46,4 +47,5 @@ var lexems map[rune]LexemType = map[rune]LexemType{
 	':': COLUMN,
 	',': COMA,
 	';': SEMI,
+	'!': NOT,
 }
