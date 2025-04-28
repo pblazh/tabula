@@ -21,7 +21,7 @@ type LetStatement struct {
 }
 
 func (s LetStatement) Literal() string {
-	return fmt.Sprintf("let %s = %s", s.Identifier.Literal(), s.Value.Literal())
+	return fmt.Sprintf("let %s = %s;", s.Identifier.Literal(), s.Value.Literal())
 }
 
 type Expression interface {

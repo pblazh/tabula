@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/lexer"
 )
@@ -27,7 +29,11 @@ outer:
 	for p.cur.Type != lexer.EOF {
 		switch p.cur.Type {
 		case lexer.LET:
-			program = append(program, p.parseLetStatement())
+			stm, err := p.parseLetStatement()
+			if err != nil {
+				panic(err)
+			}
+			program = append(program, stm)
 		default:
 			break outer
 		}
@@ -41,23 +47,41 @@ func (p *Parser) advance() {
 	p.nex = p.lex.Next()
 }
 
-func (p *Parser) parseLetStatement() ast.Statement {
+func (p *Parser) parseLetStatement() (ast.Statement, error) {
 	p.advance()
+	if !p.expectCurLexem(lexer.IDENT) {
+		return nil, fmt.Errorf("expected an identifier, but got %v", p.cur)
+	}
 
 	statement := ast.LetStatement{
 		Identifier: ast.IdentifierExpression{Value: p.cur},
 	}
 	p.advance()
-	p.advance()
-	statement.Value = p.parseExpression()
+	if !p.expectCurLexem(lexer.ASSIGN) {
+		return nil, fmt.Errorf("expected =, but got %v", p.cur)
+	}
 
-	return statement
+	p.advance()
+	expression, err := p.parseExpression()
+	if err != nil {
+		return nil, err
+	}
+	statement.Value = expression
+
+	return statement, nil
 }
 
-func (p *Parser) parseExpression() ast.Expression {
+func (p *Parser) expectCurLexem(typ lexer.LexemType) bool {
+	return p.cur.Type == typ
+}
+
+func (p *Parser) parseExpression() (ast.Expression, error) {
 	val := p.cur
-	p.advance()
+
+	for !p.expectCurLexem(lexer.SEMI) {
+		p.advance()
+	}
 	return ast.NumberExpression{
 		Value: val,
-	}
+	}, nil
 }

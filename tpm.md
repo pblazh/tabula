@@ -7,3 +7,4 @@
 - [x] #05: Create a lexer
   - [x] #05.01: Add a LET lexem
 - [x] #06: Setup a parser
+  - [x] #06.01: Return errors
