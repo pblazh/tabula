@@ -9,3 +9,4 @@
 - [x] #06: Setup a parser
   - [x] #06.01: Return errors
   - [x] #06.02: Parse prefix expression
+  - [x] #06.03: Parse infix expression

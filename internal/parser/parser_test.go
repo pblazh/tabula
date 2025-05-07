@@ -4,19 +4,44 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/lexer"
 )
 
 func TestPaser(t *testing.T) {
 	testcases := []struct {
-		name     string
-		input    string
-		expected ast.Program
+		name   string
+		input  string
+		output string
 	}{
 		{
 			name:  "simple assign",
 			input: "let A1 = -10;",
+		},
+		{
+			name:  "identifier",
+			input: "something;",
+		},
+		{
+			name:  "not identifier",
+			input: "!something;",
+		},
+		{
+			name:  "number",
+			input: "10;",
+		},
+		{
+			name:  "number",
+			input: "-10;",
+		},
+		{
+			name:   "infix",
+			input:  "5 + 6 - 2;",
+			output: "((5 + 6) - 2);",
+		},
+		{
+			name:   "infix precedence",
+			input:  "5 + 6 * 2;",
+			output: "(5 + (6 * 2));",
 		},
 	}
 
@@ -32,8 +57,13 @@ func TestPaser(t *testing.T) {
 			}
 
 			literal := program[0].String()
-			if literal != tc.input {
-				t.Errorf("Expected '%s' to equal '%s'", literal, tc.input)
+			output := tc.output
+			if output == "" {
+				output = tc.input
+			}
+
+			if literal != output {
+				t.Errorf("Expected '%s' to equal '%s'", literal, tc.output)
 			}
 		})
 	}

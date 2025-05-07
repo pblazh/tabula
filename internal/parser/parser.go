@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/pblazh/csvss/internal/ast"
@@ -30,10 +31,31 @@ func New(lex *lexer.Lexer) *Parser {
 
 	parser.registerPrefix(lexer.IDENT, parser.parseIdentifier)
 	parser.registerPrefix(lexer.NUMBER, parser.parseNumber)
+
 	parser.registerPrefix(lexer.MINUS, parser.parsePrefix)
 	parser.registerPrefix(lexer.NOT, parser.parsePrefix)
 
+	parser.registerInfix(lexer.PLUS, parser.parseInfix)
+	parser.registerInfix(lexer.MINUS, parser.parseInfix)
+	parser.registerInfix(lexer.MULT, parser.parseInfix)
+	parser.registerInfix(lexer.DIV, parser.parseInfix)
+	parser.registerInfix(lexer.EQUAL, parser.parseInfix)
+	parser.registerInfix(lexer.NOT_EQUAL, parser.parseInfix)
+	parser.registerInfix(lexer.LESS, parser.parseInfix)
+	parser.registerInfix(lexer.GREATER, parser.parseInfix)
+
 	return parser
+}
+
+func (p *Parser) curretnPrecedence() int {
+	if p, ok := precedences[p.cur.Type]; ok {
+		return p
+	}
+	return LOWEST
+}
+
+func (p *Parser) nextTokenIs(typ lexer.LexemType) bool {
+	return p.nex.Type == typ
 }
 
 func (p *Parser) Parse() ast.Program {
@@ -86,7 +108,7 @@ func (p *Parser) parseLetStatement() (ast.Statement, error) {
 	}
 
 	statement := ast.LetStatement{
-		Identifier: ast.IdentifierExpression{Value: p.cur},
+		Identifier: ast.IdentifierExpression{Right: p.cur},
 	}
 	p.advance()
 	if !p.expectCurLexem(lexer.ASSIGN) {
@@ -98,7 +120,7 @@ func (p *Parser) parseLetStatement() (ast.Statement, error) {
 	if err != nil {
 		return nil, err
 	}
-	statement.Value = expression
+	statement.Right = expression
 	if p.expectCurLexem(lexer.SEMI) {
 		p.advance()
 	}
@@ -116,7 +138,7 @@ func (p *Parser) parseExpressionStatement() (ast.Statement, error) {
 		return nil, err
 	}
 
-	statement.Value = expression
+	statement.Right = expression
 	if p.expectCurLexem(lexer.SEMI) {
 		p.advance()
 	}
@@ -126,11 +148,28 @@ func (p *Parser) parseExpressionStatement() (ast.Statement, error) {
 
 func (p *Parser) parseExpression(precendence int) (ast.Expression, error) {
 	prefix := p.prefixParsers[p.cur.Type]
+
 	if prefix == nil {
-		return nil, nil
+		return nil, errors.New("parser not found for " + p.cur.Literal)
 	}
 
 	leftExpr, err := prefix()
+	if err != nil {
+		return nil, err
+	}
+
+	for !p.nextTokenIs(lexer.SEMI) && precendence < p.curretnPrecedence() {
+		infix := p.infixParsers[p.cur.Type]
+		if infix == nil {
+			return leftExpr, nil
+		}
+
+		leftExpr, err = infix(leftExpr)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return leftExpr, err
 }
 
@@ -138,7 +177,7 @@ func (p *Parser) parseIdentifier() (ast.Expression, error) {
 	if p.cur.Type != lexer.IDENT {
 		return nil, fmt.Errorf("expected an identifier, but got %v", p.cur)
 	}
-	expr := ast.IdentifierExpression{Value: p.cur}
+	expr := ast.IdentifierExpression{Right: p.cur}
 	p.advance()
 	return expr, nil
 }
@@ -148,23 +187,40 @@ func (p *Parser) parseNumber() (ast.Expression, error) {
 		return nil, fmt.Errorf("expected an identifier, but got %v", p.cur)
 	}
 
-	expr := ast.NumberExpression{Value: p.cur}
+	expr := ast.NumberExpression{Right: p.cur}
 	p.advance()
 	return expr, nil
 }
 
 func (p *Parser) parsePrefix() (ast.Expression, error) {
-	if p.cur.Type != lexer.MINUS {
-		return nil, fmt.Errorf("expected -, but got %v", p.cur)
+	if _, ok := p.prefixParsers[p.cur.Type]; !ok {
+		return nil, fmt.Errorf("expected prefix, but got %v", p.cur)
 	}
 
 	prefix := ast.PrefixExpression{Operator: p.cur}
 	p.advance()
-	expression, err := p.parseExpression(LOWEST)
+	expression, err := p.parseExpression(PREFIX)
 	if err != nil {
 		return nil, err
 	}
 
-	prefix.Value = expression
+	prefix.Right = expression
 	return prefix, nil
+}
+
+func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
+	expression := &ast.InfixExpression{
+		Operator: p.cur,
+		Left:     left,
+	}
+
+	precedence := p.curretnPrecedence()
+	p.advance()
+	right, err := p.parseExpression(precedence)
+	if err != nil {
+		return nil, err
+	}
+	expression.Right = right
+
+	return expression, nil
 }
