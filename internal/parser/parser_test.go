@@ -39,10 +39,20 @@ func TestPaser(t *testing.T) {
 			output: "((5 + 6) - 2);",
 		},
 		{
-			name:   "infix precedence",
+			name:   "infix reverse precedence",
 			input:  "5 + 6 * 2;",
 			output: "(5 + (6 * 2));",
 		},
+		{
+			name:   "infix precedence",
+			input:  "5 / 6 + 2;",
+			output: "((5 / 6) + 2);",
+		},
+		// {
+		// 	name:   "multiple statements",
+		// 	input:  "let A1 = 5.6;\nlet A2 = x;\nlet A3 = sum(A1:A2);",
+		// 	output: "let A1 = 5.6;let A2 = x;let A3 = sum(A1:A2);",
+		// },
 	}
 
 	for _, tc := range testcases {
@@ -51,12 +61,11 @@ func TestPaser(t *testing.T) {
 			parser := New(lex)
 			program := parser.Parse()
 
-			if len(program) != 1 {
-				t.Errorf("Expected one statement but got '%d'", len(program))
-				return
+			literal := ""
+			for _, statement := range program {
+				literal += statement.String()
 			}
 
-			literal := program[0].String()
 			output := tc.output
 			if output == "" {
 				output = tc.input

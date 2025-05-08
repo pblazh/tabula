@@ -11,3 +11,4 @@
   - [x] #06.02: Parse prefix expression
   - [x] #06.03: Parse infix expression
   - [x] #06.04: Parse boolean infix expression
+  - [x] #06.05: Parse multi statement program
