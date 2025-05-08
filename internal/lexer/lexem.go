@@ -18,38 +18,50 @@ func (t Lexem) String() string {
 }
 
 const (
-	IDENT     = "IDENT"
-	ILLEGAL   = "ILLEGAL"
-	EOF       = "EOF"
-	NUMBER    = "NUMBER"
-	ASSIGN    = "ASSIGN"
-	PLUS      = "PLUS"
-	MINUS     = "MINUS"
-	MULT      = "MULT"
-	DIV       = "DIV"
-	LPAREN    = "LPAREN"
-	RPAREN    = "RPAREN"
-	COLUMN    = "COLUMN"
-	COMA      = "COMA"
-	LET       = "LET"
-	SEMI      = "SEMI"
-	NOT       = "NOT"
-	EQUAL     = "EQUAL"
-	NOT_EQUAL = "NOT_EQUAL"
-	LESS      = "LESS"
-	GREATER   = "GREATER"
+	IDENT            = "IDENT"
+	ILLEGAL          = "ILLEGAL"
+	EOF              = "EOF"
+	NUMBER           = "NUMBER"
+	ASSIGN           = "ASSIGN"
+	PLUS             = "PLUS"
+	MINUS            = "MINUS"
+	MULT             = "MULT"
+	DIV              = "DIV"
+	REM              = "REM"
+	LPAREN           = "LPAREN"
+	RPAREN           = "RPAREN"
+	COLUMN           = "COLUMN"
+	COMA             = "COMA"
+	LET              = "LET"
+	SEMI             = "SEMI"
+	EQUAL            = "EQUAL"
+	NOT_EQUAL        = "NOT_EQUAL"
+	LESS             = "LESS"
+	GREATER          = "GREATER"
+	GREATER_OR_EQUAL = "GREATER_OR_EQUAL"
+	LESS_OR_EQUAL    = "LESS_OR_EQUAL"
+	NOT              = "NOT"
+	AND              = "AND"
+	OR               = "OR"
 )
 
-var lexems map[rune]LexemType = map[rune]LexemType{
-	'=': ASSIGN,
-	'+': PLUS,
-	'-': MINUS,
-	'*': MULT,
-	'/': DIV,
-	'(': LPAREN,
-	')': RPAREN,
-	':': COLUMN,
-	',': COMA,
-	';': SEMI,
-	'!': NOT,
+var lexems = map[string]LexemType{
+	"=":  ASSIGN,
+	"+":  PLUS,
+	"-":  MINUS,
+	"*":  MULT,
+	"/":  DIV,
+	"%":  REM,
+	"(":  LPAREN,
+	")":  RPAREN,
+	":":  COLUMN,
+	",":  COMA,
+	";":  SEMI,
+	"<":  LESS,
+	">":  GREATER,
+	">=": GREATER_OR_EQUAL,
+	"<=": LESS_OR_EQUAL,
+	"!":  NOT,
+	"==": EQUAL,
+	"!=": NOT_EQUAL,
 }

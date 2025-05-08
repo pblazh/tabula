@@ -14,7 +14,7 @@ func TestLexer(t *testing.T) {
 	}{
 		{
 			name:  "supported tokens",
-			input: "=+-*/()",
+			input: "=+-*/()%",
 			expected: []Lexem{
 				{
 					Type:    ASSIGN,
@@ -66,16 +66,24 @@ func TestLexer(t *testing.T) {
 					},
 				},
 				{
-					Type: EOF,
+					Type:    REM,
+					Literal: "%",
 					Position: scanner.Position{
 						Column: 8,
 					},
 				},
+				{
+					Type: EOF,
+					Position: scanner.Position{
+						Column: 9,
+					},
+				},
 			},
 		},
+
 		{
 			name:  "expression",
-			input: "let A1=A2+34 * SUM(B1:B2, 9.1);",
+			input: "let A1=A2+34 * SUM(B1:B2, 9.1) % 9;",
 			expected: []Lexem{
 				{
 					Type:    LET,
@@ -183,16 +191,142 @@ func TestLexer(t *testing.T) {
 					},
 				},
 				{
+					Type:    REM,
+					Literal: "%",
+					Position: scanner.Position{
+						Column: 32,
+					},
+				},
+				{
+					Type:    NUMBER,
+					Literal: "9",
+					Position: scanner.Position{
+						Column: 34,
+					},
+				},
+				{
 					Type:    SEMI,
 					Literal: ";",
 					Position: scanner.Position{
-						Column: 31,
+						Column: 35,
 					},
 				},
 				{
 					Type: EOF,
 					Position: scanner.Position{
-						Column: 32,
+						Column: 36,
+					},
+				},
+			},
+		},
+
+		{
+			name:  "equal expression",
+			input: "a == b",
+			expected: []Lexem{
+				{
+					Type:    IDENT,
+					Literal: "a",
+					Position: scanner.Position{
+						Column: 1,
+					},
+				},
+				{
+					Type:    EQUAL,
+					Literal: "==",
+					Position: scanner.Position{
+						Column: 3,
+					},
+				},
+				{
+					Type:    IDENT,
+					Literal: "b",
+					Position: scanner.Position{
+						Column: 6,
+					},
+				},
+			},
+		},
+
+		{
+			name:  "not equal expression",
+			input: "a != b",
+			expected: []Lexem{
+				{
+					Type:    IDENT,
+					Literal: "a",
+					Position: scanner.Position{
+						Column: 1,
+					},
+				},
+				{
+					Type:    NOT_EQUAL,
+					Literal: "!=",
+					Position: scanner.Position{
+						Column: 3,
+					},
+				},
+				{
+					Type:    IDENT,
+					Literal: "b",
+					Position: scanner.Position{
+						Column: 6,
+					},
+				},
+			},
+		},
+
+		{
+			name:  "greater equal expression",
+			input: "a >= b",
+			expected: []Lexem{
+				{
+					Type:    IDENT,
+					Literal: "a",
+					Position: scanner.Position{
+						Column: 1,
+					},
+				},
+				{
+					Type:    GREATER_OR_EQUAL,
+					Literal: ">=",
+					Position: scanner.Position{
+						Column: 3,
+					},
+				},
+				{
+					Type:    IDENT,
+					Literal: "b",
+					Position: scanner.Position{
+						Column: 6,
+					},
+				},
+			},
+		},
+
+		{
+			name:  "less equal expression",
+			input: "a <= b",
+			expected: []Lexem{
+				{
+					Type:    IDENT,
+					Literal: "a",
+					Position: scanner.Position{
+						Column: 1,
+					},
+				},
+				{
+					Type:    LESS_OR_EQUAL,
+					Literal: "<=",
+					Position: scanner.Position{
+						Column: 3,
+					},
+				},
+				{
+					Type:    IDENT,
+					Literal: "b",
+					Position: scanner.Position{
+						Column: 6,
 					},
 				},
 			},

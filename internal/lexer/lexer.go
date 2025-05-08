@@ -22,6 +22,46 @@ func (l *Lexer) Next() Lexem {
 		}
 	}
 
+	if literal == "=" && l.scanner.Peek() == '=' {
+		lex := Lexem{
+			Type:     EQUAL,
+			Literal:  "==",
+			Position: l.scanner.Position,
+		}
+		l.scanner.Scan()
+		return lex
+	}
+
+	if literal == "!" && l.scanner.Peek() == '=' {
+		lex := Lexem{
+			Type:     NOT_EQUAL,
+			Literal:  "!=",
+			Position: l.scanner.Position,
+		}
+		l.scanner.Scan()
+		return lex
+	}
+
+	if literal == ">" && l.scanner.Peek() == '=' {
+		lex := Lexem{
+			Type:     GREATER_OR_EQUAL,
+			Literal:  ">=",
+			Position: l.scanner.Position,
+		}
+		l.scanner.Scan()
+		return lex
+	}
+
+	if literal == "<" && l.scanner.Peek() == '=' {
+		lex := Lexem{
+			Type:     LESS_OR_EQUAL,
+			Literal:  "<=",
+			Position: l.scanner.Position,
+		}
+		l.scanner.Scan()
+		return lex
+	}
+
 	if literal == "let" {
 		return Lexem{
 			Type:     LET,
@@ -46,7 +86,7 @@ func (l *Lexer) Next() Lexem {
 		}
 	}
 
-	if t, ok := lexems[tok]; ok {
+	if t, ok := lexems[literal]; ok {
 		return Lexem{
 			Type:     t,
 			Literal:  literal,
