@@ -14,12 +14,15 @@ const (
 )
 
 var precedences = map[lexer.LexemType]int{
-	lexer.EQUAL:     EQUALS,
-	lexer.NOT_EQUAL: EQUALS,
-	lexer.LESS:      LESSGREATER,
-	lexer.GREATER:   LESSGREATER,
-	lexer.PLUS:      SUM,
-	lexer.MINUS:     SUM,
-	lexer.DIV:       PRODUCT,
-	lexer.MULT:      PRODUCT,
+	lexer.EQUAL:            EQUALS,
+	lexer.NOT_EQUAL:        EQUALS,
+	lexer.LESS:             LESSGREATER,
+	lexer.GREATER:          LESSGREATER,
+	lexer.GREATER_OR_EQUAL: LESSGREATER,
+	lexer.LESS_OR_EQUAL:    LESSGREATER,
+	lexer.PLUS:             SUM,
+	lexer.MINUS:            SUM,
+	lexer.DIV:              PRODUCT,
+	lexer.MULT:             PRODUCT,
+	lexer.REM:              PRODUCT,
 }
