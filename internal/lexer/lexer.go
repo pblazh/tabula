@@ -2,6 +2,7 @@ package lexer
 
 import (
 	"io"
+	"strings"
 	"text/scanner"
 	"unicode"
 )
@@ -86,9 +87,17 @@ func (l *Lexer) Next() Lexem {
 		}
 	}
 
-	if unicode.IsDigit(rune(literal[0])) {
+	if unicode.IsDigit(rune(literal[0])) && strings.Contains(literal, ".") {
 		return Lexem{
-			Type:     NUMBER,
+			Type:     FLOAT,
+			Literal:  literal,
+			Position: l.scanner.Position,
+		}
+	}
+
+	if unicode.IsDigit(rune(literal[0])) && !strings.Contains(literal, ".") {
+		return Lexem{
+			Type:     INT,
 			Literal:  literal,
 			Position: l.scanner.Position,
 		}

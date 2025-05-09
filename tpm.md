@@ -6,6 +6,7 @@
 - [x] #04: Describe a script language syntax
 - [x] #05: Create a lexer
   - [x] #05.01: Add a LET lexem
+  - [x] #05.02: Distinguish int and float
 - [x] #06: Setup a parser
   - [x] #06.01: Return errors
   - [x] #06.02: Parse prefix expression
@@ -13,3 +14,5 @@
   - [x] #06.04: Parse boolean infix expression
   - [x] #06.05: Parse multi statement program
   - [x] #06.06: Parse boolean literals
+  - [x] #06.07: Compare boolean literals
+  - [x] #06.08: Output AST as S expressions

@@ -3,6 +3,7 @@ package parser
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/lexer"
@@ -30,7 +31,8 @@ func New(lex *lexer.Lexer) *Parser {
 	}
 
 	parser.registerPrefix(lexer.IDENT, parser.parseIdentifier)
-	parser.registerPrefix(lexer.NUMBER, parser.parseNumber)
+	parser.registerPrefix(lexer.INT, parser.parseInt)
+	parser.registerPrefix(lexer.FLOAT, parser.parseFloat)
 	parser.registerPrefix(lexer.TRUE, parser.parseBool)
 	parser.registerPrefix(lexer.FALSE, parser.parseBool)
 
@@ -181,8 +183,23 @@ func (p *Parser) parseIdentifier() (ast.Expression, error) {
 	return expr, nil
 }
 
-func (p *Parser) parseNumber() (ast.Expression, error) {
-	expr := ast.NumberExpression{Right: p.cur}
+func (p *Parser) parseInt() (ast.Expression, error) {
+	value, err := strconv.Atoi(p.cur.Literal)
+	if err != nil {
+		return nil, err
+	}
+	expr := ast.IntExpression{Right: p.cur, Value: value}
+	p.advance()
+	return expr, nil
+}
+
+func (p *Parser) parseFloat() (ast.Expression, error) {
+	value, err := strconv.ParseFloat(p.cur.Literal, 32)
+	if err != nil {
+		return nil, err
+	}
+
+	expr := ast.FloatExpression{Right: p.cur, Value: value}
 	p.advance()
 	return expr, nil
 }

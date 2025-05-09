@@ -57,13 +57,24 @@ func (s BooleanExpression) String() string {
 	return fmt.Sprintf("<bool %v>", s.Value)
 }
 
-type NumberExpression struct {
+type IntExpression struct {
 	Expression
 	Right lexer.Lexem
+	Value int
 }
 
-func (s NumberExpression) String() string {
-	return s.Right.Literal
+func (s IntExpression) String() string {
+	return fmt.Sprintf("<int %d>", s.Value)
+}
+
+type FloatExpression struct {
+	Expression
+	Right lexer.Lexem
+	Value float64
+}
+
+func (s FloatExpression) String() string {
+	return fmt.Sprintf("<float %.2f>", s.Value)
 }
 
 type PrefixExpression struct {
@@ -73,17 +84,7 @@ type PrefixExpression struct {
 }
 
 func (s PrefixExpression) String() string {
-	return fmt.Sprintf("%s%s", s.Operator.Literal, s.Right)
-}
-
-type SumExpression struct {
-	Expression
-	Left  Expression
-	Right Expression
-}
-
-func (s SumExpression) String() string {
-	return fmt.Sprintf("%s + %s", s.Left.String(), s.Right.String())
+	return fmt.Sprintf("(%s %s)", s.Operator.Literal, s.Right)
 }
 
 type InfixExpression struct {
@@ -94,7 +95,7 @@ type InfixExpression struct {
 }
 
 func (s InfixExpression) String() string {
-	return fmt.Sprintf("(%s %s %s)", s.Left, s.Operator.Literal, s.Right)
+	return fmt.Sprintf("(%s %s %s)", s.Operator.Literal, s.Left, s.Right)
 }
 
 type Program []Statement

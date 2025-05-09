@@ -121,7 +121,7 @@ func TestLexer(t *testing.T) {
 					},
 				},
 				{
-					Type:    NUMBER,
+					Type:    INT,
 					Literal: "34",
 					Position: scanner.Position{
 						Column: 11,
@@ -177,7 +177,7 @@ func TestLexer(t *testing.T) {
 					},
 				},
 				{
-					Type:    NUMBER,
+					Type:    FLOAT,
 					Literal: "9.1",
 					Position: scanner.Position{
 						Column: 27,
@@ -198,7 +198,7 @@ func TestLexer(t *testing.T) {
 					},
 				},
 				{
-					Type:    NUMBER,
+					Type:    INT,
 					Literal: "9",
 					Position: scanner.Position{
 						Column: 34,

@@ -14,24 +14,28 @@ func TestPaser(t *testing.T) {
 		output string
 	}{
 		{
-			name:  "simple assign",
-			input: "let A1 = -10;",
+			name:   "simple assign",
+			input:  "let A1 = -10;",
+			output: "let A1 = (- <int 10>);",
 		},
 		{
 			name:  "identifier",
 			input: "something;",
 		},
 		{
-			name:  "not identifier",
-			input: "!something;",
+			name:   "not identifier",
+			input:  "!something;",
+			output: "(! something);",
 		},
 		{
-			name:  "number",
-			input: "10;",
+			name:   "number",
+			input:  "10;",
+			output: "<int 10>;",
 		},
 		{
-			name:  "number",
-			input: "-10;",
+			name:   "number",
+			input:  "-10;",
+			output: "(- <int 10>);",
 		},
 		{
 			name:   "true",
@@ -46,32 +50,32 @@ func TestPaser(t *testing.T) {
 		{
 			name:   "compare with boolen",
 			input:  "3 > 5 == false;",
-			output: "((3 > 5) == <bool false>);",
+			output: "(== (> <int 3> <int 5>) <bool false>);",
 		},
 		{
 			name:   "compare boolen",
 			input:  "true == 3 < 5;",
-			output: "(<bool true> == (3 < 5));",
+			output: "(== <bool true> (< <int 3> <int 5>));",
 		},
 		{
 			name:   "infix",
 			input:  "5 + 6 - 2;",
-			output: "((5 + 6) - 2);",
+			output: "(- (+ <int 5> <int 6>) <int 2>);",
 		},
 		{
 			name:   "infix reverse precedence",
 			input:  "5 + 6 * 2;",
-			output: "(5 + (6 * 2));",
+			output: "(+ <int 5> (* <int 6> <int 2>));",
 		},
 		{
 			name:   "infix precedence",
 			input:  "5 / 6 + 2;",
-			output: "((5 / 6) + 2);",
+			output: "(+ (/ <int 5> <int 6>) <int 2>);",
 		},
 		{
 			name:   "multiple statements",
 			input:  "let A1 = 5.6;\nlet A2 = x;\n",
-			output: "let A1 = 5.6;let A2 = x;",
+			output: "let A1 = <float 5.60>;let A2 = x;",
 		},
 		// {
 		// 	name:   "multiple statements",
