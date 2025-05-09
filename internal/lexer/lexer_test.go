@@ -331,6 +331,27 @@ func TestLexer(t *testing.T) {
 				},
 			},
 		},
+
+		{
+			name:  "bool expressions",
+			input: "true false",
+			expected: []Lexem{
+				{
+					Type:    TRUE,
+					Literal: "true",
+					Position: scanner.Position{
+						Column: 1,
+					},
+				},
+				{
+					Type:    FALSE,
+					Literal: "false",
+					Position: scanner.Position{
+						Column: 6,
+					},
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {

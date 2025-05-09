@@ -70,6 +70,22 @@ func (l *Lexer) Next() Lexem {
 		}
 	}
 
+	if literal == "true" {
+		return Lexem{
+			Type:     TRUE,
+			Literal:  literal,
+			Position: l.scanner.Position,
+		}
+	}
+
+	if literal == "false" {
+		return Lexem{
+			Type:     FALSE,
+			Literal:  literal,
+			Position: l.scanner.Position,
+		}
+	}
+
 	if unicode.IsDigit(rune(literal[0])) {
 		return Lexem{
 			Type:     NUMBER,

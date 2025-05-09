@@ -22,6 +22,8 @@ const (
 	ILLEGAL          = "ILLEGAL"
 	EOF              = "EOF"
 	NUMBER           = "NUMBER"
+	TRUE             = "TRUE"
+	FALSE            = "FALSE"
 	ASSIGN           = "ASSIGN"
 	PLUS             = "PLUS"
 	MINUS            = "MINUS"

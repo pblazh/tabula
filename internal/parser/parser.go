@@ -31,7 +31,8 @@ func New(lex *lexer.Lexer) *Parser {
 
 	parser.registerPrefix(lexer.IDENT, parser.parseIdentifier)
 	parser.registerPrefix(lexer.NUMBER, parser.parseNumber)
-	parser.registerPrefix(lexer.BOOL, parser.parseBool)
+	parser.registerPrefix(lexer.TRUE, parser.parseBool)
+	parser.registerPrefix(lexer.FALSE, parser.parseBool)
 
 	parser.registerPrefix(lexer.MINUS, parser.parsePrefix)
 	parser.registerPrefix(lexer.NOT, parser.parsePrefix)
@@ -175,30 +176,19 @@ func (p *Parser) parseExpression(precendence int) (ast.Expression, error) {
 }
 
 func (p *Parser) parseIdentifier() (ast.Expression, error) {
-	if p.cur.Type != lexer.IDENT {
-		return nil, fmt.Errorf("expected an identifier, but got %v", p.cur)
-	}
 	expr := ast.IdentifierExpression{Right: p.cur}
 	p.advance()
 	return expr, nil
 }
 
 func (p *Parser) parseNumber() (ast.Expression, error) {
-	if p.cur.Type != lexer.NUMBER {
-		return nil, fmt.Errorf("expected an identifier, but got %v", p.cur)
-	}
-
 	expr := ast.NumberExpression{Right: p.cur}
 	p.advance()
 	return expr, nil
 }
 
 func (p *Parser) parseBool() (ast.Expression, error) {
-	if p.cur.Type != lexer.BOOL {
-		return nil, fmt.Errorf("expected a bool, but got %v", p.cur)
-	}
-
-	expr := ast.BooleanExpression{Right: p.cur, Value: p.cur.Literal == "true"}
+	expr := ast.BooleanExpression{Right: p.cur, Value: p.cur.Type == lexer.TRUE}
 	p.advance()
 	return expr, nil
 }

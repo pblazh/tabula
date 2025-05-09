@@ -44,6 +44,16 @@ func TestPaser(t *testing.T) {
 			output: "<bool false>;",
 		},
 		{
+			name:   "compare with boolen",
+			input:  "3 > 5 == false;",
+			output: "((3 > 5) == <bool false>);",
+		},
+		{
+			name:   "compare boolen",
+			input:  "true == 3 < 5;",
+			output: "(<bool true> == (3 < 5));",
+		},
+		{
 			name:   "infix",
 			input:  "5 + 6 - 2;",
 			output: "((5 + 6) - 2);",
