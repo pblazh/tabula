@@ -34,6 +34,16 @@ func TestPaser(t *testing.T) {
 			input: "-10;",
 		},
 		{
+			name:   "true",
+			input:  "true;",
+			output: "<bool true>;",
+		},
+		{
+			name:   "false",
+			input:  "false;",
+			output: "<bool false>;",
+		},
+		{
 			name:   "infix",
 			input:  "5 + 6 - 2;",
 			output: "((5 + 6) - 2);",
@@ -47,6 +57,11 @@ func TestPaser(t *testing.T) {
 			name:   "infix precedence",
 			input:  "5 / 6 + 2;",
 			output: "((5 / 6) + 2);",
+		},
+		{
+			name:   "multiple statements",
+			input:  "let A1 = 5.6;\nlet A2 = x;\n",
+			output: "let A1 = 5.6;let A2 = x;",
 		},
 		// {
 		// 	name:   "multiple statements",

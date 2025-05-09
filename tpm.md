@@ -12,3 +12,4 @@
   - [x] #06.03: Parse infix expression
   - [x] #06.04: Parse boolean infix expression
   - [x] #06.05: Parse multi statement program
+  - [x] #06.06: Parse boolean literals

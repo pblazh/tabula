@@ -47,6 +47,16 @@ func (s IdentifierExpression) String() string {
 	return s.Right.Literal
 }
 
+type BooleanExpression struct {
+	Expression
+	Right lexer.Lexem
+	Value bool
+}
+
+func (s BooleanExpression) String() string {
+	return fmt.Sprintf("<bool %v>", s.Value)
+}
+
 type NumberExpression struct {
 	Expression
 	Right lexer.Lexem
