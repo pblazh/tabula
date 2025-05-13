@@ -35,6 +35,7 @@ func New(lex *lexer.Lexer) *Parser {
 	parser.registerPrefix(lexer.FLOAT, parser.parseFloat)
 	parser.registerPrefix(lexer.TRUE, parser.parseBool)
 	parser.registerPrefix(lexer.FALSE, parser.parseBool)
+	parser.registerPrefix(lexer.LPAREN, parser.parseLparen)
 
 	parser.registerPrefix(lexer.MINUS, parser.parsePrefix)
 	parser.registerPrefix(lexer.NOT, parser.parsePrefix)
@@ -208,6 +209,21 @@ func (p *Parser) parseBool() (ast.Expression, error) {
 	expr := ast.BooleanExpression{Right: p.cur, Value: p.cur.Type == lexer.TRUE}
 	p.advance()
 	return expr, nil
+}
+
+func (p *Parser) parseLparen() (ast.Expression, error) {
+	p.advance()
+	expression, err := p.parseExpression(LOWEST)
+	if err != nil {
+		return nil, err
+	}
+
+	if !p.expectCurLexem(lexer.RPAREN) {
+		return nil, fmt.Errorf("expected right paren, but got %v", p.cur)
+	}
+	p.advance()
+
+	return expression, nil
 }
 
 func (p *Parser) parsePrefix() (ast.Expression, error) {

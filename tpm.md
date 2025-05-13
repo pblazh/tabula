@@ -16,3 +16,4 @@
   - [x] #06.06: Parse boolean literals
   - [x] #06.07: Compare boolean literals
   - [x] #06.08: Output AST as S expressions
+  - [x] #06.09: Parse parenthesis

@@ -77,6 +77,11 @@ func TestPaser(t *testing.T) {
 			input:  "let A1 = 5.6;\nlet A2 = x;\n",
 			output: "let A1 = <float 5.60>;let A2 = x;",
 		},
+		{
+			name:   "parenteces precedence",
+			input:  "(5 + 6) * 2;",
+			output: "(* (+ <int 5> <int 6>) <int 2>);",
+		},
 		// {
 		// 	name:   "multiple statements",
 		// 	input:  "let A1 = 5.6;\nlet A2 = x;\nlet A3 = sum(A1:A2);",
