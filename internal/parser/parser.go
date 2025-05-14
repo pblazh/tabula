@@ -48,6 +48,7 @@ func New(lex *lexer.Lexer) *Parser {
 	parser.registerInfix(lexer.NOT_EQUAL, parser.parseInfix)
 	parser.registerInfix(lexer.LESS, parser.parseInfix)
 	parser.registerInfix(lexer.GREATER, parser.parseInfix)
+	parser.registerInfix(lexer.COLUMN, parser.parseInfix)
 	parser.registerInfix(lexer.LPAREN, parser.parseCallExpression)
 
 	return parser

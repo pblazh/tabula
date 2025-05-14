@@ -97,11 +97,16 @@ func TestPaser(t *testing.T) {
 			input:  "SUM(5, 6);",
 			output: "(SUM <int 5> <int 6>);",
 		},
-		// {
-		// 	name:   "multiple statements",
-		// 	input:  "let A1 = 5.6;\nlet A2 = x;\nlet A3 = sum(A1:A2);",
-		// 	output: "let A1 = 5.6;let A2 = x;let A3 = sum(A1:A2);",
-		// },
+		{
+			name:   "range expression",
+			input:  "A:B;",
+			output: "(: A B);",
+		},
+		{
+			name:   "multiple statements",
+			input:  "let A1 = 5.6;\nlet A2 = x;\nlet A3 = sum(A1:A2);",
+			output: "let A1 = <float 5.60>;let A2 = x;let A3 = (sum (: A1 A2));",
+		},
 	}
 
 	for _, tc := range testcases {

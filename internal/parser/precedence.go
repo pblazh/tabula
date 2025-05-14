@@ -26,4 +26,5 @@ var precedences = map[lexer.LexemType]int{
 	lexer.MULT:             PRODUCT,
 	lexer.REM:              PRODUCT,
 	lexer.LPAREN:           CALL,
+	lexer.COLUMN:           CALL,
 }
