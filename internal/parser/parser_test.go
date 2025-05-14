@@ -82,6 +82,21 @@ func TestPaser(t *testing.T) {
 			input:  "(5 + 6) * 2;",
 			output: "(* (+ <int 5> <int 6>) <int 2>);",
 		},
+		{
+			name:   "call expression with no arguments",
+			input:  "SUM();",
+			output: "(SUM);",
+		},
+		{
+			name:   "call expression with one argument",
+			input:  "SUM(5);",
+			output: "(SUM <int 5>);",
+		},
+		{
+			name:   "call expression with multiple arguments",
+			input:  "SUM(5, 6);",
+			output: "(SUM <int 5> <int 6>);",
+		},
 		// {
 		// 	name:   "multiple statements",
 		// 	input:  "let A1 = 5.6;\nlet A2 = x;\nlet A3 = sum(A1:A2);",

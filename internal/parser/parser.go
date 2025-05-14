@@ -48,6 +48,7 @@ func New(lex *lexer.Lexer) *Parser {
 	parser.registerInfix(lexer.NOT_EQUAL, parser.parseInfix)
 	parser.registerInfix(lexer.LESS, parser.parseInfix)
 	parser.registerInfix(lexer.GREATER, parser.parseInfix)
+	parser.registerInfix(lexer.LPAREN, parser.parseCallExpression)
 
 	return parser
 }
@@ -257,4 +258,42 @@ func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
 	expression.Right = right
 
 	return expression, nil
+}
+
+func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error) {
+	expr := ast.CallExpression{Identifier: left}
+	arguments, err := p.parseCallArguments()
+	if err != nil {
+		return nil, err
+	}
+	expr.Arguments = arguments
+	return expr, nil
+}
+
+func (p *Parser) parseCallArguments() ([]ast.Expression, error) {
+	p.advance()
+
+	arguments := []ast.Expression{}
+	if p.expectCurLexem(lexer.RPAREN) {
+		p.advance()
+		return arguments, nil
+	}
+
+	expr, err := p.parseExpression(LOWEST)
+	if err != nil {
+		return nil, err
+	}
+	arguments = append(arguments, expr)
+
+	for p.expectCurLexem(lexer.COMA) {
+		p.advance()
+		expr, err := p.parseExpression(LOWEST)
+		if err != nil {
+			return nil, err
+		}
+		arguments = append(arguments, expr)
+	}
+
+	p.advance()
+	return arguments, nil
 }

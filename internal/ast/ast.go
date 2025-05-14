@@ -2,6 +2,7 @@ package ast
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pblazh/csvss/internal/lexer"
 )
@@ -96,6 +97,31 @@ type InfixExpression struct {
 
 func (s InfixExpression) String() string {
 	return fmt.Sprintf("(%s %s %s)", s.Operator.Literal, s.Left, s.Right)
+}
+
+type CallExpression struct {
+	Expression
+	Identifier Expression
+	Arguments  []Expression
+}
+
+func (s CallExpression) String() string {
+	b := strings.Builder{}
+	b.WriteString("(")
+	b.WriteString(s.Identifier.String())
+	if len(s.Arguments) > 0 {
+		b.WriteString(" ")
+	}
+
+	for i, arg := range s.Arguments {
+		b.WriteString(arg.String())
+		if i < len(s.Arguments)-1 {
+			b.WriteString(" ")
+		}
+	}
+	b.WriteString(")")
+
+	return b.String()
 }
 
 type Program []Statement
