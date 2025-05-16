@@ -352,6 +352,33 @@ func TestLexer(t *testing.T) {
 				},
 			},
 		},
+		{
+			name:  "string expressions",
+			input: "\"some \\\"string\"",
+			expected: []Lexem{
+				{
+					Type:    STRING,
+					Literal: "\"some \\\"string\"",
+					Position: scanner.Position{
+						Column: 1,
+					},
+				},
+			},
+		},
+
+		{
+			name:  "single quote string expressions",
+			input: "'some \\'string'",
+			expected: []Lexem{
+				{
+					Type:    STRING,
+					Literal: "'some \\'string'",
+					Position: scanner.Position{
+						Column: 1,
+					},
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {

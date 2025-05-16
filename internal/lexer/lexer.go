@@ -23,6 +23,16 @@ func (l *Lexer) Next() Lexem {
 		}
 	}
 
+	if literal[0] == '"' || literal[0] == '\'' {
+		lex := Lexem{
+			Type:     STRING,
+			Literal:  literal,
+			Position: l.scanner.Position,
+		}
+		l.scanner.Scan()
+		return lex
+	}
+
 	if literal == "=" && l.scanner.Peek() == '=' {
 		lex := Lexem{
 			Type:     EQUAL,

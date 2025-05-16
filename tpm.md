@@ -19,3 +19,4 @@
   - [x] #06.09: Parse parenthesis
   - [x] #06.10: Parse call expressions
   - [x] #06.11: Parse range expressions
+  - [x] #06.12: Parse string expressions

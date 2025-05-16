@@ -78,6 +78,15 @@ func (s FloatExpression) String() string {
 	return fmt.Sprintf("<float %.2f>", s.Value)
 }
 
+type StringExpression struct {
+	Expression
+	Right lexer.Lexem
+}
+
+func (s StringExpression) String() string {
+	return fmt.Sprintf("<str %s>", s.Right.Literal)
+}
+
 type PrefixExpression struct {
 	Expression
 	Operator lexer.Lexem

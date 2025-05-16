@@ -24,6 +24,7 @@ const (
 	INT              = "INT"
 	FLOAT            = "FLOAT"
 	TRUE             = "TRUE"
+	STRING           = "STRING"
 	FALSE            = "FALSE"
 	ASSIGN           = "ASSIGN"
 	PLUS             = "PLUS"

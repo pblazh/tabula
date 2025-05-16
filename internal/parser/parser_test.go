@@ -103,6 +103,11 @@ func TestPaser(t *testing.T) {
 			output: "(: A B);",
 		},
 		{
+			name:   "string expression",
+			input:  "let a = \"hello\";",
+			output: "let a = <str \"hello\">;",
+		},
+		{
 			name:   "multiple statements",
 			input:  "let A1 = 5.6;\nlet A2 = x;\nlet A3 = sum(A1:A2);",
 			output: "let A1 = <float 5.60>;let A2 = x;let A3 = (sum (: A1 A2));",
