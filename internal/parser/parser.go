@@ -68,8 +68,14 @@ func (p *Parser) nextTokenIs(typ lexer.LexemType) bool {
 func (p *Parser) Parse() (ast.Program, error) {
 	program := make([]ast.Statement, 0)
 
-	p.advance()
-	p.advance()
+	err := p.advance()
+	if err != nil {
+		return nil, err
+	}
+	err = p.advance()
+	if err != nil {
+		return nil, err
+	}
 
 	for p.cur.Type != lexer.EOF {
 		switch p.cur.Type {
@@ -91,11 +97,15 @@ func (p *Parser) Parse() (ast.Program, error) {
 	return program, nil
 }
 
-func (p *Parser) advance() {
+func (p *Parser) advance() error {
 	p.cur = p.nex
 
-	nex, _ := p.lex.Next()
+	nex, err := p.lex.Next()
+	if err != nil {
+		return err
+	}
 	p.nex = nex
+	return nil
 }
 
 func (p *Parser) expectCurLexem(typ lexer.LexemType) bool {
@@ -111,7 +121,11 @@ func (p *Parser) registerInfix(l lexer.LexemType, parse infixParse) {
 }
 
 func (p *Parser) parseLetStatement() (ast.Statement, error) {
-	p.advance()
+	err := p.advance()
+	if err != nil {
+		return nil, err
+	}
+
 	if !p.expectCurLexem(lexer.IDENT) {
 		return nil, fmt.Errorf("expected an identifier, but got %s at %v", p.cur.Literal, p.cur.Position)
 	}
@@ -119,19 +133,29 @@ func (p *Parser) parseLetStatement() (ast.Statement, error) {
 	statement := ast.LetStatement{
 		Identifier: ast.IdentifierExpression{Right: p.cur},
 	}
-	p.advance()
+	err = p.advance()
+	if err != nil {
+		return nil, err
+	}
+
 	if !p.expectCurLexem(lexer.ASSIGN) {
 		return nil, fmt.Errorf("expected =, but got %v", p.cur)
 	}
 
-	p.advance()
+	err = p.advance()
+	if err != nil {
+		return nil, err
+	}
 	expression, err := p.parseExpression(LOWEST)
 	if err != nil {
 		return nil, err
 	}
 	statement.Right = expression
 	if p.expectCurLexem(lexer.SEMI) {
-		p.advance()
+		err = p.advance()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return statement, nil
@@ -149,7 +173,10 @@ func (p *Parser) parseExpressionStatement() (ast.Statement, error) {
 
 	statement.Right = expression
 	if p.expectCurLexem(lexer.SEMI) {
-		p.advance()
+		err := p.advance()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return statement, nil
@@ -184,7 +211,10 @@ func (p *Parser) parseExpression(precendence int) (ast.Expression, error) {
 
 func (p *Parser) parseIdentifier() (ast.Expression, error) {
 	expr := ast.IdentifierExpression{Right: p.cur}
-	p.advance()
+	err := p.advance()
+	if err != nil {
+		return nil, err
+	}
 	return expr, nil
 }
 
@@ -194,7 +224,10 @@ func (p *Parser) parseInt() (ast.Expression, error) {
 		return nil, err
 	}
 	expr := ast.IntExpression{Right: p.cur, Value: value}
-	p.advance()
+	err = p.advance()
+	if err != nil {
+		return nil, err
+	}
 	return expr, nil
 }
 
@@ -205,24 +238,36 @@ func (p *Parser) parseFloat() (ast.Expression, error) {
 	}
 
 	expr := ast.FloatExpression{Right: p.cur, Value: value}
-	p.advance()
+	err = p.advance()
+	if err != nil {
+		return nil, err
+	}
 	return expr, nil
 }
 
 func (p *Parser) parseBool() (ast.Expression, error) {
 	expr := ast.BooleanExpression{Right: p.cur, Value: p.cur.Type == lexer.TRUE}
-	p.advance()
+	err := p.advance()
+	if err != nil {
+		return nil, err
+	}
 	return expr, nil
 }
 
 func (p *Parser) parseString() (ast.Expression, error) {
 	expr := ast.StringExpression{Right: p.cur}
-	p.advance()
+	err := p.advance()
+	if err != nil {
+		return nil, err
+	}
 	return expr, nil
 }
 
 func (p *Parser) parseLparen() (ast.Expression, error) {
-	p.advance()
+	err := p.advance()
+	if err != nil {
+		return nil, err
+	}
 	expression, err := p.parseExpression(LOWEST)
 	if err != nil {
 		return nil, err
@@ -231,7 +276,10 @@ func (p *Parser) parseLparen() (ast.Expression, error) {
 	if !p.expectCurLexem(lexer.RPAREN) {
 		return nil, fmt.Errorf("expected right paren, but got %v", p.cur)
 	}
-	p.advance()
+	err = p.advance()
+	if err != nil {
+		return nil, err
+	}
 
 	return expression, nil
 }
@@ -242,7 +290,10 @@ func (p *Parser) parsePrefix() (ast.Expression, error) {
 	}
 
 	prefix := ast.PrefixExpression{Operator: p.cur}
-	p.advance()
+	err := p.advance()
+	if err != nil {
+		return nil, err
+	}
 	expression, err := p.parseExpression(PREFIX)
 	if err != nil {
 		return nil, err
@@ -259,7 +310,10 @@ func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
 	}
 
 	precedence := p.curretnPrecedence()
-	p.advance()
+	err := p.advance()
+	if err != nil {
+		return nil, err
+	}
 	right, err := p.parseExpression(precedence)
 	if err != nil {
 		return nil, err
@@ -280,11 +334,17 @@ func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error
 }
 
 func (p *Parser) parseCallArguments() ([]ast.Expression, error) {
-	p.advance()
+	err := p.advance()
+	if err != nil {
+		return nil, err
+	}
 
 	arguments := []ast.Expression{}
 	if p.expectCurLexem(lexer.RPAREN) {
-		p.advance()
+		err = p.advance()
+		if err != nil {
+			return nil, err
+		}
 		return arguments, nil
 	}
 
@@ -295,7 +355,10 @@ func (p *Parser) parseCallArguments() ([]ast.Expression, error) {
 	arguments = append(arguments, expr)
 
 	for p.expectCurLexem(lexer.COMA) {
-		p.advance()
+		err := p.advance()
+		if err != nil {
+			return nil, err
+		}
 		expr, err := p.parseExpression(LOWEST)
 		if err != nil {
 			return nil, err
@@ -303,6 +366,9 @@ func (p *Parser) parseCallArguments() ([]ast.Expression, error) {
 		arguments = append(arguments, expr)
 	}
 
-	p.advance()
+	err = p.advance()
+	if err != nil {
+		return nil, err
+	}
 	return arguments, nil
 }
