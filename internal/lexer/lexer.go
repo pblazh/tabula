@@ -1,6 +1,7 @@
 package lexer
 
 import (
+	"fmt"
 	"io"
 	"strings"
 	"text/scanner"
@@ -8,69 +9,79 @@ import (
 )
 
 type Lexer struct {
-	scanner  scanner.Scanner
-	Filename string
+	scanner          *scanner.Scanner
+	lastErrorMessage string
+	errorCount       int
 }
 
-func (l *Lexer) Next() Lexem {
+func (l *Lexer) Next() (Lexem, error) {
 	tok := l.scanner.Scan()
 	literal := l.scanner.TokenText()
+
+	if l.scanner.ErrorCount > l.errorCount {
+		l.errorCount = l.scanner.ErrorCount
+
+		return Lexem{
+			Type:     ERROR,
+			Position: l.scanner.Position,
+		}, fmt.Errorf("%s at %v", l.lastErrorMessage, l.scanner.Position)
+	}
 
 	if tok == scanner.EOF {
 		return Lexem{
 			Type:     EOF,
 			Position: l.scanner.Position,
-		}
+		}, nil
 	}
 
 	if literal[0] == '"' || literal[0] == '\'' {
-		lex := Lexem{
+		lexem := Lexem{
 			Type:     STRING,
 			Literal:  literal,
 			Position: l.scanner.Position,
 		}
 		l.scanner.Scan()
-		return lex
+		return lexem, nil
 	}
 
 	if literal == "=" && l.scanner.Peek() == '=' {
-		lex := Lexem{
+		lexem := Lexem{
 			Type:     EQUAL,
 			Literal:  "==",
 			Position: l.scanner.Position,
 		}
 		l.scanner.Scan()
-		return lex
+		return lexem, nil
 	}
 
 	if literal == "!" && l.scanner.Peek() == '=' {
-		lex := Lexem{
+		lexem := Lexem{
 			Type:     NOT_EQUAL,
 			Literal:  "!=",
 			Position: l.scanner.Position,
 		}
 		l.scanner.Scan()
-		return lex
+		return lexem, nil
 	}
 
 	if literal == ">" && l.scanner.Peek() == '=' {
-		lex := Lexem{
+		lexem := Lexem{
 			Type:     GREATER_OR_EQUAL,
 			Literal:  ">=",
 			Position: l.scanner.Position,
 		}
 		l.scanner.Scan()
-		return lex
+		return lexem, nil
 	}
 
 	if literal == "<" && l.scanner.Peek() == '=' {
-		lex := Lexem{
+		lexem := Lexem{
 			Type:     LESS_OR_EQUAL,
 			Literal:  "<=",
 			Position: l.scanner.Position,
 		}
 		l.scanner.Scan()
-		return lex
+		return lexem, nil
 	}
 
 	if literal == "let" {
@@ -78,7 +89,7 @@ func (l *Lexer) Next() Lexem {
 			Type:     LET,
 			Literal:  literal,
 			Position: l.scanner.Position,
-		}
+		}, nil
 	}
 
 	if literal == "true" {
@@ -86,7 +97,7 @@ func (l *Lexer) Next() Lexem {
 			Type:     TRUE,
 			Literal:  literal,
 			Position: l.scanner.Position,
-		}
+		}, nil
 	}
 
 	if literal == "false" {
@@ -94,7 +105,7 @@ func (l *Lexer) Next() Lexem {
 			Type:     FALSE,
 			Literal:  literal,
 			Position: l.scanner.Position,
-		}
+		}, nil
 	}
 
 	if unicode.IsDigit(rune(literal[0])) && strings.Contains(literal, ".") {
@@ -102,7 +113,7 @@ func (l *Lexer) Next() Lexem {
 			Type:     FLOAT,
 			Literal:  literal,
 			Position: l.scanner.Position,
-		}
+		}, nil
 	}
 
 	if unicode.IsDigit(rune(literal[0])) && !strings.Contains(literal, ".") {
@@ -110,7 +121,7 @@ func (l *Lexer) Next() Lexem {
 			Type:     INT,
 			Literal:  literal,
 			Position: l.scanner.Position,
-		}
+		}, nil
 	}
 
 	if unicode.IsLetter(rune(literal[0])) {
@@ -118,7 +129,7 @@ func (l *Lexer) Next() Lexem {
 			Type:     IDENT,
 			Literal:  literal,
 			Position: l.scanner.Position,
-		}
+		}, nil
 	}
 
 	if t, ok := lexems[literal]; ok {
@@ -126,20 +137,30 @@ func (l *Lexer) Next() Lexem {
 			Type:     t,
 			Literal:  literal,
 			Position: l.scanner.Position,
-		}
+		}, nil
 	}
 
 	return Lexem{
 		Type:     ILLEGAL,
 		Literal:  literal,
 		Position: l.scanner.Position,
-	}
+	}, nil
 }
 
 func New(r io.Reader, filename string) *Lexer {
 	var s scanner.Scanner
-	s.Init(r)
 	s.Filename = filename
+	s.Init(r)
 
-	return &Lexer{s, filename}
+	lexer := &Lexer{
+		scanner:          &s,
+		lastErrorMessage: "",
+		errorCount:       0,
+	}
+
+	s.Error = func(s *scanner.Scanner, msg string) {
+		lexer.lastErrorMessage = msg
+	}
+
+	return lexer
 }

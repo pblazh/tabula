@@ -112,13 +112,26 @@ func TestPaser(t *testing.T) {
 			input:  "let A1 = 5.6;\nlet A2 = x;\nlet A3 = sum(A1:A2);",
 			output: "let A1 = <float 5.60>;let A2 = x;let A3 = (sum (: A1 A2));",
 		},
+		{
+			name:   "one statements",
+			input:  "A1",
+			output: "A1;",
+		},
+		{
+			name:   "no statements",
+			input:  "",
+			output: "",
+		},
 	}
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
 			lex := lexer.New(strings.NewReader(tc.input), tc.name)
 			parser := New(lex)
-			program := parser.Parse()
+			program, err := parser.Parse()
+			if err != nil {
+				t.Errorf("Unexpected error '%v'", err)
+			}
 
 			literal := ""
 			for _, statement := range program {

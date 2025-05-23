@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -66,7 +65,7 @@ func (p *Parser) nextTokenIs(typ lexer.LexemType) bool {
 	return p.nex.Type == typ
 }
 
-func (p *Parser) Parse() ast.Program {
+func (p *Parser) Parse() (ast.Program, error) {
 	program := make([]ast.Statement, 0)
 
 	p.advance()
@@ -77,24 +76,26 @@ func (p *Parser) Parse() ast.Program {
 		case lexer.LET:
 			stm, err := p.parseLetStatement()
 			if err != nil {
-				panic(err)
+				return nil, err
 			}
 			program = append(program, stm)
 		default:
 			stm, err := p.parseExpressionStatement()
 			if err != nil {
-				panic(err)
+				return nil, err
 			}
 			program = append(program, stm)
 		}
 	}
 
-	return program
+	return program, nil
 }
 
 func (p *Parser) advance() {
 	p.cur = p.nex
-	p.nex = p.lex.Next()
+
+	nex, _ := p.lex.Next()
+	p.nex = nex
 }
 
 func (p *Parser) expectCurLexem(typ lexer.LexemType) bool {
@@ -112,7 +113,7 @@ func (p *Parser) registerInfix(l lexer.LexemType, parse infixParse) {
 func (p *Parser) parseLetStatement() (ast.Statement, error) {
 	p.advance()
 	if !p.expectCurLexem(lexer.IDENT) {
-		return nil, fmt.Errorf("expected an identifier, but got %v", p.cur)
+		return nil, fmt.Errorf("expected an identifier, but got %s at %v", p.cur.Literal, p.cur.Position)
 	}
 
 	statement := ast.LetStatement{
@@ -158,7 +159,7 @@ func (p *Parser) parseExpression(precendence int) (ast.Expression, error) {
 	prefix := p.prefixParsers[p.cur.Type]
 
 	if prefix == nil {
-		return nil, errors.New("parser not found for " + p.cur.Literal)
+		return nil, fmt.Errorf("unexpected %s at %v", p.cur.Literal, p.cur.Position)
 	}
 
 	leftExpr, err := prefix()

@@ -11,6 +11,7 @@ func TestLexer(t *testing.T) {
 		name     string
 		input    string
 		expected []Lexem
+		error    string
 	}{
 		{
 			name:  "supported tokens",
@@ -365,19 +366,31 @@ func TestLexer(t *testing.T) {
 				},
 			},
 		},
-
 		{
-			name:  "single quote string expressions",
-			input: "'some \\'string'",
+			name:  "invalid quotes",
+			input: "'somestring",
 			expected: []Lexem{
 				{
-					Type:    STRING,
-					Literal: "'some \\'string'",
+					Type: ERROR,
 					Position: scanner.Position{
 						Column: 1,
 					},
 				},
 			},
+			error: "invalid char literal at invalid quotes:1:1",
+		},
+		{
+			name:  "unmached quote",
+			input: " \"some",
+			expected: []Lexem{
+				{
+					Type: ERROR,
+					Position: scanner.Position{
+						Column: 2,
+					},
+				},
+			},
+			error: "literal not terminated at unmached quote:1:2",
 		},
 	}
 
@@ -387,8 +400,9 @@ func TestLexer(t *testing.T) {
 			lexer := New(r, test.name)
 
 			for _, lexem := range test.expected {
-				next := lexer.Next()
+				next, err := lexer.Next()
 				EqualLexems(t, next, lexem)
+				ExpectError(t, err, test.error)
 			}
 		})
 	}
@@ -401,5 +415,16 @@ func EqualLexems(t testing.TB, a, b Lexem) {
 		a.Literal != b.Literal ||
 		a.Column != b.Column {
 		t.Errorf("Expected %v to equal %v", a, b)
+	}
+}
+
+func ExpectError(t testing.TB, err error, expected string) {
+	t.Helper()
+	if err == nil || expected == "" {
+		return
+	}
+
+	if err.Error() != expected {
+		t.Errorf("Expected %s to equal %s", err, expected)
 	}
 }

@@ -18,8 +18,9 @@ func (t Lexem) String() string {
 }
 
 const (
-	IDENT            = "IDENT"
+	ERROR            = "ERROR"
 	ILLEGAL          = "ILLEGAL"
+	IDENT            = "IDENT"
 	EOF              = "EOF"
 	INT              = "INT"
 	FLOAT            = "FLOAT"
