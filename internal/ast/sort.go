@@ -33,6 +33,8 @@ func ExtractDependencies(expr Expression) []string {
 		for _, arg := range e.Arguments {
 			deps = append(deps, ExtractDependencies(arg)...)
 		}
+	case RangeExpression:
+		deps = append(deps, e.Cells...)
 	default:
 		// No dependencies for literal expressions
 	}

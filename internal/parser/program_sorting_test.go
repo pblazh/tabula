@@ -62,10 +62,11 @@ C1 * 2;`,
 		},
 		{
 			name: "range expression dependencies",
-			input: `let A1 = SUM(B1:C1);
+			input: `let D1 = SUM(A1:C1);
 let B1 = 10;
-let C1 = 30;`,
-			output: "let B1 = <int 10>;let C1 = <int 30>;let A1 = (SUM (: B1 C1));",
+let C1 = 20;
+let E1 = 30;`,
+			output: "let B1 = <int 10>;let C1 = <int 20>;let D1 = (SUM (: A1 B1 C1));let E1 = <int 30>;",
 		},
 		{
 			name: "prefix expression dependencies",

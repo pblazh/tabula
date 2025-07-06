@@ -22,4 +22,4 @@
   - [x] #06.12: Parse string expressions
 - [x] #07: Test parser errors
 - [x] #08: Sort statements topologically
-- [ ] #09: Parse range expressions into a list of cells
+- [x] #09: Parse range expressions into a list of cells

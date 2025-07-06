@@ -134,4 +134,13 @@ func (expr CallExpression) String() string {
 	return b.String()
 }
 
+type RangeExpression struct {
+	Expression
+	Cells []string
+}
+
+func (expr RangeExpression) String() string {
+	return fmt.Sprintf("(: %s)", strings.Join(expr.Cells, " "))
+}
+
 type Program []Statement

@@ -28,6 +28,11 @@ func TestParserErrors(t *testing.T) {
 			input:  "let x = \"9;",
 			output: "literal not terminated at not terminated quote:1:9",
 		},
+		{
+			name:   "invalid range with variables",
+			input:  "A:B;",
+			output: "range must contain valid cell references (like A1:B2), got A:B",
+		},
 	}
 
 	for _, tc := range testcases {

@@ -99,8 +99,8 @@ func TestParser(t *testing.T) {
 		},
 		{
 			name:   "range expression",
-			input:  "A:B;",
-			output: "(: A B);",
+			input:  "A1:B1;",
+			output: "(: A1 B1);",
 		},
 		{
 			name:   "string expression",

@@ -306,6 +306,11 @@ func (p *Parser) parsePrefix() (ast.Expression, error) {
 }
 
 func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
+	// Check if this is a range operator (:)
+	if p.cur.Type == lexer.COLUMN {
+		return p.parseRange(left)
+	}
+
 	expression := ast.InfixExpression{
 		Operator: p.cur,
 		Left:     left,
@@ -323,6 +328,29 @@ func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
 	expression.Right = right
 
 	return expression, nil
+}
+
+func (p *Parser) parseRange(left ast.Expression) (ast.Expression, error) {
+	// advance past the ':'
+	if err := p.advance(); err != nil {
+		return nil, err
+	}
+
+	// parse the right side
+	right, err := p.parseExpression(LOWEST)
+	if err != nil {
+		return nil, err
+	}
+
+	// extract identifiers and expand the range (ExpandRange handles validation)
+	leftIdent := left.(ast.IdentifierExpression)
+	rightIdent := right.(ast.IdentifierExpression)
+	cells, err := ast.ExpandRange(leftIdent.Token.Literal, rightIdent.Token.Literal)
+	if err != nil {
+		return nil, err
+	}
+
+	return ast.RangeExpression{Cells: cells}, nil
 }
 
 func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error) {
