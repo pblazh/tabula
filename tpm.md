@@ -26,4 +26,4 @@
 - [x] #10: Make cell addresses case insensitive
 - [ ] #11: Allow assigning to the range expression
 - [ ] #12: Evaluation
-  - [ ] #12.1: Setup evaluation
+  - [x] #12.1: Setup evaluation
