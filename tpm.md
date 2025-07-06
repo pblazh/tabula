@@ -23,3 +23,7 @@
 - [x] #07: Test parser errors
 - [x] #08: Sort statements topologically
 - [x] #09: Parse range expressions into a list of cells
+- [x] #10: Make cell addresses case insensitive
+- [ ] #11: Allow assigning to the range expression
+- [ ] #12: Evaluation
+  - [ ] #12.1: Setup evaluation

@@ -22,6 +22,7 @@ type Parser struct {
 
 	prefixParsers map[lexer.TokenType]prefixParse
 	infixParsers  map[lexer.TokenType]infixParse
+	identifiers   []string
 }
 
 func New(lex *lexer.Lexer) *Parser {
@@ -29,6 +30,7 @@ func New(lex *lexer.Lexer) *Parser {
 		lex:           lex,
 		prefixParsers: make(map[lexer.TokenType]prefixParse),
 		infixParsers:  make(map[lexer.TokenType]infixParse),
+		identifiers:   make([]string, 0),
 	}
 
 	parser.registerPrefix(lexer.IDENT, parser.parseIdentifier)
@@ -67,16 +69,17 @@ func (p *Parser) nextTokenIs(typ lexer.TokenType) bool {
 	return p.nex.Type == typ
 }
 
-func (p *Parser) Parse() (ast.Program, error) {
+func (p *Parser) Parse() (ast.Program, []string, error) {
 	program := make([]ast.Statement, 0)
+	p.identifiers = make([]string, 0) // Reset identifiers for each parse
 
 	err := p.advance()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	err = p.advance()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	for p.cur.Type != lexer.EOF {
@@ -84,19 +87,19 @@ func (p *Parser) Parse() (ast.Program, error) {
 		case lexer.LET:
 			stm, err := p.parseLetStatement()
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			program = append(program, stm)
 		default:
 			stm, err := p.parseExpressionStatement()
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			program = append(program, stm)
 		}
 	}
 
-	return program, nil
+	return program, p.identifiers, nil
 }
 
 func (p *Parser) advance() error {
@@ -131,6 +134,9 @@ func (p *Parser) parseLetStatement() (ast.Statement, error) {
 	if !p.expectCurrentToken(lexer.IDENT) {
 		return nil, fmt.Errorf("expected an identifier, but got %s at %v", p.cur.Literal, p.cur.Position)
 	}
+
+	// Add let statement identifier to the list
+	p.identifiers = append(p.identifiers, p.cur.Literal)
 
 	statement := ast.LetStatement{
 		Identifier: ast.IdentifierExpression{Token: p.cur},
@@ -212,6 +218,9 @@ func (p *Parser) parseExpression(precedence int) (ast.Expression, error) {
 }
 
 func (p *Parser) parseIdentifier() (ast.Expression, error) {
+	// Add identifier to the list
+	p.identifiers = append(p.identifiers, p.cur.Literal)
+
 	expr := ast.IdentifierExpression{Token: p.cur}
 	err := p.advance()
 	if err != nil {

@@ -89,7 +89,7 @@ func TestParserRanges(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			lex := lexer.New(strings.NewReader(tc.input), tc.name)
 			parser := New(lex)
-			program, err := parser.Parse()
+			program, _, err := parser.Parse()
 			if err != nil {
 				t.Errorf("Unexpected error '%v'", err)
 			}

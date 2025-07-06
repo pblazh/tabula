@@ -39,7 +39,7 @@ func TestParserErrors(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			lex := lexer.New(strings.NewReader(tc.input), tc.name)
 			parser := New(lex)
-			res, err := parser.Parse()
+			res, _, err := parser.Parse()
 
 			if err == nil {
 				t.Errorf("Expected '%s' to return error '%s', but got %s", tc.input, tc.output, res)
