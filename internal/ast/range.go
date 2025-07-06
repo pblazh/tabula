@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"fmt"
 	"strconv"
 	"unicode"
 )
@@ -52,21 +53,17 @@ func numberToColumn(num int) string {
 	return result
 }
 
-// ExpandRange expands a range like "A1:C1" into ["A1", "B1", "C1"]
-func ExpandRange(start, end string) []string {
+func ExpandRange(start, end string) ([]string, error) {
 	startCol, startRow, startOk := ParseCell(start)
 	endCol, endRow, endOk := ParseCell(end)
 
 	if !startOk || !endOk {
-		// If we can't parse the cells, just return the endpoints
-		return []string{start, end}
+		return nil, fmt.Errorf("range must contain valid cell references (like A1:B2), got %s:%s", start, end)
 	}
 
-	// Convert columns to numbers for consistent handling
 	startColNum := columnToNumber(startCol)
 	endColNum := columnToNumber(endCol)
 
-	// Determine iteration direction
 	colStep := 1
 	if startColNum > endColNum {
 		colStep = -1
@@ -77,7 +74,6 @@ func ExpandRange(start, end string) []string {
 		rowStep = -1
 	}
 
-	// Generate all cells in the rectangle (handles single row, single column, and full rectangles)
 	var result []string
 	for row := startRow; (rowStep > 0 && row <= endRow) || (rowStep < 0 && row >= endRow); row += rowStep {
 		for colNum := startColNum; (colStep > 0 && colNum <= endColNum) || (colStep < 0 && colNum >= endColNum); colNum += colStep {
@@ -86,5 +82,5 @@ func ExpandRange(start, end string) []string {
 		}
 	}
 
-	return result
+	return result, nil
 }
