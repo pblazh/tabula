@@ -5,6 +5,7 @@ package parser
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/lexer"
@@ -218,10 +219,16 @@ func (p *Parser) parseExpression(precedence int) (ast.Expression, error) {
 }
 
 func (p *Parser) parseIdentifier() (ast.Expression, error) {
-	// Add identifier to the list
-	p.identifiers = append(p.identifiers, p.cur.Literal)
+	// Add identifier to the list (convert cell identifiers to uppercase)
+	literal := p.cur.Literal
+	token := p.cur
+	if ast.IsCellIdentifier(literal) {
+		literal = strings.ToUpper(literal)
+		token.Literal = literal // Also update the token for the AST
+	}
+	p.identifiers = append(p.identifiers, literal)
 
-	expr := ast.IdentifierExpression{Token: p.cur}
+	expr := ast.IdentifierExpression{Token: token}
 	err := p.advance()
 	if err != nil {
 		return nil, err
@@ -351,9 +358,9 @@ func (p *Parser) parseRange(left ast.Expression) (ast.Expression, error) {
 		return nil, err
 	}
 
-	// extract identifiers and expand the range (ExpandRange handles validation)
 	leftIdent := left.(ast.IdentifierExpression)
 	rightIdent := right.(ast.IdentifierExpression)
+
 	cells, err := ast.ExpandRange(leftIdent.Token.Literal, rightIdent.Token.Literal)
 	if err != nil {
 		return nil, err

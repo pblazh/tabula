@@ -36,7 +36,7 @@ func TestParserIdentifiers(t *testing.T) {
 		{
 			name:        "range expression",
 			input:       "a1:B2;",
-			expectedIds: []string{"a1", "B2"},
+			expectedIds: []string{"A1", "B2"},
 		},
 		{
 			name:        "no identifiers",

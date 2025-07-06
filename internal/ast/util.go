@@ -1,6 +1,10 @@
 package ast
 
-import "regexp"
+import (
+	"regexp"
+	"strconv"
+	"strings"
+)
 
 // IsCellIdentifier returns true if the identifier matches A1 cell name format
 func IsCellIdentifier(identifier string) bool {
@@ -25,4 +29,16 @@ func NumberToColumn(num int) string {
 		num /= 26
 	}
 	return result
+}
+
+// parseCell parses a cell reference like "A1" into column and row components
+func parseCell(cell string) (string, int) {
+	cellRegex := regexp.MustCompile(`^([A-Za-z]+)([0-9]+)$`)
+	matches := cellRegex.FindStringSubmatch(cell)
+
+	col := strings.ToUpper(matches[1]) // Convert column to uppercase for consistency
+	rowStr := matches[2]
+
+	row, _ := strconv.Atoi(rowStr)
+	return col, row
 }

@@ -15,7 +15,7 @@ func TestParserRanges(t *testing.T) {
 	}{
 		{
 			name:   "range expression",
-			input:  "A1:B1;",
+			input:  "a1:B1;",
 			output: "(: A1 B1);",
 		},
 		{
