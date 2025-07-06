@@ -1,3 +1,4 @@
+// Package ast defines the abstract syntax tree nodes for the CSV spreadsheet language.
 package ast
 
 import (
@@ -18,21 +19,21 @@ type Statement interface {
 type LetStatement struct {
 	Statement
 	Identifier IdentifierExpression
-	Right      Expression
+	Value      Expression
 }
 
-func (s LetStatement) String() string {
-	return fmt.Sprintf("let %s = %s;", s.Identifier.String(), s.Right)
+func (stmt LetStatement) String() string {
+	return fmt.Sprintf("let %s = %s;", stmt.Identifier.String(), stmt.Value)
 }
 
 type ExpressionStatement struct {
 	Statement
-	Token lexer.Lexem
-	Right Expression
+	Token lexer.Token
+	Value Expression
 }
 
-func (s ExpressionStatement) String() string {
-	return s.Right.String() + ";"
+func (stmt ExpressionStatement) String() string {
+	return stmt.Value.String() + ";"
 }
 
 type Expression interface {
@@ -41,71 +42,71 @@ type Expression interface {
 
 type IdentifierExpression struct {
 	Expression
-	Right lexer.Lexem
+	Token lexer.Token
 }
 
-func (s IdentifierExpression) String() string {
-	return s.Right.Literal
+func (expr IdentifierExpression) String() string {
+	return expr.Token.Literal
 }
 
 type BooleanExpression struct {
 	Expression
-	Right lexer.Lexem
+	Token lexer.Token
 	Value bool
 }
 
-func (s BooleanExpression) String() string {
-	return fmt.Sprintf("<bool %v>", s.Value)
+func (expr BooleanExpression) String() string {
+	return fmt.Sprintf("<bool %v>", expr.Value)
 }
 
 type IntExpression struct {
 	Expression
-	Right lexer.Lexem
+	Token lexer.Token
 	Value int
 }
 
-func (s IntExpression) String() string {
-	return fmt.Sprintf("<int %d>", s.Value)
+func (expr IntExpression) String() string {
+	return fmt.Sprintf("<int %d>", expr.Value)
 }
 
 type FloatExpression struct {
 	Expression
-	Right lexer.Lexem
+	Token lexer.Token
 	Value float64
 }
 
-func (s FloatExpression) String() string {
-	return fmt.Sprintf("<float %.2f>", s.Value)
+func (expr FloatExpression) String() string {
+	return fmt.Sprintf("<float %.2f>", expr.Value)
 }
 
 type StringExpression struct {
 	Expression
-	Right lexer.Lexem
+	Token lexer.Token
 }
 
-func (s StringExpression) String() string {
-	return fmt.Sprintf("<str %s>", s.Right.Literal)
+func (expr StringExpression) String() string {
+	return fmt.Sprintf("<str %s>", expr.Token.Literal)
 }
 
 type PrefixExpression struct {
 	Expression
-	Operator lexer.Lexem
+	Operator lexer.Token
 	Right    Expression
 }
 
-func (s PrefixExpression) String() string {
-	return fmt.Sprintf("(%s %s)", s.Operator.Literal, s.Right)
+func (expr PrefixExpression) String() string {
+	return fmt.Sprintf("(%s %s)", expr.Operator.Literal, expr.Right)
 }
 
 type InfixExpression struct {
 	Expression
 	Left     Expression
-	Operator lexer.Lexem
+	Operator lexer.Token
 	Right    Expression
 }
 
-func (s InfixExpression) String() string {
-	return fmt.Sprintf("(%s %s %s)", s.Operator.Literal, s.Left, s.Right)
+func (expr InfixExpression) String() string {
+	return fmt.Sprintf("(%s %s %s)", expr.Operator.Literal, expr.Left, expr.Right)
 }
 
 type CallExpression struct {
@@ -114,17 +115,17 @@ type CallExpression struct {
 	Arguments  []Expression
 }
 
-func (s CallExpression) String() string {
+func (expr CallExpression) String() string {
 	b := strings.Builder{}
 	b.WriteString("(")
-	b.WriteString(s.Identifier.String())
-	if len(s.Arguments) > 0 {
+	b.WriteString(expr.Identifier.String())
+	if len(expr.Arguments) > 0 {
 		b.WriteString(" ")
 	}
 
-	for i, arg := range s.Arguments {
+	for i, arg := range expr.Arguments {
 		b.WriteString(arg.String())
-		if i < len(s.Arguments)-1 {
+		if i < len(expr.Arguments)-1 {
 			b.WriteString(" ")
 		}
 	}

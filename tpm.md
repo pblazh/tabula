@@ -21,3 +21,4 @@
   - [x] #06.11: Parse range expressions
   - [x] #06.12: Parse string expressions
 - [x] #07: Test parser errors
+- [x] #08: Sort statements topologically

@@ -10,13 +10,13 @@ func TestLexer(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    string
-		expected []Lexem
+		expected []Token
 		error    string
 	}{
 		{
 			name:  "supported tokens",
 			input: "=+-*/()%",
-			expected: []Lexem{
+			expected: []Token{
 				{
 					Type:    ASSIGN,
 					Literal: "=",
@@ -85,7 +85,7 @@ func TestLexer(t *testing.T) {
 		{
 			name:  "expression",
 			input: "let A1=A2+34 * SUM(B1:B2, 9.1) % 9;",
-			expected: []Lexem{
+			expected: []Token{
 				{
 					Type:    LET,
 					Literal: "let",
@@ -171,7 +171,7 @@ func TestLexer(t *testing.T) {
 					},
 				},
 				{
-					Type:    COMA,
+					Type:    COMMA,
 					Literal: ",",
 					Position: scanner.Position{
 						Column: 25,
@@ -224,7 +224,7 @@ func TestLexer(t *testing.T) {
 		{
 			name:  "equal expression",
 			input: "a == b",
-			expected: []Lexem{
+			expected: []Token{
 				{
 					Type:    IDENT,
 					Literal: "a",
@@ -252,7 +252,7 @@ func TestLexer(t *testing.T) {
 		{
 			name:  "not equal expression",
 			input: "a != b",
-			expected: []Lexem{
+			expected: []Token{
 				{
 					Type:    IDENT,
 					Literal: "a",
@@ -280,7 +280,7 @@ func TestLexer(t *testing.T) {
 		{
 			name:  "greater equal expression",
 			input: "a >= b",
-			expected: []Lexem{
+			expected: []Token{
 				{
 					Type:    IDENT,
 					Literal: "a",
@@ -308,7 +308,7 @@ func TestLexer(t *testing.T) {
 		{
 			name:  "less equal expression",
 			input: "a <= b",
-			expected: []Lexem{
+			expected: []Token{
 				{
 					Type:    IDENT,
 					Literal: "a",
@@ -336,7 +336,7 @@ func TestLexer(t *testing.T) {
 		{
 			name:  "bool expressions",
 			input: "true false",
-			expected: []Lexem{
+			expected: []Token{
 				{
 					Type:    TRUE,
 					Literal: "true",
@@ -356,7 +356,7 @@ func TestLexer(t *testing.T) {
 		{
 			name:  "string expressions",
 			input: "\"some \\\"string\"",
-			expected: []Lexem{
+			expected: []Token{
 				{
 					Type:    STRING,
 					Literal: "\"some \\\"string\"",
@@ -369,7 +369,7 @@ func TestLexer(t *testing.T) {
 		{
 			name:  "invalid quotes",
 			input: "'somestring",
-			expected: []Lexem{
+			expected: []Token{
 				{
 					Type: ERROR,
 					Position: scanner.Position{
@@ -382,7 +382,7 @@ func TestLexer(t *testing.T) {
 		{
 			name:  "unmached quote",
 			input: " \"some",
-			expected: []Lexem{
+			expected: []Token{
 				{
 					Type: ERROR,
 					Position: scanner.Position{
@@ -399,16 +399,16 @@ func TestLexer(t *testing.T) {
 			r := strings.NewReader(test.input)
 			lexer := New(r, test.name)
 
-			for _, lexem := range test.expected {
+			for _, token := range test.expected {
 				next, err := lexer.Next()
-				EqualLexems(t, next, lexem)
+				EqualTokens(t, next, token)
 				ExpectError(t, err, test.error)
 			}
 		})
 	}
 }
 
-func EqualLexems(t testing.TB, a, b Lexem) {
+func EqualTokens(t testing.TB, a, b Token) {
 	t.Helper()
 
 	if a.Type != b.Type ||

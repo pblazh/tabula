@@ -7,7 +7,7 @@ import (
 	"github.com/pblazh/csvss/internal/lexer"
 )
 
-func TestPaser(t *testing.T) {
+func TestParser(t *testing.T) {
 	testcases := []struct {
 		name   string
 		input  string
@@ -144,7 +144,7 @@ func TestPaser(t *testing.T) {
 			}
 
 			if literal != output {
-				t.Errorf("Expected '%s' to equal '%s'", literal, tc.output)
+				t.Errorf("Expected '%s' to equal '%s'", literal, output)
 			}
 		})
 	}

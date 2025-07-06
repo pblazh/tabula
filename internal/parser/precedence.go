@@ -13,7 +13,7 @@ const (
 	CALL
 )
 
-var precedences = map[lexer.LexemType]int{
+var precedences = map[lexer.TokenType]int{
 	lexer.EQUAL:            EQUALS,
 	lexer.NOT_EQUAL:        EQUALS,
 	lexer.LESS:             LESSGREATER,

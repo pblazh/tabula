@@ -1,3 +1,5 @@
+// Package lexer provides lexical analysis for the CSV spreadsheet language.
+// It tokenizes input text into tokens that can be processed by the parser.
 package lexer
 
 import (
@@ -5,15 +7,15 @@ import (
 	"text/scanner"
 )
 
-type LexemType string
+type TokenType string
 
-type Lexem struct {
-	Type    LexemType
+type Token struct {
+	Type    TokenType
 	Literal string
 	scanner.Position
 }
 
-func (t Lexem) String() string {
+func (t Token) String() string {
 	return fmt.Sprintf("<%s:%s at %v>", t.Type, t.Literal, t.Position)
 }
 
@@ -36,7 +38,7 @@ const (
 	LPAREN           = "LPAREN"
 	RPAREN           = "RPAREN"
 	COLUMN           = "COLUMN"
-	COMA             = "COMA"
+	COMMA            = "COMMA"
 	LET              = "LET"
 	SEMI             = "SEMI"
 	EQUAL            = "EQUAL"
@@ -50,7 +52,7 @@ const (
 	OR               = "OR"
 )
 
-var lexems = map[string]LexemType{
+var tokens = map[string]TokenType{
 	"=":  ASSIGN,
 	"+":  PLUS,
 	"-":  MINUS,
@@ -60,7 +62,7 @@ var lexems = map[string]LexemType{
 	"(":  LPAREN,
 	")":  RPAREN,
 	":":  COLUMN,
-	",":  COMA,
+	",":  COMMA,
 	";":  SEMI,
 	"<":  LESS,
 	">":  GREATER,

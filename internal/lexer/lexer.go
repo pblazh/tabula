@@ -14,136 +14,136 @@ type Lexer struct {
 	errorCount       int
 }
 
-func (l *Lexer) Next() (Lexem, error) {
-	tok := l.scanner.Scan()
-	literal := l.scanner.TokenText()
+func (lexer *Lexer) Next() (Token, error) {
+	tok := lexer.scanner.Scan()
+	literal := lexer.scanner.TokenText()
 
-	if l.scanner.ErrorCount > l.errorCount {
-		l.errorCount = l.scanner.ErrorCount
+	if lexer.scanner.ErrorCount > lexer.errorCount {
+		lexer.errorCount = lexer.scanner.ErrorCount
 
-		return Lexem{
+		return Token{
 			Type:     ERROR,
-			Position: l.scanner.Position,
-		}, fmt.Errorf("%s at %v", l.lastErrorMessage, l.scanner.Position)
+			Position: lexer.scanner.Position,
+		}, fmt.Errorf("%s at %v", lexer.lastErrorMessage, lexer.scanner.Position)
 	}
 
 	if tok == scanner.EOF {
-		return Lexem{
+		return Token{
 			Type:     EOF,
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}, nil
 	}
 
 	if literal[0] == '"' || literal[0] == '\'' {
-		lexem := Lexem{
+		token := Token{
 			Type:     STRING,
 			Literal:  literal,
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}
-		l.scanner.Scan()
-		return lexem, nil
+		lexer.scanner.Scan()
+		return token, nil
 	}
 
-	if literal == "=" && l.scanner.Peek() == '=' {
-		lexem := Lexem{
+	if literal == "=" && lexer.scanner.Peek() == '=' {
+		token := Token{
 			Type:     EQUAL,
 			Literal:  "==",
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}
-		l.scanner.Scan()
-		return lexem, nil
+		lexer.scanner.Scan()
+		return token, nil
 	}
 
-	if literal == "!" && l.scanner.Peek() == '=' {
-		lexem := Lexem{
+	if literal == "!" && lexer.scanner.Peek() == '=' {
+		token := Token{
 			Type:     NOT_EQUAL,
 			Literal:  "!=",
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}
-		l.scanner.Scan()
-		return lexem, nil
+		lexer.scanner.Scan()
+		return token, nil
 	}
 
-	if literal == ">" && l.scanner.Peek() == '=' {
-		lexem := Lexem{
+	if literal == ">" && lexer.scanner.Peek() == '=' {
+		token := Token{
 			Type:     GREATER_OR_EQUAL,
 			Literal:  ">=",
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}
-		l.scanner.Scan()
-		return lexem, nil
+		lexer.scanner.Scan()
+		return token, nil
 	}
 
-	if literal == "<" && l.scanner.Peek() == '=' {
-		lexem := Lexem{
+	if literal == "<" && lexer.scanner.Peek() == '=' {
+		token := Token{
 			Type:     LESS_OR_EQUAL,
 			Literal:  "<=",
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}
-		l.scanner.Scan()
-		return lexem, nil
+		lexer.scanner.Scan()
+		return token, nil
 	}
 
 	if literal == "let" {
-		return Lexem{
+		return Token{
 			Type:     LET,
 			Literal:  literal,
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}, nil
 	}
 
 	if literal == "true" {
-		return Lexem{
+		return Token{
 			Type:     TRUE,
 			Literal:  literal,
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}, nil
 	}
 
 	if literal == "false" {
-		return Lexem{
+		return Token{
 			Type:     FALSE,
 			Literal:  literal,
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}, nil
 	}
 
 	if unicode.IsDigit(rune(literal[0])) && strings.Contains(literal, ".") {
-		return Lexem{
+		return Token{
 			Type:     FLOAT,
 			Literal:  literal,
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}, nil
 	}
 
 	if unicode.IsDigit(rune(literal[0])) && !strings.Contains(literal, ".") {
-		return Lexem{
+		return Token{
 			Type:     INT,
 			Literal:  literal,
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}, nil
 	}
 
 	if unicode.IsLetter(rune(literal[0])) {
-		return Lexem{
+		return Token{
 			Type:     IDENT,
 			Literal:  literal,
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}, nil
 	}
 
-	if t, ok := lexems[literal]; ok {
-		return Lexem{
+	if t, ok := tokens[literal]; ok {
+		return Token{
 			Type:     t,
 			Literal:  literal,
-			Position: l.scanner.Position,
+			Position: lexer.scanner.Position,
 		}, nil
 	}
 
-	return Lexem{
+	return Token{
 		Type:     ILLEGAL,
 		Literal:  literal,
-		Position: l.scanner.Position,
+		Position: lexer.scanner.Position,
 	}, nil
 }
 

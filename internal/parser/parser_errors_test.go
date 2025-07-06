@@ -7,7 +7,7 @@ import (
 	"github.com/pblazh/csvss/internal/lexer"
 )
 
-func TestPaserErrors(t *testing.T) {
+func TestParserErrors(t *testing.T) {
 	testcases := []struct {
 		name   string
 		input  string
