@@ -27,3 +27,4 @@
 - [ ] #11: Allow assigning to the range expression
 - [ ] #12: Evaluation
   - [x] #12.1: Setup evaluation
+  - [x] #12.2: Evaluate expressions

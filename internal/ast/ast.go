@@ -91,11 +91,11 @@ func (expr StringExpression) String() string {
 type PrefixExpression struct {
 	Expression
 	Operator lexer.Token
-	Right    Expression
+	Value    Expression
 }
 
 func (expr PrefixExpression) String() string {
-	return fmt.Sprintf("(%s %s)", expr.Operator.Literal, expr.Right)
+	return fmt.Sprintf("(%s %s)", expr.Operator.Literal, expr.Value)
 }
 
 type InfixExpression struct {
@@ -136,11 +136,11 @@ func (expr CallExpression) String() string {
 
 type RangeExpression struct {
 	Expression
-	Cells []string
+	Value []string
 }
 
 func (expr RangeExpression) String() string {
-	return fmt.Sprintf("(: %s)", strings.Join(expr.Cells, " "))
+	return fmt.Sprintf("(: %s)", strings.Join(expr.Value, " "))
 }
 
 type Program []Statement

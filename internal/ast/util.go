@@ -42,3 +42,29 @@ func parseCell(cell string) (string, int) {
 	row, _ := strconv.Atoi(rowStr)
 	return col, row
 }
+
+// TypeName returns a human-readable name for the expression type.
+func TypeName(expr Expression) string {
+	switch expr.(type) {
+	case IntExpression:
+		return "integer"
+	case FloatExpression:
+		return "float"
+	case BooleanExpression:
+		return "boolean"
+	case StringExpression:
+		return "string"
+	case IdentifierExpression:
+		return "identifier"
+	case PrefixExpression:
+		return "prefix expression"
+	case InfixExpression:
+		return "infix expression"
+	case CallExpression:
+		return "function call"
+	case RangeExpression:
+		return "range"
+	default:
+		return "unknown"
+	}
+}

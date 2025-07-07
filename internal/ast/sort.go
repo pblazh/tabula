@@ -24,7 +24,7 @@ func ExtractDependencies(expr Expression) []string {
 	case IdentifierExpression:
 		deps = append(deps, e.Token.Literal)
 	case PrefixExpression:
-		deps = append(deps, ExtractDependencies(e.Right)...)
+		deps = append(deps, ExtractDependencies(e.Value)...)
 	case InfixExpression:
 		deps = append(deps, ExtractDependencies(e.Left)...)
 		deps = append(deps, ExtractDependencies(e.Right)...)
@@ -34,7 +34,7 @@ func ExtractDependencies(expr Expression) []string {
 			deps = append(deps, ExtractDependencies(arg)...)
 		}
 	case RangeExpression:
-		deps = append(deps, e.Cells...)
+		deps = append(deps, e.Value...)
 	default:
 		// No dependencies for literal expressions
 	}

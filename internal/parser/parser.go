@@ -317,7 +317,7 @@ func (p *Parser) parsePrefix() (ast.Expression, error) {
 		return nil, err
 	}
 
-	prefix.Right = expression
+	prefix.Value = expression
 	return prefix, nil
 }
 
@@ -366,7 +366,7 @@ func (p *Parser) parseRange(left ast.Expression) (ast.Expression, error) {
 		return nil, err
 	}
 
-	return ast.RangeExpression{Cells: cells}, nil
+	return ast.RangeExpression{Value: cells}, nil
 }
 
 func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error) {
