@@ -47,7 +47,7 @@ func main() {
 
 	csvFile, err := os.Open(args[0])
 	if err != nil {
-		_, _ = os.Stderr.WriteString(err.Error())
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -57,7 +57,7 @@ func main() {
 
 	records, err := reader.ReadAll()
 	if err != nil {
-		_, _ = os.Stderr.WriteString(err.Error())
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
 
