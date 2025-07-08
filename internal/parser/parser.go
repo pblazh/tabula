@@ -91,6 +91,12 @@ func (p *Parser) Parse() (ast.Program, []string, error) {
 				return nil, nil, err
 			}
 			program = append(program, stm)
+		case lexer.FMT:
+			stm, err := p.parseFmtStatement()
+			if err != nil {
+				return nil, nil, err
+			}
+			program = append(program, stm)
 		default:
 			stm, err := p.parseExpressionStatement()
 			if err != nil {
@@ -140,6 +146,50 @@ func (p *Parser) parseLetStatement() (ast.Statement, error) {
 	p.identifiers = append(p.identifiers, p.cur.Literal)
 
 	statement := ast.LetStatement{
+		Identifier: ast.IdentifierExpression{Token: p.cur},
+	}
+	err = p.advance()
+	if err != nil {
+		return nil, err
+	}
+
+	if !p.expectCurrentToken(lexer.ASSIGN) {
+		return nil, fmt.Errorf("expected =, but got %v", p.cur)
+	}
+
+	err = p.advance()
+	if err != nil {
+		return nil, err
+	}
+	expression, err := p.parseExpression(LOWEST)
+	if err != nil {
+		return nil, err
+	}
+	statement.Value = expression
+	if p.expectCurrentToken(lexer.SEMI) {
+		err = p.advance()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return statement, nil
+}
+
+func (p *Parser) parseFmtStatement() (ast.Statement, error) {
+	err := p.advance()
+	if err != nil {
+		return nil, err
+	}
+
+	if !p.expectCurrentToken(lexer.IDENT) {
+		return nil, fmt.Errorf("expected an identifier, but got %s at %v", p.cur.Literal, p.cur.Position)
+	}
+
+	// Add fmt statement identifier to the list
+	p.identifiers = append(p.identifiers, p.cur.Literal)
+
+	statement := ast.FmtStatement{
 		Identifier: ast.IdentifierExpression{Token: p.cur},
 	}
 	err = p.advance()
