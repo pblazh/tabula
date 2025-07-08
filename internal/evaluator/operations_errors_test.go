@@ -92,7 +92,7 @@ func TestOperationErrors(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 
-			result, err := EvaluateExpression(expr)
+			result, err := EvaluateExpression(expr, make(map[string]string))
 			if err == nil {
 				t.Errorf("Expected error but got result: %s", result.String())
 				return

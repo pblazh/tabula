@@ -40,3 +40,11 @@ func parseExpression(input string) (ast.Expression, error) {
 
 	return stmt.Value, nil
 }
+
+// ParseProgram is a helper function to parse a program from a string
+func ParseProgram(input string) (ast.Program, error) {
+	lex := lexer.New(strings.NewReader(input), "test")
+	p := parser.New(lex)
+	program, _, err := p.Parse()
+	return program, err
+}

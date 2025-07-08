@@ -2,22 +2,33 @@ package evaluator
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/lexer"
 )
 
 // EvaluateExpression evaluates any AST expression and returns the result
-func EvaluateExpression(expr ast.Expression) (ast.Expression, error) {
+func EvaluateExpression(expr ast.Expression, context map[string]string) (ast.Expression, error) {
 	switch node := expr.(type) {
-	case ast.IntExpression, ast.FloatExpression, ast.BooleanExpression, ast.StringExpression, ast.IdentifierExpression:
+	case ast.IntExpression, ast.FloatExpression, ast.BooleanExpression, ast.StringExpression:
 		return node, nil
+	case ast.IdentifierExpression:
+		value, ok := context[node.Token.Literal]
+		if !ok {
+			return nil, fmt.Errorf("%s not found in context", node)
+		}
+		val, error := strconv.Atoi(value)
+		if error != nil {
+			return nil, error
+		}
+		return ast.IntExpression{Value: val}, nil
 	case ast.PrefixExpression:
-		return evaluatePrefixExpression(node)
+		return evaluatePrefixExpression(node, context)
 	case ast.InfixExpression:
-		return evaluateInfixExpression(node)
+		return evaluateInfixExpression(node, context)
 	case ast.CallExpression:
-		return evaluateCallExpression(node)
+		return evaluateCallExpression(node, context)
 	case ast.RangeExpression:
 		return node, nil
 	default:
@@ -25,8 +36,8 @@ func EvaluateExpression(expr ast.Expression) (ast.Expression, error) {
 	}
 }
 
-func evaluatePrefixExpression(expr ast.PrefixExpression) (ast.Expression, error) {
-	value, err := EvaluateExpression(expr.Value)
+func evaluatePrefixExpression(expr ast.PrefixExpression, context map[string]string) (ast.Expression, error) {
+	value, err := EvaluateExpression(expr.Value, context)
 	if err != nil {
 		return nil, err
 	}
@@ -41,12 +52,12 @@ func evaluatePrefixExpression(expr ast.PrefixExpression) (ast.Expression, error)
 	}
 }
 
-func evaluateInfixExpression(expr ast.InfixExpression) (ast.Expression, error) {
-	left, err := EvaluateExpression(expr.Left)
+func evaluateInfixExpression(expr ast.InfixExpression, context map[string]string) (ast.Expression, error) {
+	left, err := EvaluateExpression(expr.Left, context)
 	if err != nil {
 		return nil, err
 	}
-	right, err := EvaluateExpression(expr.Right)
+	right, err := EvaluateExpression(expr.Right, context)
 	if err != nil {
 		return nil, err
 	}
@@ -73,10 +84,10 @@ func evaluateInfixExpression(expr ast.InfixExpression) (ast.Expression, error) {
 	}
 }
 
-func evaluateCallExpression(expr ast.CallExpression) (ast.Expression, error) {
+func evaluateCallExpression(expr ast.CallExpression, context map[string]string) (ast.Expression, error) {
 	args := make([]ast.Expression, len(expr.Arguments))
 	for i, arg := range expr.Arguments {
-		evaluated, err := EvaluateExpression(arg)
+		evaluated, err := EvaluateExpression(arg, context)
 		if err != nil {
 			return nil, err
 		}

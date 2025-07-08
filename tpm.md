@@ -28,3 +28,4 @@
 - [ ] #12: Evaluation
   - [x] #12.1: Setup evaluation
   - [x] #12.2: Evaluate expressions
+  - [x] #12.3: Evaluate statements
