@@ -1,16 +1,33 @@
 package evaluator
 
-import "github.com/pblazh/csvss/internal/ast"
+import (
+	"fmt"
 
-func EvaluateStatement(statement ast.Statement, context map[string]string) error {
+	"github.com/pblazh/csvss/internal/ast"
+)
+
+func EvaluateStatement(statement ast.Statement, context map[string]string, format map[string]string) error {
 	switch s := statement.(type) {
 	case ast.LetStatement:
-		value, error := EvaluateExpression(s.Value, context)
+		value, error := EvaluateExpression(s.Value, context, format)
 		if error != nil {
 			return error
 		}
 
 		context[s.Identifier.Token.Literal] = value.String()
+	case ast.FmtStatement:
+		value, error := EvaluateExpression(s.Value, context, format)
+		if error != nil {
+			return error
+		}
+
+		switch val := value.(type) {
+		case ast.StringExpression:
+			format[s.Identifier.Token.Literal] = value.String()
+		default:
+			return fmt.Errorf("fmt %s accepts only strings, but got %s", s.Identifier.Token, val)
+		}
+
 	}
 	return nil
 }
