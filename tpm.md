@@ -32,3 +32,4 @@
   - [x] #12.3: Evaluate statements
     - [x] #12.3.1: Evaluate fmt statements
 - [x] #13: Read formatted strings
+- [x] #14: Write formatted strings

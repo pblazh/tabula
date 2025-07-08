@@ -121,6 +121,69 @@ func parseWithoutFormat(value string) (ast.Expression, error) {
 	return ast.StringExpression{Token: lexer.Token{Literal: "\"" + value + "\""}}, nil
 }
 
+// WriteValue writes an AST expression to context with optional format specification
+func WriteValue(name string, value ast.Expression, context map[string]string, format map[string]string) error {
+	formatSpec, hasFormat := format[name]
+	if !hasFormat {
+		formatted, err := formatWithoutSpec(value)
+		if err != nil {
+			return err
+		}
+		context[name] = formatted
+		return nil
+	}
+
+	if err := validateFormatString(formatSpec); err != nil {
+		return fmt.Errorf("invalid format %q: %w", formatSpec, err)
+	}
+
+	// Format the value using the format specification
+	formattedValue, err := formatWithSpec(value, formatSpec)
+	if err != nil {
+		return err
+	}
+	context[name] = formattedValue
+
+	return nil
+}
+
+// formatWithSpec formats an AST expression using the specified format
+func formatWithSpec(value ast.Expression, formatSpec string) (string, error) {
+	switch expr := value.(type) {
+	case ast.IntExpression:
+		return fmt.Sprintf(formatSpec, expr.Value), nil
+	case ast.FloatExpression:
+		return fmt.Sprintf(formatSpec, expr.Value), nil
+	case ast.StringExpression:
+		// Extract content from quoted string literal
+		content := expr.Token.Literal
+		if len(content) >= 2 && content[0] == '"' && content[len(content)-1] == '"' {
+			content = content[1 : len(content)-1]
+		}
+		return fmt.Sprintf(formatSpec, content), nil
+	case ast.BooleanExpression:
+		return fmt.Sprintf(formatSpec, expr.Value), nil
+	default:
+		return "", fmt.Errorf("unsupported expression type: %T", value)
+	}
+}
+
+// formatWithoutSpec formats an AST expression without format specification
+func formatWithoutSpec(value ast.Expression) (string, error) {
+	switch expr := value.(type) {
+	case ast.IntExpression:
+		return fmt.Sprintf("%d", expr.Value), nil
+	case ast.FloatExpression:
+		return fmt.Sprintf("%g", expr.Value), nil
+	case ast.StringExpression:
+		return expr.Token.Literal, nil
+	case ast.BooleanExpression:
+		return fmt.Sprintf("%t", expr.Value), nil
+	default:
+		return "", fmt.Errorf("unsupported expression type: %T", value)
+	}
+}
+
 // newParseError creates an error message for format parsing failures
 func newParseError(value, formatSpec string, err error) error {
 	return fmt.Errorf("failed to parse %q with format %q: %w", value, formatSpec, err)
