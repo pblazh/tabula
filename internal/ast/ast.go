@@ -26,6 +26,16 @@ func (stmt LetStatement) String() string {
 	return fmt.Sprintf("let %s = %s;", stmt.Identifier.String(), stmt.Value)
 }
 
+type FmtStatement struct {
+	Statement
+	Identifier IdentifierExpression
+	Value      Expression
+}
+
+func (stmt FmtStatement) String() string {
+	return fmt.Sprintf("fmt %s = %s;", stmt.Identifier.String(), stmt.Value)
+}
+
 type ExpressionStatement struct {
 	Statement
 	Token lexer.Token

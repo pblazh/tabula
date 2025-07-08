@@ -92,6 +92,14 @@ func (lexer *Lexer) Next() (Token, error) {
 		}, nil
 	}
 
+	if literal == "fmt" {
+		return Token{
+			Type:     FMT,
+			Literal:  literal,
+			Position: lexer.scanner.Position,
+		}, nil
+	}
+
 	if literal == "true" {
 		return Token{
 			Type:     TRUE,

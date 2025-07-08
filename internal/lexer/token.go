@@ -40,6 +40,7 @@ const (
 	COLUMN           = "COLUMN"
 	COMMA            = "COMMA"
 	LET              = "LET"
+	FMT              = "FMT"
 	SEMI             = "SEMI"
 	EQUAL            = "EQUAL"
 	NOT_EQUAL        = "NOT_EQUAL"

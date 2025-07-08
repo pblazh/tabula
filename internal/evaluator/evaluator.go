@@ -12,8 +12,9 @@ import (
 // input is a two-dimensional array of strings representing the spreadsheet data
 func Evaluate(program ast.Program, input [][]string) ([][]string, error) {
 	context := make(map[string]string)
+	format := make(map[string]string)
 	for _, statement := range program {
-		error := EvaluateStatement(statement, context)
+		error := EvaluateStatement(statement, context, format)
 		if error != nil {
 			return nil, fmt.Errorf("%s caused %s", statement, error)
 		}

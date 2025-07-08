@@ -296,7 +296,7 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 
-			result, err := EvaluateExpression(expr, make(map[string]string))
+			result, err := EvaluateExpression(expr, make(map[string]string), make(map[string]string))
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return
@@ -387,7 +387,7 @@ func TestPrefixExpressionEvaluate(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 
-			result, err := EvaluateExpression(expr, make(map[string]string))
+			result, err := EvaluateExpression(expr, make(map[string]string), make(map[string]string))
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return
