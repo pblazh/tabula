@@ -82,6 +82,7 @@
   - [ ] #24.1: Add syntax highlighting for script files
   - [ ] #24.2: Add interactive mode/REPL
   - [ ] #24.3: Add plugin system for custom functions
+        (execute external program for evaluation and format)
   - [ ] #24.4: Add debugging capabilities
   - [ ] #24.5: Add configuration file support
 - [ ] #25: Developer Experience
