@@ -18,6 +18,7 @@ func EvaluateExpression(expr ast.Expression, context map[string]string, format m
 		if !ok {
 			return nil, fmt.Errorf("%s not found in context", node)
 		}
+		// TODO: Replace this hardcoded integer parsing with proper type inference
 		val, error := strconv.Atoi(value)
 		if error != nil {
 			return nil, error
@@ -95,5 +96,5 @@ func evaluateCallExpression(expr ast.CallExpression, context map[string]string, 
 	}
 
 	// For now, just return the identifier as we haven't implemented function calls yet
-	return expr.Identifier, nil
+	return expr.Identifier, nil // TODO: Remove this placeholder
 }

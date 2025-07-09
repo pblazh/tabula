@@ -33,3 +33,161 @@
     - [x] #12.3.1: Evaluate fmt statements
 - [x] #13: Read formatted strings
 - [x] #14: Write formatted strings
+- [ ] #15: **CRITICAL** CLI Integration
+  - [ ] #15.1: Implement script file reading in `cmd/cli/main.go`
+  - [ ] #15.2: Integrate lexer → parser → evaluator pipeline in CLI
+  - [ ] #15.3: Add CSV data to context mapping (A1, B2, etc.)
+  - [ ] #15.4: Convert evaluation results back to CSV format
+  - [ ] #15.5: Implement actual output handling (stdout/file)
+- [ ] #16: **CRITICAL** Function Implementation
+  - [ ] #16.1: Implement function call evaluation in `evaluateCallExpression`
+  - [ ] #16.3: Implement range evaluation (A1:C3 expansion)
+  - [ ] #16.4: Add function registry and dispatch system
+- [ ] #17: **CRITICAL** Documentation Fixes
+  - [ ] #17.1: Fix binary name inconsistency (ucsvss vs csvss)
+  - [ ] #17.2: Update README with actual working examples
+  - [ ] #17.3: Remove/mark unimplemented functions in README
+- [ ] #18: Missing Project Files
+  - [ ] #18.1: Add `go.sum` file (run `go mod tidy`)
+  - [ ] #18.2: Add CI/CD configuration (GitHub Actions)
+  - [ ] #18.3: Add proper build/release scripts
+- [ ] #19: Testing Infrastructure
+  - [ ] #19.1: Add integration tests for complete workflows
+  - [ ] #19.2: Add CLI package tests
+  - [ ] #19.3: Add test coverage reporting
+  - [ ] #19.4: Add benchmark tests for large CSV files
+- [ ] #20: Examples and Documentation
+  - [ ] #20.1: Create comprehensive script examples
+  - [ ] #20.2: Add language specification document
+  - [ ] #20.3: Add API documentation
+  - [ ] #20.4: Create tutorial/getting started guide
+- [ ] #21: Code Quality Improvements
+  - [ ] #21.1: Add better error recovery in parser
+  - [ ] #21.2: Add position tracking for error messages
+  - [ ] #21.3: Add semantic analysis phase
+  - [ ] #21.4: Improve identifier resolution for cell references
+  - [ ] #21.5: Add input validation throughout
+- [ ] #22: Feature Extensions
+  - [ ] #22.1: Add support for multiple output formats (JSON, plain text)
+  - [ ] #22.2: Add more data types beyond basic four
+  - [ ] #22.3: Add nested function call support
+  - [ ] #22.4: Add variable scoping
+  - [ ] #22.5: Add conditional statements (if/else)
+- [ ] #23: Performance Optimizations
+  - [ ] #23.1: Optimize CSV parsing for large files
+  - [ ] #23.2: Add streaming evaluation for large datasets
+  - [ ] #23.3: Add memory usage optimization
+  - [ ] #23.4: Add parallel evaluation where possible
+- [ ] #24: Enhancement Features
+  - [ ] #24.1: Add syntax highlighting for script files
+  - [ ] #24.2: Add interactive mode/REPL
+  - [ ] #24.3: Add plugin system for custom functions
+  - [ ] #24.4: Add debugging capabilities
+  - [ ] #24.5: Add configuration file support
+- [ ] #25: Developer Experience
+  - [ ] #25.1: Add development documentation
+  - [ ] #25.2: Add contribution guidelines
+  - [ ] #25.3: Add code formatting checks
+  - [ ] #25.4: Add linting configuration
+- [ ] #26: AST Enhancements
+  - [ ] #26.1: Add position information to nodes for better error reporting
+  - [ ] #26.2: Add validation methods to AST nodes
+  - [ ] #26.3: Consider adding visitor pattern for AST traversal
+  - [ ] #26.4: Add type checking for expressions
+- [ ] #27: Parser Improvements
+  - [ ] #27.1: Add better error recovery mechanisms
+  - [ ] #27.2: Add support for more complex expressions
+  - [ ] #27.3: Add validation for cell reference format
+  - [ ] #27.4: Add semantic analysis phase after parsing
+- [ ] #28: Evaluator Enhancements
+  - [ ] #28.1: Add proper type system
+  - [ ] #28.2: Add function argument validation
+  - [ ] #28.3: Add bounds checking for CSV operations
+  - [ ] #28.4: Add format specification improvements
+- [ ] #29: Math Functions Implementation
+  - [ ] #29.1: Implement ABS function
+  - [ ] #29.2: Implement AVERAGE function
+  - [ ] #29.3: Implement AVERAGEIF function
+  - [ ] #29.4: Implement CEILING function
+  - [ ] #29.5: Implement COUNT function
+  - [ ] #29.6: Implement COUNTIF function
+  - [ ] #29.7: Implement FLOOR function
+  - [ ] #29.8: Implement MAX function
+  - [ ] #29.9: Implement MIN function
+  - [ ] #29.10: Implement POWER function
+  - [ ] #29.11: Implement PRODUCT function
+  - [ ] #29.12: Implement ROUND function
+  - [ ] #29.13: Implement SQRT function
+  - [ ] #29.14: Implement SUM function
+  - [ ] #29.15: Implement SUMIF function
+  - [ ] #29.16: Implement SUMIFS function
+- [ ] #30: Text Functions Implementation
+  - [ ] #30.1: Implement CONCATENATE function
+  - [ ] #30.2: Implement EXACT function
+  - [ ] #30.3: Implement FIND function
+  - [ ] #30.4: Implement LEFT function
+  - [ ] #30.5: Implement LEN function
+  - [ ] #30.6: Implement LOWER function
+  - [ ] #30.7: Implement MID function
+  - [ ] #30.8: Implement REPLACE function
+  - [ ] #30.9: Implement RIGHT function
+  - [ ] #30.10: Implement SUBSTITUTE function
+  - [ ] #30.11: Implement TRIM function
+  - [ ] #30.12: Implement UPPER function
+- [ ] #31: Date and Time Functions Implementation
+  - [ ] #31.1: Implement DATE function
+  - [ ] #31.2: Implement DATEDIF function
+  - [ ] #31.3: Implement DAY function
+  - [ ] #31.4: Implement HOUR function
+  - [ ] #31.5: Implement MINUTE function
+  - [ ] #31.6: Implement MONTH function
+  - [ ] #31.7: Implement NOW function
+  - [ ] #31.8: Implement SECOND function
+  - [ ] #31.9: Implement TIME function
+  - [ ] #31.10: Implement TODAY function
+  - [ ] #31.11: Implement WEEKDAY function
+  - [ ] #31.12: Implement YEAR function
+- [ ] #32: Logical Functions Implementation
+  - [ ] #32.1: Implement AND function
+  - [ ] #32.2: Implement FALSE function
+  - [ ] #32.3: Implement IF function
+  - [ ] #32.4: Implement IFERROR function
+  - [ ] #32.5: Implement NOT function
+  - [ ] #32.6: Implement OR function
+  - [ ] #32.7: Implement TRUE function
+- [ ] #33: Lookup and Reference Functions Implementation
+  - [ ] #33.1: Implement CHOOSE function
+  - [ ] #33.2: Implement COLUMN function
+  - [ ] #33.3: Implement HLOOKUP function
+  - [ ] #33.4: Implement INDEX function
+  - [ ] #33.5: Implement INDIRECT function
+  - [ ] #33.6: Implement LOOKUP function
+  - [ ] #33.7: Implement MATCH function
+  - [ ] #33.8: Implement OFFSET function
+  - [ ] #33.9: Implement ROW function
+  - [ ] #33.10: Implement VLOOKUP function
+- [ ] #34: Statistical Functions Implementation
+  - [ ] #34.1: Implement CORREL function
+  - [ ] #34.2: Implement MEDIAN function
+  - [ ] #34.3: Implement MODE function
+  - [ ] #34.4: Implement PERCENTILE function
+  - [ ] #34.5: Implement STDEV function
+  - [ ] #34.6: Implement VAR function
+- [ ] #35: Array Functions Implementation
+  - [ ] #35.1: Implement FILTER function
+  - [ ] #35.2: Implement SORT function
+  - [ ] #35.3: Implement TRANSPOSE function
+  - [ ] #35.4: Implement UNIQUE function
+- [ ] #36: Cell Formatting Implementation
+  - [ ] #36.1: Standard Format Types
+    - [ ] #36.1.1: Implement Number format
+    - [ ] #36.1.2: Implement Currency format
+    - [ ] #36.1.3: Implement Percentage format
+    - [ ] #36.1.4: Implement Date format
+    - [ ] #36.1.5: Implement Time format
+    - [ ] #36.1.6: Implement Scientific format
+    - [ ] #36.1.7: Implement Accounting format
+    - [ ] #36.1.8: Implement Financial format
+    - [ ] #36.1.9: Implement Plain Text format
+  - [ ] #36.6: Conditional Formatting
+  - [ ] #36.7: Text and Symbol Formatting
