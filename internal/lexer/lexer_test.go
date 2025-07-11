@@ -377,7 +377,7 @@ func TestLexer(t *testing.T) {
 					},
 				},
 			},
-			error: "invalid char literal at invalid quotes:1:1",
+			error: "Lexer error: invalid char literal at invalid quotes:1:1",
 		},
 		{
 			name:  "unmached quote",
@@ -390,7 +390,7 @@ func TestLexer(t *testing.T) {
 					},
 				},
 			},
-			error: "literal not terminated at unmached quote:1:2",
+			error: "Lexer error: literal not terminated at unmached quote:1:2",
 		},
 	}
 

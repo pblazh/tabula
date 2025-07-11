@@ -1,20 +1,19 @@
 package ast
 
 import (
-	"fmt"
 	"strconv"
 )
 
 func ExpandRange(start, end string) ([]string, error) {
 	if !IsCellIdentifier(start) || !IsCellIdentifier(end) {
-		return nil, fmt.Errorf("range must contain valid cell references (like A1:B2), got %s:%s", start, end)
+		return nil, ErrInvalidRange(start, end)
 	}
 
-	startCol, startRow := parseCell(start)
-	endCol, endRow := parseCell(end)
+	startCol, startRow := ParseCell(start)
+	endCol, endRow := ParseCell(end)
 
-	startColNum := ColumnToNumber(startCol)
-	endColNum := ColumnToNumber(endCol)
+	startColNum := ColumnToIndex(startCol)
+	endColNum := ColumnToIndex(endCol)
 
 	colStep := 1
 	if startColNum > endColNum {
@@ -29,7 +28,7 @@ func ExpandRange(start, end string) ([]string, error) {
 	var result []string
 	for row := startRow; (rowStep > 0 && row <= endRow) || (rowStep < 0 && row >= endRow); row += rowStep {
 		for colNum := startColNum; (colStep > 0 && colNum <= endColNum) || (colStep < 0 && colNum >= endColNum); colNum += colStep {
-			col := NumberToColumn(colNum)
+			col := IndexToColumn(colNum)
 			result = append(result, col+strconv.Itoa(row))
 		}
 	}

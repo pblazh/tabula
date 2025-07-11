@@ -92,10 +92,11 @@ func (expr FloatExpression) String() string {
 type StringExpression struct {
 	Expression
 	Token lexer.Token
+	Value string
 }
 
 func (expr StringExpression) String() string {
-	return fmt.Sprintf("<str %s>", expr.Token.Literal)
+	return fmt.Sprintf("<str %s>", expr.Value)
 }
 
 type PrefixExpression struct {

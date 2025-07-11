@@ -1,31 +1,40 @@
 package evaluator
 
 import (
-	"fmt"
-
 	"github.com/pblazh/csvss/internal/ast"
 )
 
-func EvaluateStatement(statement ast.Statement, context map[string]string, format map[string]string) error {
+func EvaluateStatement(statement ast.Statement, context map[string]string, input [][]string, formats map[string]string) error {
 	switch s := statement.(type) {
 	case ast.LetStatement:
-		value, error := EvaluateExpression(s.Value, context, format)
+		value, error := EvaluateExpression(s.Value, context, input, formats)
 		if error != nil {
 			return error
 		}
 
-		context[s.Identifier.Token.Literal] = value.String()
+		format := formats[s.Identifier.Token.Literal]
+		output, error := WriteValue(value, format)
+		if error != nil {
+			return error
+		}
+
+		if ast.IsCellIdentifier(s.Identifier.Token.Literal) {
+			context[s.Identifier.Token.Literal] = output
+			break
+		}
+
+		context[s.Identifier.Token.Literal] = output
 	case ast.FmtStatement:
-		value, error := EvaluateExpression(s.Value, context, format)
+		value, error := EvaluateExpression(s.Value, context, input, formats)
 		if error != nil {
 			return error
 		}
 
 		switch val := value.(type) {
 		case ast.StringExpression:
-			format[s.Identifier.Token.Literal] = value.String()
+			formats[s.Identifier.Token.Literal] = val.Token.Literal
 		default:
-			return fmt.Errorf("fmt %s accepts only strings, but got %s", s.Identifier.Token, val)
+			return ErrFmtExpectedString(s.Identifier.Token, val.String())
 		}
 
 	}

@@ -1,7 +1,6 @@
 package lexer
 
 import (
-	"fmt"
 	"io"
 	"strings"
 	"text/scanner"
@@ -24,7 +23,7 @@ func (lexer *Lexer) Next() (Token, error) {
 		return Token{
 			Type:     ERROR,
 			Position: lexer.scanner.Position,
-		}, fmt.Errorf("%s at %v", lexer.lastErrorMessage, lexer.scanner.Position)
+		}, ErrLexerError(lexer.lastErrorMessage, lexer.scanner.Position)
 	}
 
 	if tok == scanner.EOF {

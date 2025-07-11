@@ -296,7 +296,8 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 
-			result, err := EvaluateExpression(expr, make(map[string]string), make(map[string]string))
+			var input [][]string
+			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string))
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return
@@ -387,7 +388,8 @@ func TestPrefixExpressionEvaluate(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 
-			result, err := EvaluateExpression(expr, make(map[string]string), make(map[string]string))
+			var input [][]string
+			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string))
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return
@@ -451,18 +453,18 @@ func TestOperationErrors(t *testing.T) {
 		{
 			name:          "bool / int",
 			input:         "true / 5",
-			expectedError: "cannot divide boolean by integer",
+			expectedError: "operator <DIV:/ at test:1:6> is not supported for type: boolean and integer",
 		},
 		// Type mismatch errors for comparison operations
 		{
 			name:          "int < bool",
 			input:         "5 < true",
-			expectedError: "numeric comparison <LESS:< at test:1:3> is not supported for type: integer and boolean",
+			expectedError: "operator <LESS:< at test:1:3> is not supported for type: integer and boolean",
 		},
 		{
 			name:          "bool > int",
 			input:         "true > 5",
-			expectedError: "numeric comparison <GREATER:> at test:1:6> is not supported for type: integer and boolean",
+			expectedError: "operator <GREATER:> at test:1:6> is not supported for type: boolean and integer",
 		},
 		// Prefix operation errors
 		{
@@ -485,8 +487,9 @@ func TestOperationErrors(t *testing.T) {
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
-
-			result, err := EvaluateExpression(expr, make(map[string]string), make(map[string]string))
+			var input [][]string
+			formats := make(map[string]string)
+			result, err := EvaluateExpression(expr, make(map[string]string), input, formats)
 			if err == nil {
 				t.Errorf("Expected error but got result: %s", result.String())
 				return

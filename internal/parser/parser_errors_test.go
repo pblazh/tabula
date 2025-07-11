@@ -26,7 +26,7 @@ func TestParserErrors(t *testing.T) {
 		{
 			name:   "not terminated quote",
 			input:  "let x = \"9;",
-			output: "literal not terminated at not terminated quote:1:9",
+			output: "Lexer error: literal not terminated at not terminated quote:1:9",
 		},
 		{
 			name:   "invalid range with variables",

@@ -2,7 +2,6 @@
 package testutil
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 
@@ -30,12 +29,12 @@ func parseExpression(input string) (ast.Expression, error) {
 	}
 
 	if len(program) == 0 {
-		return nil, fmt.Errorf("no statements parsed")
+		return nil, ErrNoStatementsParsed()
 	}
 
 	stmt, ok := program[0].(ast.ExpressionStatement)
 	if !ok {
-		return nil, fmt.Errorf("expected ExpressionStatement, got %T", program[0])
+		return nil, ErrExpectedExpressionStatement(program[0])
 	}
 
 	return stmt.Value, nil
@@ -47,34 +46,4 @@ func ParseProgram(input string) (ast.Program, error) {
 	p := parser.New(lex)
 	program, _, err := p.Parse()
 	return program, err
-}
-
-// CompareExpressions compares two AST expressions for equality
-func CompareExpressions(a, b ast.Expression) bool {
-	if a == nil && b == nil {
-		return true
-	}
-	if a == nil || b == nil {
-		return false
-	}
-
-	switch aExpr := a.(type) {
-	case ast.IntExpression:
-		if bExpr, ok := b.(ast.IntExpression); ok {
-			return aExpr.Value == bExpr.Value && aExpr.Token.Literal == bExpr.Token.Literal
-		}
-	case ast.FloatExpression:
-		if bExpr, ok := b.(ast.FloatExpression); ok {
-			return aExpr.Value == bExpr.Value && aExpr.Token.Literal == bExpr.Token.Literal
-		}
-	case ast.StringExpression:
-		if bExpr, ok := b.(ast.StringExpression); ok {
-			return aExpr.Token.Literal == bExpr.Token.Literal
-		}
-	case ast.BooleanExpression:
-		if bExpr, ok := b.(ast.BooleanExpression); ok {
-			return aExpr.Value == bExpr.Value && aExpr.Token.Literal == bExpr.Token.Literal
-		}
-	}
-	return false
 }

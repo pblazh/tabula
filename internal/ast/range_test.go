@@ -38,7 +38,7 @@ func TestParseCell(t *testing.T) {
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			col, row := parseCell(tc.input)
+			col, row := ParseCell(tc.input)
 
 			if tc.expValid {
 				if col != tc.expCol {

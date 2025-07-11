@@ -3,7 +3,6 @@
 package parser
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -139,7 +138,7 @@ func (p *Parser) parseLetStatement() (ast.Statement, error) {
 	}
 
 	if !p.expectCurrentToken(lexer.IDENT) {
-		return nil, fmt.Errorf("expected an identifier, but got %s at %v", p.cur.Literal, p.cur.Position)
+		return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
 	}
 
 	// Add let statement identifier to the list
@@ -154,7 +153,7 @@ func (p *Parser) parseLetStatement() (ast.Statement, error) {
 	}
 
 	if !p.expectCurrentToken(lexer.ASSIGN) {
-		return nil, fmt.Errorf("expected =, but got %v", p.cur)
+		return nil, ErrExpectedToken("=", p.cur)
 	}
 
 	err = p.advance()
@@ -183,7 +182,7 @@ func (p *Parser) parseFmtStatement() (ast.Statement, error) {
 	}
 
 	if !p.expectCurrentToken(lexer.IDENT) {
-		return nil, fmt.Errorf("expected an identifier, but got %s at %v", p.cur.Literal, p.cur.Position)
+		return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
 	}
 
 	// Add fmt statement identifier to the list
@@ -198,7 +197,7 @@ func (p *Parser) parseFmtStatement() (ast.Statement, error) {
 	}
 
 	if !p.expectCurrentToken(lexer.ASSIGN) {
-		return nil, fmt.Errorf("expected =, but got %v", p.cur)
+		return nil, ErrExpectedToken("=", p.cur)
 	}
 
 	err = p.advance()
@@ -245,7 +244,7 @@ func (p *Parser) parseExpression(precedence int) (ast.Expression, error) {
 	prefix := p.prefixParsers[p.cur.Type]
 
 	if prefix == nil {
-		return nil, fmt.Errorf("unexpected %s at %v", p.cur.Literal, p.cur.Position)
+		return nil, ErrUnexpectedToken(p.cur.Literal, p.cur.Position)
 	}
 
 	leftExpr, err := prefix()
@@ -323,7 +322,7 @@ func (p *Parser) parseBool() (ast.Expression, error) {
 }
 
 func (p *Parser) parseString() (ast.Expression, error) {
-	expr := ast.StringExpression{Token: p.cur}
+	expr := ast.StringExpression{Value: p.cur.Literal, Token: p.cur}
 	err := p.advance()
 	if err != nil {
 		return nil, err
@@ -342,7 +341,7 @@ func (p *Parser) parseLparen() (ast.Expression, error) {
 	}
 
 	if !p.expectCurrentToken(lexer.RPAREN) {
-		return nil, fmt.Errorf("expected right paren, but got %v", p.cur)
+		return nil, ErrExpectedRightParen(p.cur)
 	}
 	err = p.advance()
 	if err != nil {
@@ -354,7 +353,7 @@ func (p *Parser) parseLparen() (ast.Expression, error) {
 
 func (p *Parser) parsePrefix() (ast.Expression, error) {
 	if _, ok := p.prefixParsers[p.cur.Type]; !ok {
-		return nil, fmt.Errorf("expected prefix, but got %v", p.cur)
+		return nil, ErrExpectedPrefix(p.cur)
 	}
 
 	prefix := ast.PrefixExpression{Operator: p.cur}

@@ -1,7 +1,6 @@
 package ast
 
 import (
-	"fmt"
 	"maps"
 	"sort"
 )
@@ -165,7 +164,7 @@ func (g *DependencyGraph) Sort() ([]Statement, error) {
 
 	// Check for cycles
 	if processed != len(g.Nodes) {
-		return nil, fmt.Errorf("circular dependency detected")
+		return nil, ErrCircularDependency()
 	}
 
 	return result, nil
