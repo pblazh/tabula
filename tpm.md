@@ -25,7 +25,7 @@
 - [x] #09: Parse range expressions into a list of cells
 - [x] #10: Make cell addresses case insensitive
 - [ ] #11: Allow assigning to the range expression
-- [ ] #12: Evaluation
+- [x] #12: Evaluation
   - [x] #12.1: Setup evaluation
   - [x] #12.2: Evaluate expressions
     - [x] #12.2.1: Evaluate Identifier expression
