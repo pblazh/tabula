@@ -1,8 +1,6 @@
 package evaluator
 
 import (
-	"text/scanner"
-
 	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/lexer"
 )
@@ -108,31 +106,15 @@ func evaluateCellExpression(expr ast.IdentifierExpression, input [][]string, for
 	cellRef := expr.Token.Literal
 	col, row := ast.ParseCell(cellRef)
 
-	// Convert column letters to column index (A=0, B=1, etc.)
-	colIndex := ast.ColumnToIndex(col)
-	rowIndex := row - 1 // Convert to 0-based index
-
 	// Check bounds
-	if rowIndex < 0 || rowIndex >= len(input) {
+	if row < 0 || row >= len(input) {
 		return nil, ErrCellOutOfBounds(cellRef, "row", row)
 	}
-	if colIndex < 0 || colIndex >= len(input[rowIndex]) {
-		return nil, ErrCellOutOfBounds(cellRef, "column", colIndex+1)
+	if col < 0 || col >= len(input[row]) {
+		return nil, ErrCellOutOfBounds(cellRef, "column", col)
 	}
 
 	// Get the value from the CSV input
-	value := input[rowIndex][colIndex]
-
-	// Return as StringExpression for now
-	return ast.StringExpression{
-		Value: value,
-		Token: lexer.Token{
-			Literal: value,
-			Position: scanner.Position{
-				Filename: "input",
-				Line:     rowIndex,
-				Column:   colIndex,
-			},
-		},
-	}, nil
+	value := input[row][col]
+	return ReadValue(value, formats[cellRef])
 }

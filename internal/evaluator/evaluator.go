@@ -3,8 +3,6 @@
 package evaluator
 
 import (
-	"fmt"
-
 	"github.com/pblazh/csvss/internal/ast"
 )
 
@@ -19,6 +17,5 @@ func Evaluate(program ast.Program, input [][]string) ([][]string, error) {
 			return nil, ErrStatementExecution(statement.String(), error)
 		}
 	}
-	fmt.Println(context)
-	return nil, nil
+	return input, nil
 }

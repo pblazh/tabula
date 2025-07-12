@@ -1,38 +1,46 @@
 package ast
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestParseCell(t *testing.T) {
 	testcases := []struct {
-		name     string
-		input    string
-		expCol   string
-		expRow   int
-		expValid bool
+		name   string
+		input  string
+		column int
+		row    int
 	}{
 		{
 			name:   "valid uppercase cell",
 			input:  "A1",
-			expCol: "A",
-			expRow: 1,
+			column: 0,
+			row:    0,
+		},
+		{
+			name:   "valid uppercase cell",
+			input:  "Z1",
+			column: 25,
+			row:    0,
 		},
 		{
 			name:   "valid lowercase cell",
 			input:  "a1",
-			expCol: "A", // should be converted to uppercase
-			expRow: 1,
+			column: 0,
+			row:    0,
 		},
 		{
 			name:   "valid mixed case cell",
 			input:  "aB10",
-			expCol: "AB", // should be converted to uppercase
-			expRow: 10,
+			column: 27,
+			row:    9,
 		},
 		{
 			name:   "valid multi-letter column",
 			input:  "AA123",
-			expCol: "AA",
-			expRow: 123,
+			column: 26,
+			row:    122,
 		},
 	}
 
@@ -40,13 +48,16 @@ func TestParseCell(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			col, row := ParseCell(tc.input)
 
-			if tc.expValid {
-				if col != tc.expCol {
-					t.Errorf("Expected column='%s', got column='%s'", tc.expCol, col)
-				}
-				if row != tc.expRow {
-					t.Errorf("Expected row=%d, got row=%d", tc.expRow, row)
-				}
+			if col != tc.column {
+				t.Errorf("Expected column='%d', got column='%d'", tc.column, col)
+			}
+			if row != tc.row {
+				t.Errorf("Expected row=%d, got row=%d", tc.row, row)
+			}
+
+			cell := ToCell(col, row)
+			if cell != strings.ToUpper(tc.input) {
+				t.Errorf("Expected cell=%s, got row=%s", tc.input, cell)
 			}
 		})
 	}

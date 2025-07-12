@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -17,36 +18,36 @@ func IsCellIdentifier(identifier string) bool {
 	return cellIdentifierRegex.MatchString(identifier)
 }
 
-// ParseCell parses a cell reference like "A1" into column and row components
-func ParseCell(cell string) (string, int) {
+// ParseCell parses a cell reference like "A1" into a zero based column and row components
+func ParseCell(cell string) (int, int) {
 	matches := cellParseRegex.FindStringSubmatch(cell)
 	if len(matches) != 3 {
-		return "", 0
+		return -1, -1
 	}
 
-	col := strings.ToUpper(matches[1]) // Convert column to uppercase for consistency
+	columnName := strings.ToUpper(matches[1])
 	row, _ := strconv.Atoi(matches[2])
-	return col, row
-}
 
-// ColumnToIndex converts column letters like "A" to 0, "B" to 1, etc. (0-based)
-func ColumnToIndex(column string) int {
-	result := 0
-	for _, c := range column {
-		result = result*26 + int(c-'A') + 1
+	letters := int('Z'-'A') + 1
+	column := 0
+	for _, c := range columnName {
+		column = column*letters + int(c-'A') + 1
 	}
-	return result
+	return column - 1, row - 1
 }
 
-// IndexToColumn converts 0-based index to column letters like 0 to "A", 1 to "B", etc.
-func IndexToColumn(index int) string {
+// ToCell converts 0-based column, row to cell like 0, 0 to "A1", 1,1 to "B2", etc.
+func ToCell(column, row int) string {
+	letters := int('Z'-'A') + 1
+	column++
+	row++
 	var result string
-	for index > 0 {
-		index--
-		result = string(rune('A'+index%26)) + result
-		index = index / 26
+	for column > 0 {
+		column--
+		result = string(rune('A'+column%letters)) + result
+		column = column / letters
 	}
-	return result
+	return fmt.Sprintf("%s%d", result, row)
 }
 
 // TypeName returns a human-readable name for the expression type.

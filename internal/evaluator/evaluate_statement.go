@@ -7,6 +7,7 @@ import (
 func EvaluateStatement(statement ast.Statement, context map[string]string, input [][]string, formats map[string]string) error {
 	switch s := statement.(type) {
 	case ast.LetStatement:
+
 		value, error := EvaluateExpression(s.Value, context, input, formats)
 		if error != nil {
 			return error
@@ -19,7 +20,8 @@ func EvaluateStatement(statement ast.Statement, context map[string]string, input
 		}
 
 		if ast.IsCellIdentifier(s.Identifier.Token.Literal) {
-			context[s.Identifier.Token.Literal] = output
+			col, row := ast.ParseCell(s.Identifier.Token.Literal)
+			input[row][col] = output
 			break
 		}
 
