@@ -2,51 +2,68 @@
 
 Command line tool for evaluating spreadsheets stored in the CSV file
 
-<!-- TODO: Fix binary name inconsistency - documentation shows 'ucsvss' but project builds 'csvss' -->
-<!-- TODO: Add installation instructions -->
-<!-- TODO: Add build instructions -->
-<!-- TODO: Add actual working examples with sample CSV and script files -->
-
 ## Usage
 
-```sh
- csvss -s ./script.file ./table.csv
+```bash
+./csvss -s script.csvs input.csv > output.csv
 ```
 
-<!-- TODO: Document available command line flags:
-     -s: script file path (required)
-     -i: update CSV file in place
-     -h: show help
--->
+### Command Line Options
 
-<!-- TODO: Add examples section with:
-     - Sample CSV file format
-     - Sample script file syntax
-     - Expected output examples
-     - Error handling examples
--->
+- `-s <script_file>`: Path to the CSVSS script file (required)
+- `-h`: Show help message
+- `-i`: Update CSV file in place (not yet implemented)
 
-## Scripting
+### Example
 
-<!-- TODO: Add comprehensive language specification -->
-<!-- TODO: Document supported data types: int, float, string, boolean -->
-<!-- TODO: Document supported operators: +, -, *, /, %, ==, !=, <, >, <=, >=, !, &&, || -->
-<!-- TODO: Document statement types: let, fmt -->
-<!-- TODO: Document cell reference syntax: A1, B2, etc. -->
-<!-- TODO: Document range syntax: A1:C3 -->
+Given a CSV file `data.csv`:
 
-### Expressions
+```csv
+Name,Age,Score
+Alice,25,85
+Bob,30,92
+```
 
-<!-- TODO: Add expression syntax examples -->
-<!-- TODO: Document operator precedence -->
-<!-- TODO: Document parentheses usage -->
+And a script file `transform.csvs`:
 
-### Functions
+```
+let A1 = "Full Name";
+let D1 = "Grade";
+let D2 = A2 + " has score " + C2;
+let D3 = A3 + " has score " + C3;
+```
 
-<!-- TODO: CRITICAL - Most listed functions are NOT implemented yet -->
-<!-- TODO: Mark implemented vs planned functions clearly -->
-<!-- TODO: Only document actually working features -->
-<!-- TODO: Add function usage examples for implemented functions -->
+Run:
+
+```bash
+./csvss -s transform.csvs data.csv
+```
+
+Output:
+
+```csv
+Full Name,Age,Score,Grade
+Alice,25,85,"Alice has score 85"
+Bob,30,92,"Bob has score 92"
+```
+
+## Script Language Features
+
+- **Let statements**: `let A1 = 42;` - Assign values to cells or variables
+- **Format statements**: `fmt A1 = "%d";` - Set formatting for cells
+- **Cell references**: Use A1, B2, etc. to reference CSV cells
+- **Arithmetic**: Basic operations (+, -, \*, /)
+- **Variables**: Use named variables in calculations
+- **String concatenation**: Combine strings with +
+
+## Cell Reference System
+
+- A1 = Row 1, Column 1 (first cell)
+- B2 = Row 2, Column 2
+- Z26 = Row 26, Column 26
+- AA1 = Row 1, Column 27 (after Z)
+
+Cell references are zero-based internally but use 1-based notation (like Excel).
 
 #### Math Functions
 
@@ -248,4 +265,3 @@ Format based on value conditions:
 - `HH:MM:SS` - Time with seconds (14:30:45)
 
 <https://clickup.com/blog/google-sheets-cheat-sheet/>
-

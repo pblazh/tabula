@@ -3,7 +3,11 @@
 package evaluator
 
 import (
+	"io"
+
 	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/csvss/internal/lexer"
+	"github.com/pblazh/csvss/internal/parser"
 )
 
 // Evaluate evaluates a program (list of statements) with the given context
@@ -18,4 +22,11 @@ func Evaluate(program ast.Program, input [][]string) ([][]string, error) {
 		}
 	}
 	return input, nil
+}
+
+func ParseProgram(r io.Reader, name string) (ast.Program, error) {
+	lex := lexer.New(r, name)
+	p := parser.New(lex)
+	program, _, err := p.Parse()
+	return program, err
 }

@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/pblazh/csvss/internal/evaluator"
 )
 
 var (
@@ -45,21 +47,53 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Read and parse CSV file
 	csvFile, err := os.Open(args[0])
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error opening CSV file: %v\n", err)
 		os.Exit(1)
 	}
+	defer csvFile.Close()
 
-	reader := csv.NewReader(csvFile)
-	reader.LazyQuotes = true
-	reader.TrimLeadingSpace = true
+	csvReader := csv.NewReader(csvFile)
+	csvReader.LazyQuotes = true
+	csvReader.TrimLeadingSpace = true
 
-	records, err := reader.ReadAll()
+	records, err := csvReader.ReadAll()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error reading CSV file: %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Println(records)
+	// Read and parse script file
+	scriptFile, err := os.Open(script)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error opening script file: %v\n", err)
+		os.Exit(1)
+	}
+	defer scriptFile.Close()
+
+	program, err := evaluator.ParseProgram(scriptFile, script)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error parsing script: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Evaluate the program with CSV data
+	result, err := evaluator.Evaluate(program, records)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error evaluating script: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Output result as CSV to stdout
+	writer := csv.NewWriter(os.Stdout)
+	defer writer.Flush()
+
+	for _, row := range result {
+		if err := writer.Write(row); err != nil {
+			fmt.Fprintf(os.Stderr, "Error writing CSV output: %v\n", err)
+			os.Exit(1)
+		}
+	}
 }

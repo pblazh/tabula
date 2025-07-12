@@ -16,18 +16,35 @@ func TestEvaluate(t *testing.T) {
 		input   [][]string
 		output  [][]string
 	}{
-		// {
-		// 	name:    "simple let statement",
-		// 	program: `let B2 = 42;`,
-		// 	input: [][]string{
-		// 		{"1", "2"},
-		// 		{"3", "4"},
-		// 	},
-		// 	output: [][]string{
-		// 		{"1", "2"},
-		// 		{"3", "42"},
-		// 	},
-		// },
+		{
+			name:    "let statement",
+			program: `let B2 = 42;`,
+			input: [][]string{
+				{"1", "2"},
+				{"3", "4"},
+			},
+			output: [][]string{
+				{"1", "2"},
+				{"3", "42"},
+			},
+		},
+		{
+			name: "fmt statement",
+			program: `
+				fmt B1 = "%dkg";
+				let B1 = 42;
+				fmt B2 = "%d pounds";
+				let B2 = B1 * 2;
+			`,
+			input: [][]string{
+				{"1", "2"},
+				{"3", "4"},
+			},
+			output: [][]string{
+				{"1", "\"42kg\""},
+				{"3", "\"84 pounds\""},
+			},
+		},
 		{
 			name: "multiple let statements",
 			program: `
@@ -42,6 +59,24 @@ func TestEvaluate(t *testing.T) {
 			output: [][]string{
 				{"10", "2"},
 				{"20", "30"},
+			},
+		},
+		{
+			name: "multiple let statements with variables",
+			program: `
+				let x = 2;
+				let A1 = 10;
+				let A2 = 20;
+				let A2 = A2 * 2;
+				let B2 = (A1 + A2) * x;
+			`,
+			input: [][]string{
+				{"1", "2"},
+				{"3", "4"},
+			},
+			output: [][]string{
+				{"10", "2"},
+				{"40", "100"},
 			},
 		},
 	}
@@ -70,4 +105,3 @@ func TestEvaluate(t *testing.T) {
 		})
 	}
 }
-
