@@ -7,9 +7,13 @@ import (
 )
 
 func main() {
-	config := parseArgs(os.Stderr)
-	if config == nil {
+	config, err := parseArgs()
+	if err != nil {
+		fmt.Fprint(os.Stderr, err.Error()+"\n")
 		os.Exit(1)
+	}
+	if config == nil {
+		os.Exit(0)
 	}
 
 	// Open CSV source

@@ -1,11 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"os"
 	"reflect"
-	"strings"
 	"testing"
 )
 
@@ -51,7 +49,7 @@ func TestParseArgs(t *testing.T) {
 		{
 			name:   "conflicting output flags -o and -u",
 			args:   []string{"csvss", "-s", "scriptFile", "-o", "output.csv", "-u", "csvFile"},
-			errMsg: "conflicting output",
+			errMsg: "conflicting output flags: -o and -u cannot be used together",
 		},
 		{
 			name:   "update flag without CSV file",
@@ -88,16 +86,13 @@ func TestParseArgs(t *testing.T) {
 				os.Args = oldArgs
 			}()
 
-			// Create buffer to capture output
-			var outputBuffer bytes.Buffer
-
 			// Call parseArgs function with buffer
-			config := parseArgs(&outputBuffer)
+			config, err := parseArgs()
 
 			if tt.errMsg != "" {
 				// Check that error message was written to buffer
-				if !strings.Contains(outputBuffer.String(), tt.errMsg) {
-					t.Errorf("Expected output to contain %q, got %q", tt.errMsg, outputBuffer.String())
+				if err.Error() != tt.errMsg {
+					t.Errorf("Expected output to contain %q, got %q", tt.errMsg, err.Error())
 				}
 				return
 			}

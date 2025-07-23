@@ -1,9 +1,9 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
-	"io"
 )
 
 var (
@@ -41,7 +41,7 @@ type Config struct {
 	Output string
 }
 
-func parseArgs(w io.Writer) *Config {
+func parseArgs() (*Config, error) {
 	var script string
 	var output string
 	var input string
@@ -57,13 +57,12 @@ func parseArgs(w io.Writer) *Config {
 
 	if help {
 		fmt.Println(usageMessage)
-		return nil
+		return nil, nil
 	}
 
 	// Check conflicting output flags
 	if output != "" && update != "" {
-		_, _ = fmt.Fprintf(w, "%s\n", outputConflictMessage)
-		return nil
+		return nil, errors.New(outputConflictMessage)
 	}
 
 	// Handle update flag - when -u is used, it specifies both input and output
@@ -74,13 +73,12 @@ func parseArgs(w io.Writer) *Config {
 
 	// Basic validation - need either input file or script file
 	if input == "" && script == "" {
-		_, _ = fmt.Fprintf(w, "%s\n", inputConflictMessage)
-		return nil
+		return nil, errors.New(inputConflictMessage)
 	}
 
 	return &Config{
 		Script: script,
 		Input:  input,
 		Output: output,
-	}
+	}, nil
 }
