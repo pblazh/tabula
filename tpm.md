@@ -34,6 +34,7 @@
 - [x] #13: Read formatted strings
 - [x] #14: Write formatted strings
 - [ ] #15: **CRITICAL** CLI Integration
+  - [x] #15.0: Parse and validate arguments
   - [ ] #15.1: Implement script file reading in `cmd/cli/main.go`
   - [ ] #15.2: Integrate lexer → parser → evaluator pipeline in CLI
   - [ ] #15.3: Add CSV data to context mapping (A1, B2, etc.)

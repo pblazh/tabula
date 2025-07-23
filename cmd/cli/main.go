@@ -1,98 +1,79 @@
 package main
 
 import (
-	"encoding/csv"
-	"flag"
 	"fmt"
+	"log"
 	"os"
-	"strings"
-
-	"github.com/pblazh/csvss/internal/evaluator"
-)
-
-var (
-	usageMessage      = "Usage: 'csvss -s ./script.file ./table.csv'"
-	csvPathMessage    = "Path to a csv file is required"
-	scriptPathMessage = "Path to a script file is required"
 )
 
 func main() {
-	var script string
-	var inPlace bool
-	var help bool
-
-	flag.StringVar(&script, "s", "", "path to a script file")
-	flag.BoolVar(&inPlace, "i", false, "update CSV file in place")
-	flag.BoolVar(&help, "h", false, "usage")
-	flag.Parse()
-
-	if help {
-		_, _ = os.Stdout.WriteString(usageMessage + "\n")
-		os.Exit(0)
-	}
-
-	args := flag.Args()
-
-	if len(args) == 0 {
-		_, _ = os.Stderr.WriteString(
-			strings.Join([]string{csvPathMessage, usageMessage, ""}, "\n"),
-		)
+	config := parseArgs(os.Stderr)
+	if config == nil {
 		os.Exit(1)
 	}
 
-	if script == "" {
-		_, _ = os.Stderr.WriteString(
-			strings.Join([]string{scriptPathMessage, usageMessage, ""}, "\n"),
-		)
+	// Open CSV source
+	csvReader := os.Stdin
+	if config.Input != "" {
+		csvReader, err := os.Open(config.Input)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error opening CSV file: %v\n", err)
+			os.Exit(1)
+		}
+		defer dclose(csvReader)
+	}
+
+	// Open CSV source
+	scriptReader := os.Stdin
+	if config.Script != "" {
+		scriptReader, err := os.Open(config.Script)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error opening script file: %v\n", err)
+			os.Exit(1)
+		}
+		defer dclose(scriptReader)
+	}
+
+	// Open CSV destionation
+	csvWriter := os.Stdout
+	if config.Output != "" {
+		csvWriter, err := os.Open(config.Output)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error opening output file: %v\n", err)
+			os.Exit(1)
+		}
+		defer dclose(csvWriter)
+	}
+
+	// For update in place, we'll need to write to a temp file first
+	var tempFile os.File
+	if config.Input == config.Output {
+		tempFile, err := os.CreateTemp("", "csvss_temp_*.csv")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error creating temp file: %v\n", err)
+			os.Exit(1)
+		}
+
+		defer dclose(tempFile)
+		defer func() {
+			err := os.Remove(tempFile.Name())
+			if err != nil {
+				log.Fatal(err)
+			}
+		}()
+		csvWriter = tempFile
+	}
+
+	// Process CSV
+	if err := processCSV(csvReader, scriptReader, csvWriter); err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
 
-	// Read and parse CSV file
-	csvFile, err := os.Open(args[0])
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error opening CSV file: %v\n", err)
-		os.Exit(1)
-	}
-	defer csvFile.Close()
-
-	csvReader := csv.NewReader(csvFile)
-	csvReader.LazyQuotes = true
-	csvReader.TrimLeadingSpace = true
-
-	records, err := csvReader.ReadAll()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading CSV file: %v\n", err)
-		os.Exit(1)
-	}
-
-	// Read and parse script file
-	scriptFile, err := os.Open(script)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error opening script file: %v\n", err)
-		os.Exit(1)
-	}
-	defer scriptFile.Close()
-
-	program, err := evaluator.ParseProgram(scriptFile, script)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error parsing script: %v\n", err)
-		os.Exit(1)
-	}
-
-	// Evaluate the program with CSV data
-	result, err := evaluator.Evaluate(program, records)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error evaluating script: %v\n", err)
-		os.Exit(1)
-	}
-
-	// Output result as CSV to stdout
-	writer := csv.NewWriter(os.Stdout)
-	defer writer.Flush()
-
-	for _, row := range result {
-		if err := writer.Write(row); err != nil {
-			fmt.Fprintf(os.Stderr, "Error writing CSV output: %v\n", err)
+	// For update replace original file
+	if config.Input == config.Output {
+		if err := os.Rename(tempFile.Name(), config.Input); err != nil {
+			fmt.Fprintf(os.Stderr, "Error updating file: %v\n", err)
 			os.Exit(1)
 		}
 	}
