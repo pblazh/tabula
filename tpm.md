@@ -48,7 +48,7 @@
   - [ ] #17.1: Update README with actual working examples
   - [ ] #17.2: Remove/mark unimplemented functions in README
 - [ ] #18: Missing Project Files
-  - [ ] #18.1: Add `go.sum` file (run `go mod tidy`)
+  - [x] #18.1: Add `go.sum` file (run `go mod tidy`)
   - [ ] #18.2: Add CI/CD configuration (GitHub Actions)
   - [ ] #18.3: Add proper build/release scripts
 - [ ] #19: Testing Infrastructure
@@ -116,10 +116,10 @@
   - [ ] #29.8: Implement MAX function
   - [ ] #29.9: Implement MIN function
   - [ ] #29.10: Implement POWER function
-  - [ ] #29.11: Implement PRODUCT function
+  - [x] #29.11: Implement PRODUCT function
   - [ ] #29.12: Implement ROUND function
   - [ ] #29.13: Implement SQRT function
-  - [ ] #29.14: Implement SUM function
+  - [x] #29.14: Implement SUM function
   - [ ] #29.15: Implement SUMIF function
   - [ ] #29.16: Implement SUMIFS function
 - [ ] #30: Text Functions Implementation
