@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/csvss/internal/functions"
 	"github.com/pblazh/csvss/internal/lexer"
 )
 
@@ -96,7 +97,7 @@ func evaluateCallExpression(expr ast.CallExpression, context map[string]string, 
 	}
 
 	identifier := expr.Identifier.String()
-	internalFunction, ok := dispatchMap[identifier]
+	internalFunction, ok := functions.DispatchMap[identifier]
 	if !ok {
 		return nil, ErrUnsupportedFunctions(identifier)
 	}
