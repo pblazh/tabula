@@ -39,7 +39,6 @@ func (lexer *Lexer) Next() (Token, error) {
 			Literal:  literal,
 			Position: lexer.scanner.Position,
 		}
-		lexer.scanner.Scan()
 		return token, nil
 	}
 

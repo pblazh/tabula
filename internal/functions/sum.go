@@ -1,8 +1,6 @@
 package functions
 
 import (
-	"fmt"
-
 	"github.com/pblazh/csvss/internal/ast"
 	"golang.org/x/exp/constraints"
 )
@@ -63,7 +61,6 @@ type Sumable interface {
 func sum[T Sumable](values ...T) T {
 	var result T
 	for _, n := range values {
-		fmt.Println(n)
 		result += n
 	}
 	return result

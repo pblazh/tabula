@@ -311,6 +311,42 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 			input:    "3.2 > 5.7",
 			expected: "<bool false>",
 		},
+		// Function calls
+		{
+			name:     "SUM with integers",
+			input:    "SUM(1, 2, 3)",
+			expected: "<int 6>",
+		},
+		{
+			name:     "SUM with floats",
+			input:    "SUM(1.5, 2.5)",
+			expected: "<float 4.00>",
+		},
+		{
+			name:     "SUM with mixed int and float (int first)",
+			input:    "SUM(5, 2.5)",
+			expected: "<int 7>",
+		},
+		{
+			name:     "SUM with mixed float and int (float first)",
+			input:    "SUM(2.5, 5)",
+			expected: "<float 7.50>",
+		},
+		{
+			name:     "SUM with strings",
+			input:    "SUM(\"hello\", \" \", \"world\")",
+			expected: "<str \"hello world\">",
+		},
+		{
+			name:     "SUM with single argument",
+			input:    "SUM(42)",
+			expected: "<int 42>",
+		},
+		{
+			name:     "SUM with no arguments",
+			input:    "SUM()",
+			expected: "<int 0>",
+		},
 	}
 
 	for _, tc := range testcases {
@@ -503,6 +539,27 @@ func TestOperationErrors(t *testing.T) {
 			input:         "!3.14",
 			expectedError: "<NOT:! at test:1:1> is not supported for type: float",
 		},
+		// Function call errors
+		{
+			name:          "SUM with unsupported boolean first argument",
+			input:         "SUM(true)",
+			expectedError: "unsupported function call (SUM <bool true>)",
+		},
+		{
+			name:          "SUM with mixed incompatible types in integer sum",
+			input:         "SUM(5, \"hello\")",
+			expectedError: "unsupported argument <str \"hello\"> for for (SUM <int 5> <str \"hello\">)",
+		},
+		{
+			name:          "SUM with mixed incompatible types in float sum",
+			input:         "SUM(5.5, true)",
+			expectedError: "unsupported argument <bool true> for for (SUM <float 5.50> <bool true>)",
+		},
+		// {
+		// 	name:          "SUM with mixed incompatible types in string sum",
+		// 	input:         "SUM(\"hello\", 42)",
+		// 	expectedError: "unsupported argument <int 42> for for (SUM <str \"hello\"> <int 42>)",
+		// },
 	}
 
 	for _, tc := range testcases {

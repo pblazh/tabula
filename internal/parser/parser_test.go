@@ -93,9 +93,14 @@ func TestParser(t *testing.T) {
 			output: "(SUM <int 5>);",
 		},
 		{
-			name:   "call expression with multiple arguments",
+			name:   "call expression with multiple numbers",
 			input:  "SUM(5, 6);",
 			output: "(SUM <int 5> <int 6>);",
+		},
+		{
+			name:   "call expression with multiple strings",
+			input:  "SUM(\"5\", \"6\");",
+			output: "(SUM <str \"5\"> <str \"6\">);",
 		},
 		{
 			name:   "cell expression",
