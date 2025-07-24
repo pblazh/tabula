@@ -2,7 +2,6 @@ package evaluator
 
 import (
 	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/functions"
 	"github.com/pblazh/csvss/internal/lexer"
 )
 
@@ -97,12 +96,11 @@ func evaluateCallExpression(expr ast.CallExpression, context map[string]string, 
 	}
 
 	identifier := expr.Identifier.String()
-	switch identifier {
-	case "SUM":
-		return functions.Sum(expr, args...)
-	default:
+	internalFunction, ok := dispatchMap[identifier]
+	if !ok {
 		return nil, ErrUnsupportedFunctions(identifier)
 	}
+	return internalFunction(expr, args...)
 }
 
 func evaluateVariableExpression(expr ast.IdentifierExpression, context map[string]string, formats map[string]string) (ast.Expression, error) {
