@@ -33,7 +33,7 @@ func TestReadValue(t *testing.T) {
 			name:     "format specification with string",
 			input:    "hello",
 			format:   "%s",
-			expected: ast.StringExpression{Value: "\"hello\"", Token: lexer.Token{Literal: "hello"}},
+			expected: ast.StringExpression{Value: "hello", Token: lexer.Token{Literal: "hello"}},
 		},
 		{
 			name:     "format specification with boolean true",
@@ -154,19 +154,19 @@ func TestReadValue(t *testing.T) {
 			name:     "unquoted string without format returns string",
 			input:    "hello",
 			format:   "",
-			expected: ast.StringExpression{Value: "\"hello\"", Token: lexer.Token{Literal: "hello"}},
+			expected: ast.StringExpression{Value: "hello", Token: lexer.Token{Literal: "hello"}},
 		},
 		{
 			name:     "invalid number returns string",
 			input:    "abc123",
 			format:   "",
-			expected: ast.StringExpression{Value: "\"abc123\"", Token: lexer.Token{Literal: "abc123"}},
+			expected: ast.StringExpression{Value: "abc123", Token: lexer.Token{Literal: "abc123"}},
 		},
 		{
 			name:     "empty string returns string",
 			input:    "",
 			format:   "",
-			expected: ast.StringExpression{Value: "\"\"", Token: lexer.Token{Literal: ""}},
+			expected: ast.StringExpression{Value: "", Token: lexer.Token{Literal: ""}},
 		},
 
 		// Whitespace trimming tests

@@ -63,8 +63,7 @@ func parseString(value, formatSpec string) (ast.Expression, error) {
 	if err != nil {
 		return nil, ErrParseWithFormat(value, formatSpec, err.Error())
 	}
-	quotedString := fmt.Sprintf("\"%s\"", resultString)
-	return ast.StringExpression{Value: quotedString, Token: lexer.Token{Literal: value}}, nil
+	return ast.StringExpression{Value: resultString, Token: lexer.Token{Literal: value}}, nil
 }
 
 // parseBool parses a boolean value using the specified format
@@ -113,8 +112,7 @@ func parseWithoutFormat(value string) (ast.Expression, error) {
 	}
 
 	// Otherwise return content as string
-	quotedValue := fmt.Sprintf("\"%s\"", value)
-	return ast.StringExpression{Value: quotedValue, Token: lexer.Token{Literal: value}}, nil
+	return ast.StringExpression{Value: value, Token: lexer.Token{Literal: value}}, nil
 }
 
 // WriteValue writes an AST expression to context with optional format specification

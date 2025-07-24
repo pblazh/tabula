@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/csvss/internal/functions"
 	"github.com/pblazh/csvss/internal/lexer"
 )
 
@@ -77,17 +78,31 @@ func evaluateInfixExpression(expr ast.InfixExpression, context map[string]string
 }
 
 func evaluateCallExpression(expr ast.CallExpression, context map[string]string, input [][]string, formats map[string]string) (ast.Expression, error) {
-	args := make([]ast.Expression, len(expr.Arguments))
-	for i, arg := range expr.Arguments {
-		evaluated, err := EvaluateExpression(arg, context, input, formats)
-		if err != nil {
-			return nil, err
+	args := make([]ast.Expression, 0, len(expr.Arguments))
+	for _, arg := range expr.Arguments {
+		switch a := arg.(type) {
+		case ast.RangeExpression:
+			evaluated, err := EvaluateRangeExpression(a, input, formats)
+			if err != nil {
+				return nil, err
+			}
+			args = append(args, evaluated...)
+		default:
+			evaluated, err := EvaluateExpression(arg, context, input, formats)
+			if err != nil {
+				return nil, err
+			}
+			args = append(args, evaluated)
 		}
-		args[i] = evaluated
 	}
 
-	// For now, just return the identifier as we haven't implemented function calls yet
-	return expr.Identifier, nil // TODO: Remove this placeholder
+	identifier := expr.Identifier.String()
+	switch identifier {
+	case "SUM":
+		return functions.Sum(expr, args...)
+	default:
+		return nil, ErrUnsupportedFunctions(identifier)
+	}
 }
 
 func evaluateVariableExpression(expr ast.IdentifierExpression, context map[string]string, formats map[string]string) (ast.Expression, error) {
@@ -117,4 +132,23 @@ func evaluateCellExpression(expr ast.IdentifierExpression, input [][]string, for
 	// Get the value from the CSV input
 	value := input[row][col]
 	return ReadValue(value, formats[cellRef])
+}
+
+// EvaluateRangeExpression evaluates a range cell reference (like A1:A2, A1:B2) and returns the value from the CSV input
+func EvaluateRangeExpression(expr ast.RangeExpression, input [][]string, formats map[string]string) ([]ast.Expression, error) {
+	cells := make([]ast.IdentifierExpression, len(expr.Value))
+	for i, cell := range expr.Value {
+		cells[i] = ast.IdentifierExpression{Token: lexer.Token{Literal: cell}}
+	}
+
+	result := make([]ast.Expression, len(expr.Value))
+
+	for i, cell := range cells {
+		res, err := evaluateCellExpression(cell, input, formats)
+		if err != nil {
+			return nil, err
+		}
+		result[i] = res
+	}
+	return result, nil
 }

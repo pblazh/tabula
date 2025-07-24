@@ -33,7 +33,7 @@
     - [x] #12.3.1: Evaluate fmt statements
 - [x] #13: Read formatted strings
 - [x] #14: Write formatted strings
-- [ ] #15: **CRITICAL** CLI Integration
+- [x] #15: **CRITICAL** CLI Integration
   - [x] #15.0: Parse and validate arguments
   - [x] #15.1: Implement script file reading in `cmd/cli/main.go`
   - [x] #15.2: Integrate lexer → parser → evaluator pipeline in CLI
@@ -41,8 +41,8 @@
   - [x] #15.4: Convert evaluation results back to CSV format
   - [x] #15.5: Implement actual output handling (stdout/file)
 - [ ] #16: **CRITICAL** Function Implementation
-  - [ ] #16.1: Implement function call evaluation in `evaluateCallExpression`
-  - [ ] #16.3: Implement range evaluation (A1:C3 expansion)
+  - [x] #16.1: Implement function call evaluation in `evaluateCallExpression`
+  - [x] #16.3: Implement range evaluation (A1:C3 expansion)
   - [ ] #16.4: Add function registry and dispatch system
 - [ ] #17: **CRITICAL** Documentation Fixes
   - [ ] #17.1: Fix binary name inconsistency (ucsvss vs csvss)

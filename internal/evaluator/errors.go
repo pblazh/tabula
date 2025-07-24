@@ -70,3 +70,7 @@ func ErrFmtExpectedString(identifier lexer.Token, actualValue string) error {
 func ErrStatementExecution(statement string, err error) error {
 	return fmt.Errorf("%s caused %s", statement, err)
 }
+
+func ErrUnsupportedFunctions(identifier string) error {
+	return fmt.Errorf("unsupported function: %s", identifier)
+}
