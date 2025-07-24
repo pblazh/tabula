@@ -13,7 +13,7 @@ type MathFunction[T Number] func(values ...T) T
 
 func callMathFunction(intFunction MathFunction[int], floatFunction MathFunction[float64], call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 	if len(values) == 0 {
-		return ast.IntExpression{Value: 0}, nil
+		return ast.IntExpression{Value: int(intFunction())}, nil
 	}
 
 	first := values[0]
@@ -50,13 +50,21 @@ func callMathFunction(intFunction MathFunction[int], floatFunction MathFunction[
 }
 
 func product[T Number](values ...T) T {
-	var result T
+	result := T(1)
 	for _, n := range values {
-		result += n
+		result *= n
 	}
 	return result
 }
 
-func Product(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-	return callMathFunction(product, product, call, values...)
+func average[T Number](values ...T) T {
+	if len(values) == 0 {
+		return T(0)
+	}
+
+	total := T(0)
+	for _, n := range values {
+		total += n
+	}
+	return T(total / T(len(values)))
 }

@@ -13,4 +13,3 @@ func ErrNoStatementsParsed() error {
 func ErrExpectedExpressionStatement(actual ast.Statement) error {
 	return fmt.Errorf("expected ExpressionStatement, got %T", actual)
 }
-

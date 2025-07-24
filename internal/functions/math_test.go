@@ -7,18 +7,32 @@ import (
 	"github.com/pblazh/csvss/internal/lexer"
 )
 
+type inputCase struct {
+	f        string
+	expected string
+	error    string
+}
+
 func TestProduct(t *testing.T) {
 	testcases := []struct {
-		name          string
-		input         []ast.Expression
-		expected      string
-		expectedError string
+		name  string
+		input []ast.Expression
+		cases []inputCase
 	}{
 		// Empty input
 		{
-			name:     "empty input returns one",
-			input:    []ast.Expression{},
-			expected: "<int 1>",
+			name:  "empty input returns one",
+			input: []ast.Expression{},
+			cases: []inputCase{
+				{
+					f:        "PRODUCT",
+					expected: "<int 1>",
+				},
+				{
+					f:        "AVERAGE",
+					expected: "<int 0>",
+				},
+			},
 		},
 		// Integer operations
 		{
@@ -26,7 +40,16 @@ func TestProduct(t *testing.T) {
 			input: []ast.Expression{
 				ast.IntExpression{Value: 5},
 			},
-			expected: "<int 5>",
+			cases: []inputCase{
+				{
+					f:        "PRODUCT",
+					expected: "<int 5>",
+				},
+				{
+					f:        "AVERAGE",
+					expected: "<int 5>",
+				},
+			},
 		},
 		{
 			name: "multiple integers",
@@ -35,7 +58,16 @@ func TestProduct(t *testing.T) {
 				ast.IntExpression{Value: 3},
 				ast.IntExpression{Value: 4},
 			},
-			expected: "<int 24>",
+			cases: []inputCase{
+				{
+					f:        "PRODUCT",
+					expected: "<int 24>",
+				},
+				{
+					f:        "AVERAGE",
+					expected: "<int 3>",
+				},
+			},
 		},
 		{
 			name: "integers with zero",
@@ -44,7 +76,16 @@ func TestProduct(t *testing.T) {
 				ast.IntExpression{Value: 0},
 				ast.IntExpression{Value: 5},
 			},
-			expected: "<int 0>",
+			cases: []inputCase{
+				{
+					f:        "PRODUCT",
+					expected: "<int 0>",
+				},
+				{
+					f:        "AVERAGE",
+					expected: "<int 5>",
+				},
+			},
 		},
 		{
 			name: "integers with negative values",
@@ -53,7 +94,16 @@ func TestProduct(t *testing.T) {
 				ast.IntExpression{Value: -3},
 				ast.IntExpression{Value: 2},
 			},
-			expected: "<int -60>",
+			cases: []inputCase{
+				{
+					f:        "PRODUCT",
+					expected: "<int -60>",
+				},
+				{
+					f:        "AVERAGE",
+					expected: "<int 3>",
+				},
+			},
 		},
 		// Float operations
 		{
@@ -61,7 +111,16 @@ func TestProduct(t *testing.T) {
 			input: []ast.Expression{
 				ast.FloatExpression{Value: 5.5},
 			},
-			expected: "<float 5.50>",
+			cases: []inputCase{
+				{
+					f:        "PRODUCT",
+					expected: "<float 5.50>",
+				},
+				{
+					f:        "AVERAGE",
+					expected: "<float 5.50>",
+				},
+			},
 		},
 		{
 			name: "multiple floats",
@@ -70,7 +129,16 @@ func TestProduct(t *testing.T) {
 				ast.FloatExpression{Value: 1.5},
 				ast.FloatExpression{Value: 3.0},
 			},
-			expected: "<float 9.00>",
+			cases: []inputCase{
+				{
+					f:        "PRODUCT",
+					expected: "<float 9.00>",
+				},
+				{
+					f:        "AVERAGE",
+					expected: "<float 2.17>",
+				},
+			},
 		},
 		{
 			name: "floats with zero",
@@ -79,7 +147,16 @@ func TestProduct(t *testing.T) {
 				ast.FloatExpression{Value: 0.0},
 				ast.FloatExpression{Value: 2.5},
 			},
-			expected: "<float 0.00>",
+			cases: []inputCase{
+				{
+					f:        "PRODUCT",
+					expected: "<float 0.00>",
+				},
+				{
+					f:        "AVERAGE",
+					expected: "<float 2.67>",
+				},
+			},
 		},
 		// Mixed int and float operations (result type determined by first argument)
 		{
@@ -88,7 +165,16 @@ func TestProduct(t *testing.T) {
 				ast.IntExpression{Value: 5},
 				ast.FloatExpression{Value: 2.5},
 			},
-			expected: "<int 10>",
+			cases: []inputCase{
+				{
+					f:        "PRODUCT",
+					expected: "<int 10>",
+				},
+				{
+					f:        "AVERAGE",
+					expected: "<int 3>",
+				},
+			},
 		},
 		{
 			name: "float first, then int - result is float",
@@ -96,7 +182,16 @@ func TestProduct(t *testing.T) {
 				ast.FloatExpression{Value: 2.5},
 				ast.IntExpression{Value: 4},
 			},
-			expected: "<float 10.00>",
+			cases: []inputCase{
+				{
+					f:        "PRODUCT",
+					expected: "<float 10.00>",
+				},
+				{
+					f:        "AVERAGE",
+					expected: "<float 3.25>",
+				},
+			},
 		},
 		// Error cases
 		{
@@ -104,7 +199,16 @@ func TestProduct(t *testing.T) {
 			input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 			},
-			expectedError: "unsupported function call (PRODUCT <bool true>)",
+			cases: []inputCase{
+				{
+					f:     "PRODUCT",
+					error: "unsupported function call (PRODUCT <bool true>)",
+				},
+				{
+					f:     "AVERAGE",
+					error: "unsupported function call (AVERAGE <bool true>)",
+				},
+			},
 		},
 		{
 			name: "unsupported argument in integer product",
@@ -112,7 +216,16 @@ func TestProduct(t *testing.T) {
 				ast.IntExpression{Value: 5},
 				ast.StringExpression{Value: "hello"},
 			},
-			expectedError: "unsupported argument <str \"hello\"> for for (PRODUCT <int 5> <str \"hello\">)",
+			cases: []inputCase{
+				{
+					f:     "PRODUCT",
+					error: "unsupported argument <str \"hello\"> for for (PRODUCT <int 5> <str \"hello\">)",
+				},
+				{
+					f:     "AVERAGE",
+					error: "unsupported argument <str \"hello\"> for for (AVERAGE <int 5> <str \"hello\">)",
+				},
+			},
 		},
 		{
 			name: "unsupported argument in float product",
@@ -120,45 +233,64 @@ func TestProduct(t *testing.T) {
 				ast.FloatExpression{Value: 5.5},
 				ast.BooleanExpression{Value: true},
 			},
-			expectedError: "unsupported argument <bool true> for for (PRODUCT <float 5.50> <bool true>)",
+			cases: []inputCase{
+				{
+					f:     "PRODUCT",
+					error: "unsupported argument <bool true> for for (PRODUCT <float 5.50> <bool true>)",
+				},
+				{
+					f:     "AVERAGE",
+					error: "unsupported argument <bool true> for for (AVERAGE <float 5.50> <bool true>)",
+				},
+			},
 		},
 		{
 			name: "unsupported string argument",
 			input: []ast.Expression{
 				ast.StringExpression{Value: "hello"},
 			},
-			expectedError: "unsupported function call (PRODUCT <str \"hello\">)",
+			cases: []inputCase{
+				{
+					f:     "PRODUCT",
+					error: "unsupported function call (PRODUCT <str \"hello\">)",
+				},
+				{
+					f:     "AVERAGE",
+					error: "unsupported function call (AVERAGE <str \"hello\">)",
+				},
+			},
 		},
 	}
 
 	for _, tc := range testcases {
-		t.Run(tc.name, func(t *testing.T) {
-			result, err := Product(ast.CallExpression{
-				Identifier: ast.IdentifierExpression{
-					Token: lexer.Token{Literal: "PRODUCT"},
-				}, Arguments: tc.input,
-			}, tc.input...)
+		for _, c := range tc.cases {
+			t.Run(tc.name+":"+c.f, func(t *testing.T) {
+				result, err := DispatchMap[c.f](ast.CallExpression{
+					Identifier: ast.IdentifierExpression{
+						Token: lexer.Token{Literal: c.f},
+					}, Arguments: tc.input,
+				}, tc.input...)
 
-			if tc.expectedError != "" {
-				if err == nil {
-					t.Errorf("Expected error %q but got result: %v", tc.expectedError, result)
+				if c.error != "" {
+					if err == nil {
+						t.Errorf("Expected error %q but got result: %v", c.error, result)
+						return
+					}
+					if err.Error() != c.error {
+						t.Errorf("Expected error %q, got %q", c.error, err.Error())
+					}
 					return
 				}
-				if err.Error() != tc.expectedError {
-					t.Errorf("Expected error %q, got %q", tc.expectedError, err.Error())
+
+				if err != nil {
+					t.Errorf("Unexpected error: %v", err)
+					return
 				}
-				return
-			}
 
-			if err != nil {
-				t.Errorf("Unexpected error: %v", err)
-				return
-			}
-
-			if result.String() != tc.expected {
-				t.Errorf("Expected %s, got %s", tc.expected, result.String())
-			}
-		})
+				if result.String() != c.expected {
+					t.Errorf("Expected %s, got %s", c.expected, result.String())
+				}
+			})
+		}
 	}
 }
-

@@ -11,4 +11,10 @@ type (
 
 var DispatchMap dispatchMap = dispatchMap{
 	"SUM": Sum,
+	"PRODUCT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		return callMathFunction(product, product, call, values...)
+	},
+	"AVERAGE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		return callMathFunction(average, average, call, values...)
+	},
 }

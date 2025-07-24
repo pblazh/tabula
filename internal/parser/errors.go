@@ -26,4 +26,3 @@ func ErrExpectedRightParen(actual lexer.Token) error {
 func ErrExpectedPrefix(actual lexer.Token) error {
 	return fmt.Errorf("expected prefix, but got %v", actual)
 }
-

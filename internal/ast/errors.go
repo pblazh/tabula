@@ -11,4 +11,3 @@ func ErrInvalidRange(start, end string) error {
 func ErrCircularDependency() error {
 	return fmt.Errorf("circular dependency detected")
 }
-

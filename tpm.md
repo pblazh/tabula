@@ -107,7 +107,7 @@
   - [ ] #28.4: Add format specification improvements
 - [ ] #29: Math Functions Implementation
   - [ ] #29.1: Implement ABS function
-  - [ ] #29.2: Implement AVERAGE function
+  - [x] #29.2: Implement AVERAGE function
   - [ ] #29.3: Implement AVERAGEIF function
   - [ ] #29.4: Implement CEILING function
   - [ ] #29.5: Implement COUNT function
