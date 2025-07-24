@@ -148,7 +148,7 @@ func formatWithSpec(value ast.Expression, formatSpec string) (string, error) {
 		return fmt.Sprintf(formatSpec, expr.Value), nil
 	case ast.StringExpression:
 		// Extract content from quoted string literal
-		content := expr.Token.Literal
+		content := expr.Value
 		if len(content) >= 2 && content[0] == '"' && content[len(content)-1] == '"' {
 			content = content[1 : len(content)-1]
 		}
@@ -168,7 +168,7 @@ func formatWithoutSpec(value ast.Expression) (string, error) {
 	case ast.FloatExpression:
 		return fmt.Sprintf("%g", expr.Value), nil
 	case ast.StringExpression:
-		return expr.Token.Literal, nil
+		return expr.Value, nil
 	case ast.BooleanExpression:
 		return fmt.Sprintf("%t", expr.Value), nil
 	default:

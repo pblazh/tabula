@@ -37,6 +37,15 @@ exit status 1
 exit status 1
 `,
 		},
+		{
+			name: "succcess",
+			args: []string{"-i", "../../examples/basic/file.csv", "-s", "../../examples/basic/script.csvs"},
+			stdout: `Full Name,Age,Grade
+"Dow, Bob",25,170
+"Dow, Alice",30,184
+`,
+			stderr: "",
+		},
 	}
 
 	for _, tt := range tests {

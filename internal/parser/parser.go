@@ -322,7 +322,7 @@ func (p *Parser) parseBool() (ast.Expression, error) {
 }
 
 func (p *Parser) parseString() (ast.Expression, error) {
-	expr := ast.StringExpression{Value: p.cur.Literal, Token: p.cur}
+	expr := ast.StringExpression{Value: p.cur.Literal[1 : len(p.cur.Literal)-1], Token: p.cur}
 	err := p.advance()
 	if err != nil {
 		return nil, err

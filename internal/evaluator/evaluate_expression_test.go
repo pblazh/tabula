@@ -12,6 +12,27 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 		input    string
 		expected string
 	}{
+		// Values
+		{
+			name:     "string",
+			input:    "\"hello\"",
+			expected: "<str \"hello\">",
+		},
+		{
+			name:     "int",
+			input:    "9",
+			expected: "<int 9>",
+		},
+		{
+			name:     "float",
+			input:    "9.01",
+			expected: "<float 9.01>",
+		},
+		{
+			name:     "bool",
+			input:    "true",
+			expected: "<bool true>",
+		},
 		// Addition
 		{
 			name:     "int + int",

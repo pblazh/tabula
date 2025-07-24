@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 )
 
@@ -19,52 +18,49 @@ func main() {
 	// Open CSV source
 	csvReader := os.Stdin
 	if config.Input != "" {
-		csvReader, err := os.Open(config.Input)
+		file, err := os.Open(config.Input)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error opening CSV file: %v\n", err)
 			os.Exit(1)
 		}
-		defer dclose(csvReader)
+		defer dclose(file)
+		csvReader = file
 	}
 
-	// Open CSV source
+	// Open script source
 	scriptReader := os.Stdin
 	if config.Script != "" {
-		scriptReader, err := os.Open(config.Script)
+		file, err := os.Open(config.Script)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error opening script file: %v\n", err)
 			os.Exit(1)
 		}
-		defer dclose(scriptReader)
+		defer dclose(file)
+		scriptReader = file
 	}
 
-	// Open CSV destionation
+	// Open CSV destination
 	csvWriter := os.Stdout
 	if config.Output != "" {
-		csvWriter, err := os.Open(config.Output)
+		file, err := os.Create(config.Output)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error opening output file: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Error creating output file: %v\n", err)
 			os.Exit(1)
 		}
-		defer dclose(csvWriter)
+		defer dclose(file)
+		csvWriter = file
 	}
 
 	// For update in place, we'll need to write to a temp file first
-	var tempFile os.File
+	var tempFile *os.File
 	if config.Input == config.Output {
-		tempFile, err := os.CreateTemp("", "csvss_temp_*.csv")
+		tempFile, err = os.CreateTemp("", "csvss_temp_*.csv")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error creating temp file: %v\n", err)
 			os.Exit(1)
 		}
 
-		defer dclose(tempFile)
-		defer func() {
-			err := os.Remove(tempFile.Name())
-			if err != nil {
-				log.Fatal(err)
-			}
-		}()
+		defer dremove(tempFile)
 		csvWriter = tempFile
 	}
 

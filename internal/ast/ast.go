@@ -96,7 +96,7 @@ type StringExpression struct {
 }
 
 func (expr StringExpression) String() string {
-	return fmt.Sprintf("<str %s>", expr.Value)
+	return fmt.Sprintf("<str \"%s\">", expr.Value)
 }
 
 type PrefixExpression struct {

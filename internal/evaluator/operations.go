@@ -28,7 +28,7 @@ func evaluateNot(expr ast.Expression, token lexer.Token) (ast.Expression, error)
 func evaluateAddition(left, right ast.Expression, operator lexer.Token) (ast.Expression, error) {
 	if l, ok := left.(ast.StringExpression); ok {
 		if r, ok := right.(ast.StringExpression); ok {
-			return ast.StringExpression{Value: l.Value + r.Value}, nil
+			return ast.StringExpression{Value: l.Value + r.Value, Token: operator}, nil
 		}
 	}
 

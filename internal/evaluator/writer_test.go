@@ -30,9 +30,9 @@ func TestWriteValue(t *testing.T) {
 		},
 		{
 			name:     "write string without format",
-			input:    ast.StringExpression{Token: lexer.Token{Literal: "\"hello\""}},
+			input:    ast.StringExpression{Value: "hello", Token: lexer.Token{Literal: "\"hello\""}},
 			format:   "",
-			expected: "\"hello\"",
+			expected: "hello",
 		},
 		{
 			name:     "write boolean without format",
@@ -56,9 +56,15 @@ func TestWriteValue(t *testing.T) {
 		},
 		{
 			name:     "write string with format",
-			input:    ast.StringExpression{Token: lexer.Token{Literal: "\"world\""}},
+			input:    ast.StringExpression{Value: "world", Token: lexer.Token{Literal: "\"hello\""}},
 			format:   "Hello, %s!",
 			expected: "Hello, world!",
+		},
+		{
+			name:     "write string without format",
+			input:    ast.StringExpression{Value: "world", Token: lexer.Token{Literal: "\"hello\""}},
+			format:   "",
+			expected: "world",
 		},
 		{
 			name:     "write boolean with format",

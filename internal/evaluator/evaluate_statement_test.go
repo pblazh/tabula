@@ -12,9 +12,11 @@ func TestEvaluateStatement(t *testing.T) {
 	testcases := []struct {
 		name            string
 		statement       string
+		input           [][]string
 		context         map[string]string
 		expectedContext map[string]string
 		expectedFormat  map[string]string
+		expectedInput   [][]string
 	}{
 		{
 			name:            "simple let statement with arithmetic",
@@ -65,6 +67,16 @@ func TestEvaluateStatement(t *testing.T) {
 			expectedContext: map[string]string{},
 			expectedFormat:  map[string]string{"result": "\"world\""},
 		},
+		// Data update
+		{
+			name:            "update string value",
+			statement:       "let A1 = \"hello\";",
+			input:           [][]string{{"world"}},
+			context:         map[string]string{},
+			expectedContext: map[string]string{},
+			expectedFormat:  map[string]string{},
+			expectedInput:   [][]string{{"hello"}},
+		},
 	}
 
 	for _, tc := range testcases {
@@ -77,10 +89,9 @@ func TestEvaluateStatement(t *testing.T) {
 			if len(program) == 0 {
 				t.Fatalf("No statements parsed")
 			}
-			var input [][]string
 			format := make(map[string]string)
 			for _, statement := range program {
-				err = EvaluateStatement(statement, tc.context, input, format)
+				err = EvaluateStatement(statement, tc.context, tc.input, format)
 				if err != nil {
 					t.Errorf("Unexpected error: %v", err)
 					return
@@ -93,6 +104,10 @@ func TestEvaluateStatement(t *testing.T) {
 
 			if !reflect.DeepEqual(format, tc.expectedFormat) {
 				t.Errorf("Expected format %q, got %q", tc.expectedFormat, format)
+			}
+
+			if !reflect.DeepEqual(tc.input, tc.expectedInput) {
+				t.Errorf("Expected format %q, got %q", tc.expectedInput, tc.input)
 			}
 		})
 	}

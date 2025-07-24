@@ -35,11 +35,11 @@
 - [x] #14: Write formatted strings
 - [ ] #15: **CRITICAL** CLI Integration
   - [x] #15.0: Parse and validate arguments
-  - [ ] #15.1: Implement script file reading in `cmd/cli/main.go`
-  - [ ] #15.2: Integrate lexer → parser → evaluator pipeline in CLI
-  - [ ] #15.3: Add CSV data to context mapping (A1, B2, etc.)
-  - [ ] #15.4: Convert evaluation results back to CSV format
-  - [ ] #15.5: Implement actual output handling (stdout/file)
+  - [x] #15.1: Implement script file reading in `cmd/cli/main.go`
+  - [x] #15.2: Integrate lexer → parser → evaluator pipeline in CLI
+  - [x] #15.3: Add CSV data to context mapping (A1, B2, etc.)
+  - [x] #15.4: Convert evaluation results back to CSV format
+  - [x] #15.5: Implement actual output handling (stdout/file)
 - [ ] #16: **CRITICAL** Function Implementation
   - [ ] #16.1: Implement function call evaluation in `evaluateCallExpression`
   - [ ] #16.3: Implement range evaluation (A1:C3 expansion)

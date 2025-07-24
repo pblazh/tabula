@@ -31,7 +31,7 @@ func processCSV(csvReader io.Reader, scriptReader io.Reader, csvWriter io.Writer
 		return fmt.Errorf("error evaluating script: %v", err)
 	}
 
-	// Output result as CSV
+	// Output result in the expected format
 	writer := csv.NewWriter(csvWriter)
 	defer writer.Flush()
 
