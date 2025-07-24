@@ -45,9 +45,8 @@
   - [x] #16.3: Implement range evaluation (A1:C3 expansion)
   - [x] #16.4: Add function registry and dispatch system
 - [ ] #17: **CRITICAL** Documentation Fixes
-  - [ ] #17.1: Fix binary name inconsistency (ucsvss vs csvss)
-  - [ ] #17.2: Update README with actual working examples
-  - [ ] #17.3: Remove/mark unimplemented functions in README
+  - [ ] #17.1: Update README with actual working examples
+  - [ ] #17.2: Remove/mark unimplemented functions in README
 - [ ] #18: Missing Project Files
   - [ ] #18.1: Add `go.sum` file (run `go mod tidy`)
   - [ ] #18.2: Add CI/CD configuration (GitHub Actions)
