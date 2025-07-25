@@ -10,9 +10,30 @@ Command line tool for evaluating spreadsheets stored in the CSV file
 
 ### Command Line Options
 
-- `-s <script_file>`: Path to the CSVSS script file (required)
-- `-h`: Show help message
-- `-i`: Update CSV file in place (not yet implemented)
+Options:
+
+```
+  -s <file>    Script file path (default: stdin)
+  -o <file>    Output CSV file (default: stdout)
+  -u           Update input CSV file in place
+  -h           Show this help
+
+Examples:
+ # CSV from file, script from stdin → stdout
+  csvss -i data.csv
+
+ # CSV from file, script from file → stdout
+  csvss -i data.csv -s script.file
+
+ # CSV from file, script from file → file
+  csvss -i data.csv -s script.file -o output.csv
+
+ # CSV from file, script from file → update in place
+  csvss -s script.file -u data.csv
+
+ # CSV from file, script from stdin → update in place
+  csvss -u data.csv
+```
 
 ### Example
 
