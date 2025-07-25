@@ -10,6 +10,7 @@ var (
 	usageMessage = `Usage: csvss [OPTIONS]
 
 Options:
+  -i <file>    Input CSV path (default: stdin)
   -s <file>    Script file path (default: stdin)
   -o <file>    Output CSV file (default: stdout)
   -u           Update input CSV file in place
@@ -48,9 +49,9 @@ func parseArgs() (*Config, error) {
 	var update string
 	var help bool
 
+	flag.StringVar(&input, "i", "", "read CSV file")
 	flag.StringVar(&script, "s", "", "path to a script file")
 	flag.StringVar(&output, "o", "", "output CSV file")
-	flag.StringVar(&input, "i", "", "read CSV file")
 	flag.StringVar(&update, "u", "", "update CSV file in place")
 	flag.BoolVar(&help, "h", false, "usage")
 	flag.Parse()

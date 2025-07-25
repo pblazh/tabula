@@ -12,10 +12,8 @@ func dclose(c io.Closer) {
 	}
 }
 
-func dremove(f *os.File) {
-	dclose(f)
-
-	if err := os.Remove(f.Name()); err != nil {
+func dremove(f string) {
+	if err := os.Remove(f); err != nil {
 		log.Fatal(err)
 	}
 }
