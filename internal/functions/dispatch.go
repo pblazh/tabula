@@ -21,6 +21,12 @@ var DispatchMap dispatchMap = dispatchMap{
 		return callMathFunction(abs, abs, MakeArityGuard(1), call, values...)
 	},
 	"CEILING": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-		return callMathFunction(ceil, ceil, MakeArityGuard(1), call, values...)
+		return Round(true, call, values...)
+	},
+	"FLOOR": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		return Round(false, call, values...)
+	},
+	"INT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		return Int(call, values...)
 	},
 }

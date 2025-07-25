@@ -108,7 +108,7 @@
   - [x] #29.4: Implement CEILING function
   - [ ] #29.5: Implement COUNT function
   - [ ] #29.6: Implement COUNTIF function
-  - [ ] #29.7: Implement FLOOR function
+  - [x] #29.7: Implement FLOOR function
   - [ ] #29.8: Implement MAX function
   - [ ] #29.9: Implement MIN function
   - [ ] #29.10: Implement POWER function
@@ -118,6 +118,7 @@
   - [x] #29.14: Implement SUM function
   - [ ] #29.15: Implement SUMIF function
   - [ ] #29.16: Implement SUMIFS function
+  - [x] #29.17: Implement INT function
 - [ ] #30: Text Functions Implementation
   - [ ] #30.1: Implement CONCATENATE function
   - [ ] #30.2: Implement EXACT function

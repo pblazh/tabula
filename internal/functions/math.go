@@ -83,7 +83,3 @@ func average[T Number](values ...T) T {
 func abs[T Number](values ...T) T {
 	return T(math.Abs(float64(values[0])))
 }
-
-func ceil[T Number](values ...T) T {
-	return T(math.Ceil(float64(values[0])))
-}

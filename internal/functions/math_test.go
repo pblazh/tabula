@@ -21,7 +21,7 @@ func TestProduct(t *testing.T) {
 	}{
 		// Empty input
 		{
-			name:  "empty input returns one",
+			name:  "empty input",
 			input: []ast.Expression{},
 			cases: []inputCase{
 				{
@@ -38,7 +38,15 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "(CEILING) expected 1 arguments, but got 0",
+					error: "(CEILING) expected 2 arguments, but got 0",
+				},
+				{
+					f:     "FLOOR",
+					error: "(FLOOR) expected 2 arguments, but got 0",
+				},
+				{
+					f:     "INT",
+					error: "(INT) expected 1 arguments, but got 0",
 				},
 			},
 		},
@@ -62,7 +70,7 @@ func TestProduct(t *testing.T) {
 					expected: "<int 5>",
 				},
 				{
-					f:        "CEILING",
+					f:        "INT",
 					expected: "<int -5>",
 				},
 			},
@@ -89,7 +97,15 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "(CEILING <int 2> <int 3> <int 4>) expected 1 arguments, but got 3",
+					error: "(CEILING <int 2> <int 3> <int 4>) expected 2 arguments, but got 3",
+				},
+				{
+					f:     "FLOOR",
+					error: "(FLOOR <int 2> <int 3> <int 4>) expected 2 arguments, but got 3",
+				},
+				{
+					f:     "INT",
+					error: "(INT <int 2> <int 3> <int 4>) expected 1 arguments, but got 3",
 				},
 			},
 		},
@@ -149,8 +165,8 @@ func TestProduct(t *testing.T) {
 					expected: "<float 5.50>",
 				},
 				{
-					f:        "CEILING",
-					expected: "<float 6.00>",
+					f:        "INT",
+					expected: "<int 5>",
 				},
 			},
 		},
@@ -173,8 +189,8 @@ func TestProduct(t *testing.T) {
 					expected: "<float 3.70>",
 				},
 				{
-					f:        "CEILING",
-					expected: "<float -3.00>",
+					f:        "INT",
+					expected: "<int -3>",
 				},
 			},
 		},
@@ -249,6 +265,41 @@ func TestProduct(t *testing.T) {
 				},
 			},
 		},
+		// Rounding
+		{
+			name: "float first, then 1",
+			input: []ast.Expression{
+				ast.FloatExpression{Value: 2.5},
+				ast.IntExpression{Value: 1},
+			},
+			cases: []inputCase{
+				{
+					f:        "CEILING",
+					expected: "<float 3.00>",
+				},
+				{
+					f:        "FLOOR",
+					expected: "<float 2.00>",
+				},
+			},
+		},
+		{
+			name: "float first, then 10",
+			input: []ast.Expression{
+				ast.FloatExpression{Value: 126.55},
+				ast.IntExpression{Value: 10},
+			},
+			cases: []inputCase{
+				{
+					f:        "CEILING",
+					expected: "<float 130.00>",
+				},
+				{
+					f:        "FLOOR",
+					expected: "<float 120.00>",
+				},
+			},
+		},
 		// Error cases
 		{
 			name: "unsupported boolean first argument",
@@ -270,7 +321,11 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "unsupported function call (CEILING <bool true>)",
+					error: "(CEILING <bool true>) expected 2 arguments, but got 1",
+				},
+				{
+					f:     "INT",
+					error: "unsupported function call (INT <bool true>)",
 				},
 			},
 		},
@@ -328,7 +383,11 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "unsupported function call (CEILING <str \"hello\">)",
+					error: "(CEILING <str \"hello\">) expected 2 arguments, but got 1",
+				},
+				{
+					f:     "INT",
+					error: "unsupported function call (INT <str \"hello\">)",
 				},
 			},
 		},

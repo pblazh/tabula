@@ -1,6 +1,8 @@
 package functions
 
-import "github.com/pblazh/csvss/internal/ast"
+import (
+	"github.com/pblazh/csvss/internal/ast"
+)
 
 type CallGuard func(ast.CallExpression, ...ast.Expression) error
 
@@ -19,41 +21,22 @@ func MakeArityGuard(arity int) CallGuard {
 	return checkArity
 }
 
-func SameTypeGuard(function ast.CallExpression, values ...ast.Expression) error {
-	if len(values) == 0 {
+type typeGuard func(expr ast.Expression) bool
+
+func MakeExactTypesGuard(types ...typeGuard) CallGuard {
+	checkTypes := func(function ast.CallExpression, values ...ast.Expression) error {
+		if len(values) != len(types) {
+			return ErrUnsupportedArity(function, len(types), len(values))
+		}
+
+		for i, t := range types {
+			if !t(values[i]) {
+				return ErrUnsupportedFunction(function)
+			}
+		}
+
 		return nil
 	}
 
-	first := values[0]
-	switch first.(type) {
-	case ast.IntExpression:
-		for _, arg := range values[1:] {
-			switch a := arg.(type) {
-			case ast.IntExpression:
-				continue
-			default:
-				return ErrUnsupportedArgument(function, a)
-			}
-		}
-	case ast.FloatExpression:
-		for _, arg := range values[1:] {
-			switch a := arg.(type) {
-			case ast.FloatExpression:
-				continue
-			default:
-				return ErrUnsupportedArgument(function, a)
-			}
-		}
-	case ast.StringExpression:
-		for _, arg := range values[1:] {
-			switch a := arg.(type) {
-			case ast.StringExpression:
-				continue
-			default:
-				return ErrUnsupportedArgument(function, a)
-			}
-		}
-	}
-
-	return nil
+	return checkTypes
 }
