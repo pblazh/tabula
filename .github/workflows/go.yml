@@ -27,7 +27,7 @@ jobs:
       - name: Prepare GitHub Pages content
         run: |
           mkdir -p gh-pages
-          cp ./bin/* gh-pages/
+          cp ./bin/* gh-pages/bin
 
       - name: Deploy to GitHub Pages branch
         uses: peaceiris/actions-gh-pages@v4
