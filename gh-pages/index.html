@@ -37,31 +37,22 @@
   </head>
   <body>
     <h1>Download Latest Builds</h1>
-    <ul id="file-list">
-      <!-- Files will be listed here by JS -->
+    <h2>Mac OS</h2>
+    <ul>
+      <a href="./bin/darwin/arm64/csvss" download>arm64</a>
+      <a href="./bin/darwin/amd64/csvss" download>amd64</a>
     </ul>
-
-    <script>
-      async function listFiles() {
-        const response = await fetch(window.location.href);
-        const text = await response.text();
-        const parser = new DOMParser();
-        const html = parser.parseFromString(text, "text/html");
-        const links = Array.from(html.links).filter(
-          (link) =>
-            link.href.match(/\/[^/]+$/) && !link.href.endsWith("index.html"),
-        );
-
-        const list = document.getElementById("file-list");
-        links.forEach((link) => {
-          const filename = link.href.split("/").pop();
-          const item = document.createElement("li");
-          item.innerHTML = `<a href="${filename}" download>${filename}</a>`;
-          list.appendChild(item);
-        });
-      }
-
-      listFiles();
-    </script>
+    <h2>Linux</h2>
+    <ul>
+      <a href="./bin/linux/arm64/csvss" download>arm64</a>
+      <a href="./bin/linux/amd64/csvss" download>amd64</a>
+      <a href="./bin/linux/368/csvss" download>368</a>
+    </ul>
+    <h2>Windows</h2>
+    <ul>
+      <a href="./bin/windows/arm64/csvss" download>arm64</a>
+      <a href="./bin/windows/amd64/csvss" download>amd64</a>
+      <a href="./bin/windows/368/csvss" download>368</a>
+    </ul>
   </body>
 </html>
