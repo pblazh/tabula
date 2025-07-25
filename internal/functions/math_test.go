@@ -36,6 +36,10 @@ func TestProduct(t *testing.T) {
 					f:     "ABS",
 					error: "(ABS) expected 1 arguments, but got 0",
 				},
+				{
+					f:     "CEILING",
+					error: "(CEILING) expected 1 arguments, but got 0",
+				},
 			},
 		},
 		// Integer operations
@@ -56,6 +60,10 @@ func TestProduct(t *testing.T) {
 				{
 					f:        "ABS",
 					expected: "<int 5>",
+				},
+				{
+					f:        "CEILING",
+					expected: "<int -5>",
 				},
 			},
 		},
@@ -78,6 +86,10 @@ func TestProduct(t *testing.T) {
 				{
 					f:     "ABS",
 					error: "(ABS <int 2> <int 3> <int 4>) expected 1 arguments, but got 3",
+				},
+				{
+					f:     "CEILING",
+					error: "(CEILING <int 2> <int 3> <int 4>) expected 1 arguments, but got 3",
 				},
 			},
 		},
@@ -135,6 +147,34 @@ func TestProduct(t *testing.T) {
 				{
 					f:        "ABS",
 					expected: "<float 5.50>",
+				},
+				{
+					f:        "CEILING",
+					expected: "<float 6.00>",
+				},
+			},
+		},
+		{
+			name: "negative float",
+			input: []ast.Expression{
+				ast.FloatExpression{Value: -3.7},
+			},
+			cases: []inputCase{
+				{
+					f:        "PRODUCT",
+					expected: "<float -3.70>",
+				},
+				{
+					f:        "AVERAGE",
+					expected: "<float -3.70>",
+				},
+				{
+					f:        "ABS",
+					expected: "<float 3.70>",
+				},
+				{
+					f:        "CEILING",
+					expected: "<float -3.00>",
 				},
 			},
 		},
@@ -228,6 +268,10 @@ func TestProduct(t *testing.T) {
 					f:     "ABS",
 					error: "unsupported function call (ABS <bool true>)",
 				},
+				{
+					f:     "CEILING",
+					error: "unsupported function call (CEILING <bool true>)",
+				},
 			},
 		},
 		{
@@ -281,6 +325,10 @@ func TestProduct(t *testing.T) {
 				{
 					f:     "ABS",
 					error: "unsupported function call (ABS <str \"hello\">)",
+				},
+				{
+					f:     "CEILING",
+					error: "unsupported function call (CEILING <str \"hello\">)",
 				},
 			},
 		},
