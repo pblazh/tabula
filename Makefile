@@ -1,44 +1,53 @@
-# TODO: Complete this Makefile with proper build targets
-
 .PHONY: build test clean install lint
 
-# TODO: Add proper build target
-build:
-	@echo "TODO: Implement build target"
-	# go build -o bin/csvss ./cmd/cli
+build: test build-darwin-arm64 build-darwin-amd64 build-linux-arm64 build-linux-amd64 build-linux-386 build-windows-arm64 build-windows-amd64 build-windows-386 build-wasm
 
-# TODO: Add test target with coverage
+build-darwin-arm64:
+	env GOOS=darwin GOARCH=arm64 go build -o bin/darwin/arm64/csvss ./cmd/cli
+
+build-darwin-amd64:
+	env GOOS=darwin GOARCH=amd64 go build -o bin/darwin/amd64/csvss ./cmd/cli
+
+
+build-linux-arm64:
+	env GOOS=linux GOARCH=arm64 go build -o bin/linux/arm64/csvss ./cmd/cli
+
+build-linux-amd64:
+	env GOOS=linux GOARCH=amd64 go build -o bin/linux/amd64/csvss ./cmd/cli
+
+build-linux-386:
+	env GOOS=linux GOARCH=386 go build -o bin/linux/amd64/csvss ./cmd/cli
+
+
+build-windows-arm64:
+	env GOOS=windows GOARCH=arm64 go build -o bin/windows/arm64/csvss.exe ./cmd/cli
+
+build-windows-amd64:
+	env GOOS=windows GOARCH=amd64 go build -o bin/windows/amd64/csvss.exe ./cmd/cli
+
+build-windows-386:
+	env GOOS=windows GOARCH=386 go build -o bin/windows/386/csvss.exe ./cmd/cli
+
+
+build-wasm:
+	env GOOS=js GOARCH=wasm go build -o bin/wasm/csvss ./cmd/cli
+
+
 test:
-	@echo "TODO: Implement test target with coverage reporting"
-	# go test -v -cover ./...
+	go test -v -cover ./...
 
-# TODO: Add clean target
 clean:
-	@echo "TODO: Implement clean target"
-	# rm -rf bin/
+	rm -rf bin/
 
-# TODO: Add install target
 install:
-	@echo "TODO: Implement install target"
-	# go install ./cmd/cli
+	go install ./cmd/cli
 
-# TODO: Add linting target
 lint:
-	@echo "TODO: Implement linting target"
-	# golangci-lint run
+	golangci-lint run
 
-# TODO: Add format target
 fmt:
 	@echo "TODO: Implement format target"
-	# go fmt ./...
-
-# TODO: Add release target
-release:
-	@echo "TODO: Implement release target with cross-compilation"
-
-# TODO: Add integration test target
-integration-test:
-	@echo "TODO: Implement integration tests"
+	go fmt ./...
 
 # TODO: Add benchmark target
 benchmark:

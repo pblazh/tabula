@@ -49,8 +49,8 @@
   - [ ] #17.2: Remove/mark unimplemented functions in README
 - [ ] #18: Missing Project Files
   - [x] #18.1: Add `go.sum` file (run `go mod tidy`)
-  - [ ] #18.2: Add CI/CD configuration (GitHub Actions)
-  - [ ] #18.3: Add proper build/release scripts
+  - [x] #18.2: Add CI/CD configuration (GitHub Actions)
+  - [x] #18.3: Add proper build/release scripts
 - [ ] #19: Testing Infrastructure
   - [ ] #19.1: Add integration tests for complete workflows
   - [ ] #19.2: Add CLI package tests
