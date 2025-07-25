@@ -3,7 +3,7 @@ name: Test, Build, and Publish to GitHub Pages
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   test-build-deploy:
