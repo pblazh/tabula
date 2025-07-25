@@ -53,7 +53,7 @@
   - [x] #18.3: Add proper build/release scripts
 - [ ] #19: Testing Infrastructure
   - [ ] #19.1: Add integration tests for complete workflows
-  - [ ] #19.2: Add CLI package tests
+  - [x] #19.2: Add CLI package tests
   - [ ] #19.3: Add test coverage reporting
   - [ ] #19.4: Add benchmark tests for large CSV files
 - [ ] #20: Examples and Documentation
@@ -68,19 +68,15 @@
   - [ ] #21.4: Improve identifier resolution for cell references
   - [ ] #21.5: Add input validation throughout
 - [ ] #22: Feature Extensions
-  - [ ] #22.1: Add support for multiple output formats (JSON, plain text)
+  - [ ] #22.1: Add support for multiple output formats (markdown, rst, etc)
   - [ ] #22.2: Add more data types beyond basic four
   - [ ] #22.3: Add nested function call support
-  - [ ] #22.4: Add variable scoping
-  - [ ] #22.5: Add conditional statements (if/else)
 - [ ] #23: Performance Optimizations
   - [ ] #23.1: Optimize CSV parsing for large files
-  - [ ] #23.2: Add streaming evaluation for large datasets
-  - [ ] #23.3: Add memory usage optimization
-  - [ ] #23.4: Add parallel evaluation where possible
+  - [ ] #23.2: Add memory usage optimization
+  - [ ] #23.3: Add parallel evaluation where possible
 - [ ] #24: Enhancement Features
   - [ ] #24.1: Add syntax highlighting for script files
-  - [ ] #24.2: Add interactive mode/REPL
   - [ ] #24.3: Add plugin system for custom functions
         (execute external program for evaluation and format)
   - [ ] #24.4: Add debugging capabilities
@@ -106,7 +102,7 @@
   - [ ] #28.3: Add bounds checking for CSV operations
   - [ ] #28.4: Add format specification improvements
 - [ ] #29: Math Functions Implementation
-  - [ ] #29.1: Implement ABS function
+  - [x] #29.1: Implement ABS function
   - [x] #29.2: Implement AVERAGE function
   - [ ] #29.3: Implement AVERAGEIF function
   - [ ] #29.4: Implement CEILING function

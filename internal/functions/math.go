@@ -1,6 +1,8 @@
 package functions
 
 import (
+	"math"
+
 	"github.com/pblazh/csvss/internal/ast"
 	"golang.org/x/exp/constraints"
 )
@@ -11,7 +13,16 @@ type Number interface {
 
 type MathFunction[T Number] func(values ...T) T
 
-func callMathFunction(intFunction MathFunction[int], floatFunction MathFunction[float64], call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func callMathFunction(
+	intFunction MathFunction[int],
+	floatFunction MathFunction[float64],
+	callGuard CallGuard,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	if err := callGuard(call, values...); err != nil {
+		return nil, err
+	}
+
 	if len(values) == 0 {
 		return ast.IntExpression{Value: int(intFunction())}, nil
 	}
@@ -67,4 +78,8 @@ func average[T Number](values ...T) T {
 		total += n
 	}
 	return T(total / T(len(values)))
+}
+
+func abs[T Number](values ...T) T {
+	return T(math.Abs(float64(values[0])))
 }

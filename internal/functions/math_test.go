@@ -32,21 +32,29 @@ func TestProduct(t *testing.T) {
 					f:        "AVERAGE",
 					expected: "<int 0>",
 				},
+				{
+					f:     "ABS",
+					error: "(ABS) expected 1 arguments, but got 0",
+				},
 			},
 		},
 		// Integer operations
 		{
 			name: "single integer",
 			input: []ast.Expression{
-				ast.IntExpression{Value: 5},
+				ast.IntExpression{Value: -5},
 			},
 			cases: []inputCase{
 				{
 					f:        "PRODUCT",
-					expected: "<int 5>",
+					expected: "<int -5>",
 				},
 				{
 					f:        "AVERAGE",
+					expected: "<int -5>",
+				},
+				{
+					f:        "ABS",
 					expected: "<int 5>",
 				},
 			},
@@ -66,6 +74,10 @@ func TestProduct(t *testing.T) {
 				{
 					f:        "AVERAGE",
 					expected: "<int 3>",
+				},
+				{
+					f:     "ABS",
+					error: "(ABS <int 2> <int 3> <int 4>) expected 1 arguments, but got 3",
 				},
 			},
 		},
@@ -118,6 +130,10 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:        "AVERAGE",
+					expected: "<float 5.50>",
+				},
+				{
+					f:        "ABS",
 					expected: "<float 5.50>",
 				},
 			},
@@ -208,6 +224,10 @@ func TestProduct(t *testing.T) {
 					f:     "AVERAGE",
 					error: "unsupported function call (AVERAGE <bool true>)",
 				},
+				{
+					f:     "ABS",
+					error: "unsupported function call (ABS <bool true>)",
+				},
 			},
 		},
 		{
@@ -257,6 +277,10 @@ func TestProduct(t *testing.T) {
 				{
 					f:     "AVERAGE",
 					error: "unsupported function call (AVERAGE <str \"hello\">)",
+				},
+				{
+					f:     "ABS",
+					error: "unsupported function call (ABS <str \"hello\">)",
 				},
 			},
 		},

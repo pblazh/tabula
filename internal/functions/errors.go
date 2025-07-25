@@ -7,6 +7,10 @@ import (
 	"github.com/pblazh/csvss/internal/ast"
 )
 
+func ErrUnsupportedArity(function ast.CallExpression, expected, given int) error {
+	return fmt.Errorf("%s expected %d arguments, but got %d", function, expected, given)
+}
+
 func ErrUnsupportedArgument(function ast.CallExpression, argument ast.Expression) error {
 	return fmt.Errorf("unsupported argument %s for for %s", argument, function)
 }
