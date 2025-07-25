@@ -2,6 +2,12 @@
 
 Command line tool for evaluating spreadsheets stored in the CSV file
 
+## Installation
+
+Fetch a binary for your system and put in path
+
+<https://pblazh.github.io/csvss/>
+
 ## Usage
 
 ```bash
