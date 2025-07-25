@@ -1,6 +1,6 @@
 .PHONY: build test clean install lint
 
-build: test build-darwin-arm64 build-darwin-amd64 build-linux-arm64 build-linux-amd64 build-linux-386 build-windows-arm64 build-windows-amd64 build-windows-386 build-wasm
+build: build-darwin-arm64 build-darwin-amd64 build-linux-arm64 build-linux-amd64 build-linux-386 build-windows-arm64 build-windows-amd64 build-windows-386 build-wasm
 
 build-darwin-arm64:
 	env GOOS=darwin GOARCH=arm64 go build -o bin/darwin/arm64/csvss ./cmd/cli
