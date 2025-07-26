@@ -85,12 +85,34 @@ func IsInt(expr Expression) bool {
 	}
 }
 
+func ToInt(expr *Expression) (*IntExpression, bool) {
+	switch e := (*expr).(type) {
+	case IntExpression:
+		return &e, true
+	case FloatExpression:
+		return &IntExpression{Value: int(e.Value), Token: e.Token}, true
+	default:
+		return nil, false
+	}
+}
+
 func IsFloat(expr Expression) bool {
 	switch expr.(type) {
 	case FloatExpression:
 		return true
 	default:
 		return false
+	}
+}
+
+func ToFloat(expr *Expression) (*FloatExpression, bool) {
+	switch e := (*expr).(type) {
+	case IntExpression:
+		return &FloatExpression{Value: float64(e.Value), Token: e.Token}, true
+	case FloatExpression:
+		return &e, true
+	default:
+		return nil, false
 	}
 }
 
@@ -108,12 +130,30 @@ func IsString(expr Expression) bool {
 	}
 }
 
+func ToString(expr *Expression) (*StringExpression, bool) {
+	switch e := (*expr).(type) {
+	case StringExpression:
+		return &e, true
+	default:
+		return nil, false
+	}
+}
+
 func IsBoolean(expr Expression) bool {
 	switch expr.(type) {
 	case BooleanExpression:
 		return true
 	default:
 		return false
+	}
+}
+
+func ToBoolean(expr *Expression) (*BooleanExpression, bool) {
+	switch e := (*expr).(type) {
+	case BooleanExpression:
+		return &e, true
+	default:
+		return nil, false
 	}
 }
 

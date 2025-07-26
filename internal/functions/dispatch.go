@@ -22,10 +22,12 @@ var DispatchMap dispatchMap = dispatchMap{
 		return callNumbersFunction(format, abs, abs, MakeArityGuard(format, 1), call, values...)
 	},
 	"CEILING": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-		return Round(true, "CEILING(number, number)", call, values...)
+		format := "CEILING(number, number)"
+		return Round(true, format, call, values...)
 	},
 	"FLOOR": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-		return Round(false, "FLOOR(number, number)", call, values...)
+		format := "FLOOR(number, number)"
+		return Round(false, format, call, values...)
 	},
 	"POWER": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		return Power(call, values...)

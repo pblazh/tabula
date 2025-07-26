@@ -10,6 +10,15 @@ func EmptyGuard(function ast.CallExpression, values ...ast.Expression) error {
 	return nil
 }
 
+func NumericGuard(function ast.CallExpression, values ...ast.Expression) error {
+	for _, t := range values {
+		if !ast.IsNumeric(t) {
+			return ErrUnsupportedFunction(function)
+		}
+	}
+	return nil
+}
+
 func MakeArityGuard(format string, arity int) CallGuard {
 	checkArity := func(function ast.CallExpression, values ...ast.Expression) error {
 		if arity >= 0 && len(values) != arity {
