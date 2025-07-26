@@ -548,17 +548,17 @@ func TestOperationErrors(t *testing.T) {
 		{
 			name:          "SUM with mixed incompatible types in integer sum",
 			input:         "SUM(5, \"hello\")",
-			expectedError: "unsupported argument <str \"hello\"> in (SUM <int 5> <str \"hello\">)",
+			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <str \"hello\"> in (SUM <int 5> <str \"hello\">)",
 		},
 		{
 			name:          "SUM with mixed incompatible types in float sum",
 			input:         "SUM(5.5, true)",
-			expectedError: "unsupported argument <bool true> in (SUM <float 5.50> <bool true>)",
+			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <bool true> in (SUM <float 5.50> <bool true>)",
 		},
 		{
 			name:          "SUM with mixed incompatible types in string sum",
 			input:         "SUM(\"hello\", 42)",
-			expectedError: "unsupported argument <int 42> in (SUM <str \"hello\"> <int 42>)",
+			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <int 42> in (SUM <str \"hello\"> <int 42>)",
 		},
 	}
 

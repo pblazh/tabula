@@ -7,7 +7,7 @@ import (
 )
 
 func Int(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-	callGuard := MakeExactTypesGuard(ast.IsNumeric)
+	callGuard := MakeExactTypesGuard("INT(number)", ast.IsNumeric)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
 	}
@@ -22,8 +22,8 @@ func Int(call ast.CallExpression, values ...ast.Expression) (ast.Expression, err
 	}
 }
 
-func Round(up bool, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-	callGuard := MakeExactTypesGuard(ast.IsNumeric, ast.IsNumeric)
+func Round(up bool, format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeExactTypesGuard(format, ast.IsNumeric, ast.IsNumeric)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
 	}

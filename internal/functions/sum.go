@@ -6,6 +6,7 @@ import (
 )
 
 func Sum(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	format := "SUM(number...) | SUM(string...)"
 	if len(values) == 0 {
 		return ast.IntExpression{Value: 0}, nil
 	}
@@ -19,12 +20,12 @@ func Sum(call ast.CallExpression, values ...ast.Expression) (ast.Expression, err
 			case ast.StringExpression:
 				args = append(args, a.Value)
 			default:
-				return nil, ErrUnsupportedArgument(call, a)
+				return nil, ErrUnsupportedArgument(format, call, a)
 			}
 		}
 		return ast.StringExpression{Value: sum(args...)}, nil
 	default:
-		return callNumbersFunction(sum, sum, EmptyGuard, call, values...)
+		return callNumbersFunction(format, sum, sum, EmptyGuard, call, values...)
 	}
 }
 

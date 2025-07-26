@@ -13,7 +13,7 @@ type inputCase struct {
 	error    string
 }
 
-func TestProduct(t *testing.T) {
+func TestMathFunctions(t *testing.T) {
 	testcases := []struct {
 		name  string
 		input []ast.Expression
@@ -34,23 +34,23 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "ABS",
-					error: "(ABS) expected 1 arguments, but got 0",
+					error: "ABS(number) expected 1 argument, but got 0 in (ABS)",
 				},
 				{
 					f:     "CEILING",
-					error: "(CEILING) expected 2 arguments, but got 0",
+					error: "CEILING(number, number) expected 2 arguments, but got 0 in (CEILING)",
 				},
 				{
 					f:     "FLOOR",
-					error: "(FLOOR) expected 2 arguments, but got 0",
+					error: "FLOOR(number, number) expected 2 arguments, but got 0 in (FLOOR)",
 				},
 				{
 					f:     "INT",
-					error: "(INT) expected 1 arguments, but got 0",
+					error: "INT(number) expected 1 argument, but got 0 in (INT)",
 				},
 				{
 					f:     "POWER",
-					error: "(POWER) expected 2 arguments, but got 0",
+					error: "POWER(number, number) expected 2 arguments, but got 0 in (POWER)",
 				},
 			},
 		},
@@ -79,7 +79,7 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "POWER",
-					error: "(POWER <int -5>) expected 2 arguments, but got 1",
+					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <int -5>)",
 				},
 			},
 		},
@@ -101,23 +101,23 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "ABS",
-					error: "(ABS <int 2> <int 3> <int 4>) expected 1 arguments, but got 3",
+					error: "ABS(number) expected 1 argument, but got 3 in (ABS <int 2> <int 3> <int 4>)",
 				},
 				{
 					f:     "CEILING",
-					error: "(CEILING <int 2> <int 3> <int 4>) expected 2 arguments, but got 3",
+					error: "CEILING(number, number) expected 2 arguments, but got 3 in (CEILING <int 2> <int 3> <int 4>)",
 				},
 				{
 					f:     "FLOOR",
-					error: "(FLOOR <int 2> <int 3> <int 4>) expected 2 arguments, but got 3",
+					error: "FLOOR(number, number) expected 2 arguments, but got 3 in (FLOOR <int 2> <int 3> <int 4>)",
 				},
 				{
 					f:     "INT",
-					error: "(INT <int 2> <int 3> <int 4>) expected 1 arguments, but got 3",
+					error: "INT(number) expected 1 argument, but got 3 in (INT <int 2> <int 3> <int 4>)",
 				},
 				{
 					f:     "POWER",
-					error: "(POWER <int 2> <int 3> <int 4>) expected 2 arguments, but got 3",
+					error: "POWER(number, number) expected 2 arguments, but got 3 in (POWER <int 2> <int 3> <int 4>)",
 				},
 			},
 		},
@@ -182,15 +182,15 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "(CEILING <float 5.50>) expected 2 arguments, but got 1",
+					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <float 5.50>)",
 				},
 				{
 					f:     "FLOOR",
-					error: "(FLOOR <float 5.50>) expected 2 arguments, but got 1",
+					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <float 5.50>)",
 				},
 				{
 					f:     "POWER",
-					error: "(POWER <float 5.50>) expected 2 arguments, but got 1",
+					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <float 5.50>)",
 				},
 			},
 		},
@@ -218,15 +218,15 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "(CEILING <float -3.70>) expected 2 arguments, but got 1",
+					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <float -3.70>)",
 				},
 				{
 					f:     "FLOOR",
-					error: "(FLOOR <float -3.70>) expected 2 arguments, but got 1",
+					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <float -3.70>)",
 				},
 				{
 					f:     "POWER",
-					error: "(POWER <float -3.70>) expected 2 arguments, but got 1",
+					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <float -3.70>)",
 				},
 			},
 		},
@@ -268,7 +268,7 @@ func TestProduct(t *testing.T) {
 		},
 		// Mixed int and float operations (result type determined by first argument)
 		{
-			name: "int first, then float - result is int",
+			name: "int and float",
 			input: []ast.Expression{
 				ast.IntExpression{Value: 5},
 				ast.FloatExpression{Value: 2.5},
@@ -285,7 +285,7 @@ func TestProduct(t *testing.T) {
 			},
 		},
 		{
-			name: "float first, then int - result is float",
+			name: "float and int",
 			input: []ast.Expression{
 				ast.FloatExpression{Value: 2.5},
 				ast.IntExpression{Value: 4},
@@ -305,7 +305,6 @@ func TestProduct(t *testing.T) {
 				},
 			},
 		},
-		// Rounding
 		{
 			name: "two ints",
 			input: []ast.Expression{
@@ -328,7 +327,7 @@ func TestProduct(t *testing.T) {
 			},
 		},
 		{
-			name: "float first, then 1",
+			name: "float, then 1",
 			input: []ast.Expression{
 				ast.FloatExpression{Value: 2.5},
 				ast.IntExpression{Value: 1},
@@ -349,7 +348,7 @@ func TestProduct(t *testing.T) {
 			},
 		},
 		{
-			name: "float first, then int",
+			name: "float and smaller int",
 			input: []ast.Expression{
 				ast.FloatExpression{Value: 126.55},
 				ast.IntExpression{Value: 3},
@@ -369,9 +368,8 @@ func TestProduct(t *testing.T) {
 				},
 			},
 		},
-		// Error cases
 		{
-			name: "unsupported boolean first argument",
+			name: "boolean",
 			input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 			},
@@ -390,11 +388,11 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "(CEILING <bool true>) expected 2 arguments, but got 1",
+					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <bool true>)",
 				},
 				{
 					f:     "FLOOR",
-					error: "(FLOOR <bool true>) expected 2 arguments, but got 1",
+					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <bool true>)",
 				},
 				{
 					f:     "INT",
@@ -402,12 +400,12 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "POWER",
-					error: "(POWER <bool true>) expected 2 arguments, but got 1",
+					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <bool true>)",
 				},
 			},
 		},
 		{
-			name: "unsupported argument in integer product",
+			name: "int and string",
 			input: []ast.Expression{
 				ast.IntExpression{Value: 5},
 				ast.StringExpression{Value: "hello"},
@@ -415,11 +413,11 @@ func TestProduct(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "unsupported argument <str \"hello\"> for (PRODUCT <int 5> <str \"hello\">)",
+					error: "PRODUCT(number...) got a wrong argument <str \"hello\"> in (PRODUCT <int 5> <str \"hello\">)",
 				},
 				{
 					f:     "AVERAGE",
-					error: "unsupported argument <str \"hello\"> for (AVERAGE <int 5> <str \"hello\">)",
+					error: "AVERAGE(number...) got a wrong argument <str \"hello\"> in (AVERAGE <int 5> <str \"hello\">)",
 				},
 			},
 		},
@@ -432,16 +430,16 @@ func TestProduct(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "unsupported argument <bool true> for (PRODUCT <float 5.50> <bool true>)",
+					error: "PRODUCT(number...) got a wrong argument <bool true> in (PRODUCT <float 5.50> <bool true>)",
 				},
 				{
 					f:     "AVERAGE",
-					error: "unsupported argument <bool true> for (AVERAGE <float 5.50> <bool true>)",
+					error: "AVERAGE(number...) got a wrong argument <bool true> in (AVERAGE <float 5.50> <bool true>)",
 				},
 			},
 		},
 		{
-			name: "unsupported string argument",
+			name: "string",
 			input: []ast.Expression{
 				ast.StringExpression{Value: "hello"},
 			},
@@ -460,11 +458,11 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "(CEILING <str \"hello\">) expected 2 arguments, but got 1",
+					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <str \"hello\">)",
 				},
 				{
 					f:     "FLOOR",
-					error: "(FLOOR <str \"hello\">) expected 2 arguments, but got 1",
+					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <str \"hello\">)",
 				},
 				{
 					f:     "INT",
@@ -472,7 +470,7 @@ func TestProduct(t *testing.T) {
 				},
 				{
 					f:     "POWER",
-					error: "(POWER <str \"hello\">) expected 2 arguments, but got 1",
+					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <str \"hello\">)",
 				},
 			},
 		},

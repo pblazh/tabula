@@ -111,7 +111,7 @@
   - [x] #29.7: Implement FLOOR function
   - [ ] #29.8: Implement MAX function
   - [ ] #29.9: Implement MIN function
-  - [ ] #29.10: Implement POWER function
+  - [x] #29.10: Implement POWER function
   - [x] #29.11: Implement PRODUCT function
   - [ ] #29.12: Implement ROUND function
   - [ ] #29.13: Implement SQRT function

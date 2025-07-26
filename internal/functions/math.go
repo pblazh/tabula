@@ -13,7 +13,8 @@ type Number interface {
 
 type MathFunction[T Number] func(values ...T) T
 
-func callMathFunction(
+func callNumbersFunction(
+	format string,
 	intFunction MathFunction[int],
 	floatFunction MathFunction[float64],
 	callGuard CallGuard,
@@ -38,7 +39,7 @@ func callMathFunction(
 			case ast.FloatExpression:
 				args = append(args, int(a.Value))
 			default:
-				return nil, ErrUnsupportedArgument(call, a)
+				return nil, ErrUnsupportedArgument(format, call, a)
 			}
 		}
 		return ast.IntExpression{Value: intFunction(args...)}, nil
@@ -51,7 +52,7 @@ func callMathFunction(
 			case ast.FloatExpression:
 				args = append(args, a.Value)
 			default:
-				return nil, ErrUnsupportedArgument(call, a)
+				return nil, ErrUnsupportedArgument(format, call, a)
 			}
 		}
 		return ast.FloatExpression{Value: floatFunction(args...)}, nil
@@ -61,7 +62,7 @@ func callMathFunction(
 }
 
 func Power(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-	callGuard := MakeExactTypesGuard(ast.IsNumeric, ast.IsNumeric)
+	callGuard := MakeExactTypesGuard("POWER(number, number)", ast.IsNumeric, ast.IsNumeric)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
 	}
@@ -109,4 +110,3 @@ func average[T Number](values ...T) T {
 func abs[T Number](values ...T) T {
 	return T(math.Abs(float64(values[0])))
 }
-

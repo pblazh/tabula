@@ -68,7 +68,7 @@ func TestMakeArityGuard(t *testing.T) {
 			values: []ast.Expression{
 				ast.IntExpression{Value: 1},
 			},
-			expectedError: "expected 0 arguments, but got 1 in (TEST <int 1>)",
+			expectedError: "(TEST) expected 0 arguments, but got 1 in (TEST <int 1>)",
 		},
 		{
 			name:  "one arity with correct argument",
@@ -82,7 +82,7 @@ func TestMakeArityGuard(t *testing.T) {
 			name:          "one arity with no arguments",
 			arity:         1,
 			values:        []ast.Expression{},
-			expectedError: "expected 1 argument, but got 0 in (TEST)",
+			expectedError: "(TEST) expected 1 argument, but got 0 in (TEST)",
 		},
 		{
 			name:  "one arity with too many arguments",
@@ -91,7 +91,7 @@ func TestMakeArityGuard(t *testing.T) {
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 2},
 			},
-			expectedError: "expected 1 argument, but got 2 in (TEST <int 1> <int 2>)",
+			expectedError: "(TEST) expected 1 argument, but got 2 in (TEST <int 1> <int 2>)",
 		},
 		{
 			name:  "two arity with correct arguments",
@@ -108,7 +108,7 @@ func TestMakeArityGuard(t *testing.T) {
 			values: []ast.Expression{
 				ast.IntExpression{Value: 1},
 			},
-			expectedError: "expected 2 arguments, but got 1 in (TEST <int 1>)",
+			expectedError: "(TEST) expected 2 arguments, but got 1 in (TEST <int 1>)",
 		},
 		{
 			name:  "negative arity should always pass",
@@ -124,7 +124,7 @@ func TestMakeArityGuard(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			guard := MakeArityGuard(tt.arity)
+			guard := MakeArityGuard("(TEST)", tt.arity)
 			call.Arguments = tt.values
 			err := guard(call, tt.values...)
 
@@ -162,7 +162,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 			values: []ast.Expression{
 				ast.IntExpression{Value: 1},
 			},
-			expectedError: "expected 0 arguments, but got 1 in (TEST <int 1>)",
+			expectedError: "(TEST) expected 0 arguments, but got 1 in (TEST <int 1>)",
 		},
 		{
 			name:       "one numeric guard with int",
@@ -238,7 +238,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 			values: []ast.Expression{
 				ast.IntExpression{Value: 1},
 			},
-			expectedError: "expected 2 arguments, but got 1 in (TEST <int 1>)",
+			expectedError: "(TEST) expected 2 arguments, but got 1 in (TEST <int 1>)",
 		},
 		{
 			name:       "wrong arity - too many arguments",
@@ -247,7 +247,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 2},
 			},
-			expectedError: "expected 1 argument, but got 2 in (TEST <int 1> <int 2>)",
+			expectedError: "(TEST) expected 1 argument, but got 2 in (TEST <int 1> <int 2>)",
 		},
 		{
 			name:       "boolean guard with correct type",
@@ -269,7 +269,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			guard := MakeExactTypesGuard(tt.typeGuards...)
+			guard := MakeExactTypesGuard("(TEST)", tt.typeGuards...)
 			call.Arguments = tt.values
 			err := guard(call, tt.values...)
 
