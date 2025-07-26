@@ -48,6 +48,10 @@ func TestProduct(t *testing.T) {
 					f:     "INT",
 					error: "(INT) expected 1 arguments, but got 0",
 				},
+				{
+					f:     "POWER",
+					error: "(POWER) expected 2 arguments, but got 0",
+				},
 			},
 		},
 		// Integer operations
@@ -72,6 +76,10 @@ func TestProduct(t *testing.T) {
 				{
 					f:        "INT",
 					expected: "<int -5>",
+				},
+				{
+					f:     "POWER",
+					error: "(POWER <int -5>) expected 2 arguments, but got 1",
 				},
 			},
 		},
@@ -106,6 +114,10 @@ func TestProduct(t *testing.T) {
 				{
 					f:     "INT",
 					error: "(INT <int 2> <int 3> <int 4>) expected 1 arguments, but got 3",
+				},
+				{
+					f:     "POWER",
+					error: "(POWER <int 2> <int 3> <int 4>) expected 2 arguments, but got 3",
 				},
 			},
 		},
@@ -168,6 +180,18 @@ func TestProduct(t *testing.T) {
 					f:        "INT",
 					expected: "<int 5>",
 				},
+				{
+					f:     "CEILING",
+					error: "(CEILING <float 5.50>) expected 2 arguments, but got 1",
+				},
+				{
+					f:     "FLOOR",
+					error: "(FLOOR <float 5.50>) expected 2 arguments, but got 1",
+				},
+				{
+					f:     "POWER",
+					error: "(POWER <float 5.50>) expected 2 arguments, but got 1",
+				},
 			},
 		},
 		{
@@ -191,6 +215,18 @@ func TestProduct(t *testing.T) {
 				{
 					f:        "INT",
 					expected: "<int -3>",
+				},
+				{
+					f:     "CEILING",
+					error: "(CEILING <float -3.70>) expected 2 arguments, but got 1",
+				},
+				{
+					f:     "FLOOR",
+					error: "(FLOOR <float -3.70>) expected 2 arguments, but got 1",
+				},
+				{
+					f:     "POWER",
+					error: "(POWER <float -3.70>) expected 2 arguments, but got 1",
 				},
 			},
 		},
@@ -263,9 +299,34 @@ func TestProduct(t *testing.T) {
 					f:        "AVERAGE",
 					expected: "<float 3.25>",
 				},
+				{
+					f:        "POWER",
+					expected: "<float 39.06>",
+				},
 			},
 		},
 		// Rounding
+		{
+			name: "two ints",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 21},
+				ast.IntExpression{Value: 2},
+			},
+			cases: []inputCase{
+				{
+					f:        "CEILING",
+					expected: "<float 22.00>",
+				},
+				{
+					f:        "FLOOR",
+					expected: "<float 20.00>",
+				},
+				{
+					f:        "POWER",
+					expected: "<float 441.00>",
+				},
+			},
+		},
 		{
 			name: "float first, then 1",
 			input: []ast.Expression{
@@ -281,22 +342,30 @@ func TestProduct(t *testing.T) {
 					f:        "FLOOR",
 					expected: "<float 2.00>",
 				},
+				{
+					f:        "POWER",
+					expected: "<float 2.50>",
+				},
 			},
 		},
 		{
-			name: "float first, then 10",
+			name: "float first, then int",
 			input: []ast.Expression{
 				ast.FloatExpression{Value: 126.55},
-				ast.IntExpression{Value: 10},
+				ast.IntExpression{Value: 3},
 			},
 			cases: []inputCase{
 				{
 					f:        "CEILING",
-					expected: "<float 130.00>",
+					expected: "<float 129.00>",
 				},
 				{
 					f:        "FLOOR",
-					expected: "<float 120.00>",
+					expected: "<float 126.00>",
+				},
+				{
+					f:        "POWER",
+					expected: "<float 2026685.91>",
 				},
 			},
 		},
@@ -324,8 +393,16 @@ func TestProduct(t *testing.T) {
 					error: "(CEILING <bool true>) expected 2 arguments, but got 1",
 				},
 				{
+					f:     "FLOOR",
+					error: "(FLOOR <bool true>) expected 2 arguments, but got 1",
+				},
+				{
 					f:     "INT",
 					error: "unsupported function call (INT <bool true>)",
+				},
+				{
+					f:     "POWER",
+					error: "(POWER <bool true>) expected 2 arguments, but got 1",
 				},
 			},
 		},
@@ -338,11 +415,11 @@ func TestProduct(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "unsupported argument <str \"hello\"> for for (PRODUCT <int 5> <str \"hello\">)",
+					error: "unsupported argument <str \"hello\"> for (PRODUCT <int 5> <str \"hello\">)",
 				},
 				{
 					f:     "AVERAGE",
-					error: "unsupported argument <str \"hello\"> for for (AVERAGE <int 5> <str \"hello\">)",
+					error: "unsupported argument <str \"hello\"> for (AVERAGE <int 5> <str \"hello\">)",
 				},
 			},
 		},
@@ -355,11 +432,11 @@ func TestProduct(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "unsupported argument <bool true> for for (PRODUCT <float 5.50> <bool true>)",
+					error: "unsupported argument <bool true> for (PRODUCT <float 5.50> <bool true>)",
 				},
 				{
 					f:     "AVERAGE",
-					error: "unsupported argument <bool true> for for (AVERAGE <float 5.50> <bool true>)",
+					error: "unsupported argument <bool true> for (AVERAGE <float 5.50> <bool true>)",
 				},
 			},
 		},
@@ -386,8 +463,16 @@ func TestProduct(t *testing.T) {
 					error: "(CEILING <str \"hello\">) expected 2 arguments, but got 1",
 				},
 				{
+					f:     "FLOOR",
+					error: "(FLOOR <str \"hello\">) expected 2 arguments, but got 1",
+				},
+				{
 					f:     "INT",
 					error: "unsupported function call (INT <str \"hello\">)",
+				},
+				{
+					f:     "POWER",
+					error: "(POWER <str \"hello\">) expected 2 arguments, but got 1",
 				},
 			},
 		},

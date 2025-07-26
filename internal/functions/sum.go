@@ -24,7 +24,7 @@ func Sum(call ast.CallExpression, values ...ast.Expression) (ast.Expression, err
 		}
 		return ast.StringExpression{Value: sum(args...)}, nil
 	default:
-		return callMathFunction(sum, sum, EmptyGuard, call, values...)
+		return callNumbersFunction(sum, sum, EmptyGuard, call, values...)
 	}
 }
 

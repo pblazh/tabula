@@ -8,7 +8,6 @@ import (
 
 func Int(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(ast.IsNumeric)
-
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
 	}
@@ -25,10 +24,10 @@ func Int(call ast.CallExpression, values ...ast.Expression) (ast.Expression, err
 
 func Round(up bool, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(ast.IsNumeric, ast.IsNumeric)
-
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
 	}
+
 	switch v := values[0].(type) {
 	case ast.IntExpression:
 		switch p := values[1].(type) {
@@ -46,7 +45,7 @@ func Round(up bool, call ast.CallExpression, values ...ast.Expression) (ast.Expr
 		}
 	}
 
-	return nil, nil
+	return nil, ErrUnsupportedFunction(call)
 }
 
 func roundPrecise(up bool, value, precision float64) float64 {

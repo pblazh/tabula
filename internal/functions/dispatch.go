@@ -26,6 +26,9 @@ var DispatchMap dispatchMap = dispatchMap{
 	"FLOOR": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		return Round(false, call, values...)
 	},
+	"POWER": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		return Power(call, values...)
+	},
 	"INT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		return Int(call, values...)
 	},

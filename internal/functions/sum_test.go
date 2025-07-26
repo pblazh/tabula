@@ -102,7 +102,7 @@ func TestSum(t *testing.T) {
 				ast.IntExpression{Value: 5},
 				ast.StringExpression{Value: "hello"},
 			},
-			expectedError: "unsupported argument <str \"hello\"> for for (SUM <int 5> <str \"hello\">)",
+			expectedError: "unsupported argument <str \"hello\"> for (SUM <int 5> <str \"hello\">)",
 		},
 		{
 			name: "unsupported argument in float sum",
@@ -110,7 +110,7 @@ func TestSum(t *testing.T) {
 				ast.FloatExpression{Value: 5.5},
 				ast.BooleanExpression{Value: true},
 			},
-			expectedError: "unsupported argument <bool true> for for (SUM <float 5.50> <bool true>)",
+			expectedError: "unsupported argument <bool true> for (SUM <float 5.50> <bool true>)",
 		},
 		{
 			name: "unsupported argument in string sum",
@@ -118,7 +118,7 @@ func TestSum(t *testing.T) {
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 42},
 			},
-			expectedError: "unsupported argument <int 42> for for (SUM <str \"hello\"> <int 42>)",
+			expectedError: "unsupported argument <int 42> for (SUM <str \"hello\"> <int 42>)",
 		},
 	}
 

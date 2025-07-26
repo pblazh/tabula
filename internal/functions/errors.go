@@ -12,7 +12,7 @@ func ErrUnsupportedArity(function ast.CallExpression, expected, given int) error
 }
 
 func ErrUnsupportedArgument(function ast.CallExpression, argument ast.Expression) error {
-	return fmt.Errorf("unsupported argument %s for for %s", argument, function)
+	return fmt.Errorf("unsupported argument %s for %s", argument, function)
 }
 
 func ErrUnsupportedFunction(function ast.CallExpression) error {
