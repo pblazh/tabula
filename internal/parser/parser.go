@@ -356,7 +356,7 @@ func (p *Parser) parsePrefix() (ast.Expression, error) {
 		return nil, ErrExpectedPrefix(p.cur)
 	}
 
-	prefix := ast.PrefixExpression{Operator: p.cur}
+	prefix := ast.PrefixExpression{Token: p.cur, Operator: p.cur}
 	err := p.advance()
 	if err != nil {
 		return nil, err
@@ -377,6 +377,7 @@ func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
 	}
 
 	expression := ast.InfixExpression{
+		Token:    p.cur,
 		Operator: p.cur,
 		Left:     left,
 	}
@@ -396,6 +397,8 @@ func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
 }
 
 func (p *Parser) parseRange(left ast.Expression) (ast.Expression, error) {
+	// store the ':' token
+	colonToken := p.cur
 	// advance past the ':'
 	if err := p.advance(); err != nil {
 		return nil, err
@@ -415,11 +418,12 @@ func (p *Parser) parseRange(left ast.Expression) (ast.Expression, error) {
 		return nil, err
 	}
 
-	return ast.RangeExpression{Value: cells}, nil
+	return ast.RangeExpression{Token: colonToken, Value: cells}, nil
 }
 
 func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error) {
-	expr := ast.CallExpression{Identifier: left}
+	identifier := left.(ast.IdentifierExpression)
+	expr := ast.CallExpression{Identifier: identifier, Token: identifier.Token}
 	arguments, err := p.parseCallArguments()
 	if err != nil {
 		return nil, err

@@ -11,6 +11,16 @@ type (
 
 var DispatchMap dispatchMap = dispatchMap{
 	"SUM": Sum,
+	// "SUM": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	// 	format := "SUM(number...)"
+	// 	guard := MakeSameTypeGuard(format, ast.IsNumeric)
+	// 	return callNumbersFunction(format, sum, sum, guard, call, values...)
+	// },
+	"ADD": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "ADD(number, number)"
+		guard := MakeArityGuard(format, 2)
+		return callNumbersFunction(format, sum, sum, guard, call, values...)
+	},
 	"PRODUCT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		return callNumbersFunction("PRODUCT(number...)", product, product, EmptyGuard, call, values...)
 	},

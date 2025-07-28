@@ -33,21 +33,21 @@
     - [x] #12.3.1: Evaluate fmt statements
 - [x] #13: Read formatted strings
 - [x] #14: Write formatted strings
-- [x] #15: **CRITICAL** CLI Integration
+- [x] #15: CLI Integration
   - [x] #15.0: Parse and validate arguments
   - [x] #15.1: Implement script file reading in `cmd/cli/main.go`
   - [x] #15.2: Integrate lexer → parser → evaluator pipeline in CLI
   - [x] #15.3: Add CSV data to context mapping (A1, B2, etc.)
   - [x] #15.4: Convert evaluation results back to CSV format
   - [x] #15.5: Implement actual output handling (stdout/file)
-- [ ] #16: **CRITICAL** Function Implementation
+- [x] #16: Function Implementation
   - [x] #16.1: Implement function call evaluation in `evaluateCallExpression`
   - [x] #16.3: Implement range evaluation (A1:C3 expansion)
   - [x] #16.4: Add function registry and dispatch system
-- [ ] #17: **CRITICAL** Documentation Fixes
+- [ ] #17: Documentation Fixes
   - [ ] #17.1: Update README with actual working examples
   - [ ] #17.2: Remove/mark unimplemented functions in README
-- [ ] #18: Missing Project Files
+- [x] #18: Missing Project Files
   - [x] #18.1: Add `go.sum` file (run `go mod tidy`)
   - [x] #18.2: Add CI/CD configuration (GitHub Actions)
   - [x] #18.3: Add proper build/release scripts
@@ -70,7 +70,6 @@
 - [ ] #22: Feature Extensions
   - [ ] #22.1: Add support for multiple output formats (markdown, rst, etc)
   - [ ] #22.2: Add more data types beyond basic four
-  - [ ] #22.3: Add nested function call support
 - [ ] #23: Performance Optimizations
   - [ ] #23.1: Optimize CSV parsing for large files
   - [ ] #23.2: Add memory usage optimization
@@ -98,7 +97,7 @@
   - [ ] #27.4: Add semantic analysis phase after parsing
 - [ ] #28: Evaluator Enhancements
   - [ ] #28.1: Add proper type system
-  - [ ] #28.2: Add function argument validation
+  - [x] #28.2: Add function argument validation
   - [ ] #28.3: Add bounds checking for CSV operations
   - [ ] #28.4: Add format specification improvements
 - [ ] #29: Math Functions Implementation

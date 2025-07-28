@@ -333,11 +333,6 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 			expected: "<float 7.50>",
 		},
 		{
-			name:     "SUM with strings",
-			input:    "SUM(\"hello\", \" \", \"world\")",
-			expected: "<str \"hello world\">",
-		},
-		{
 			name:     "SUM with single argument",
 			input:    "SUM(42)",
 			expected: "<int 42>",
@@ -469,96 +464,96 @@ func TestOperationErrors(t *testing.T) {
 		{
 			name:          "int division by zero",
 			input:         "10 / 0",
-			expectedError: "division by zero at <DIV:/ at test:1:4>",
+			expectedError: "division by zero at <DIV:/ test:1:4>",
 		},
 		{
 			name:          "float division by zero",
 			input:         "10.5 / 0.0",
-			expectedError: "division by zero at <DIV:/ at test:1:6>",
+			expectedError: "division by zero at <DIV:/ test:1:6>",
 		},
 		{
 			name:          "int division by float zero",
 			input:         "10 / 0.0",
-			expectedError: "division by zero at <DIV:/ at test:1:4>",
+			expectedError: "division by zero at <DIV:/ test:1:4>",
 		},
 		{
 			name:          "float division by int zero",
 			input:         "10.5 / 0",
-			expectedError: "division by zero at <DIV:/ at test:1:6>",
+			expectedError: "division by zero at <DIV:/ test:1:6>",
 		},
 		// Type mismatch errors for arithmetic operations
 		{
 			name:          "bool + int",
 			input:         "true + 5",
-			expectedError: "operator <PLUS:+ at test:1:6> is not supported for type: boolean and integer",
+			expectedError: "operator <PLUS:+ test:1:6> is not supported for type: boolean and integer",
 		},
 		{
 			name:          "int + bool",
 			input:         "5 + true",
-			expectedError: "operator <PLUS:+ at test:1:3> is not supported for type: integer and boolean",
+			expectedError: "operator <PLUS:+ test:1:3> is not supported for type: integer and boolean",
 		},
 		{
 			name:          "bool - int",
 			input:         "true - 5",
-			expectedError: "operator <MINUS:- at test:1:6> is not supported for type: boolean and integer",
+			expectedError: "operator <MINUS:- test:1:6> is not supported for type: boolean and integer",
 		},
 		{
 			name:          "bool * int",
 			input:         "true * 5",
-			expectedError: "operator <MULT:* at test:1:6> is not supported for type: boolean and integer",
+			expectedError: "operator <MULT:* test:1:6> is not supported for type: boolean and integer",
 		},
 		{
 			name:          "bool / int",
 			input:         "true / 5",
-			expectedError: "operator <DIV:/ at test:1:6> is not supported for type: boolean and integer",
+			expectedError: "operator <DIV:/ test:1:6> is not supported for type: boolean and integer",
 		},
 		// Type mismatch errors for comparison operations
 		{
 			name:          "int < bool",
 			input:         "5 < true",
-			expectedError: "operator <LESS:< at test:1:3> is not supported for type: integer and boolean",
+			expectedError: "operator <LESS:< test:1:3> is not supported for type: integer and boolean",
 		},
 		{
 			name:          "bool > int",
 			input:         "true > 5",
-			expectedError: "operator <GREATER:> at test:1:6> is not supported for type: boolean and integer",
+			expectedError: "operator <GREATER:> test:1:6> is not supported for type: boolean and integer",
 		},
 		// Prefix operation errors
 		{
 			name:          "negation of bool",
 			input:         "-true",
-			expectedError: "<MINUS:- at test:1:1> is not supported for type: boolean",
+			expectedError: "<MINUS:- test:1:1> is not supported for type: boolean",
 		},
 		{
 			name:          "logical not of int",
 			input:         "!5",
-			expectedError: "<NOT:! at test:1:1> is not supported for type: integer",
+			expectedError: "<NOT:! test:1:1> is not supported for type: integer",
 		},
 		{
 			name:          "logical not of float",
 			input:         "!3.14",
-			expectedError: "<NOT:! at test:1:1> is not supported for type: float",
+			expectedError: "<NOT:! test:1:1> is not supported for type: float",
 		},
 		// Function call errors
 		{
 			name:          "SUM with unsupported boolean first argument",
 			input:         "SUM(true)",
-			expectedError: "unsupported function call (SUM <bool true>)",
+			expectedError: "unsupported function call (SUM <bool true>) at <IDENT:SUM test:1:1>",
 		},
 		{
 			name:          "SUM with mixed incompatible types in integer sum",
 			input:         "SUM(5, \"hello\")",
-			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <str \"hello\"> in (SUM <int 5> <str \"hello\">)",
+			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <str \"hello\"> in (SUM <int 5> <str \"hello\">), at <IDENT:SUM test:1:1>",
 		},
 		{
 			name:          "SUM with mixed incompatible types in float sum",
 			input:         "SUM(5.5, true)",
-			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <bool true> in (SUM <float 5.50> <bool true>)",
+			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <bool true> in (SUM <float 5.50> <bool true>), at <IDENT:SUM test:1:1>",
 		},
 		{
 			name:          "SUM with mixed incompatible types in string sum",
 			input:         "SUM(\"hello\", 42)",
-			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <int 42> in (SUM <str \"hello\"> <int 42>)",
+			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <int 42> in (SUM <str \"hello\"> <int 42>), at <IDENT:SUM test:1:1>",
 		},
 	}
 

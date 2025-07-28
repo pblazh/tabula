@@ -8,7 +8,7 @@ import (
 	"github.com/pblazh/csvss/internal/evaluator"
 )
 
-func processCSV(csvReader io.Reader, scriptReader io.Reader, csvWriter io.Writer) error {
+func processCSV(scriptPath string, scriptReader io.Reader, csvReader io.Reader, csvWriter io.Writer) error {
 	// Read and parse CSV
 	reader := csv.NewReader(csvReader)
 	reader.LazyQuotes = true
@@ -20,7 +20,7 @@ func processCSV(csvReader io.Reader, scriptReader io.Reader, csvWriter io.Writer
 	}
 
 	// Parse script
-	program, err := evaluator.ParseProgram(scriptReader, "")
+	program, err := evaluator.ParseProgram(scriptReader, scriptPath)
 	if err != nil {
 		return fmt.Errorf("error parsing script: %v", err)
 	}
@@ -28,7 +28,7 @@ func processCSV(csvReader io.Reader, scriptReader io.Reader, csvWriter io.Writer
 	// Evaluate the program with CSV data
 	result, err := evaluator.Evaluate(program, records)
 	if err != nil {
-		return fmt.Errorf("error evaluating script: %v", err)
+		return fmt.Errorf("error evaluating script %s: %v", scriptPath, err)
 	}
 
 	// Output result in the expected format

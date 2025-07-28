@@ -101,6 +101,7 @@ func (expr StringExpression) String() string {
 
 type PrefixExpression struct {
 	Expression
+	Token    lexer.Token
 	Operator lexer.Token
 	Value    Expression
 }
@@ -111,6 +112,7 @@ func (expr PrefixExpression) String() string {
 
 type InfixExpression struct {
 	Expression
+	Token    lexer.Token
 	Left     Expression
 	Operator lexer.Token
 	Right    Expression
@@ -122,6 +124,7 @@ func (expr InfixExpression) String() string {
 
 type CallExpression struct {
 	Expression
+	Token      lexer.Token
 	Identifier Expression
 	Arguments  []Expression
 }
@@ -147,6 +150,7 @@ func (expr CallExpression) String() string {
 
 type RangeExpression struct {
 	Expression
+	Token lexer.Token
 	Value []string
 }
 

@@ -34,23 +34,23 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "ABS",
-					error: "ABS(number) expected 1 argument, but got 0 in (ABS)",
+					error: "ABS(number) expected 1 argument, but got 0 in (ABS), at <: input:0:0>",
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 0 in (CEILING)",
+					error: "CEILING(number, number) expected 2 arguments, but got 0 in (CEILING), at <: input:0:0>",
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 0 in (FLOOR)",
+					error: "FLOOR(number, number) expected 2 arguments, but got 0 in (FLOOR), at <: input:0:0>",
 				},
 				{
 					f:     "INT",
-					error: "INT(number) expected 1 argument, but got 0 in (INT)",
+					error: "INT(number) expected 1 argument, but got 0 in (INT), at <: input:0:0>",
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 0 in (POWER)",
+					error: "POWER(number, number) expected 2 arguments, but got 0 in (POWER), at <: input:0:0>",
 				},
 			},
 		},
@@ -79,7 +79,7 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <int -5>)",
+					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <int -5>), at <: input:0:0>",
 				},
 			},
 		},
@@ -101,23 +101,23 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "ABS",
-					error: "ABS(number) expected 1 argument, but got 3 in (ABS <int 2> <int 3> <int 4>)",
+					error: "ABS(number) expected 1 argument, but got 3 in (ABS <int 2> <int 3> <int 4>), at <: input:0:0>",
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 3 in (CEILING <int 2> <int 3> <int 4>)",
+					error: "CEILING(number, number) expected 2 arguments, but got 3 in (CEILING <int 2> <int 3> <int 4>), at <: input:0:0>",
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 3 in (FLOOR <int 2> <int 3> <int 4>)",
+					error: "FLOOR(number, number) expected 2 arguments, but got 3 in (FLOOR <int 2> <int 3> <int 4>), at <: input:0:0>",
 				},
 				{
 					f:     "INT",
-					error: "INT(number) expected 1 argument, but got 3 in (INT <int 2> <int 3> <int 4>)",
+					error: "INT(number) expected 1 argument, but got 3 in (INT <int 2> <int 3> <int 4>), at <: input:0:0>",
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 3 in (POWER <int 2> <int 3> <int 4>)",
+					error: "POWER(number, number) expected 2 arguments, but got 3 in (POWER <int 2> <int 3> <int 4>), at <: input:0:0>",
 				},
 			},
 		},
@@ -182,15 +182,15 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <float 5.50>)",
+					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <float 5.50>), at <: input:0:0>",
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <float 5.50>)",
+					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <float 5.50>), at <: input:0:0>",
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <float 5.50>)",
+					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <float 5.50>), at <: input:0:0>",
 				},
 			},
 		},
@@ -218,15 +218,15 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <float -3.70>)",
+					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <float -3.70>), at <: input:0:0>",
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <float -3.70>)",
+					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <float -3.70>), at <: input:0:0>",
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <float -3.70>)",
+					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <float -3.70>), at <: input:0:0>",
 				},
 			},
 		},
@@ -376,31 +376,31 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "unsupported function call (PRODUCT <bool true>)",
+					error: "unsupported function call (PRODUCT <bool true>) at <: input:0:0>",
 				},
 				{
 					f:     "AVERAGE",
-					error: "unsupported function call (AVERAGE <bool true>)",
+					error: "unsupported function call (AVERAGE <bool true>) at <: input:0:0>",
 				},
 				{
 					f:     "ABS",
-					error: "unsupported function call (ABS <bool true>)",
+					error: "unsupported function call (ABS <bool true>) at <: input:0:0>",
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <bool true>)",
+					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <bool true>), at <: input:0:0>",
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <bool true>)",
+					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <bool true>), at <: input:0:0>",
 				},
 				{
 					f:     "INT",
-					error: "unsupported function call (INT <bool true>)",
+					error: "INT(number) got a wrong argument <bool true> in (INT <bool true>), at <: input:0:0>",
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <bool true>)",
+					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <bool true>), at <: input:0:0>",
 				},
 			},
 		},
@@ -413,11 +413,11 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "PRODUCT(number...) got a wrong argument <str \"hello\"> in (PRODUCT <int 5> <str \"hello\">)",
+					error: "PRODUCT(number...) got a wrong argument <str \"hello\"> in (PRODUCT <int 5> <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "AVERAGE",
-					error: "AVERAGE(number...) got a wrong argument <str \"hello\"> in (AVERAGE <int 5> <str \"hello\">)",
+					error: "AVERAGE(number...) got a wrong argument <str \"hello\"> in (AVERAGE <int 5> <str \"hello\">), at <: input:0:0>",
 				},
 			},
 		},
@@ -430,11 +430,11 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "PRODUCT(number...) got a wrong argument <bool true> in (PRODUCT <float 5.50> <bool true>)",
+					error: "PRODUCT(number...) got a wrong argument <bool true> in (PRODUCT <float 5.50> <bool true>), at <: input:0:0>",
 				},
 				{
 					f:     "AVERAGE",
-					error: "AVERAGE(number...) got a wrong argument <bool true> in (AVERAGE <float 5.50> <bool true>)",
+					error: "AVERAGE(number...) got a wrong argument <bool true> in (AVERAGE <float 5.50> <bool true>), at <: input:0:0>",
 				},
 			},
 		},
@@ -446,31 +446,31 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "unsupported function call (PRODUCT <str \"hello\">)",
+					error: "unsupported function call (PRODUCT <str \"hello\">) at <: input:0:0>",
 				},
 				{
 					f:     "AVERAGE",
-					error: "unsupported function call (AVERAGE <str \"hello\">)",
+					error: "unsupported function call (AVERAGE <str \"hello\">) at <: input:0:0>",
 				},
 				{
 					f:     "ABS",
-					error: "unsupported function call (ABS <str \"hello\">)",
+					error: "unsupported function call (ABS <str \"hello\">) at <: input:0:0>",
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <str \"hello\">)",
+					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <str \"hello\">)",
+					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "INT",
-					error: "unsupported function call (INT <str \"hello\">)",
+					error: "INT(number) got a wrong argument <str \"hello\"> in (INT <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <str \"hello\">)",
+					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <str \"hello\">), at <: input:0:0>",
 				},
 			},
 		},

@@ -32,18 +32,31 @@ func MakeArityGuard(format string, arity int) CallGuard {
 
 type typeGuard func(expr ast.Expression) bool
 
-func MakeExactTypesGuard(format string, types ...typeGuard) CallGuard {
+func MakeExactTypesGuard(format string, guards ...typeGuard) CallGuard {
 	checkTypes := func(function ast.CallExpression, values ...ast.Expression) error {
-		if len(values) != len(types) {
-			return ErrUnsupportedArity(format, function, len(types), len(values))
+		if len(values) != len(guards) {
+			return ErrUnsupportedArity(format, function, len(guards), len(values))
 		}
 
-		for i, t := range types {
-			if !t(values[i]) {
-				return ErrUnsupportedFunction(function)
+		for i, value := range values {
+			if !guards[i](value) {
+				return ErrUnsupportedArgument(format, function, values[i])
 			}
 		}
 
+		return nil
+	}
+
+	return checkTypes
+}
+
+func MakeSameTypeGuard(format string, guard typeGuard) CallGuard {
+	checkTypes := func(function ast.CallExpression, values ...ast.Expression) error {
+		for _, value := range values {
+			if !guard(value) {
+				return ErrUnsupportedArgument(format, function, value)
+			}
+		}
 		return nil
 	}
 

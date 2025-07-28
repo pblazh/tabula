@@ -16,7 +16,11 @@ type Token struct {
 }
 
 func (t Token) String() string {
-	return fmt.Sprintf("<%s:%s at %v>", t.Type, t.Literal, t.Position)
+	fn := t.Filename
+	if t.Filename == "" {
+		fn = "input"
+	}
+	return fmt.Sprintf("<%s:%s %s:%d:%d>", t.Type, t.Literal, fn, t.Line, t.Column)
 }
 
 const (
