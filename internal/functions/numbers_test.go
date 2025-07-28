@@ -33,6 +33,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int 0>",
 				},
 				{
+					f:        "SUM",
+					expected: "<int 0>",
+				},
+				{
 					f:     "ABS",
 					error: "ABS(number) expected 1 argument, but got 0 in (ABS), at <: input:0:0>",
 				},
@@ -78,6 +82,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int -5>",
 				},
 				{
+					f:        "SUM",
+					expected: "<int -5>",
+				},
+				{
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <int -5>), at <: input:0:0>",
 				},
@@ -98,6 +106,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "AVERAGE",
 					expected: "<int 3>",
+				},
+				{
+					f:        "SUM",
+					expected: "<int 9>",
 				},
 				{
 					f:     "ABS",
@@ -137,6 +149,10 @@ func TestMathFunctions(t *testing.T) {
 					f:        "AVERAGE",
 					expected: "<int 5>",
 				},
+				{
+					f:        "SUM",
+					expected: "<int 15>",
+				},
 			},
 		},
 		{
@@ -154,6 +170,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "AVERAGE",
 					expected: "<int 3>",
+				},
+				{
+					f:        "SUM",
+					expected: "<int 9>",
 				},
 			},
 		},
@@ -179,6 +199,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "INT",
 					expected: "<int 5>",
+				},
+				{
+					f:        "SUM",
+					expected: "<float 5.50>",
 				},
 				{
 					f:     "CEILING",
@@ -217,6 +241,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int -3>",
 				},
 				{
+					f:        "SUM",
+					expected: "<float -3.70>",
+				},
+				{
 					f:     "CEILING",
 					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <float -3.70>), at <: input:0:0>",
 				},
@@ -246,6 +274,10 @@ func TestMathFunctions(t *testing.T) {
 					f:        "AVERAGE",
 					expected: "<float 2.17>",
 				},
+				{
+					f:        "SUM",
+					expected: "<float 6.50>",
+				},
 			},
 		},
 		{
@@ -264,6 +296,10 @@ func TestMathFunctions(t *testing.T) {
 					f:        "AVERAGE",
 					expected: "<float 2.67>",
 				},
+				{
+					f:        "SUM",
+					expected: "<float 8.00>",
+				},
 			},
 		},
 		// Mixed int and float operations (result type determined by first argument)
@@ -281,6 +317,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "AVERAGE",
 					expected: "<int 3>",
+				},
+				{
+					f:        "SUM",
+					expected: "<int 7>",
 				},
 			},
 		},
@@ -303,6 +343,10 @@ func TestMathFunctions(t *testing.T) {
 					f:        "POWER",
 					expected: "<float 39.06>",
 				},
+				{
+					f:        "SUM",
+					expected: "<float 6.50>",
+				},
 			},
 		},
 		{
@@ -323,6 +367,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "POWER",
 					expected: "<float 441.00>",
+				},
+				{
+					f:        "SUM",
+					expected: "<int 23>",
 				},
 			},
 		},
@@ -345,6 +393,10 @@ func TestMathFunctions(t *testing.T) {
 					f:        "POWER",
 					expected: "<float 2.50>",
 				},
+				{
+					f:        "SUM",
+					expected: "<float 3.50>",
+				},
 			},
 		},
 		{
@@ -365,6 +417,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "POWER",
 					expected: "<float 2026685.91>",
+				},
+				{
+					f:        "SUM",
+					expected: "<float 129.55>",
 				},
 			},
 		},
@@ -399,6 +455,10 @@ func TestMathFunctions(t *testing.T) {
 					error: "INT(number) got a wrong argument <bool true> in (INT <bool true>), at <: input:0:0>",
 				},
 				{
+					f:     "SUM",
+					error: "SUM(number...) got a wrong argument <bool true> in (SUM <bool true>), at <: input:0:0>",
+				},
+				{
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <bool true>), at <: input:0:0>",
 				},
@@ -419,6 +479,10 @@ func TestMathFunctions(t *testing.T) {
 					f:     "AVERAGE",
 					error: "AVERAGE(number...) got a wrong argument <str \"hello\"> in (AVERAGE <int 5> <str \"hello\">), at <: input:0:0>",
 				},
+				{
+					f:     "SUM",
+					error: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <int 5> <str \"hello\">), at <: input:0:0>",
+				},
 			},
 		},
 		{
@@ -435,6 +499,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "AVERAGE",
 					error: "AVERAGE(number...) got a wrong argument <bool true> in (AVERAGE <float 5.50> <bool true>), at <: input:0:0>",
+				},
+				{
+					f:     "SUM",
+					error: "SUM(number...) got a wrong argument <bool true> in (SUM <float 5.50> <bool true>), at <: input:0:0>",
 				},
 			},
 		},
@@ -471,6 +539,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <str \"hello\">), at <: input:0:0>",
+				},
+				{
+					f:     "SUM",
+					error: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <str \"hello\">), at <: input:0:0>",
 				},
 			},
 		},

@@ -538,22 +538,22 @@ func TestOperationErrors(t *testing.T) {
 		{
 			name:          "SUM with unsupported boolean first argument",
 			input:         "SUM(true)",
-			expectedError: "unsupported function call (SUM <bool true>) at <IDENT:SUM test:1:1>",
+			expectedError: "SUM(number...) got a wrong argument <bool true> in (SUM <bool true>), at <IDENT:SUM test:1:1>",
 		},
 		{
 			name:          "SUM with mixed incompatible types in integer sum",
 			input:         "SUM(5, \"hello\")",
-			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <str \"hello\"> in (SUM <int 5> <str \"hello\">), at <IDENT:SUM test:1:1>",
+			expectedError: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <int 5> <str \"hello\">), at <IDENT:SUM test:1:1>",
 		},
 		{
 			name:          "SUM with mixed incompatible types in float sum",
 			input:         "SUM(5.5, true)",
-			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <bool true> in (SUM <float 5.50> <bool true>), at <IDENT:SUM test:1:1>",
+			expectedError: "SUM(number...) got a wrong argument <bool true> in (SUM <float 5.50> <bool true>), at <IDENT:SUM test:1:1>",
 		},
 		{
 			name:          "SUM with mixed incompatible types in string sum",
 			input:         "SUM(\"hello\", 42)",
-			expectedError: "SUM(number...) | SUM(string...) got a wrong argument <int 42> in (SUM <str \"hello\"> <int 42>), at <IDENT:SUM test:1:1>",
+			expectedError: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <str \"hello\"> <int 42>), at <IDENT:SUM test:1:1>",
 		},
 	}
 

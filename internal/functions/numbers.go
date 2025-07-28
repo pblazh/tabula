@@ -4,6 +4,14 @@ import (
 	"math"
 )
 
+func sum[T Number](values ...T) T {
+	var result T
+	for _, n := range values {
+		result += n
+	}
+	return result
+}
+
 func product[T Number](values ...T) T {
 	result := T(1)
 	for _, n := range values {
