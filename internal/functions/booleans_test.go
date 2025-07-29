@@ -31,6 +31,10 @@ func TestBooleanFunctions(t *testing.T) {
 					error: "OR(boolean, boolean) expected 2 arguments, but got 0 in (OR), at <: input:0:0>",
 				},
 				{
+					f:     "IF",
+					error: "IF(boolean, any, any) expected 3 arguments, but got 0 in (IF), at <: input:0:0>",
+				},
+				{
 					f:        "TRUE",
 					expected: "<bool true>",
 				},
@@ -60,6 +64,10 @@ func TestBooleanFunctions(t *testing.T) {
 					error: "OR(boolean, boolean) expected 2 arguments, but got 1 in (OR <bool true>), at <: input:0:0>",
 				},
 				{
+					f:     "IF",
+					error: "IF(boolean, any, any) expected 3 arguments, but got 1 in (IF <bool true>), at <: input:0:0>",
+				},
+				{
 					f:     "TRUE",
 					error: "TRUE() expected 0 arguments, but got 1 in (TRUE <bool true>), at <: input:0:0>",
 				},
@@ -87,6 +95,10 @@ func TestBooleanFunctions(t *testing.T) {
 				{
 					f:     "OR",
 					error: "OR(boolean, boolean) expected 2 arguments, but got 1 in (OR <bool false>), at <: input:0:0>",
+				},
+				{
+					f:     "IF",
+					error: "IF(boolean, any, any) expected 3 arguments, but got 1 in (IF <bool false>), at <: input:0:0>",
 				},
 			},
 		},
@@ -245,6 +257,106 @@ func TestBooleanFunctions(t *testing.T) {
 				{
 					f:     "OR",
 					error: "OR(boolean, boolean) expected 2 arguments, but got 1 in (OR <float 1.00>), at <: input:0:0>",
+				},
+			},
+		},
+		// IF function tests
+		{
+			name: "IF true condition",
+			input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.StringExpression{Value: "yes"},
+				ast.StringExpression{Value: "no"},
+			},
+			cases: []inputCase{
+				{
+					f:        "IF",
+					expected: `<str "yes">`,
+				},
+			},
+		},
+		{
+			name: "IF false condition",
+			input: []ast.Expression{
+				ast.BooleanExpression{Value: false},
+				ast.StringExpression{Value: "yes"},
+				ast.StringExpression{Value: "no"},
+			},
+			cases: []inputCase{
+				{
+					f:        "IF",
+					expected: `<str "no">`,
+				},
+			},
+		},
+		{
+			name: "IF with mixed types",
+			input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.IntExpression{Value: 42},
+				ast.FloatExpression{Value: 3.14},
+			},
+			cases: []inputCase{
+				{
+					f:        "IF",
+					expected: "<int 42>",
+				},
+			},
+		},
+		{
+			name: "IF with mixed types false",
+			input: []ast.Expression{
+				ast.BooleanExpression{Value: false},
+				ast.IntExpression{Value: 42},
+				ast.FloatExpression{Value: 3.14},
+			},
+			cases: []inputCase{
+				{
+					f:        "IF",
+					expected: "<float 3.14>",
+				},
+			},
+		},
+		{
+			name: "IF with boolean results",
+			input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.BooleanExpression{Value: false},
+				ast.BooleanExpression{Value: true},
+			},
+			cases: []inputCase{
+				{
+					f:        "IF",
+					expected: "<bool false>",
+				},
+			},
+		},
+		{
+			name: "IF with non-boolean condition",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "true"},
+				ast.StringExpression{Value: "yes"},
+				ast.StringExpression{Value: "no"},
+			},
+			cases: []inputCase{
+				{
+					f:     "IF",
+					error: `IF(boolean, any, any) got a wrong argument <str "true"> in (IF <str "true"> <str "yes"> <str "no">), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "IF with too many arguments",
+			input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.StringExpression{Value: "yes"},
+				ast.StringExpression{Value: "no"},
+				ast.StringExpression{Value: "extra"},
+			},
+			cases: []inputCase{
+				{
+					f:     "IF",
+					error: `IF(boolean, any, any) expected 3 arguments, but got 4 in (IF <bool true> <str "yes"> <str "no"> <str "extra">), at <: input:0:0>`,
 				},
 			},
 		},

@@ -71,8 +71,28 @@ var DispatchMap dispatchMap = dispatchMap{
 		return Exact(format, call, values...)
 	},
 	// bulean functions
+	"IF": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "IF(boolean, any, any)"
+		return If(format, call, values...)
+	},
+	"NOT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "NOT(boolean)"
+		return Not(format, call, values...)
+	},
+	"AND": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "AND(boolean, boolean)"
+		return And(format, call, values...)
+	},
+	"OR": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "OR(boolean, boolean)"
+		return Or(format, call, values...)
+	},
+	"TRUE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "TRUE()"
+		return True(format, call, values...)
+	},
 	"FALSE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-		format := "FALSE(boolean)"
+		format := "FALSE()"
 		return False(format, call, values...)
 	},
 }

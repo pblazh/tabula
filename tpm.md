@@ -147,7 +147,7 @@
 - [ ] #32: Logical Functions Implementation
   - [x] #32.1: Implement AND function
   - [x] #32.2: Implement FALSE function
-  - [ ] #32.3: Implement IF function
+  - [x] #32.3: Implement IF function
   - [ ] #32.4: Implement IFERROR function
   - [x] #32.5: Implement NOT function
   - [x] #32.6: Implement OR function
