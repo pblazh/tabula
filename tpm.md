@@ -124,7 +124,7 @@
   - [ ] #30.3: Implement FIND function
   - [ ] #30.4: Implement LEFT function
   - [x] #30.5: Implement LEN function
-  - [ ] #30.6: Implement LOWER function
+  - [x] #30.6: Implement LOWER function
   - [ ] #30.7: Implement MID function
   - [ ] #30.8: Implement REPLACE function
   - [ ] #30.9: Implement RIGHT function

@@ -33,3 +33,15 @@ func Len(format string,
 	a := values[0].(ast.StringExpression)
 	return ast.IntExpression{Value: len(a.Value)}, nil
 }
+
+func Lower(format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	guard := MakeExactTypesGuard(format, ast.IsString)
+	if err := guard(call, values...); err != nil {
+		return nil, err
+	}
+
+	a := values[0].(ast.StringExpression)
+	return ast.StringExpression{Value: strings.ToLower(a.Value)}, nil
+}

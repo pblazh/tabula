@@ -26,6 +26,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "LEN",
 					error: "LEN(string) expected 1 argument, but got 0 in (LEN), at <: input:0:0>",
 				},
+				{
+					f:     "LOWER",
+					error: "LOWER(string) expected 1 argument, but got 0 in (LOWER), at <: input:0:0>",
+				},
 			},
 		},
 		// Single string
@@ -42,6 +46,31 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "LEN",
 					expected: "<int 5>",
+				},
+				{
+					f:        "LOWER",
+					expected: `<str "hello">`,
+				},
+			},
+		},
+		// Mixed case string
+		{
+			name: "mixed case string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "Hello World"},
+			},
+			cases: []inputCase{
+				{
+					f:        "CONCATENATE",
+					expected: `<str "Hello World">`,
+				},
+				{
+					f:        "LEN",
+					expected: "<int 11>",
+				},
+				{
+					f:        "LOWER",
+					expected: `<str "hello world">`,
 				},
 			},
 		},
@@ -61,6 +90,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "LEN",
 					error: `LEN(string) expected 1 argument, but got 3 in (LEN <str "hello"> <str " "> <str "world">), at <: input:0:0>`,
+				},
+				{
+					f:     "LOWER",
+					error: `LOWER(string) expected 1 argument, but got 3 in (LOWER <str "hello"> <str " "> <str "world">), at <: input:0:0>`,
 				},
 			},
 		},
@@ -163,6 +196,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "LEN",
 					error: "LEN(string) got a wrong argument <int 123> in (LEN <int 123>), at <: input:0:0>",
 				},
+				{
+					f:     "LOWER",
+					error: "LOWER(string) got a wrong argument <int 123> in (LOWER <int 123>), at <: input:0:0>",
+				},
 			},
 		},
 		{
@@ -178,6 +215,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "LEN",
 					error: "LEN(string) got a wrong argument <bool false> in (LEN <bool false>), at <: input:0:0>",
+				},
+				{
+					f:     "LOWER",
+					error: "LOWER(string) got a wrong argument <bool false> in (LOWER <bool false>), at <: input:0:0>",
 				},
 			},
 		},

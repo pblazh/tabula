@@ -54,4 +54,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "LEN(string)"
 		return Len(format, call, values...)
 	},
+	"LOWER": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "LOWER(string)"
+		return Lower(format, call, values...)
+	},
 }
