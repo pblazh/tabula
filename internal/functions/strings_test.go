@@ -22,6 +22,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "CONCATENATE",
 					expected: `<str "">`,
 				},
+				{
+					f:     "LEN",
+					error: "LEN(string) expected 1 argument, but got 0 in (LEN), at <: input:0:0>",
+				},
 			},
 		},
 		// Single string
@@ -34,6 +38,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "CONCATENATE",
 					expected: `<str "hello">`,
+				},
+				{
+					f:        "LEN",
+					expected: "<int 5>",
 				},
 			},
 		},
@@ -49,6 +57,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "CONCATENATE",
 					expected: `<str "hello world">`,
+				},
+				{
+					f:     "LEN",
+					error: `LEN(string) expected 1 argument, but got 3 in (LEN <str "hello"> <str " "> <str "world">), at <: input:0:0>`,
 				},
 			},
 		},
@@ -147,6 +159,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "CONCATENATE",
 					error: `CONCATENATE(string...) got a wrong argument <int 123> in (CONCATENATE <int 123>), at <: input:0:0>`,
 				},
+				{
+					f:     "LEN",
+					error: "LEN(string) got a wrong argument <int 123> in (LEN <int 123>), at <: input:0:0>",
+				},
 			},
 		},
 		{
@@ -158,6 +174,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "CONCATENATE",
 					error: `CONCATENATE(string...) got a wrong argument <bool false> in (CONCATENATE <bool false>), at <: input:0:0>`,
+				},
+				{
+					f:     "LEN",
+					error: "LEN(string) got a wrong argument <bool false> in (LEN <bool false>), at <: input:0:0>",
 				},
 			},
 		},
@@ -195,4 +215,3 @@ func TestStringFunctions(t *testing.T) {
 		}
 	}
 }
-

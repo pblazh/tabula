@@ -123,7 +123,7 @@
   - [ ] #30.2: Implement EXACT function
   - [ ] #30.3: Implement FIND function
   - [ ] #30.4: Implement LEFT function
-  - [ ] #30.5: Implement LEN function
+  - [x] #30.5: Implement LEN function
   - [ ] #30.6: Implement LOWER function
   - [ ] #30.7: Implement MID function
   - [ ] #30.8: Implement REPLACE function

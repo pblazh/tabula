@@ -1,6 +1,8 @@
 package functions
 
 import (
+	"strings"
+
 	"github.com/pblazh/csvss/internal/ast"
 )
 
@@ -12,18 +14,22 @@ func Concat(format string,
 		return nil, err
 	}
 
-	args := make([]string, len(values))
-	for i, arg := range values {
+	var result strings.Builder
+	for _, arg := range values {
 		a := arg.(ast.StringExpression)
-		args[i] = a.Value
+		result.WriteString(a.Value)
 	}
-	return ast.StringExpression{Value: concat(args...)}, nil
+	return ast.StringExpression{Value: result.String()}, nil
 }
 
-func concat[T string](values ...T) T {
-	var result T
-	for _, n := range values {
-		result += n
+func Len(format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	guard := MakeExactTypesGuard(format, ast.IsString)
+	if err := guard(call, values...); err != nil {
+		return nil, err
 	}
-	return result
+
+	a := values[0].(ast.StringExpression)
+	return ast.IntExpression{Value: len(a.Value)}, nil
 }

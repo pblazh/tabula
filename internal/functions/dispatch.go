@@ -50,4 +50,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "CONCATENATE(string...)"
 		return Concat(format, call, values...)
 	},
+	"LEN": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "LEN(string)"
+		return Len(format, call, values...)
+	},
 }
