@@ -62,4 +62,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "UPPER(string)"
 		return Upper(format, call, values...)
 	},
+	"TRIM": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "TRIM(string)"
+		return Trim(format, call, values...)
+	},
 }

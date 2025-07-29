@@ -34,6 +34,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "UPPER",
 					error: "UPPER(string) expected 1 argument, but got 0 in (UPPER), at <: input:0:0>",
 				},
+				{
+					f:     "TRIM",
+					error: "TRIM(string) expected 1 argument, but got 0 in (TRIM), at <: input:0:0>",
+				},
 			},
 		},
 		// Single string
@@ -59,6 +63,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "UPPER",
 					expected: `<str "HELLO">`,
 				},
+				{
+					f:        "TRIM",
+					expected: `<str "hello">`,
+				},
 			},
 		},
 		// Mixed case string
@@ -83,6 +91,39 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "UPPER",
 					expected: `<str "HELLO WORLD">`,
+				},
+				{
+					f:        "TRIM",
+					expected: `<str "Hello World">`,
+				},
+			},
+		},
+		// String with whitespace
+		{
+			name: "string with whitespace",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "  hello world  "},
+			},
+			cases: []inputCase{
+				{
+					f:        "CONCATENATE",
+					expected: `<str "  hello world  ">`,
+				},
+				{
+					f:        "LEN",
+					expected: "<int 15>",
+				},
+				{
+					f:        "LOWER",
+					expected: `<str "  hello world  ">`,
+				},
+				{
+					f:        "UPPER",
+					expected: `<str "  HELLO WORLD  ">`,
+				},
+				{
+					f:        "TRIM",
+					expected: `<str "hello world">`,
 				},
 			},
 		},
@@ -110,6 +151,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "UPPER",
 					error: `UPPER(string) expected 1 argument, but got 3 in (UPPER <str "hello"> <str " "> <str "world">), at <: input:0:0>`,
+				},
+				{
+					f:     "TRIM",
+					error: `TRIM(string) expected 1 argument, but got 3 in (TRIM <str "hello"> <str " "> <str "world">), at <: input:0:0>`,
 				},
 			},
 		},
@@ -220,6 +265,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "UPPER",
 					error: "UPPER(string) got a wrong argument <int 123> in (UPPER <int 123>), at <: input:0:0>",
 				},
+				{
+					f:     "TRIM",
+					error: "TRIM(string) got a wrong argument <int 123> in (TRIM <int 123>), at <: input:0:0>",
+				},
 			},
 		},
 		{
@@ -243,6 +292,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "UPPER",
 					error: "UPPER(string) got a wrong argument <bool false> in (UPPER <bool false>), at <: input:0:0>",
+				},
+				{
+					f:     "TRIM",
+					error: "TRIM(string) got a wrong argument <bool false> in (TRIM <bool false>), at <: input:0:0>",
 				},
 			},
 		},

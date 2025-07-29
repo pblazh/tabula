@@ -129,8 +129,8 @@
   - [ ] #30.8: Implement REPLACE function
   - [ ] #30.9: Implement RIGHT function
   - [ ] #30.10: Implement SUBSTITUTE function
-  - [ ] #30.11: Implement TRIM function
-  - [ ] #30.12: Implement UPPER function
+  - [x] #30.11: Implement TRIM function
+  - [x] #30.12: Implement UPPER function
 - [ ] #31: Date and Time Functions Implementation
   - [ ] #31.1: Implement DATE function
   - [ ] #31.2: Implement DATEDIF function

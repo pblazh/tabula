@@ -57,3 +57,15 @@ func Upper(format string,
 	a := values[0].(ast.StringExpression)
 	return ast.StringExpression{Value: strings.ToUpper(a.Value)}, nil
 }
+
+func Trim(format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	guard := MakeExactTypesGuard(format, ast.IsString)
+	if err := guard(call, values...); err != nil {
+		return nil, err
+	}
+
+	a := values[0].(ast.StringExpression)
+	return ast.StringExpression{Value: strings.TrimSpace(a.Value)}, nil
+}
