@@ -19,7 +19,7 @@ func Concat(format string,
 		a := arg.(ast.StringExpression)
 		result.WriteString(a.Value)
 	}
-	return ast.StringExpression{Value: result.String()}, nil
+	return ast.StringExpression{Value: result.String(), Token: call.Token}, nil
 }
 
 func Len(format string,
@@ -31,7 +31,7 @@ func Len(format string,
 	}
 
 	a := values[0].(ast.StringExpression)
-	return ast.IntExpression{Value: len(a.Value)}, nil
+	return ast.IntExpression{Value: len(a.Value), Token: call.Token}, nil
 }
 
 func Lower(format string,
@@ -43,7 +43,7 @@ func Lower(format string,
 	}
 
 	a := values[0].(ast.StringExpression)
-	return ast.StringExpression{Value: strings.ToLower(a.Value)}, nil
+	return ast.StringExpression{Value: strings.ToLower(a.Value), Token: call.Token}, nil
 }
 
 func Upper(format string,
@@ -55,7 +55,7 @@ func Upper(format string,
 	}
 
 	a := values[0].(ast.StringExpression)
-	return ast.StringExpression{Value: strings.ToUpper(a.Value)}, nil
+	return ast.StringExpression{Value: strings.ToUpper(a.Value), Token: call.Token}, nil
 }
 
 func Trim(format string,
@@ -67,5 +67,18 @@ func Trim(format string,
 	}
 
 	a := values[0].(ast.StringExpression)
-	return ast.StringExpression{Value: strings.TrimSpace(a.Value)}, nil
+	return ast.StringExpression{Value: strings.TrimSpace(a.Value), Token: call.Token}, nil
+}
+
+func Exact(format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	guard := MakeExactTypesGuard(format, ast.IsString, ast.IsString)
+	if err := guard(call, values...); err != nil {
+		return nil, err
+	}
+
+	a := values[0].(ast.StringExpression)
+	b := values[0].(ast.StringExpression)
+	return ast.BooleanExpression{Value: strings.Compare(a.Value, b.Value) == 0, Token: call.Token}, nil
 }

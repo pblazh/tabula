@@ -66,4 +66,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "TRIM(string)"
 		return Trim(format, call, values...)
 	},
+	"EXACT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "EXACT(string, string)"
+		return Exact(format, call, values...)
+	},
 }

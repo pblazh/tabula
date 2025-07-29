@@ -120,7 +120,7 @@
   - [x] #29.17: Implement INT function
 - [ ] #30: Text Functions Implementation
   - [x] #30.1: Implement CONCATENATE function
-  - [ ] #30.2: Implement EXACT function
+  - [x] #30.2: Implement EXACT function
   - [ ] #30.3: Implement FIND function
   - [ ] #30.4: Implement LEFT function
   - [x] #30.5: Implement LEN function

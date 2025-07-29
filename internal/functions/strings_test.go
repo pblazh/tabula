@@ -38,6 +38,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "TRIM",
 					error: "TRIM(string) expected 1 argument, but got 0 in (TRIM), at <: input:0:0>",
 				},
+				{
+					f:     "EXACT",
+					error: "EXACT(string, string) expected 2 arguments, but got 0 in (EXACT), at <: input:0:0>",
+				},
 			},
 		},
 		// Single string
@@ -66,6 +70,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "TRIM",
 					expected: `<str "hello">`,
+				},
+				{
+					f:     "EXACT",
+					error: "EXACT(string, string) expected 2 arguments, but got 1 in (EXACT <str \"hello\">), at <: input:0:0>",
 				},
 			},
 		},
@@ -96,6 +104,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "TRIM",
 					expected: `<str "Hello World">`,
 				},
+				{
+					f:     "EXACT",
+					error: "EXACT(string, string) expected 2 arguments, but got 1 in (EXACT <str \"Hello World\">), at <: input:0:0>",
+				},
 			},
 		},
 		// String with whitespace
@@ -124,6 +136,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "TRIM",
 					expected: `<str "hello world">`,
+				},
+				{
+					f:     "EXACT",
+					error: "EXACT(string, string) expected 2 arguments, but got 1 in (EXACT <str \"  hello world  \">), at <: input:0:0>",
 				},
 			},
 		},
@@ -155,6 +171,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "TRIM",
 					error: `TRIM(string) expected 1 argument, but got 3 in (TRIM <str "hello"> <str " "> <str "world">), at <: input:0:0>`,
+				},
+				{
+					f:     "EXACT",
+					error: `EXACT(string, string) expected 2 arguments, but got 3 in (EXACT <str "hello"> <str " "> <str "world">), at <: input:0:0>`,
 				},
 			},
 		},
@@ -203,6 +223,46 @@ func TestStringFunctions(t *testing.T) {
 				},
 			},
 		},
+		// Two strings for EXACT testing
+		{
+			name: "two identical strings",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "hello"},
+			},
+			cases: []inputCase{
+				{
+					f:        "EXACT",
+					expected: "<bool true>",
+				},
+			},
+		},
+		{
+			name: "two different strings",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "world"},
+			},
+			cases: []inputCase{
+				{
+					f:        "EXACT",
+					expected: "<bool false>",
+				},
+			},
+		},
+		{
+			name: "case sensitivity test",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "Hello"},
+				ast.StringExpression{Value: "hello"},
+			},
+			cases: []inputCase{
+				{
+					f:        "EXACT",
+					expected: "<bool false>",
+				},
+			},
+		},
 		// Numbers and other types (should error)
 		{
 			name: "string and integer",
@@ -214,6 +274,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "CONCATENATE",
 					error: `CONCATENATE(string...) got a wrong argument <int 42> in (CONCATENATE <str "hello"> <int 42>), at <: input:0:0>`,
+				},
+				{
+					f:     "EXACT",
+					error: `EXACT(string, string) got a wrong argument <int 42> in (EXACT <str "hello"> <int 42>), at <: input:0:0>`,
 				},
 			},
 		},
@@ -228,6 +292,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "CONCATENATE",
 					error: `CONCATENATE(string...) got a wrong argument <float 3.14> in (CONCATENATE <str "value: "> <float 3.14>), at <: input:0:0>`,
 				},
+				{
+					f:     "EXACT",
+					error: `EXACT(string, string) got a wrong argument <float 3.14> in (EXACT <str "value: "> <float 3.14>), at <: input:0:0>`,
+				},
 			},
 		},
 		{
@@ -240,6 +308,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "CONCATENATE",
 					error: `CONCATENATE(string...) got a wrong argument <bool true> in (CONCATENATE <str "result: "> <bool true>), at <: input:0:0>`,
+				},
+				{
+					f:     "EXACT",
+					error: `EXACT(string, string) got a wrong argument <bool true> in (EXACT <str "result: "> <bool true>), at <: input:0:0>`,
 				},
 			},
 		},
@@ -269,6 +341,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "TRIM",
 					error: "TRIM(string) got a wrong argument <int 123> in (TRIM <int 123>), at <: input:0:0>",
 				},
+				{
+					f:     "EXACT",
+					error: "EXACT(string, string) expected 2 arguments, but got 1 in (EXACT <int 123>), at <: input:0:0>",
+				},
 			},
 		},
 		{
@@ -296,6 +372,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "TRIM",
 					error: "TRIM(string) got a wrong argument <bool false> in (TRIM <bool false>), at <: input:0:0>",
+				},
+				{
+					f:     "EXACT",
+					error: "EXACT(string, string) expected 2 arguments, but got 1 in (EXACT <bool false>), at <: input:0:0>",
 				},
 			},
 		},
