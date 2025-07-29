@@ -51,21 +51,21 @@ func TestEvaluateStatement(t *testing.T) {
 			statement:       "fmt result = \"hello\";",
 			context:         map[string]string{},
 			expectedContext: map[string]string{},
-			expectedFormat:  map[string]string{"result": "\"hello\""},
+			expectedFormat:  map[string]string{"result": "hello"},
 		},
 		{
 			name:            "multi fmt statement with strings",
 			statement:       "fmt result = \"hello\"; fmt another = \"world\";",
 			context:         map[string]string{},
 			expectedContext: map[string]string{},
-			expectedFormat:  map[string]string{"result": "\"hello\"", "another": "\"world\""},
+			expectedFormat:  map[string]string{"result": "hello", "another": "world"},
 		},
 		{
 			name:            "fmt statement override strings",
 			statement:       "fmt result = \"hello\"; fmt result = \"world\";",
 			context:         map[string]string{},
 			expectedContext: map[string]string{},
-			expectedFormat:  map[string]string{"result": "\"world\""},
+			expectedFormat:  map[string]string{"result": "world"},
 		},
 		// Data update
 		{

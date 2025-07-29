@@ -46,10 +46,16 @@ func parseInt(value, formatSpec string) (ast.Expression, error) {
 	return ast.IntExpression{Value: resultInt, Token: lexer.Token{Literal: value}}, nil
 }
 
+// removePrecision removes precision specifiers like %.2f from format strings
+func removePrecision(format string) string {
+	re := regexp.MustCompile(`%(\.\d+)?([a-zA-Z])`)
+	return re.ReplaceAllString(format, `%$2`)
+}
+
 // parseFloat parses a float value using the specified format
 func parseFloat(value, formatSpec string) (ast.Expression, error) {
 	var resultFloat float64
-	_, err := fmt.Sscanf(value, formatSpec, &resultFloat)
+	_, err := fmt.Sscanf(value, removePrecision(formatSpec), &resultFloat)
 	if err != nil {
 		return nil, ErrParseWithFormat(value, formatSpec, err.Error())
 	}

@@ -41,8 +41,8 @@ func TestEvaluate(t *testing.T) {
 				{"3", "4"},
 			},
 			output: [][]string{
-				{"1", "\"42kg\""},
-				{"3", "\"84 pounds\""},
+				{"1", "42kg"},
+				{"3", "84 pounds"},
 			},
 		},
 		{

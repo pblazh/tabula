@@ -34,7 +34,7 @@ func EvaluateStatement(statement ast.Statement, context map[string]string, input
 
 		switch val := value.(type) {
 		case ast.StringExpression:
-			formats[s.Identifier.Token.Literal] = val.Token.Literal
+			formats[s.Identifier.Token.Literal] = val.Value
 		default:
 			return ErrFmtExpectedString(s.Identifier.Token, val.String())
 		}

@@ -30,6 +30,12 @@ func TestReadValue(t *testing.T) {
 			expected: ast.FloatExpression{Value: 3.14, Token: lexer.Token{Literal: "3.14kg"}},
 		},
 		{
+			name:     "format specification with precision",
+			input:    "3.14кг",
+			format:   "%.2fкг",
+			expected: ast.FloatExpression{Value: 3.14, Token: lexer.Token{Literal: "3.14кг"}},
+		},
+		{
 			name:     "format specification with string",
 			input:    "hello",
 			format:   "%s",
