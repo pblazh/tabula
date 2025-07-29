@@ -10,6 +10,7 @@ type (
 )
 
 var DispatchMap dispatchMap = dispatchMap{
+	// numberic functions
 	"SUM": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		format := "SUM(number...)"
 		guard := MakeSameTypeGuard(format, ast.IsNumeric)
@@ -43,5 +44,10 @@ var DispatchMap dispatchMap = dispatchMap{
 	},
 	"INT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		return Int(call, values...)
+	},
+	// string functions
+	"CONCATENATE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "CONCATENATE(string...)"
+		return Concat(format, call, values...)
 	},
 }

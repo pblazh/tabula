@@ -4,19 +4,18 @@ import (
 	"github.com/pblazh/csvss/internal/ast"
 )
 
-func Concat(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-	if len(values) == 0 {
-		return ast.StringExpression{Value: ""}, nil
+func Concat(format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	guard := MakeSameTypeGuard(format, ast.IsString)
+	if err := guard(call, values...); err != nil {
+		return nil, err
 	}
 
 	args := make([]string, len(values))
 	for i, arg := range values {
-		switch a := arg.(type) {
-		case ast.StringExpression:
-			args[i] = a.Value
-		default:
-			return nil, ErrUnsupportedArgument(format, call, a)
-		}
+		a := arg.(ast.StringExpression)
+		args[i] = a.Value
 	}
 	return ast.StringExpression{Value: concat(args...)}, nil
 }
