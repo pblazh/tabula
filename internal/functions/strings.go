@@ -79,6 +79,6 @@ func Exact(format string,
 	}
 
 	a := values[0].(ast.StringExpression)
-	b := values[0].(ast.StringExpression)
+	b := values[1].(ast.StringExpression)
 	return ast.BooleanExpression{Value: strings.Compare(a.Value, b.Value) == 0, Token: call.Token}, nil
 }

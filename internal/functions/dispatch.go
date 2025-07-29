@@ -70,4 +70,9 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "EXACT(string, string)"
 		return Exact(format, call, values...)
 	},
+	// bulean functions
+	"FALSE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "FALSE(boolean)"
+		return False(format, call, values...)
+	},
 }

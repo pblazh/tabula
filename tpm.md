@@ -145,13 +145,13 @@
   - [ ] #31.11: Implement WEEKDAY function
   - [ ] #31.12: Implement YEAR function
 - [ ] #32: Logical Functions Implementation
-  - [ ] #32.1: Implement AND function
-  - [ ] #32.2: Implement FALSE function
+  - [x] #32.1: Implement AND function
+  - [x] #32.2: Implement FALSE function
   - [ ] #32.3: Implement IF function
   - [ ] #32.4: Implement IFERROR function
-  - [ ] #32.5: Implement NOT function
-  - [ ] #32.6: Implement OR function
-  - [ ] #32.7: Implement TRUE function
+  - [x] #32.5: Implement NOT function
+  - [x] #32.6: Implement OR function
+  - [x] #32.7: Implement TRUE function
 - [ ] #33: Lookup and Reference Functions Implementation
   - [ ] #33.1: Implement CHOOSE function
   - [ ] #33.2: Implement COLUMN function
