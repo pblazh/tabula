@@ -58,4 +58,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "LOWER(string)"
 		return Lower(format, call, values...)
 	},
+	"UPPER": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "UPPER(string)"
+		return Upper(format, call, values...)
+	},
 }

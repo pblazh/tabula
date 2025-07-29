@@ -30,6 +30,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "LOWER",
 					error: "LOWER(string) expected 1 argument, but got 0 in (LOWER), at <: input:0:0>",
 				},
+				{
+					f:     "UPPER",
+					error: "UPPER(string) expected 1 argument, but got 0 in (UPPER), at <: input:0:0>",
+				},
 			},
 		},
 		// Single string
@@ -51,6 +55,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "LOWER",
 					expected: `<str "hello">`,
 				},
+				{
+					f:        "UPPER",
+					expected: `<str "HELLO">`,
+				},
 			},
 		},
 		// Mixed case string
@@ -71,6 +79,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "LOWER",
 					expected: `<str "hello world">`,
+				},
+				{
+					f:        "UPPER",
+					expected: `<str "HELLO WORLD">`,
 				},
 			},
 		},
@@ -94,6 +106,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "LOWER",
 					error: `LOWER(string) expected 1 argument, but got 3 in (LOWER <str "hello"> <str " "> <str "world">), at <: input:0:0>`,
+				},
+				{
+					f:     "UPPER",
+					error: `UPPER(string) expected 1 argument, but got 3 in (UPPER <str "hello"> <str " "> <str "world">), at <: input:0:0>`,
 				},
 			},
 		},
@@ -200,6 +216,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "LOWER",
 					error: "LOWER(string) got a wrong argument <int 123> in (LOWER <int 123>), at <: input:0:0>",
 				},
+				{
+					f:     "UPPER",
+					error: "UPPER(string) got a wrong argument <int 123> in (UPPER <int 123>), at <: input:0:0>",
+				},
 			},
 		},
 		{
@@ -219,6 +239,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "LOWER",
 					error: "LOWER(string) got a wrong argument <bool false> in (LOWER <bool false>), at <: input:0:0>",
+				},
+				{
+					f:     "UPPER",
+					error: "UPPER(string) got a wrong argument <bool false> in (UPPER <bool false>), at <: input:0:0>",
 				},
 			},
 		},
