@@ -48,6 +48,15 @@ exit status 1
 `,
 			stderr: "",
 		},
+		{
+			name: "script path from CSV comment",
+			args: []string{"-i", "../../examples/basic/file.csv"},
+			stdout: `Full Name,Age,Grade
+"Dow, Bob",25,170
+"Dow, Alice",30,184
+`,
+			stderr: "",
+		},
 	}
 
 	for _, tt := range tests {

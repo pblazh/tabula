@@ -1,8 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"os"
+	"path"
+	"strings"
 )
 
 func main() {
@@ -56,6 +60,17 @@ func main() {
 		}
 		defer dclose(file)
 		csvReader = file
+
+		comment := readComment(csvReader)
+		_, err = file.Seek(0, 0)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error opening CSV file: %v\n", err)
+			os.Exit(1)
+		}
+
+		if comment != "" && config.Script == "" {
+			config.Script = path.Join(path.Dir(config.Input), comment)
+		}
 	}
 
 	// Open script source
@@ -75,4 +90,18 @@ func main() {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
+}
+
+func readComment(f io.Reader) string {
+	prefix := "#csvss:"
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := scanner.Text()
+		trimmed := strings.TrimSpace(line)
+
+		if strings.HasPrefix(trimmed, prefix) {
+			return trimmed[len(prefix):]
+		}
+	}
+	return ""
 }

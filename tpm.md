@@ -42,6 +42,8 @@
   - [x] #15.4: Convert evaluation results back to CSV format
   - [x] #15.5: Implement actual output handling (stdout/file)
   - [x] #15.6: Align CSV table columns
+  - [x] #15.7: Read script file from comment
+  - [ ] #15.8: Read embedded script
 - [x] #16: Function Implementation
   - [x] #16.1: Implement function call evaluation in `evaluateCallExpression`
   - [x] #16.3: Implement range evaluation (A1:C3 expansion)
