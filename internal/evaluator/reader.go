@@ -46,16 +46,17 @@ func parseInt(value, formatSpec string) (ast.Expression, error) {
 	return ast.IntExpression{Value: resultInt, Token: lexer.Token{Literal: value}}, nil
 }
 
-// removePrecision removes precision specifiers like %.2f from format strings
-func removePrecision(format string) string {
-	re := regexp.MustCompile(`%(\.\d+)?([a-zA-Z])`)
-	return re.ReplaceAllString(format, `%$2`)
+// cleanFormat removes the width and precision parts from format strings (e.g., %-9s → %s, %6f → %f, %6.2f → %f)
+func cleanFormat(format string) string {
+	re := regexp.MustCompile(`%([-+0# ]*)(\d+)?(\.\d+)?([a-zA-Z])`)
+	return re.ReplaceAllString(format, `%$4`)
 }
 
 // parseFloat parses a float value using the specified format
 func parseFloat(value, formatSpec string) (ast.Expression, error) {
 	var resultFloat float64
-	_, err := fmt.Sscanf(value, removePrecision(formatSpec), &resultFloat)
+	cleaned := cleanFormat(formatSpec)
+	_, err := fmt.Sscanf(value, cleaned, &resultFloat)
 	if err != nil {
 		return nil, ErrParseWithFormat(value, formatSpec, err.Error())
 	}
@@ -63,11 +64,12 @@ func parseFloat(value, formatSpec string) (ast.Expression, error) {
 }
 
 // parseString parses a string value using the specified format
-func parseString(value, formatSpec string) (ast.Expression, error) {
+func parseString(value, format string) (ast.Expression, error) {
 	var resultString string
-	_, err := fmt.Sscanf(value, formatSpec, &resultString)
+	cleaned := cleanFormat(format)
+	_, err := fmt.Sscanf(value, cleaned, &resultString)
 	if err != nil {
-		return nil, ErrParseWithFormat(value, formatSpec, err.Error())
+		return nil, ErrParseWithFormat(value, cleaned, err.Error())
 	}
 	return ast.StringExpression{Value: resultString, Token: lexer.Token{Literal: value}}, nil
 }
@@ -144,21 +146,21 @@ func WriteValue(value ast.Expression, format string) (string, error) {
 }
 
 // formatWithSpec formats an AST expression using the specified format
-func formatWithSpec(value ast.Expression, formatSpec string) (string, error) {
+func formatWithSpec(value ast.Expression, format string) (string, error) {
 	switch expr := value.(type) {
 	case ast.IntExpression:
-		return fmt.Sprintf(formatSpec, expr.Value), nil
+		return fmt.Sprintf(format, expr.Value), nil
 	case ast.FloatExpression:
-		return fmt.Sprintf(formatSpec, expr.Value), nil
+		return fmt.Sprintf(format, expr.Value), nil
 	case ast.StringExpression:
 		// Extract content from quoted string literal
 		content := expr.Value
 		if len(content) >= 2 && content[0] == '"' && content[len(content)-1] == '"' {
 			content = content[1 : len(content)-1]
 		}
-		return fmt.Sprintf(formatSpec, content), nil
+		return fmt.Sprintf(format, content), nil
 	case ast.BooleanExpression:
-		return fmt.Sprintf(formatSpec, expr.Value), nil
+		return fmt.Sprintf(format, expr.Value), nil
 	default:
 		return "", ErrUnsupportedExpressionType(value)
 	}
