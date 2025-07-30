@@ -45,6 +45,21 @@ func TestParseArgs(t *testing.T) {
 			args:   []string{"csvss", "-u", "csvFile"},
 			config: &Config{Script: "", Input: "csvFile", Output: "csvFile"},
 		},
+		{
+			name:   "script from file, csv from file, aligned output",
+			args:   []string{"csvss", "-s", "scriptFile", "-i", "csvFile", "-a"},
+			config: &Config{Script: "scriptFile", Input: "csvFile", Output: "", Align: true},
+		},
+		{
+			name:   "script from file, csv from file, output to file, aligned",
+			args:   []string{"csvss", "-s", "scriptFile", "-i", "csvFile", "-o", "output.csv", "-a"},
+			config: &Config{Script: "scriptFile", Input: "csvFile", Output: "output.csv", Align: true},
+		},
+		{
+			name:   "script from file, csv from file, update in place, aligned",
+			args:   []string{"csvss", "-s", "scriptFile", "-u", "csvFile", "-a"},
+			config: &Config{Script: "scriptFile", Input: "csvFile", Output: "csvFile", Align: true},
+		},
 		// Invalid combinations
 		{
 			name:   "conflicting output flags -o and -u",

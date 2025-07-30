@@ -4,23 +4,31 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/pblazh/csvss/internal/evaluator"
 )
 
-func processCSV(scriptPath string, scriptReader io.Reader, csvReader io.Reader, csvWriter io.Writer) error {
+func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csvWriter io.Writer) error {
 	// Read and parse CSV
 	reader := csv.NewReader(csvReader)
 	reader.LazyQuotes = true
 	reader.TrimLeadingSpace = true
+	reader.Comment = '#'
 
 	records, err := reader.ReadAll()
 	if err != nil {
 		return fmt.Errorf("error reading CSV: %v", err)
 	}
 
+	for i, row := range records {
+		for j, cel := range row {
+			records[i][j] = strings.TrimSpace(cel)
+		}
+	}
+
 	// Parse script
-	program, err := evaluator.ParseProgram(scriptReader, scriptPath)
+	program, err := evaluator.ParseProgram(scriptReader, config.Script)
 	if err != nil {
 		return fmt.Errorf("error parsing script: %v", err)
 	}
@@ -28,18 +36,13 @@ func processCSV(scriptPath string, scriptReader io.Reader, csvReader io.Reader, 
 	// Evaluate the program with CSV data
 	result, err := evaluator.Evaluate(program, records)
 	if err != nil {
-		return fmt.Errorf("error evaluating script %s: %v", scriptPath, err)
+		return fmt.Errorf("error evaluating script %s: %v", config.Script, err)
+	}
+
+	if config.Align {
+		return writeAligned(csvWriter, result)
 	}
 
 	// Output result in the expected format
-	writer := csv.NewWriter(csvWriter)
-	defer writer.Flush()
-
-	for _, row := range result {
-		if err := writer.Write(row); err != nil {
-			return fmt.Errorf("error writing CSV output: %v", err)
-		}
-	}
-
-	return nil
+	return writeCompact(csvWriter, result)
 }

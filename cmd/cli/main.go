@@ -71,7 +71,7 @@ func main() {
 	}
 
 	// Process CSV
-	if err := processCSV(config.Script, scriptReader, csvReader, csvWriter); err != nil {
+	if err := processCSV(config, scriptReader, csvReader, csvWriter); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}

@@ -14,6 +14,7 @@ Options:
   -s <file>    Script file path (default: stdin)
   -o <file>    Output CSV file (default: stdout)
   -u           Update input CSV file in place
+  -a           Align output
   -h           Show this help
 
 Examples:
@@ -40,6 +41,7 @@ type Config struct {
 	Script string
 	Input  string
 	Output string
+	Align  bool
 }
 
 func parseArgs() (*Config, error) {
@@ -47,12 +49,14 @@ func parseArgs() (*Config, error) {
 	var output string
 	var input string
 	var update string
+	var align bool
 	var help bool
 
 	flag.StringVar(&input, "i", "", "read CSV file")
 	flag.StringVar(&script, "s", "", "path to a script file")
 	flag.StringVar(&output, "o", "", "output CSV file")
 	flag.StringVar(&update, "u", "", "update CSV file in place")
+	flag.BoolVar(&align, "a", false, "Align CSV output")
 	flag.BoolVar(&help, "h", false, "usage")
 	flag.Parse()
 
@@ -81,5 +85,6 @@ func parseArgs() (*Config, error) {
 		Script: script,
 		Input:  input,
 		Output: output,
+		Align:  align,
 	}, nil
 }

@@ -41,6 +41,7 @@
   - [x] #15.3: Add CSV data to context mapping (A1, B2, etc.)
   - [x] #15.4: Convert evaluation results back to CSV format
   - [x] #15.5: Implement actual output handling (stdout/file)
+  - [x] #15.6: Align CSV table columns
 - [x] #16: Function Implementation
   - [x] #16.1: Implement function call evaluation in `evaluateCallExpression`
   - [x] #16.3: Implement range evaluation (A1:C3 expansion)
