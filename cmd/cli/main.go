@@ -50,6 +50,7 @@ func main() {
 		csvWriter = file
 	}
 
+	var comments map[int]string
 	// Open CSV source
 	csvReader := os.Stdin
 	if config.Input != "" {
@@ -61,15 +62,17 @@ func main() {
 		defer dclose(file)
 		csvReader = file
 
-		comment := readComment(csvReader)
+		scriptComment, c := readComments(csvReader)
+		comments = c
+
 		_, err = file.Seek(0, 0)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error opening CSV file: %v\n", err)
 			os.Exit(1)
 		}
 
-		if comment != "" && config.Script == "" {
-			config.Script = path.Join(path.Dir(config.Input), comment)
+		if scriptComment != "" && config.Script == "" {
+			config.Script = path.Join(path.Dir(config.Input), scriptComment)
 		}
 	}
 
@@ -86,22 +89,32 @@ func main() {
 	}
 
 	// Process CSV
-	if err := processCSV(config, scriptReader, csvReader, csvWriter); err != nil {
+	if err := processCSV(config, scriptReader, csvReader, csvWriter, comments); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
 }
 
-func readComment(f io.Reader) string {
-	prefix := "#csvss:"
+func readComments(f io.Reader) (string, map[int]string) {
+	prefix := "#"
+	scriptPrefix := "#csvss:"
 	scanner := bufio.NewScanner(f)
+	var i int
+
+	comments := make(map[int]string)
+	var script string
+
 	for scanner.Scan() {
 		line := scanner.Text()
 		trimmed := strings.TrimSpace(line)
 
-		if strings.HasPrefix(trimmed, prefix) {
-			return trimmed[len(prefix):]
+		if strings.HasPrefix(trimmed, scriptPrefix) {
+			script = trimmed[len(scriptPrefix):]
 		}
+		if strings.HasPrefix(trimmed, prefix) {
+			comments[i] = trimmed
+		}
+		i++
 	}
-	return ""
+	return script, comments
 }

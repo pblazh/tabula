@@ -263,6 +263,7 @@ func TestStringFunctions(t *testing.T) {
 				},
 			},
 		},
+
 		// Numbers and other types (should error)
 		{
 			name: "string and integer",

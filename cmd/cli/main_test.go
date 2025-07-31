@@ -42,18 +42,33 @@ exit status 1
 		{
 			name: "succcess",
 			args: []string{"-i", "../../examples/basic/file.csv", "-s", "../../examples/basic/script.csvs"},
-			stdout: `Full Name,Age,Grade
+			stdout: `# Header
+Full Name,Age,Grade
 "Dow, Bob",25,170
 "Dow, Alice",30,184
+#csvss:./script.csvs
 `,
 			stderr: "",
 		},
 		{
 			name: "script path from CSV comment",
 			args: []string{"-i", "../../examples/basic/file.csv"},
-			stdout: `Full Name,Age,Grade
+			stdout: `# Header
+Full Name,Age,Grade
 "Dow, Bob",25,170
 "Dow, Alice",30,184
+#csvss:./script.csvs
+`,
+			stderr: "",
+		},
+		{
+			name: "align flag",
+			args: []string{"-i", "../../examples/basic/file.csv", "-a"},
+			stdout: `# Header
+Full Name    , Age , Grade
+"Dow, Bob"   , 25  , 170
+"Dow, Alice" , 30  , 184
+#csvss:./script.csvs
 `,
 			stderr: "",
 		},

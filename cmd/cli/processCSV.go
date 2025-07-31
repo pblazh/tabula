@@ -9,7 +9,7 @@ import (
 	"github.com/pblazh/csvss/internal/evaluator"
 )
 
-func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csvWriter io.Writer) error {
+func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csvWriter io.Writer, comments map[int]string) error {
 	// Read and parse CSV
 	reader := csv.NewReader(csvReader)
 	reader.LazyQuotes = true
@@ -40,9 +40,9 @@ func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csv
 	}
 
 	if config.Align {
-		return writeAligned(csvWriter, result)
+		return writeAligned(csvWriter, result, comments)
 	}
 
 	// Output result in the expected format
-	return writeCompact(csvWriter, result)
+	return writeCompact(csvWriter, result, comments)
 }

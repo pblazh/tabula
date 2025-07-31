@@ -70,6 +70,7 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "EXACT(string, string)"
 		return Exact(format, call, values...)
 	},
+
 	// bulean functions
 	"IF": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		format := "IF(boolean, any, any)"

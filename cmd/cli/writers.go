@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/csv"
 	"fmt"
@@ -18,22 +19,44 @@ func escapeCSVField(field string) string {
 	return escaped[:len(escaped)-1] // remove trailing newline
 }
 
-func writeCompact(csvWriter io.Writer, result [][]string) error {
+func writeCompact(csvWriter io.Writer, result [][]string, comments map[int]string) error {
 	writer := csv.NewWriter(csvWriter)
 	defer writer.Flush()
 
+	lineNum := 0
 	for _, row := range result {
+		if comment, ok := comments[lineNum]; ok {
+			writer.Flush()
+			if err := writer.Error(); err != nil {
+				return err
+			}
+			if _, err := fmt.Fprintln(csvWriter, comment); err != nil {
+				return err
+			}
+			lineNum++
+		}
 		if err := writer.Write(row); err != nil {
 			return fmt.Errorf("error writing CSV output: %v", err)
+		}
+		lineNum++
+	}
+
+	writer.Flush()
+	for j, comment := range comments {
+		if j >= lineNum {
+			if _, err := fmt.Fprintln(csvWriter, comment); err != nil {
+				return err
+			}
 		}
 	}
 
 	return nil
 }
 
-func writeAligned(csvWriter io.Writer, result [][]string) error {
+func writeAligned(csvWriter io.Writer, result [][]string, comments map[int]string) error {
+	var buf bytes.Buffer
 	tb := new(tabwriter.Writer)
-	tb.Init(csvWriter, 0, 0, 1, ' ', 0)
+	tb.Init(&buf, 0, 0, 1, ' ', 0)
 
 	var sb strings.Builder
 	for _, row := range result {
@@ -45,10 +68,36 @@ func writeAligned(csvWriter io.Writer, result [][]string) error {
 			}
 		}
 		sb.Write([]byte("\n"))
-		_, err := tb.Write([]byte(sb.String()))
-		if err != nil {
+		if _, err := tb.Write([]byte(sb.String())); err != nil {
 			return err
 		}
 	}
-	return tb.Flush()
+	if err := tb.Flush(); err != nil {
+		return err
+	}
+
+	scanner := bufio.NewScanner(&buf)
+	var lineNum int
+	for scanner.Scan() {
+		if comment, ok := comments[lineNum]; ok {
+			if _, err := fmt.Fprintln(csvWriter, comment); err != nil {
+				return err
+			}
+		}
+		if _, err := fmt.Fprintln(csvWriter, scanner.Text()); err != nil {
+			return err
+		}
+		lineNum++
+	}
+
+	for j, key := range comments {
+		if j >= lineNum {
+			_, err := fmt.Fprintln(csvWriter, key)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
