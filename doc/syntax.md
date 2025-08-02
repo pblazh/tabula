@@ -15,11 +15,12 @@ fmt B1 = "%d";
 
 ### Comments
 
-Lines starting with `#` are comments and are ignored:
+Single and multyline comments are supported:
 
 ```
-# This is a comment
-let A1 = 100;  # This calculates something
+// comment
+/* here is a comment
+   that spans multiple lines */
 ```
 
 ## Cell References
@@ -27,7 +28,7 @@ let A1 = 100;  # This calculates something
 Use spreadsheet-style cell references to access CSV data:
 
 - `A1` - First row, first column
-- `B2` - Second row, second column  
+- `B2` - Second row, second column
 - `Z26` - 26th row, 26th column
 - `AA1` - First row, 27th column (after Z)
 
@@ -81,6 +82,7 @@ fmt C1 = "%s";               # Format as string
 ```
 
 Multiple cells can be formatted with the same format:
+
 ```
 fmt A1:C1 = "%.2f";          # Format range
 fmt A1, B1, C1 = "%d";       # Format multiple cells
@@ -162,6 +164,7 @@ let D1 = total;
 ```
 
 Variables follow the same naming rules as programming languages:
+
 - Start with a letter or underscore
 - Can contain letters, numbers, and underscores
 - Case sensitive
@@ -179,6 +182,7 @@ CSVSS follows standard mathematical precedence:
 7. Logical OR `||`
 
 Examples:
+
 ```
 let A1 = 2 + 3 * 4;        # Result: 14 (not 20)
 let A1 = (2 + 3) * 4;      # Result: 20
@@ -207,3 +211,4 @@ let A1 = 10;        # This will be executed first
 ```
 
 This means you can write statements in any order, and CSVSS will figure out the correct execution sequence.
+
