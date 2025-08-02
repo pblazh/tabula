@@ -164,3 +164,92 @@ func TestUpdateInPlace(t *testing.T) {
 		t.Errorf("Expected empty stderr but got: %q", stderr.String())
 	}
 }
+
+func TestScriptPathFromCSVComment(t *testing.T) {
+	tempDir := os.TempDir()
+
+	// Create subdirectory structure
+	subDir := filepath.Join(tempDir, "csvss_test_subdir")
+	err := os.MkdirAll(subDir, 0755)
+	if err != nil {
+		t.Fatalf("Failed to create test subdirectory: %v", err)
+	}
+	defer dremove(subDir)
+
+	tests := []struct {
+		name           string
+		csvPath        string
+		scriptPath     string
+		scriptComment  string
+		csvContent     string
+		scriptContent  string
+		expectedOutput string
+	}{
+		{
+			name:           "parent directory script reference",
+			csvPath:        filepath.Join(subDir, "test.csv"),
+			scriptPath:     filepath.Join(tempDir, "parent_script.csvs"),
+			scriptComment:  "../parent_script.csvs",
+			csvContent:     "A,B\n1,2\n#csvss:../parent_script.csvs\n",
+			scriptContent:  "let A1 = \"ParentScript\"; let B1 = \"Modified\";",
+			expectedOutput: "ParentScript,Modified\n1,2\n#csvss:../parent_script.csvs\n",
+		},
+		{
+			name:           "same directory script reference",
+			csvPath:        filepath.Join(subDir, "test2.csv"),
+			scriptPath:     filepath.Join(subDir, "local_script.csvs"),
+			scriptComment:  "./local_script.csvs",
+			csvContent:     "A,B\n1,2\n#csvss:./local_script.csvs\n",
+			scriptContent:  "let A1 = \"LocalScript\"; let B1 = \"Local\";",
+			expectedOutput: "LocalScript,Local\n1,2\n#csvss:./local_script.csvs\n",
+		},
+		{
+			name:           "relative path without dot prefix",
+			csvPath:        filepath.Join(subDir, "test3.csv"),
+			scriptPath:     filepath.Join(subDir, "simple_script.csvs"),
+			scriptComment:  "simple_script.csvs",
+			csvContent:     "A,B\n1,2\n#csvss:simple_script.csvs\n",
+			scriptContent:  "let A1 = \"SimpleScript\"; let B1 = \"Simple\";",
+			expectedOutput: "SimpleScript,Simple\n1,2\n#csvss:simple_script.csvs\n",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create CSV file
+			err := os.WriteFile(tt.csvPath, []byte(tt.csvContent), 0644)
+			if err != nil {
+				t.Fatalf("Failed to create CSV file: %v", err)
+			}
+			defer dremove(tt.csvPath)
+
+			// Create script file
+			err = os.WriteFile(tt.scriptPath, []byte(tt.scriptContent), 0644)
+			if err != nil {
+				t.Fatalf("Failed to create script file: %v", err)
+			}
+			defer dremove(tt.scriptPath)
+
+			// Execute command - only specify CSV file, let it find script from comment
+			cmd := exec.Command("go", "run", ".", "-i", tt.csvPath)
+			var stdout, stderr bytes.Buffer
+			cmd.Stdout = &stdout
+			cmd.Stderr = &stderr
+
+			err = cmd.Run()
+			if err != nil {
+				t.Fatalf("Command failed: %v\nStderr: %s", err, stderr.String())
+			}
+
+			// Check output
+			if stdout.String() != tt.expectedOutput {
+				t.Errorf("Expected output:\n%s\nBut got:\n%s", tt.expectedOutput, stdout.String())
+			}
+
+			// Ensure stderr is empty (no errors)
+			if stderr.String() != "" {
+				t.Errorf("Expected empty stderr but got: %q", stderr.String())
+			}
+		})
+	}
+}

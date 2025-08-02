@@ -116,7 +116,7 @@ cat data.csv | csvss -s script.csvs
 
 ### Embedded Scripts
 
-CSV files can contain embedded script references in comments:
+CSV files can contain embedded script references in comments. The script path is resolved relative to the CSV file's location, not the current working directory.
 
 ```csv
 Name,Age,Score
