@@ -9,6 +9,7 @@ import (
 
 var call ast.CallExpression = ast.CallExpression{
 	Identifier: ast.IdentifierExpression{
+		Value: "TEST",
 		Token: lexer.Token{Literal: "TEST"},
 	},
 }

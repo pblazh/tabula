@@ -121,6 +121,24 @@ func IsNumeric(expr Expression) bool {
 	return IsInt(expr) || IsFloat(expr)
 }
 
+func IsIdentifier(expr Expression) bool {
+	switch expr.(type) {
+	case IdentifierExpression:
+		return true
+	default:
+		return false
+	}
+}
+
+func IsFunction(expr Expression) bool {
+	switch expr.(type) {
+	case CallExpression:
+		return true
+	default:
+		return false
+	}
+}
+
 func IsString(expr Expression) bool {
 	switch expr.(type) {
 	case StringExpression:

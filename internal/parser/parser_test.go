@@ -19,8 +19,49 @@ func TestParser(t *testing.T) {
 			output: "let A1 = (- <int 10>);",
 		},
 		{
-			name:  "identifier",
-			input: "something;",
+			name:   "range assign",
+			input:  "let A1:A3 = 1;",
+			output: "let A1 = <int 1>;let A2 = <int 1>;let A3 = <int 1>;",
+		},
+		{
+			name:   "multy values assign",
+			input:  "let A1,A3 = 1;",
+			output: "let A1 = <int 1>;let A3 = <int 1>;",
+		},
+		{
+			name:   "multy range assign",
+			input:  "let A1:A3, B1:b3 = 1;",
+			output: "let A1 = <int 1>;let A2 = <int 1>;let A3 = <int 1>;let B1 = <int 1>;let B2 = <int 1>;let B3 = <int 1>;",
+		},
+		{
+			name:   "mixed range values assign",
+			input:  "let a, A1:A3, B1:b3, C2, b = 1;",
+			output: "let a = <int 1>;let A1 = <int 1>;let A2 = <int 1>;let A3 = <int 1>;let B1 = <int 1>;let B2 = <int 1>;let B3 = <int 1>;let C2 = <int 1>;let b = <int 1>;",
+		},
+		{
+			name:   "range fmt",
+			input:  "fmt A1:A3 = \"%s\";",
+			output: "fmt A1 = <str \"%s\">;fmt A2 = <str \"%s\">;fmt A3 = <str \"%s\">;",
+		},
+		{
+			name:   "multy values fmt",
+			input:  "fmt A1,A3 = \"%s\";",
+			output: "fmt A1 = <str \"%s\">;fmt A3 = <str \"%s\">;",
+		},
+		{
+			name:   "multy range fmt",
+			input:  "fmt A1:A3, B1:b3 = \"%s\";",
+			output: "fmt A1 = <str \"%s\">;fmt A2 = <str \"%s\">;fmt A3 = <str \"%s\">;fmt B1 = <str \"%s\">;fmt B2 = <str \"%s\">;fmt B3 = <str \"%s\">;",
+		},
+		{
+			name:   "mixed range values fmt",
+			input:  "fmt a, A1:A3, B1:b3, C2, b = \"%s\";",
+			output: "fmt a = <str \"%s\">;fmt A1 = <str \"%s\">;fmt A2 = <str \"%s\">;fmt A3 = <str \"%s\">;fmt B1 = <str \"%s\">;fmt B2 = <str \"%s\">;fmt B3 = <str \"%s\">;fmt C2 = <str \"%s\">;fmt b = <str \"%s\">;",
+		},
+		{
+			name:   "identifier",
+			input:  "something;",
+			output: "something;",
 		},
 		{
 			name:   "not identifier",
@@ -120,7 +161,7 @@ func TestParser(t *testing.T) {
 		{
 			name:   "multiple statements",
 			input:  "let A1 = 5.6;\nlet A2 = x;\nlet A3 = sum(A1:A2);",
-			output: "let A1 = <float 5.60>;let A2 = x;let A3 = (sum (: A1 A2));",
+			output: "let A1 = <float 5.60>;let A2 = x;let A3 = (sum A1 A2);",
 		},
 		{
 			name:   "one statements",

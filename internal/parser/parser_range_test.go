@@ -41,12 +41,12 @@ func TestParserRanges(t *testing.T) {
 		{
 			name:   "range expression in call",
 			input:  "SUM(A1:C1);",
-			output: "(SUM (: A1 B1 C1));",
+			output: "(SUM A1 B1 C1);",
 		},
 		{
 			name:   "range expression in let statement",
 			input:  "let total = SUM(B1:D1);",
-			output: "let total = (SUM (: B1 C1 D1));",
+			output: "let total = (SUM B1 C1 D1);",
 		},
 		{
 			name:   "range expression large horizontal",
@@ -71,12 +71,12 @@ func TestParserRanges(t *testing.T) {
 		{
 			name:   "multiple ranges in call",
 			input:  "SUM(A1:B1, C1:D1);",
-			output: "(SUM (: A1 B1) (: C1 D1));",
+			output: "(SUM A1 B1 C1 D1);",
 		},
 		{
 			name:   "range in complex expression",
 			input:  "A1 + SUM(B1:D1) * 2;",
-			output: "(+ A1 (* (SUM (: B1 C1 D1)) <int 2>));",
+			output: "(+ A1 (* (SUM B1 C1 D1) <int 2>));",
 		},
 		{
 			name:   "range with parentheses",

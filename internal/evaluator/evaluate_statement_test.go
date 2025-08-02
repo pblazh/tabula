@@ -121,17 +121,17 @@ func TestEvaluateStatementErrors(t *testing.T) {
 	}{
 		{
 			name:          "fmt statement with integer should error",
-			statement:     "fmt result = 5;",
+			statement:     "fmt result = A1;",
 			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, but got <int 5>",
 		},
 		{
 			name:          "fmt statement with float should error",
-			statement:     "fmt result = 5.5;",
+			statement:     "fmt result = B1;",
 			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, but got <float 5.50>",
 		},
 		{
 			name:          "fmt statement with boolean should error",
-			statement:     "fmt result = true;",
+			statement:     "fmt result = C1;",
 			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, but got <bool true>",
 		},
 	}
@@ -147,7 +147,7 @@ func TestEvaluateStatementErrors(t *testing.T) {
 				t.Fatalf("No statements parsed")
 			}
 
-			var input [][]string
+			input := [][]string{{"5", "5.5", "true"}}
 			format := make(map[string]string)
 			context := make(map[string]string)
 			for _, statement := range program {

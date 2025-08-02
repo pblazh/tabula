@@ -367,6 +367,7 @@ func TestBooleanFunctions(t *testing.T) {
 			t.Run(tc.name+":"+c.f, func(t *testing.T) {
 				result, err := DispatchMap[c.f](ast.CallExpression{
 					Identifier: ast.IdentifierExpression{
+						Value: c.f,
 						Token: lexer.Token{Literal: c.f},
 					}, Arguments: tc.input,
 				}, tc.input...)

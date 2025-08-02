@@ -53,10 +53,11 @@ type Expression interface {
 type IdentifierExpression struct {
 	Expression
 	Token lexer.Token
+	Value string
 }
 
 func (expr IdentifierExpression) String() string {
-	return expr.Token.Literal
+	return expr.Value
 }
 
 type BooleanExpression struct {
