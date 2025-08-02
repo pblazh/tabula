@@ -40,6 +40,54 @@ csvss -s script.csvs -u data.csv
 
 **Warning:** This overwrites the original file. Make backups of important data.
 
+### `-a` - Align Output
+
+Align CSV columns for better readability when viewing the output.
+
+```bash
+csvss -s script.csvs data.csv -a
+```
+
+This formats the output with consistent column spacing:
+
+```csv
+Name     , Age , Score
+Alice    , 25  , 85
+Bob      , 30  , 92
+```
+
+### `-t` - Topological Sort
+
+Sort statements in the script based on their dependencies before execution. This ensures that variables are defined before they are used.
+
+```bash
+csvss -s script.csvs data.csv -t
+```
+
+**When to use `-t`:**
+
+- When your script has interdependent statements that need to execute in dependency order
+- To automatically resolve statement ordering issues
+- When you want CSVSS to determine the optimal execution sequence
+
+**Example without `-t` (execution order matters):**
+
+```csvss
+let B1 = A1 + 1;  // A1 is undefined (0) at this point
+let A1 = 10;      // A1 gets set after B1 calculation
+```
+
+Result: A1=10, B1=1
+
+**Example with `-t` (dependencies resolved):**
+
+```csvss
+let B1 = A1 + 1;  // Will execute second
+let A1 = 10;      // Will execute first due to sorting
+```
+
+Result: A1=10, B1=11
+
 ### `-h` - Help
 
 Display help information and available options.
@@ -122,6 +170,12 @@ csvss data.csv < script.csvs
 
 # Script from file, CSV from stdin → stdout
 cat data.csv | csvss -s transform.csvs
+
+# With topological sorting for dependency resolution
+csvss -s complex_script.csvs data.csv -t
+
+# Aligned output with dependency sorting
+csvss -s script.csvs data.csv -t -a
 ```
 
 ### File Operations
@@ -191,4 +245,3 @@ Error: division by zero in expression at line 5: let A1 = B1 / C1;
 - `0` - Success
 - `1` - General error (file not found, syntax error, etc.)
 - `2` - Invalid command line arguments
-

@@ -15,6 +15,7 @@ Options:
   -o <file>    Output CSV file (default: stdout)
   -u           Update input CSV file in place
   -a           Align output
+  -t           Sort statements topologically
   -h           Show this help
 
 Examples:
@@ -42,6 +43,7 @@ type Config struct {
 	Input  string
 	Output string
 	Align  bool
+	Sort   bool
 }
 
 func parseArgs() (*Config, error) {
@@ -50,6 +52,7 @@ func parseArgs() (*Config, error) {
 	var input string
 	var update string
 	var align bool
+	var sort bool
 	var help bool
 
 	flag.StringVar(&input, "i", "", "read CSV file")
@@ -57,6 +60,7 @@ func parseArgs() (*Config, error) {
 	flag.StringVar(&output, "o", "", "output CSV file")
 	flag.StringVar(&update, "u", "", "update CSV file in place")
 	flag.BoolVar(&align, "a", false, "Align CSV output")
+	flag.BoolVar(&sort, "t", false, "Sort statements topologically")
 	flag.BoolVar(&help, "h", false, "usage")
 	flag.Parse()
 
@@ -86,5 +90,6 @@ func parseArgs() (*Config, error) {
 		Input:  input,
 		Output: output,
 		Align:  align,
+		Sort:   sort,
 	}, nil
 }

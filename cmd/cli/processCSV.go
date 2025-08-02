@@ -6,6 +6,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/evaluator"
 )
 
@@ -31,6 +32,14 @@ func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csv
 	program, err := evaluator.ParseProgram(scriptReader, config.Script)
 	if err != nil {
 		return fmt.Errorf("error parsing script: %v", err)
+	}
+
+	// Sort program topologically if Sort flag is set
+	if config.Sort {
+		program, err = ast.SortProgram(program)
+		if err != nil {
+			return fmt.Errorf("error sorting script statements: %v", err)
+		}
 	}
 
 	// Evaluate the program with CSV data
