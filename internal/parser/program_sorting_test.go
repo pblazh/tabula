@@ -66,7 +66,7 @@ C1 * 2;`,
 let B1 = 10;
 let C1 = 20;
 let E1 = 30;`,
-			output: "let B1 = <int 10>;let C1 = <int 20>;let D1 = (SUM (: A1 B1 C1));let E1 = <int 30>;",
+			output: "let B1 = <int 10>;let C1 = <int 20>;let D1 = (SUM A1 B1 C1);let E1 = <int 30>;",
 		},
 		{
 			name: "prefix expression dependencies",

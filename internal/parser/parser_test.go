@@ -18,9 +18,15 @@ func TestParser(t *testing.T) {
 			input:  "let A1 = -10;",
 			output: "let A1 = (- <int 10>);",
 		},
+		// {
+		// 	name:   "range assign",
+		// 	input:  "let A1:A3 = 1;",
+		// 	output: "let A1 = <int 1>;let A2 = <int 1>;let A3 = <int 1>;",
+		// },
 		{
-			name:  "identifier",
-			input: "something;",
+			name:   "identifier",
+			input:  "something;",
+			output: "something;",
 		},
 		{
 			name:   "not identifier",
@@ -120,7 +126,7 @@ func TestParser(t *testing.T) {
 		{
 			name:   "multiple statements",
 			input:  "let A1 = 5.6;\nlet A2 = x;\nlet A3 = sum(A1:A2);",
-			output: "let A1 = <float 5.60>;let A2 = x;let A3 = (sum (: A1 A2));",
+			output: "let A1 = <float 5.60>;let A2 = x;let A3 = (sum A1 A2);",
 		},
 		{
 			name:   "one statements",

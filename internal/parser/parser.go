@@ -141,11 +141,13 @@ func (p *Parser) parseLetStatement() (ast.Statement, error) {
 		return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
 	}
 
+	// parse range expression
+
 	// Add let statement identifier to the list
 	p.identifiers = append(p.identifiers, p.cur.Literal)
 
 	statement := ast.LetStatement{
-		Identifier: ast.IdentifierExpression{Token: p.cur},
+		Identifier: ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal},
 	}
 	err = p.advance()
 	if err != nil {
@@ -189,7 +191,7 @@ func (p *Parser) parseFmtStatement() (ast.Statement, error) {
 	p.identifiers = append(p.identifiers, p.cur.Literal)
 
 	statement := ast.FmtStatement{
-		Identifier: ast.IdentifierExpression{Token: p.cur},
+		Identifier: ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal},
 	}
 	err = p.advance()
 	if err != nil {
@@ -277,7 +279,7 @@ func (p *Parser) parseIdentifier() (ast.Expression, error) {
 	}
 	p.identifiers = append(p.identifiers, literal)
 
-	expr := ast.IdentifierExpression{Token: token}
+	expr := ast.IdentifierExpression{Token: token, Value: literal}
 	err := p.advance()
 	if err != nil {
 		return nil, err
@@ -413,7 +415,7 @@ func (p *Parser) parseRange(left ast.Expression) (ast.Expression, error) {
 	leftIdent := left.(ast.IdentifierExpression)
 	rightIdent := right.(ast.IdentifierExpression)
 
-	cells, err := ast.ExpandRange(leftIdent.Token.Literal, rightIdent.Token.Literal)
+	cells, err := ast.ExpandRange(leftIdent.Value, rightIdent.Value)
 	if err != nil {
 		return nil, err
 	}
@@ -428,7 +430,19 @@ func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error
 	if err != nil {
 		return nil, err
 	}
-	expr.Arguments = arguments
+
+	expandedArguments := make([]ast.Expression, 0, len(arguments))
+	for _, arg := range arguments {
+		if rangeExpr, ok := arg.(ast.RangeExpression); ok {
+			for _, expandedArg := range rangeExpr.Value {
+				expandedArguments = append(expandedArguments, ast.IdentifierExpression{Value: expandedArg, Token: rangeExpr.Token})
+			}
+		} else {
+			expandedArguments = append(expandedArguments, arg)
+		}
+	}
+
+	expr.Arguments = expandedArguments
 	return expr, nil
 }
 

@@ -12,7 +12,7 @@ func EvaluateExpression(expr ast.Expression, context map[string]string, input []
 	case ast.IntExpression, ast.FloatExpression, ast.BooleanExpression, ast.StringExpression:
 		return node, nil
 	case ast.IdentifierExpression:
-		if ast.IsCellIdentifier(node.Token.Literal) {
+		if ast.IsCellIdentifier(node.Value) {
 			return evaluateCellExpression(node, input, formats)
 		}
 		return evaluateVariableExpression(node, context, formats)
@@ -80,20 +80,11 @@ func evaluateInfixExpression(expr ast.InfixExpression, context map[string]string
 func evaluateCallExpression(expr ast.CallExpression, context map[string]string, input [][]string, formats map[string]string) (ast.Expression, error) {
 	args := make([]ast.Expression, 0, len(expr.Arguments))
 	for _, arg := range expr.Arguments {
-		switch a := arg.(type) {
-		case ast.RangeExpression:
-			evaluated, err := EvaluateRangeExpression(a, input, formats)
-			if err != nil {
-				return nil, err
-			}
-			args = append(args, evaluated...)
-		default:
-			evaluated, err := EvaluateExpression(arg, context, input, formats)
-			if err != nil {
-				return nil, err
-			}
-			args = append(args, evaluated)
+		evaluated, err := EvaluateExpression(arg, context, input, formats)
+		if err != nil {
+			return nil, err
 		}
+		args = append(args, evaluated)
 	}
 
 	identifier := expr.Identifier.String()
@@ -105,7 +96,7 @@ func evaluateCallExpression(expr ast.CallExpression, context map[string]string, 
 }
 
 func evaluateVariableExpression(expr ast.IdentifierExpression, context map[string]string, formats map[string]string) (ast.Expression, error) {
-	name := expr.Token.Literal
+	name := expr.Value
 	value, exists := context[name]
 	if !exists {
 		return nil, ErrVariableNotFound(expr)
@@ -117,7 +108,7 @@ func evaluateVariableExpression(expr ast.IdentifierExpression, context map[strin
 
 // evaluateCellExpression evaluates a cell reference (like A1, B2) and returns the value from the CSV input
 func evaluateCellExpression(expr ast.IdentifierExpression, input [][]string, formats map[string]string) (ast.Expression, error) {
-	cellRef := expr.Token.Literal
+	cellRef := expr.Value
 	col, row := ast.ParseCell(cellRef)
 
 	// Check bounds
@@ -137,7 +128,7 @@ func evaluateCellExpression(expr ast.IdentifierExpression, input [][]string, for
 func EvaluateRangeExpression(expr ast.RangeExpression, input [][]string, formats map[string]string) ([]ast.Expression, error) {
 	cells := make([]ast.IdentifierExpression, len(expr.Value))
 	for i, cell := range expr.Value {
-		cells[i] = ast.IdentifierExpression{Token: lexer.Token{Literal: cell}}
+		cells[i] = ast.IdentifierExpression{Token: expr.Token, Value: cell}
 	}
 
 	result := make([]ast.Expression, len(expr.Value))
