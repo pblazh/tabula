@@ -1,4 +1,4 @@
-fmt D2:D4,E2:E9 = "%.2fгрн."
+fmt D2:D4,E2:E9 = "%.2fгрн"
 
 let E2 = (C2 - B2) * D2
 let E3 = (C3 - B3) * D3
