@@ -73,11 +73,11 @@ func (p *Parser) Parse() (ast.Program, []string, error) {
 	program := make([]ast.Statement, 0)
 	p.identifiers = make([]string, 0) // Reset identifiers for each parse
 
-	err := p.advance()
+	err := p.advance(1)
 	if err != nil {
 		return nil, nil, err
 	}
-	err = p.advance()
+	err = p.advance(1)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -85,17 +85,17 @@ func (p *Parser) Parse() (ast.Program, []string, error) {
 	for p.cur.Type != lexer.EOF {
 		switch p.cur.Type {
 		case lexer.LET:
-			stm, err := p.parseLetStatement()
+			stms, err := p.parseLetStatement()
 			if err != nil {
 				return nil, nil, err
 			}
-			program = append(program, stm)
+			program = append(program, stms...)
 		case lexer.FMT:
-			stm, err := p.parseFmtStatement()
+			stms, err := p.parseFmtStatement()
 			if err != nil {
 				return nil, nil, err
 			}
-			program = append(program, stm)
+			program = append(program, stms...)
 		default:
 			stm, err := p.parseExpressionStatement()
 			if err != nil {
@@ -108,14 +108,15 @@ func (p *Parser) Parse() (ast.Program, []string, error) {
 	return program, p.identifiers, nil
 }
 
-func (p *Parser) advance() error {
-	p.cur = p.nex
-
-	nex, err := p.lex.Next()
-	if err != nil {
-		return err
+func (p *Parser) advance(steps int) error {
+	for range steps {
+		p.cur = p.nex
+		nex, err := p.lex.Next()
+		if err != nil {
+			return err
+		}
+		p.nex = nex
 	}
-	p.nex = nex
 	return nil
 }
 
@@ -131,25 +132,20 @@ func (p *Parser) registerInfix(l lexer.TokenType, parse infixParse) {
 	p.infixParsers[l] = parse
 }
 
-func (p *Parser) parseLetStatement() (ast.Statement, error) {
-	err := p.advance()
+func (p *Parser) parseLetStatement() ([]ast.Statement, error) {
+	// Advance past the LET token
+	err := p.advance(1)
 	if err != nil {
 		return nil, err
 	}
 
-	if !p.expectCurrentToken(lexer.IDENT) {
-		return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
+	identifiers, err := p.parseAssignmentTarget()
+	if err != nil {
+		return nil, err
 	}
 
-	// parse range expression
-
-	// Add let statement identifier to the list
-	p.identifiers = append(p.identifiers, p.cur.Literal)
-
-	statement := ast.LetStatement{
-		Identifier: ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal},
-	}
-	err = p.advance()
+	// Advance to '='
+	err = p.advance(1)
 	if err != nil {
 		return nil, err
 	}
@@ -158,42 +154,125 @@ func (p *Parser) parseLetStatement() (ast.Statement, error) {
 		return nil, ErrExpectedToken("=", p.cur)
 	}
 
-	err = p.advance()
+	// Advance to the value expression
+	err = p.advance(1)
 	if err != nil {
 		return nil, err
 	}
+
 	expression, err := p.parseExpression(LOWEST)
 	if err != nil {
 		return nil, err
 	}
-	statement.Value = expression
+
 	if p.expectCurrentToken(lexer.SEMI) {
-		err = p.advance()
+		err = p.advance(1)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return statement, nil
+	// Convert to slice of individual LetStatements
+	var statements []ast.Statement
+	for _, identifier := range identifiers {
+		stmt := ast.LetStatement{
+			Identifier: identifier,
+			Value:      expression,
+		}
+		statements = append(statements, stmt)
+	}
+
+	return statements, nil
 }
 
-func (p *Parser) parseFmtStatement() (ast.Statement, error) {
-	err := p.advance()
+func (p *Parser) parseAssignmentTarget() ([]ast.IdentifierExpression, error) {
+	// Parse the first identifier or range
+	target, err := p.parseIdentifierOrRange()
 	if err != nil {
 		return nil, err
 	}
 
+	// Parse additional comma-separated identifiers or ranges
+	for p.nextTokenIs(lexer.COMMA) {
+		// Advance past comma
+		err := p.advance(2)
+		if err != nil {
+			return nil, err
+		}
+
+		// Parse this identifier or range
+		identifiers, err := p.parseIdentifierOrRange()
+		if err != nil {
+			return nil, err
+		}
+		target = append(target, identifiers...)
+	}
+	return target, nil
+}
+
+func (p *Parser) parseIdentifierOrRange() ([]ast.IdentifierExpression, error) {
+	var identifiers []ast.IdentifierExpression
 	if !p.expectCurrentToken(lexer.IDENT) {
 		return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
 	}
+	// Current token is an identifier
+	firstIdent := ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal}
 
-	// Add fmt statement identifier to the list
-	p.identifiers = append(p.identifiers, p.cur.Literal)
+	// Check if this is a range (next token is ':')
+	if p.nextTokenIs(lexer.COLUMN) {
+		// Advance to ':'
+		err := p.advance(1)
+		if err != nil {
+			return nil, err
+		}
 
-	statement := ast.FmtStatement{
-		Identifier: ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal},
+		// Advance to second identifier
+		err = p.advance(1)
+		if err != nil {
+			return nil, err
+		}
+
+		if !p.expectCurrentToken(lexer.IDENT) {
+			return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
+		}
+
+		secondIdent := ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal}
+
+		// Expand the range to get all identifiers
+		cells, err := ast.ExpandRange(firstIdent.Value, secondIdent.Value)
+		if err != nil {
+			return nil, err
+		}
+
+		// Add all cells to the identifiers list
+		for _, cell := range cells {
+			ident := ast.IdentifierExpression{Token: firstIdent.Token, Value: cell}
+			identifiers = append(identifiers, ident)
+			p.identifiers = append(p.identifiers, cell)
+		}
+	} else {
+		// Just a single identifier
+		identifiers = append(identifiers, firstIdent)
+		p.identifiers = append(p.identifiers, firstIdent.Value)
 	}
-	err = p.advance()
+
+	return identifiers, nil
+}
+
+func (p *Parser) parseFmtStatement() ([]ast.Statement, error) {
+	// Advance past the FMT token
+	err := p.advance(1)
+	if err != nil {
+		return nil, err
+	}
+
+	identifiers, err := p.parseAssignmentTarget()
+	if err != nil {
+		return nil, err
+	}
+
+	// Advance to '='
+	err = p.advance(1)
 	if err != nil {
 		return nil, err
 	}
@@ -202,23 +281,39 @@ func (p *Parser) parseFmtStatement() (ast.Statement, error) {
 		return nil, ErrExpectedToken("=", p.cur)
 	}
 
-	err = p.advance()
+	// Advance to the value expression
+	err = p.advance(1)
 	if err != nil {
 		return nil, err
 	}
+
+	prev := p.cur
 	expression, err := p.parseExpression(LOWEST)
 	if err != nil {
 		return nil, err
 	}
-	statement.Value = expression
+	if !ast.IsString(expression) && !ast.IsIdentifier(expression) && !ast.IsFunction(expression) {
+		return nil, ErrExpectedToken("string", prev)
+	}
+
 	if p.expectCurrentToken(lexer.SEMI) {
-		err = p.advance()
+		err = p.advance(1)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return statement, nil
+	// Convert to slice of individual FmtStatements
+	var statements []ast.Statement
+	for _, identifier := range identifiers {
+		stmt := ast.FmtStatement{
+			Identifier: identifier,
+			Value:      expression,
+		}
+		statements = append(statements, stmt)
+	}
+
+	return statements, nil
 }
 
 func (p *Parser) parseExpressionStatement() (ast.Statement, error) {
@@ -233,7 +328,7 @@ func (p *Parser) parseExpressionStatement() (ast.Statement, error) {
 
 	statement.Value = expression
 	if p.expectCurrentToken(lexer.SEMI) {
-		err := p.advance()
+		err := p.advance(1)
 		if err != nil {
 			return nil, err
 		}
@@ -280,7 +375,7 @@ func (p *Parser) parseIdentifier() (ast.Expression, error) {
 	p.identifiers = append(p.identifiers, literal)
 
 	expr := ast.IdentifierExpression{Token: token, Value: literal}
-	err := p.advance()
+	err := p.advance(1)
 	if err != nil {
 		return nil, err
 	}
@@ -293,7 +388,7 @@ func (p *Parser) parseInt() (ast.Expression, error) {
 		return nil, err
 	}
 	expr := ast.IntExpression{Token: p.cur, Value: value}
-	err = p.advance()
+	err = p.advance(1)
 	if err != nil {
 		return nil, err
 	}
@@ -307,7 +402,7 @@ func (p *Parser) parseFloat() (ast.Expression, error) {
 	}
 
 	expr := ast.FloatExpression{Token: p.cur, Value: value}
-	err = p.advance()
+	err = p.advance(1)
 	if err != nil {
 		return nil, err
 	}
@@ -316,7 +411,7 @@ func (p *Parser) parseFloat() (ast.Expression, error) {
 
 func (p *Parser) parseBool() (ast.Expression, error) {
 	expr := ast.BooleanExpression{Token: p.cur, Value: p.cur.Type == lexer.TRUE}
-	err := p.advance()
+	err := p.advance(1)
 	if err != nil {
 		return nil, err
 	}
@@ -325,7 +420,7 @@ func (p *Parser) parseBool() (ast.Expression, error) {
 
 func (p *Parser) parseString() (ast.Expression, error) {
 	expr := ast.StringExpression{Value: p.cur.Literal[1 : len(p.cur.Literal)-1], Token: p.cur}
-	err := p.advance()
+	err := p.advance(1)
 	if err != nil {
 		return nil, err
 	}
@@ -333,7 +428,7 @@ func (p *Parser) parseString() (ast.Expression, error) {
 }
 
 func (p *Parser) parseLparen() (ast.Expression, error) {
-	err := p.advance()
+	err := p.advance(1)
 	if err != nil {
 		return nil, err
 	}
@@ -343,9 +438,9 @@ func (p *Parser) parseLparen() (ast.Expression, error) {
 	}
 
 	if !p.expectCurrentToken(lexer.RPAREN) {
-		return nil, ErrExpectedRightParen(p.cur)
+		return nil, ErrExpectedToken("right paren", p.cur)
 	}
-	err = p.advance()
+	err = p.advance(1)
 	if err != nil {
 		return nil, err
 	}
@@ -359,7 +454,7 @@ func (p *Parser) parsePrefix() (ast.Expression, error) {
 	}
 
 	prefix := ast.PrefixExpression{Token: p.cur, Operator: p.cur}
-	err := p.advance()
+	err := p.advance(1)
 	if err != nil {
 		return nil, err
 	}
@@ -385,7 +480,7 @@ func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
 	}
 
 	precedence := p.currentPrecedence()
-	err := p.advance()
+	err := p.advance(1)
 	if err != nil {
 		return nil, err
 	}
@@ -398,11 +493,42 @@ func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
 	return expression, nil
 }
 
+func (p *Parser) parseAssignDestination(left ast.Expression) ([]ast.IdentifierExpression, error) {
+	var identifiers []ast.IdentifierExpression
+
+	if !p.expectCurrentToken(lexer.IDENT) {
+		return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
+	}
+
+	var first ast.IdentifierExpression
+	for {
+		first = ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal}
+		err := p.advance(1)
+		if err != nil {
+			return nil, err
+		}
+		if p.expectCurrentToken(lexer.COLUMN) {
+			err := p.advance(1)
+			if err != nil {
+				return nil, err
+			}
+			second := ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal}
+			_, err = ast.ExpandRange(first.Value, second.Value)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		break
+	}
+	return identifiers, nil
+}
+
 func (p *Parser) parseRange(left ast.Expression) (ast.Expression, error) {
 	// store the ':' token
 	colonToken := p.cur
 	// advance past the ':'
-	if err := p.advance(); err != nil {
+	if err := p.advance(1); err != nil {
 		return nil, err
 	}
 
@@ -447,14 +573,14 @@ func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error
 }
 
 func (p *Parser) parseCallArguments() ([]ast.Expression, error) {
-	err := p.advance()
+	err := p.advance(1)
 	if err != nil {
 		return nil, err
 	}
 
 	arguments := []ast.Expression{}
 	if p.expectCurrentToken(lexer.RPAREN) {
-		err = p.advance()
+		err = p.advance(1)
 		if err != nil {
 			return nil, err
 		}
@@ -468,7 +594,7 @@ func (p *Parser) parseCallArguments() ([]ast.Expression, error) {
 	arguments = append(arguments, expr)
 
 	for p.expectCurrentToken(lexer.COMMA) {
-		err := p.advance()
+		err := p.advance(1)
 		if err != nil {
 			return nil, err
 		}
@@ -479,7 +605,7 @@ func (p *Parser) parseCallArguments() ([]ast.Expression, error) {
 		arguments = append(arguments, expr)
 	}
 
-	err = p.advance()
+	err = p.advance(1)
 	if err != nil {
 		return nil, err
 	}
