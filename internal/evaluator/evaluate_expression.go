@@ -7,7 +7,7 @@ import (
 )
 
 // EvaluateExpression evaluates any AST expression and returns the result
-func EvaluateExpression(expr ast.Expression, context map[string]string, input [][]string, formats map[string]string) (ast.Expression, error) {
+func EvaluateExpression(expr ast.Expression, context map[string]string, input [][]string, formats map[string]string, target string) (ast.Expression, error) {
 	switch node := expr.(type) {
 	case ast.IntExpression, ast.FloatExpression, ast.BooleanExpression, ast.StringExpression:
 		return node, nil
@@ -17,11 +17,11 @@ func EvaluateExpression(expr ast.Expression, context map[string]string, input []
 		}
 		return evaluateVariableExpression(node, context, formats)
 	case ast.PrefixExpression:
-		return evaluatePrefixExpression(node, context, input, formats)
+		return evaluatePrefixExpression(node, context, input, formats, target)
 	case ast.InfixExpression:
-		return evaluateInfixExpression(node, context, input, formats)
+		return evaluateInfixExpression(node, context, input, formats, target)
 	case ast.CallExpression:
-		return evaluateCallExpression(node, context, input, formats)
+		return evaluateCallExpression(node, context, input, formats, target)
 	case ast.RangeExpression:
 		return node, nil
 	default:
@@ -29,8 +29,8 @@ func EvaluateExpression(expr ast.Expression, context map[string]string, input []
 	}
 }
 
-func evaluatePrefixExpression(expr ast.PrefixExpression, context map[string]string, input [][]string, formats map[string]string) (ast.Expression, error) {
-	value, err := EvaluateExpression(expr.Value, context, input, formats)
+func evaluatePrefixExpression(expr ast.PrefixExpression, context map[string]string, input [][]string, formats map[string]string, target string) (ast.Expression, error) {
+	value, err := EvaluateExpression(expr.Value, context, input, formats, target)
 	if err != nil {
 		return nil, err
 	}
@@ -45,12 +45,12 @@ func evaluatePrefixExpression(expr ast.PrefixExpression, context map[string]stri
 	}
 }
 
-func evaluateInfixExpression(expr ast.InfixExpression, context map[string]string, input [][]string, formats map[string]string) (ast.Expression, error) {
-	left, err := EvaluateExpression(expr.Left, context, input, formats)
+func evaluateInfixExpression(expr ast.InfixExpression, context map[string]string, input [][]string, formats map[string]string, target string) (ast.Expression, error) {
+	left, err := EvaluateExpression(expr.Left, context, input, formats, target)
 	if err != nil {
 		return nil, err
 	}
-	right, err := EvaluateExpression(expr.Right, context, input, formats)
+	right, err := EvaluateExpression(expr.Right, context, input, formats, target)
 	if err != nil {
 		return nil, err
 	}
@@ -77,10 +77,10 @@ func evaluateInfixExpression(expr ast.InfixExpression, context map[string]string
 	}
 }
 
-func evaluateCallExpression(expr ast.CallExpression, context map[string]string, input [][]string, formats map[string]string) (ast.Expression, error) {
+func evaluateCallExpression(expr ast.CallExpression, context map[string]string, input [][]string, formats map[string]string, target string) (ast.Expression, error) {
 	args := make([]ast.Expression, 0, len(expr.Arguments))
 	for _, arg := range expr.Arguments {
-		evaluated, err := EvaluateExpression(arg, context, input, formats)
+		evaluated, err := EvaluateExpression(arg, context, input, formats, target)
 		if err != nil {
 			return nil, err
 		}
@@ -88,11 +88,47 @@ func evaluateCallExpression(expr ast.CallExpression, context map[string]string, 
 	}
 
 	identifier := expr.Identifier.String()
+	if identifier == "REL" {
+		return evaluateRel(expr, target, args, input, formats)
+	}
+
 	internalFunction, ok := functions.DispatchMap[identifier]
 	if !ok {
 		return nil, ErrUnsupportedFunctions(identifier)
 	}
 	return internalFunction(expr, args...)
+}
+
+func evaluateRel(expr ast.CallExpression, target string, args []ast.Expression, input [][]string, formats map[string]string) (ast.Expression, error) {
+	if !ast.IsCellIdentifier(target) || len(args) != 2 {
+		return nil, ErrUnsupportedCall(expr, target)
+	}
+
+	dx := args[0]
+	dy := args[1]
+
+	if !ast.IsInt(dx) {
+		return nil, ErrUnsupportedType(expr, dx)
+	}
+	if !ast.IsInt(dy) {
+		return nil, ErrUnsupportedType(expr, dy)
+	}
+
+	currentCol, currentRow := ast.ParseCell(target)
+
+	row := currentRow + dy.(ast.IntExpression).Value
+	col := currentCol + dx.(ast.IntExpression).Value
+
+	if row < 0 || row >= len(input) || col < 0 || col >= len(input[row]) {
+		return nil, ErrRelOutOfBounds(expr)
+	}
+
+	newCellExpr := ast.IdentifierExpression{
+		Token: expr.Token,
+		Value: ast.ToCell(col, row),
+	}
+
+	return evaluateCellExpression(newCellExpr, input, formats)
 }
 
 func evaluateVariableExpression(expr ast.IdentifierExpression, context map[string]string, formats map[string]string) (ast.Expression, error) {

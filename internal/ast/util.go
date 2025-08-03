@@ -76,6 +76,15 @@ func TypeName(expr Expression) string {
 	}
 }
 
+func IsCell(expr Expression) bool {
+	switch c := expr.(type) {
+	case IdentifierExpression:
+		return IsCellIdentifier(c.Value)
+	default:
+		return false
+	}
+}
+
 func IsInt(expr Expression) bool {
 	switch expr.(type) {
 	case IntExpression:

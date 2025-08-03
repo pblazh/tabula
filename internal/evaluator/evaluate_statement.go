@@ -8,7 +8,7 @@ func EvaluateStatement(statement ast.Statement, context map[string]string, input
 	switch s := statement.(type) {
 	case ast.LetStatement:
 
-		value, error := EvaluateExpression(s.Value, context, input, formats)
+		value, error := EvaluateExpression(s.Value, context, input, formats, s.Identifier.Value)
 		if error != nil {
 			return error
 		}
@@ -27,7 +27,7 @@ func EvaluateStatement(statement ast.Statement, context map[string]string, input
 
 		context[s.Identifier.Value] = output
 	case ast.FmtStatement:
-		value, error := EvaluateExpression(s.Value, context, input, formats)
+		value, error := EvaluateExpression(s.Value, context, input, formats, s.Identifier.Value)
 		if error != nil {
 			return error
 		}

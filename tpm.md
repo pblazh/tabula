@@ -29,6 +29,7 @@
   - [x] #12.1: Setup evaluation
   - [x] #12.2: Evaluate expressions
     - [x] #12.2.1: Evaluate Identifier expression
+    - [x] #12.2.2: Evaluate Relative Identifier expression
   - [x] #12.3: Evaluate statements
     - [x] #12.3.1: Evaluate fmt statements
 - [x] #13: Read formatted strings

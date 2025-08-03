@@ -350,7 +350,7 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 
 			var input [][]string
-			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string))
+			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string), "target")
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return
@@ -442,7 +442,7 @@ func TestPrefixExpressionEvaluate(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 
 			var input [][]string
-			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string))
+			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string), "target")
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return
@@ -563,7 +563,7 @@ func TestOperationErrors(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 			var input [][]string
 			formats := make(map[string]string)
-			result, err := EvaluateExpression(expr, make(map[string]string), input, formats)
+			result, err := EvaluateExpression(expr, make(map[string]string), input, formats, "target")
 			if err == nil {
 				t.Errorf("Expected error but got result: %s", result.String())
 				return

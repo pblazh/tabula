@@ -79,6 +79,20 @@ func TestEvaluate(t *testing.T) {
 				{"40", "100"},
 			},
 		},
+		{
+			name: "REL function",
+			program: `
+			let C1:C2 = SUM(REL(-1,0), REL(-2,0));
+			`,
+			input: [][]string{
+				{"1", "2", "0"},
+				{"3", "4", "0"},
+			},
+			output: [][]string{
+				{"1", "2", "3"},
+				{"3", "4", "7"},
+			},
+		},
 	}
 
 	for _, tc := range testcases {
