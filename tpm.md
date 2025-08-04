@@ -63,9 +63,9 @@
   - [ ] #19.3: Add test coverage reporting
   - [ ] #19.4: Add benchmark tests for large CSV files
 - [ ] #20: Examples and Documentation
-  - [ ] #20.1: Create comprehensive script examples
+  - [x] #20.1: Create comprehensive script examples
   - [ ] #20.2: Add language specification document
-  - [ ] #20.3: Add API documentation
+  - [x] #20.3: Add API documentation
   - [ ] #20.4: Create tutorial/getting started guide
 - [ ] #21: Code Quality Improvements
   - [ ] #21.1: Add better error recovery in parser

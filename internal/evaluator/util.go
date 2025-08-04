@@ -29,3 +29,11 @@ func evaluateNumericOperation(
 	}
 	return nil, ErrUnsupportedBinaryOperation(operator, left, right)
 }
+
+func ifCellInBounds(s ast.IdentifierExpression, input [][]string) error {
+	col, row := ast.ParseCell(s.Value)
+	if row < 0 || row >= len(input) || col < 0 || col >= len(input[row]) {
+		return ErrRelOutOfBounds(s)
+	}
+	return nil
+}

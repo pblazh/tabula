@@ -21,6 +21,10 @@ func EvaluateStatement(statement ast.Statement, context map[string]string, input
 
 		if ast.IsCellIdentifier(s.Identifier.Value) {
 			col, row := ast.ParseCell(s.Identifier.Value)
+			err := ifCellInBounds(s.Identifier, input)
+			if err != nil {
+				return err
+			}
 			input[row][col] = output
 			break
 		}

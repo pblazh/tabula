@@ -1,3 +1,0 @@
-let E1 = SUM(A1, B1, C1, D1);
-let E2 = SUM(A2, B2:D2);
-let E3 = SUM(D3:B3, A3);

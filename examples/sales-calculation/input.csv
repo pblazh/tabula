@@ -1,0 +1,6 @@
+Product,Price,Quantity,
+Apple,1.20,10,
+Banana,0.80,15,
+Cherry,2.50,8,
+,,,
+#csvss:./script.csvs

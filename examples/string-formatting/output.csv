@@ -1,0 +1,4 @@
+first_name , last_name , Full Name  , Display Name
+john       , doe       , john doe   , JOHN DOE
+jane       , smith     , jane smith , JANE SMITH
+#csvss:./script.csvs

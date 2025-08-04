@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -38,39 +39,6 @@ exit status 1
 			stderr: `either script or data has to be read from a file
 exit status 1
 `,
-		},
-		{
-			name: "succcess",
-			args: []string{"-i", "../../examples/basic/file.csv", "-s", "../../examples/basic/script.csvs"},
-			stdout: `# Header
-Full Name,Age,Grade
-"Dow, Bob",25,170
-"Dow, Alice",30,184
-#csvss:./script.csvs
-`,
-			stderr: "",
-		},
-		{
-			name: "script path from CSV comment",
-			args: []string{"-i", "../../examples/basic/file.csv"},
-			stdout: `# Header
-Full Name,Age,Grade
-"Dow, Bob",25,170
-"Dow, Alice",30,184
-#csvss:./script.csvs
-`,
-			stderr: "",
-		},
-		{
-			name: "align flag",
-			args: []string{"-i", "../../examples/basic/file.csv", "-a"},
-			stdout: `# Header
-Full Name    , Age , Grade
-"Dow, Bob"   , 25  , 170
-"Dow, Alice" , 30  , 184
-#csvss:./script.csvs
-`,
-			stderr: "",
 		},
 	}
 
@@ -252,4 +220,104 @@ func TestScriptPathFromCSVComment(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestExamples(t *testing.T) {
+	// Get the project root directory (go up from cmd/cli to project root)
+	examplesDir := filepath.Join("..", "..", "examples")
+
+	// Walk through all example directories
+	err := filepath.WalkDir(examplesDir, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		// Skip the root examples directory and README.md
+		if path == examplesDir || !d.IsDir() {
+			return nil
+		}
+
+		// Skip if this is a subdirectory of an example (not a direct example folder)
+		rel, _ := filepath.Rel(examplesDir, path)
+		if strings.Contains(rel, string(filepath.Separator)) {
+			return nil
+		}
+
+		exampleName := d.Name()
+
+		// Define required file paths
+		inputFile := filepath.Join(path, "input.csv")
+		outputFile := filepath.Join(path, "output.csv")
+
+		// Check if all required files exist
+		if !fileExists(inputFile) {
+			t.Errorf("Example %s: missing input.csv", exampleName)
+			return nil
+		}
+		if !fileExists(outputFile) {
+			t.Errorf("Example %s: missing output.csv", exampleName)
+			return nil
+		}
+
+		// Run the test for this example
+		t.Run(exampleName, func(t *testing.T) {
+			testExample(t, exampleName, inputFile, outputFile)
+		})
+
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("Failed to walk examples directory: %v", err)
+	}
+}
+
+func testExample(t *testing.T, exampleName, inputFile, outputFile string) {
+	// Read expected output
+	expectedOutput, err := os.ReadFile(outputFile)
+	if err != nil {
+		t.Fatalf("Failed to read expected output file %s: %v", outputFile, err)
+	}
+
+	// Execute csvss command: csvss -i input.csv -s script.csvs
+	actualOutput, err := executeCSVSSCommand(inputFile)
+	if err != nil {
+		t.Fatalf("Failed to execute csvss command for example %s: %v", exampleName, err)
+	}
+
+	// Normalize whitespace for comparison
+	expectedStr := normalizeOutput(string(expectedOutput))
+	actualStr := normalizeOutput(string(actualOutput))
+
+	if expectedStr != actualStr {
+		t.Errorf("Example %s: output mismatch\nExpected:\n%s\n\nActual:\n%s",
+			exampleName, expectedStr, actualStr)
+	}
+}
+
+func executeCSVSSCommand(inputFile string) ([]byte, error) {
+	cmd := exec.Command("go", "run", ".", "-i", inputFile, "-a")
+
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+	if err != nil {
+		return nil, err
+	}
+
+	return stdout.Bytes(), nil
+}
+
+func normalizeOutput(s string) string {
+	// Normalize line endings and trim whitespace
+	s = strings.ReplaceAll(s, "\r\n", "\n")
+	s = strings.ReplaceAll(s, "\r", "\n")
+	s = strings.TrimSpace(s)
+	return s
+}
+
+func fileExists(filename string) bool {
+	_, err := os.Stat(filename)
+	return !os.IsNotExist(err)
 }

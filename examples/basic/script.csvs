@@ -1,8 +1,0 @@
-let A1 = "Full Name";
-
-let A2 = "Dow, Bob";
-let A3 = "Dow, Alice";
-
-let C1 = "Grade";
-let C2 = C2 * 2;
-let C3 = C3 * 2;
