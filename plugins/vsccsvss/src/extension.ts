@@ -1,6 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { parseString } from "fast-csv";
+import { parseString, format } from "fast-csv";
 import * as vscode from "vscode";
 type CsvRowType = {
   [key: string]: string;
@@ -32,7 +32,9 @@ export function activate(context: vscode.ExtensionContext) {
         "csvEditing", // Identifies the type of the webview. Used internally
         "File Content to Edit", // Title of the panel displayed to the user
         vscode.ViewColumn.One, // Editor column to show the new webview panel in.
-        {} // Webview options. More on these later.
+        {
+          enableScripts: true,
+        }
       );
 
       const onDiskPathCsv = vscode.Uri.joinPath(
@@ -44,6 +46,20 @@ export function activate(context: vscode.ExtensionContext) {
         const csvContent = await readFileContent(onDiskPathCsv);
 
         panel.webview.html = getWebviewContent(csvContent);
+
+        panel.webview.onDidReceiveMessage(
+          async (message) => {
+            switch (message.command) {
+              case "updateCell":
+                csvContent[message.rowIndex][message.columnIndex] =
+                  message.value;
+                await saveFileContent(onDiskPathCsv, csvContent);
+                return;
+            }
+          },
+          undefined,
+          context.subscriptions
+        );
       } catch (error) {
         console.log(error);
       }
@@ -54,7 +70,9 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function getWebviewContent(csvRows: CsvRowType[] | undefined) {
-  if (!csvRows) return "No file to edit";
+  if (!csvRows) {
+    return "No file to edit";
+  }
 
   const columnNames = Object.keys(csvRows[0]);
   const rows = csvRows.reduce<{
@@ -63,8 +81,11 @@ function getWebviewContent(csvRows: CsvRowType[] | undefined) {
   }>(
     (acc, row) => {
       const updatedAcc = { content: acc.content, comments: acc.comments };
-      if (Object.values(row)[0].includes("#")) updatedAcc.comments.push(row);
-      else updatedAcc.content.push(row);
+      if (Object.values(row)[0].includes("#")) {
+        updatedAcc.comments.push(row);
+      } else {
+        updatedAcc.content.push(row);
+      }
       return updatedAcc;
     },
     { content: [], comments: [] }
@@ -73,6 +94,7 @@ function getWebviewContent(csvRows: CsvRowType[] | undefined) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline';">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Content</title>
 </head>
@@ -88,9 +110,18 @@ function getWebviewContent(csvRows: CsvRowType[] | undefined) {
   <tbody>
    ${rows.content
      ?.map(
-       (row) =>
+       (row, indexRow) =>
          `<tr>${columnNames
-           .map((column) => `<td><input value="${row[column]}" /></td>`)
+           .map(
+             (column, indexColumn) =>
+               `<td>
+                  <input
+                    value="${row[column]}"
+                    data-row-index="${indexRow}"
+                    data-column-index="${indexColumn}"
+                  />
+                </td>`
+           )
            .join("")}</tr>`
      )
      .join("")}
@@ -111,7 +142,34 @@ function getWebviewContent(csvRows: CsvRowType[] | undefined) {
 <h2>Parsed Rows of CSV</h2>
     ${csvRows?.map((item) => `<div>${JSON.stringify(item)}</div><br>`).join("")}
 </section>
-	</body>
+
+<script>
+  const vscode = acquireVsCodeApi();
+  
+  function handleInputChange(event) {
+    const input = event.target;
+    const newValue = input.value;
+    const rowIndex = input.dataset.rowIndex;
+    const columnIndex = input.dataset.columnIndex;
+
+    console.log('This cell was updated:', { rowIndex, columnIndex, newValue });
+
+    vscode.postMessage({
+      command: 'updateCell',
+      rowIndex: rowIndex,
+      columnIndex: columnIndex,
+      value: newValue,
+    });
+  }
+
+  const allInputs = document.querySelectorAll('input');
+
+  allInputs.forEach(input => {
+    input.addEventListener('change', handleInputChange);
+  });
+
+</script>
+</body>
 </html>`;
 }
 
@@ -134,6 +192,45 @@ async function readFileContent(fileUri: vscode.Uri) {
         resolve(results);
       });
   });
+}
+
+async function saveFileContent(
+  fileUri: vscode.Uri,
+  data: CsvRowType[]
+): Promise<void> {
+  try {
+    const csvString = await new Promise<string>((resolve, reject) => {
+      const chunks: Buffer[] = [];
+
+      const stringifyStream = format({ headers: true });
+
+      stringifyStream.on("data", (chunk: Buffer) => {
+        chunks.push(chunk);
+      });
+
+      stringifyStream.on("error", (err) => {
+        reject(err);
+      });
+
+      stringifyStream.on("end", () => {
+        resolve(Buffer.concat(chunks).toString("utf-8"));
+      });
+
+      data.forEach((row) => stringifyStream.write(row));
+
+      stringifyStream.end();
+    });
+
+    const writeData: Uint8Array = new TextEncoder().encode(csvString);
+
+    await vscode.workspace.fs.writeFile(fileUri, writeData);
+
+    vscode.window.showInformationMessage(`File was saved: ${fileUri.fsPath}`);
+  } catch (error) {
+    console.error("Save file by fast-csv Error:", error);
+    vscode.window.showErrorMessage(`Saving file failure`);
+    return Promise.reject(error);
+  }
 }
 
 // This method is called when your extension is deactivated
