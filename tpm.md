@@ -83,7 +83,7 @@
   - [ ] #23.3: Add parallel evaluation where possible
 - [ ] #24: Enhancement Features
   - [ ] #24.1: Add syntax highlighting for script files
-  - [ ] #24.3: Add plugin system for custom functions
+  - [x] #24.3: Add plugin system for custom functions
         (execute external program for evaluation and format)
   - [ ] #24.4: Add debugging capabilities
   - [ ] #24.5: Add configuration file support
