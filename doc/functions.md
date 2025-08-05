@@ -1,6 +1,7 @@
 # CSVSS Functions Reference
 
-CSVSS provides a comprehensive set of built-in functions for data manipulation and calculations.
+CSVSS provides a comprehensive set of built-in functions for data
+manipulation and calculations.
 
 ## Numeric Functions
 
@@ -388,7 +389,60 @@ Important notes:
 - The resulting cell reference must be within the bounds of the input CSV
 - REL cannot reference cells with negative coordinates
 
-## Function Usage Tips
+### CALL (External Program Execution)
+
+CALL executes external programs and returns their stdout output as a string.
+
+```csvss
+CALL(command, argument1, argument2, ...)
+```
+
+The first argument is the command name, and subsequent arguments are passed
+as parameters to the command.
+
+Examples:
+
+```csvss
+let A1 = CALL("pwd");                     # Get current directory
+let A1 = CALL("echo", "Hello World");     # Simple echo command
+let A1 = CALL("date", "+%Y-%m-%d");       # Get formatted date
+let A1 = CALL("whoami");                  # Get current username
+let A1 = CALL("uname", "-s");             # Get system name
+```
+
+More complex examples:
+
+```csvss
+// Get disk usage
+let A1 = CALL("df", "-h", ".");
+
+// Execute custom script with parameters
+let A1 = CALL("./my_script.sh", "param1", "param2");
+```
+
+Integration with CSV data:
+
+```csvss
+// Use CSV cell values as command arguments
+let A2 = CALL("echo", B1);               # Echo content of B1
+let A2 = CALL("curl", "-s", B1);         # Fetch URL from B1
+let A2 = CALL("python", "script.py", B1, C1); # Pass B1 and C1 to Python script
+```
+
+Important notes:
+
+- All arguments must be strings or expressions that evaluate to strings
+- The command must be available in the system PATH or be an absolute path
+- Output is captured from stdout and trailing whitespace is trimmed
+- If the command fails, an error is returned with the failure message
+- Commands run with the same environment and working directory as the CSVSS process
+- Be careful with security when using external commands, especially with user input
+
+Security considerations:
+
+- Validate input when using CSV data as command arguments
+- Consider using absolute paths for scripts to avoid PATH-based attacks
+- Be aware that external commands have access to the same environment as CSVSS
 
 ### Combining Functions
 
@@ -398,6 +452,9 @@ Functions can be nested and combined:
 let A1 = UPPER(TRIM(B1));                    # Trim then uppercase
 let A1 = IF(LEN(B1) > 0, B1, "Empty");      # Check if not empty
 let A1 = SUM(ABS(B1), ABS(C1));             # Sum of absolute values
+let A1 = UPPER(CALL("whoami"));              # Get uppercase username
+let A1 = LEN(CALL("pwd"));                   # Get length of current directory path
+let A1 = IF(CALL("test", "-f", B1) == "", "File not found", "File exists"); # Check file existence
 ```
 
 ### Using with Cell Ranges
