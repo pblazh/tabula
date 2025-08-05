@@ -18,53 +18,68 @@ func TestParseArgs(t *testing.T) {
 		{
 			name:   "script from file, csv from stdin, output to stdout",
 			args:   []string{"csvss", "-s", "scriptFile"},
-			config: &Config{Script: "scriptFile", Input: "", Output: ""},
+			config: &Config{Script: "scriptFile", Execute: "", Name: "scriptFile", Input: "", Output: "", Align: false, Sort: false},
 		},
 		{
 			name:   "script from stdin, csv from file, output to stdout",
 			args:   []string{"csvss", "-i", "csvFile"},
-			config: &Config{Script: "", Input: "csvFile", Output: ""},
+			config: &Config{Script: "", Execute: "", Name: "", Input: "csvFile", Output: "", Align: false, Sort: false},
 		},
 		{
 			name:   "script from file, csv from file, output to stdout",
 			args:   []string{"csvss", "-s", "scriptFile", "-i", "csvFile"},
-			config: &Config{Script: "scriptFile", Input: "csvFile", Output: ""},
+			config: &Config{Script: "scriptFile", Execute: "", Name: "scriptFile", Input: "csvFile", Output: "", Align: false, Sort: false},
 		},
 		{
 			name:   "script from file, csv from file, output to file",
 			args:   []string{"csvss", "-s", "scriptFile", "-o", "output.csv", "-i", "csvFile"},
-			config: &Config{Script: "scriptFile", Input: "csvFile", Output: "output.csv"},
+			config: &Config{Script: "scriptFile", Execute: "", Name: "scriptFile", Input: "csvFile", Output: "output.csv", Align: false, Sort: false},
 		},
 		{
 			name:   "script from file, csv from file, update in place",
 			args:   []string{"csvss", "-s", "scriptFile", "-u", "csvFile"},
-			config: &Config{Script: "scriptFile", Input: "csvFile", Output: "csvFile"},
+			config: &Config{Script: "scriptFile", Execute: "", Name: "scriptFile", Input: "csvFile", Output: "csvFile", Align: false, Sort: false},
 		},
 		{
 			name:   "script from stdin, csv from file, update in place",
 			args:   []string{"csvss", "-u", "csvFile"},
-			config: &Config{Script: "", Input: "csvFile", Output: "csvFile"},
+			config: &Config{Script: "", Execute: "", Name: "", Input: "csvFile", Output: "csvFile", Align: false, Sort: false},
 		},
 		{
 			name:   "script from file, csv from file, aligned output",
 			args:   []string{"csvss", "-s", "scriptFile", "-i", "csvFile", "-a"},
-			config: &Config{Script: "scriptFile", Input: "csvFile", Output: "", Align: true},
+			config: &Config{Script: "scriptFile", Execute: "", Name: "scriptFile", Input: "csvFile", Output: "", Align: true, Sort: false},
 		},
 		{
 			name:   "script from file, csv from file, output to file, aligned",
 			args:   []string{"csvss", "-s", "scriptFile", "-i", "csvFile", "-o", "output.csv", "-a"},
-			config: &Config{Script: "scriptFile", Input: "csvFile", Output: "output.csv", Align: true},
+			config: &Config{Script: "scriptFile", Execute: "", Name: "scriptFile", Input: "csvFile", Output: "output.csv", Align: true, Sort: false},
 		},
 		{
 			name:   "script from file, csv from file, update in place, aligned",
 			args:   []string{"csvss", "-s", "scriptFile", "-u", "csvFile", "-a"},
-			config: &Config{Script: "scriptFile", Input: "csvFile", Output: "csvFile", Align: true},
+			config: &Config{Script: "scriptFile", Execute: "", Name: "scriptFile", Input: "csvFile", Output: "csvFile", Align: true, Sort: false},
+		},
+		{
+			name:   "execute inline code, csv from file, output to stdout",
+			args:   []string{"csvss", "-e", "sum(amount)", "-i", "csvFile"},
+			config: &Config{Script: "", Execute: "sum(amount)", Name: "<inline>", Input: "csvFile", Output: "", Align: false, Sort: false},
+		},
+		{
+			name:   "execute inline code, csv from file, output to file",
+			args:   []string{"csvss", "-e", "sum(amount)", "-i", "csvFile", "-o", "output.csv"},
+			config: &Config{Script: "", Execute: "sum(amount)", Name: "<inline>", Input: "csvFile", Output: "output.csv", Align: false, Sort: false},
 		},
 		// Invalid combinations
 		{
 			name:   "conflicting output flags -o and -u",
 			args:   []string{"csvss", "-s", "scriptFile", "-o", "output.csv", "-u", "csvFile"},
 			errMsg: "conflicting output flags: -o and -u cannot be used together",
+		},
+		{
+			name:   "conflicting script flags -s and -e",
+			args:   []string{"csvss", "-s", "scriptFile", "-e", "sum(amount)", "-i", "csvFile"},
+			errMsg: "conflicting script flags: -s and -e cannot be used together",
 		},
 		{
 			name:   "update flag without CSV file",
