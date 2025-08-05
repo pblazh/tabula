@@ -110,9 +110,6 @@ func TestExecuteInlineCode(t *testing.T) {
 		t.Fatalf("Command failed: %v\nStderr: %s", err, stderr.String())
 	}
 
-	// Remove the script comment line from expected output since we're using -e flag
-	// expectedOutput := strings.ReplaceAll(string(output), "#csvss:./script.csvs", "")
-
 	// Normalize outputs for comparison
 	expectedStr := normalizeOutput(csvOut)
 	actualStr := normalizeOutput(stdout.String())
@@ -296,6 +293,11 @@ func TestExamples(t *testing.T) {
 		}
 
 		exampleName := d.Name()
+
+		// Skip call-function example as it requires external commands
+		if exampleName == "call-function" {
+			return nil
+		}
 
 		// Define required file paths
 		inputFile := filepath.Join(path, "input.csv")
