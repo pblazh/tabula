@@ -14,10 +14,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "vsccsvss.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "vsccsvss.start",
         "title": "Start editing file",
         "category": "Edit"
