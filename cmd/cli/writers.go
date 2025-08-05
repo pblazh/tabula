@@ -36,7 +36,7 @@ func writeCompact(csvWriter io.Writer, result [][]string, comments map[int]strin
 			lineNum++
 		}
 		if err := writer.Write(row); err != nil {
-			return fmt.Errorf("error writing CSV output: %v", err)
+			return ErrWriteCSVOutput(err)
 		}
 		lineNum++
 	}
