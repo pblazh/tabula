@@ -152,12 +152,10 @@ function getWebviewContent(csvRows: CsvRowType[] | undefined) {
     const rowIndex = input.dataset.rowIndex;
     const columnIndex = input.dataset.columnIndex;
 
-    console.log('This cell was updated:', { rowIndex, columnIndex, newValue });
-
     vscode.postMessage({
       command: 'updateCell',
-      rowIndex: rowIndex,
-      columnIndex: columnIndex,
+      rowIndex,
+      columnIndex,
       value: newValue,
     });
   }
@@ -187,8 +185,7 @@ async function readFileContent(fileUri: vscode.Uri) {
       .on("data", (row) => {
         results.push(row);
       })
-      .on("end", (rowCount: number) => {
-        console.log(`Parsing ended. Number of rows: ${rowCount}`);
+      .on("end", () => {
         resolve(results);
       });
   });
