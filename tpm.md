@@ -2,6 +2,7 @@
 
 - [x] #01: Scaffold a project
 - [x] #02: Parse command line parameters
+  - [x] #02.01: Add -e execute parameter
 - [x] #03: Read CSV file into memory
 - [x] #04: Describe a script language syntax
 - [x] #05: Create a lexer

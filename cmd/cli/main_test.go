@@ -107,6 +107,58 @@ Full Name    , Age , Grade
 	}
 }
 
+func TestExecuteInlineCode(t *testing.T) {
+	scriptPath := filepath.Join("..", "..", "examples", "apartment", "script.csvs")
+	inputPath := filepath.Join("..", "..", "examples", "apartment", "input.csv")
+	outputPath := filepath.Join("..", "..", "examples", "apartment", "output.csv")
+
+	// Read expected output
+	input, err := os.ReadFile(inputPath)
+	if err != nil {
+		t.Fatalf("Failed to read expected output: %v", err)
+	}
+	csvIn := strings.ReplaceAll(string(input), "#csvss:./script.csvs", "")
+	// Read expected output
+	script, err := os.ReadFile(scriptPath)
+	if err != nil {
+		t.Fatalf("Failed to read expected output: %v", err)
+	}
+
+	// Read expected output
+	output, err := os.ReadFile(outputPath)
+	if err != nil {
+		t.Fatalf("Failed to read expected output: %v", err)
+	}
+	csvOut := strings.ReplaceAll(string(output), "#csvss:./script.csvs", "")
+
+	cmd := exec.Command("go", "run", ".", "-e", string(script), "-a")
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	cmd.Stdin = strings.NewReader(csvIn)
+
+	err = cmd.Run()
+	if err != nil {
+		t.Fatalf("Command failed: %v\nStderr: %s", err, stderr.String())
+	}
+
+	// Remove the script comment line from expected output since we're using -e flag
+	// expectedOutput := strings.ReplaceAll(string(output), "#csvss:./script.csvs", "")
+
+	// Normalize outputs for comparison
+	expectedStr := normalizeOutput(csvOut)
+	actualStr := normalizeOutput(stdout.String())
+
+	if expectedStr != actualStr {
+		t.Errorf("Apartment example with -e flag: output mismatch\nExpected:\n%s\n\nActual:\n%s", expectedStr, actualStr)
+	}
+
+	// Ensure stderr is empty (no errors)
+	if stderr.String() != "" {
+		t.Errorf("Expected empty stderr but got: %q", stderr.String())
+	}
+}
+
 func TestUpdateInPlace(t *testing.T) {
 	// Create a temporary CSV file
 	tempDir := os.TempDir()

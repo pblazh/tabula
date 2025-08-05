@@ -28,8 +28,7 @@ func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csv
 		}
 	}
 
-	// Parse script
-	program, err := evaluator.ParseProgram(scriptReader, config.Script)
+	program, err := evaluator.ParseProgram(scriptReader, config.Name)
 	if err != nil {
 		return fmt.Errorf("error parsing script: %v", err)
 	}
@@ -45,7 +44,7 @@ func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csv
 	// Evaluate the program with CSV data
 	result, err := evaluator.Evaluate(program, records)
 	if err != nil {
-		return fmt.Errorf("error evaluating script %s: %v", config.Script, err)
+		return fmt.Errorf("error evaluating script %s: %v", config.Name, err)
 	}
 
 	if config.Align {
