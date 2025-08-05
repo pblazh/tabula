@@ -34,6 +34,10 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.ViewColumn.One, // Editor column to show the new webview panel in.
         {
           enableScripts: true,
+          localResourceRoots: [
+            vscode.Uri.joinPath(context.extensionUri, "media"),
+            vscode.Uri.joinPath(context.extensionUri, "src", "js"),
+          ],
         }
       );
 
@@ -42,10 +46,24 @@ export function activate(context: vscode.ExtensionContext) {
         "media",
         "test.csv"
       );
+
+      const scriptPath = vscode.Uri.joinPath(
+        context.extensionUri,
+        "src",
+        "js",
+        "script.js"
+      );
+      const scriptUri = panel.webview.asWebviewUri(scriptPath);
+      const cspSource = panel.webview.cspSource;
+
       try {
         const csvContent = await readFileContent(onDiskPathCsv);
 
-        panel.webview.html = getWebviewContent(csvContent);
+        panel.webview.html = getWebviewContent(
+          csvContent,
+          scriptUri,
+          cspSource
+        );
 
         panel.webview.onDidReceiveMessage(
           async (message) => {
@@ -69,7 +87,11 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable, webViewCommand);
 }
 
-function getWebviewContent(csvRows: CsvRowType[] | undefined) {
+function getWebviewContent(
+  csvRows: CsvRowType[] | undefined,
+  scriptPath: vscode.Uri,
+  cspSource: string
+) {
   if (!csvRows) {
     return "No file to edit";
   }
@@ -94,7 +116,7 @@ function getWebviewContent(csvRows: CsvRowType[] | undefined) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${cspSource}; style-src 'unsafe-inline';">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Content</title>
 </head>
@@ -143,30 +165,7 @@ function getWebviewContent(csvRows: CsvRowType[] | undefined) {
     ${csvRows?.map((item) => `<div>${JSON.stringify(item)}</div><br>`).join("")}
 </section>
 
-<script>
-  const vscode = acquireVsCodeApi();
-  
-  function handleInputChange(event) {
-    const input = event.target;
-    const newValue = input.value;
-    const rowIndex = input.dataset.rowIndex;
-    const columnIndex = input.dataset.columnIndex;
-
-    vscode.postMessage({
-      command: 'updateCell',
-      rowIndex,
-      columnIndex,
-      value: newValue,
-    });
-  }
-
-  const allInputs = document.querySelectorAll('input');
-
-  allInputs.forEach(input => {
-    input.addEventListener('change', handleInputChange);
-  });
-
-</script>
+<script src="${scriptPath}"></script>
 </body>
 </html>`;
 }
