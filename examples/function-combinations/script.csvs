@@ -19,9 +19,21 @@ let F4 = SUM(0, ABS(C4), ABS(D4));
 
 // Complex nested conditions with math functions
 let G1 = "Grade";
-let G2 = IF(AVERAGE(B2, C2, D2) > 24, "A", IF(AVERAGE(B2, C2, D2) > 19, "B", IF(AVERAGE(B2, C2, D2) > 14, "C", "F")));
-let G3 = IF(AVERAGE(B3, C3, D3) > 24, "A", IF(AVERAGE(B3, C3, D3) > 19, "B", IF(AVERAGE(B3, C3, D3) > 14, "C", "F")));
-let G4 = IF(AVERAGE(0, C4, D4) > 24, "A", IF(AVERAGE(0, C4, D4) > 19, "B", IF(AVERAGE(0, C4, D4) > 14, "C", "F")));
+// Calculate average and assign grade for row 2
+let avg_2 = AVERAGE(B2, C2, D2);
+let G2 = IF(avg_2 > 24, "A", 
+         IF(avg_2 > 19, "B", 
+         IF(avg_2 > 14, "C", "F")));
+// Calculate average and assign grade for row 3
+let avg_3 = AVERAGE(B3, C3, D3);
+let G3 = IF(avg_3 > 24, "A", 
+         IF(avg_3 > 19, "B", 
+         IF(avg_3 > 14, "C", "F")));
+// Calculate average and assign grade for row 4
+let avg_4 = AVERAGE(0, C4, D4);
+let G4 = IF(avg_4 > 24, "A", 
+         IF(avg_4 > 19, "B", 
+         IF(avg_4 > 14, "C", "F")));
 
 // Power and rounding combinations
 let H1 = "Squared & Rounded";

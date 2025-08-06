@@ -1,4 +1,5 @@
-Command , Arg         , Out
-echo    , hello       , hello
-date    , Jun 20 1975 , Friday
+Command , Arg                     , Out
+echo    , hello                   , hello
+ls      , examples/call-function/ , input.csv output.csv README.md script.csvs
+date    , Jun 20 1975             , Friday
 #csvss:./script.csvs

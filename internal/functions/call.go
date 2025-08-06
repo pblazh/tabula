@@ -28,9 +28,8 @@ func Call(format string, call ast.CallExpression, values ...ast.Expression) (ast
 		return ast.StringExpression{Value: err.Error(), Token: call.Token}, err
 	}
 
-	// Return stdout output as string (trimmed of trailing whitespace)
-	result := strings.TrimSpace(string(output))
+	// Return stdout output as one string (trimmed of trailing whitespace)
+	result := strings.TrimSpace(strings.ReplaceAll(string(output), "\n", " "))
 
 	return ast.StringExpression{Value: result, Token: call.Token}, nil
 }
-

@@ -434,6 +434,7 @@ Important notes:
 - All arguments must be strings or expressions that evaluate to strings
 - The command must be available in the system PATH or be an absolute path
 - Output is captured from stdout and trailing whitespace is trimmed
+- Newlines in the output are replaced with spaces to ensure CSV compatibility
 - If the command fails, an error is returned with the failure message
 - Commands run with the same environment and working directory as the CSVSS process
 - Be careful with security when using external commands, especially with user input

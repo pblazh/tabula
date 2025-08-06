@@ -18,6 +18,17 @@ let F4 = IF(C4 > 89, "A", IF(C4 > 79, "B", IF(C4 > 69, "C", "F")));
 let G4 = IF(D4 > 89, "A", IF(D4 > 79, "B", IF(D4 > 69, "C", "F")));
 
 // Calculate overall average and grade  
-let H2 = IF(AVERAGE(B2:D2) > 89, "A", IF(AVERAGE(B2:D2) > 79, "B", IF(AVERAGE(B2:D2) > 69, "C", "F")));
-let H3 = IF(AVERAGE(B3:D3) > 89, "A", IF(AVERAGE(B3:D3) > 79, "B", IF(AVERAGE(B3:D3) > 69, "C", "F")));
-let H4 = IF(AVERAGE(B4:D4) > 89, "A", IF(AVERAGE(B4:D4) > 79, "B", IF(AVERAGE(B4:D4) > 69, "C", "F")));
+let avg_H2 = AVERAGE(B2:D2);
+let H2 = IF(avg_H2 > 89, "A", 
+         IF(avg_H2 > 79, "B", 
+         IF(avg_H2 > 69, "C", "F")));
+
+let avg_H3 = AVERAGE(B3:D3);
+let H3 = IF(avg_H3 > 89, "A", 
+         IF(avg_H3 > 79, "B", 
+         IF(avg_H3 > 69, "C", "F")));
+
+let avg_H4 = AVERAGE(B4:D4);
+let H4 = IF(avg_H4 > 89, "A", 
+         IF(avg_H4 > 79, "B", 
+         IF(avg_H4 > 69, "C", "F")));
