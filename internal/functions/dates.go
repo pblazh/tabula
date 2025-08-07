@@ -113,3 +113,12 @@ func Weekday(format string, call ast.CallExpression, values ...ast.Expression) (
 
 	return ast.IntExpression{Value: int(value.Value.Weekday()), Token: call.Token}, nil
 }
+
+func Now(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeArityGuard(format, 0)
+	if err := callGuard(call, values...); err != nil {
+		return nil, err
+	}
+
+	return ast.DateExpression{Value: time.Now(), Token: call.Token}, nil
+}

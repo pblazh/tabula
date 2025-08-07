@@ -219,6 +219,20 @@ func TestDatesParsing(t *testing.T) {
 			},
 			error: "WEEKDAY(date) got a wrong argument <str \"2025-08-07 13:41:55\"> in (WEEKDAY <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
 		},
+		// {
+		// 	name:     "now valid input",
+		// 	f:        "NOW",
+		// 	input:    []ast.Expression{},
+		// 	expected: "<int 4>",
+		// },
+		{
+			name: "now invalid input",
+			f:    "NOW",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025-08-07 13:41:55"},
+			},
+			error: "NOW() expected 0 arguments, but got 1 in (NOW <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
+		},
 	}
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {

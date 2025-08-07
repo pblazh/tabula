@@ -138,4 +138,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "WEEKDAY(date)"
 		return Weekday(format, call, values...)
 	},
+	"NOW": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "NOW()"
+		return Now(format, call, values...)
+	},
 }
