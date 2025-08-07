@@ -123,6 +123,22 @@ func TestDatesParsing(t *testing.T) {
 			},
 			error: "DAY(date) got a wrong argument <str \"2025-08-07 13:41:55\"> in (DAY <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
 		},
+		{
+			name: "hour valid input",
+			f:    "HOUR",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
+			},
+			expected: "<int 13>",
+		},
+		{
+			name: "day invalid input",
+			f:    "HOUR",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025-08-07 13:41:55"},
+			},
+			error: "HOUR(date) got a wrong argument <str \"2025-08-07 13:41:55\"> in (HOUR <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
+		},
 	}
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {

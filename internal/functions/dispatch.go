@@ -107,7 +107,15 @@ var DispatchMap dispatchMap = dispatchMap{
 		return ToDate(format, call, values...)
 	},
 	"FROMDATE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-		format := "FROMDATE(string, string)"
+		format := "FROMDATE(string, date)"
 		return FromDate(format, call, values...)
+	},
+	"DAY": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "DAY(date)"
+		return Day(format, call, values...)
+	},
+	"HOUR": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "HOUR(date)"
+		return Hour(format, call, values...)
 	},
 }

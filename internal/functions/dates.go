@@ -47,3 +47,14 @@ func Day(format string, call ast.CallExpression, values ...ast.Expression) (ast.
 
 	return ast.IntExpression{Value: value.Value.Day(), Token: call.Token}, nil
 }
+
+func Hour(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeExactTypesGuard(format, ast.IsDate)
+	if err := callGuard(call, values...); err != nil {
+		return nil, err
+	}
+
+	value := values[0].(ast.DateExpression)
+
+	return ast.IntExpression{Value: value.Value.Hour(), Token: call.Token}, nil
+}
