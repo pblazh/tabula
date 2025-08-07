@@ -100,4 +100,10 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "FALSE()"
 		return False(format, call, values...)
 	},
+
+	// Dates
+	"TODATE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "TODATE(string, string)"
+		return ToDate(format, call, values...)
+	},
 }

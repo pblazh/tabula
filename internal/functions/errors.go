@@ -25,3 +25,7 @@ func ErrUnsupportedFunction(function ast.CallExpression) error {
 func ErrCellOutOfBounds(cellRef, dimension string, index int) error {
 	return fmt.Errorf("%s %d out of bounds for cell %s", dimension, index, cellRef)
 }
+
+func ErrExecuting(format string, function ast.CallExpression, err error) error {
+	return fmt.Errorf("failed %s with %v at %v", format, function.Token, err)
+}

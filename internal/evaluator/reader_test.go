@@ -3,10 +3,16 @@ package evaluator
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/lexer"
 )
+
+func getTime(value string) time.Time {
+	t, _ := time.Parse("2006-01-02 15:04:05", value)
+	return t
+}
 
 func TestReadValue(t *testing.T) {
 	testcases := []struct {
@@ -153,6 +159,63 @@ func TestReadValue(t *testing.T) {
 			input:    "false",
 			format:   "",
 			expected: ast.BooleanExpression{Value: false, Token: lexer.Token{Literal: "false"}},
+		},
+		// Default parsing - date values
+		{
+			name:     "iso date without format",
+			input:    "2023-10-01",
+			format:   "",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 00:00:00"), Token: lexer.Token{Literal: "2023-10-01"}},
+		},
+		{
+			name:     "iso datetime without format",
+			input:    "2023-10-01 13:41",
+			format:   "",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:00"), Token: lexer.Token{Literal: "2023-10-01 13:41"}},
+		},
+		{
+			name:     "iso datetime sec without format",
+			input:    "2023-10-01 13:41:51",
+			format:   "",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:51"), Token: lexer.Token{Literal: "2023-10-01 13:41:51"}},
+		},
+
+		{
+			name:     "eu date without format",
+			input:    "01.10.2023",
+			format:   "",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 00:00:00"), Token: lexer.Token{Literal: "01.10.2023"}},
+		},
+		{
+			name:     "eu datetime without format",
+			input:    "01.10.2023 13:41",
+			format:   "",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:00"), Token: lexer.Token{Literal: "01.10.2023 13:41"}},
+		},
+		{
+			name:     "eu datetime sec without format",
+			input:    "01.10.2023 13:41:51",
+			format:   "",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:51"), Token: lexer.Token{Literal: "01.10.2023 13:41:51"}},
+		},
+
+		{
+			name:     "us date without format",
+			input:    "10/01/2023",
+			format:   "",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 00:00:00"), Token: lexer.Token{Literal: "10/01/2023"}},
+		},
+		{
+			name:     "us datetime without format",
+			input:    "10/01/2023 13:41",
+			format:   "",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:00"), Token: lexer.Token{Literal: "10/01/2023 13:41"}},
+		},
+		{
+			name:     "us datetime sec without format",
+			input:    "10/01/2023 13:41:51",
+			format:   "",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:51"), Token: lexer.Token{Literal: "10/01/2023 13:41:51"}},
 		},
 
 		// Default parsing - fallback to string

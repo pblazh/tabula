@@ -1,0 +1,107 @@
+package functions
+
+import (
+	"testing"
+
+	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/csvss/internal/lexer"
+)
+
+func TestDatesParsing(t *testing.T) {
+	testcases := []struct {
+		name     string
+		f        string
+		input    []ast.Expression
+		expected string
+		error    string
+	}{
+		// parsing
+		{
+			name: "parse valid input",
+			f:    "TODATE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2006-01-02"},
+				ast.StringExpression{Value: "2025-08-07"},
+			},
+			expected: "<date 2025-08-07 00:00:00>",
+		},
+		{
+			name:  "parse empty input",
+			f:     "TODATE",
+			input: []ast.Expression{},
+			error: "TODATE(string, string) expected 2 arguments, but got 0 in (TODATE), at <: input:0:0>",
+		},
+		{
+			name:  "parse too few arguments",
+			f:     "TODATE",
+			input: []ast.Expression{ast.StringExpression{Value: "2006-01-02"}},
+			error: "TODATE(string, string) expected 2 arguments, but got 1 in (TODATE <str \"2006-01-02\">), at <: input:0:0>",
+		},
+		{
+			name: "parse too many arguments",
+			f:    "TODATE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2006-01-01"},
+				ast.StringExpression{Value: "2006-01-02"},
+				ast.StringExpression{Value: "2006-01-03"},
+			},
+			error: "TODATE(string, string) expected 2 arguments, but got 3 in (TODATE <str \"2006-01-01\"> <str \"2006-01-02\"> <str \"2006-01-03\">), at <: input:0:0>",
+		},
+		{
+			name: "parse invalid layout",
+			f:    "TODATE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "not a layout"},
+				ast.StringExpression{Value: "2025-08-07"},
+			},
+			error: "failed TODATE(string, string) with <: input:0:0> at parsing time \"2025-08-07\" as \"not a layout\": cannot parse \"2025-08-07\" as \"not a layout\"",
+		},
+		{
+			name: "parse invalid input",
+			f:    "TODATE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2006-01-02"},
+				ast.StringExpression{Value: "not a date"},
+			},
+			error: "failed TODATE(string, string) with <: input:0:0> at parsing time \"not a date\" as \"2006-01-02\": cannot parse \"not a date\" as \"2006\"",
+		},
+		// formating
+		// {
+		// 	name:  "parse empty input",
+		// 	f:     "FROMDATE",
+		// 	input: []ast.Expression{},
+		// 	error: "FROMDATE(string, string) expected 2 arguments, but got 0 in (TODATE), at <: input:0:0>",
+		// },
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			result, err := DispatchMap[tc.f](ast.CallExpression{
+				Identifier: ast.IdentifierExpression{
+					Value: tc.f,
+					Token: lexer.Token{Literal: tc.f},
+				}, Arguments: tc.input,
+			}, tc.input...)
+
+			if tc.error != "" {
+				if err == nil {
+					t.Errorf("Expected error %q but got result: %v", tc.error, result)
+					return
+				}
+				if err.Error() != tc.error {
+					t.Errorf("Expected error %q, got %q", tc.error, err.Error())
+				}
+				return
+			}
+
+			if err != nil {
+				t.Errorf("Unexpected error: %v", err)
+				return
+			}
+
+			if result.String() != tc.expected {
+				t.Errorf("Expected %s, got %s", tc.expected, result.String())
+			}
+		})
+	}
+}
