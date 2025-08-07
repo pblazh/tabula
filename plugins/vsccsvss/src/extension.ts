@@ -4,6 +4,13 @@ import { parseString, format } from "fast-csv";
 import * as vscode from "vscode";
 import * as tableTemplate from "./templates/table";
 
+type receivedMessage = {
+  command: string;
+  rowIndex: number;
+  columnIndex: number;
+  value: string;
+};
+
 export function activate(context: vscode.ExtensionContext) {
   const webViewCommand = vscode.commands.registerCommand(
     "vsccsvss.start",
@@ -56,12 +63,20 @@ export function activate(context: vscode.ExtensionContext) {
         panel.webview.html = template(thead, tbody, tfoot);
 
         panel.webview.onDidReceiveMessage(
-          (message) => {
+          (message: receivedMessage) => {
             switch (message.command) {
               case "updateCell":
                 csvContent[message.rowIndex][message.columnIndex] =
                   message.value;
-                saveFileContent(csvPath, csvContent)
+                saveFileContent(
+                  csvPath,
+                  updateContent(
+                    csvContent,
+                    message.columnIndex,
+                    message.rowIndex,
+                    message.value
+                  )
+                )
                   .then(showSavingResult(csvPath))
                   .catch(showSavingError);
                 return;
@@ -79,6 +94,18 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(webViewCommand);
 }
 
+function updateContent(
+  content: string[][],
+  column: number,
+  row: number,
+  value: string
+): string[][] {
+  const updatedContent = content;
+  if (updatedContent[row][column]) {
+    updatedContent[row][column] = value;
+  }
+  return updatedContent;
+}
 function parseTable(table: string[][]): {
   head: string[];
   body: string[][];
