@@ -69,3 +69,14 @@ func Minute(format string, call ast.CallExpression, values ...ast.Expression) (a
 
 	return ast.IntExpression{Value: value.Value.Minute(), Token: call.Token}, nil
 }
+
+func Month(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeExactTypesGuard(format, ast.IsDate)
+	if err := callGuard(call, values...); err != nil {
+		return nil, err
+	}
+
+	value := values[0].(ast.DateExpression)
+
+	return ast.IntExpression{Value: int(value.Value.Month()), Token: call.Token}, nil
+}
