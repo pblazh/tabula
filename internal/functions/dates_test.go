@@ -132,12 +132,28 @@ func TestDatesParsing(t *testing.T) {
 			expected: "<int 13>",
 		},
 		{
-			name: "day invalid input",
+			name: "hour invalid input",
 			f:    "HOUR",
 			input: []ast.Expression{
 				ast.StringExpression{Value: "2025-08-07 13:41:55"},
 			},
 			error: "HOUR(date) got a wrong argument <str \"2025-08-07 13:41:55\"> in (HOUR <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
+		},
+		{
+			name: "minute valid input",
+			f:    "MINUTE",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
+			},
+			expected: "<int 41>",
+		},
+		{
+			name: "minute invalid input",
+			f:    "MINUTE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025-08-07 13:41:55"},
+			},
+			error: "MINUTE(date) got a wrong argument <str \"2025-08-07 13:41:55\"> in (MINUTE <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
 		},
 	}
 	for _, tc := range testcases {

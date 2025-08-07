@@ -118,4 +118,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "HOUR(date)"
 		return Hour(format, call, values...)
 	},
+	"MINUTE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "MINUTE(date)"
+		return Minute(format, call, values...)
+	},
 }
