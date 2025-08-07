@@ -1,10 +1,19 @@
 const vscode = acquireVsCodeApi();
 
+function getCellIndexesFromId(id) {
+  const splittedId = id.split("-");
+  return {
+    columnIndex: splittedId[0],
+    rowIndex: splittedId[1],
+  };
+}
+
 function handleInputChange(event) {
   const input = event.target;
   const newValue = input.value;
-  const rowIndex = input.dataset.rowIndex;
-  const columnIndex = input.dataset.columnIndex;
+  const id = input.id;
+
+  const { columnIndex, rowIndex } = getCellIndexesFromId(id);
 
   vscode.postMessage({
     command: "updateCell",
@@ -14,8 +23,6 @@ function handleInputChange(event) {
   });
 }
 
-const allInputs = document.querySelectorAll("input");
+const table = document.querySelector("table");
 
-allInputs.forEach((input) => {
-  input.addEventListener("change", handleInputChange);
-});
+table.addEventListener("change", handleInputChange);

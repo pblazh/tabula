@@ -46,9 +46,8 @@ export function createTableBody(content: string[][]): string {
             (column, indexColumn) =>
               `<td>
                   <input
+                    id="${indexColumn}-${indexRow}"
                     value="${column}"
-                    data-row-index="${indexRow}"
-                    data-column-index="${indexColumn}"
                   />
                 </td>`
           )
