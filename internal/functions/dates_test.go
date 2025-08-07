@@ -74,7 +74,7 @@ func TestDatesParsing(t *testing.T) {
 
 		// formating
 		{
-			name: "parse valid input",
+			name: "format valid input",
 			f:    "FROMDATE",
 			input: []ast.Expression{
 				ast.StringExpression{Value: "2006.01.02"},
@@ -83,13 +83,13 @@ func TestDatesParsing(t *testing.T) {
 			expected: "<str \"2025.08.07\">",
 		},
 		{
-			name:  "parse empty input",
+			name:  "format empty input",
 			f:     "FROMDATE",
 			input: []ast.Expression{},
 			error: "FROMDATE(string, date) expected 2 arguments, but got 0 in (FROMDATE), at <: input:0:0>",
 		},
 		{
-			name: "parse too few arguments",
+			name: "format too few arguments",
 			f:    "FROMDATE",
 			input: []ast.Expression{
 				ast.StringExpression{Value: "2006-01-02"},
@@ -97,7 +97,7 @@ func TestDatesParsing(t *testing.T) {
 			error: "FROMDATE(string, date) expected 2 arguments, but got 1 in (FROMDATE <str \"2006-01-02\">), at <: input:0:0>",
 		},
 		{
-			name: "parse too many arguments",
+			name: "format too many arguments",
 			f:    "FROMDATE",
 			input: []ast.Expression{
 				ast.StringExpression{Value: "2006-01-01"},
@@ -105,6 +105,23 @@ func TestDatesParsing(t *testing.T) {
 				ast.StringExpression{Value: "2006-01-03"},
 			},
 			error: "FROMDATE(string, date) expected 2 arguments, but got 3 in (FROMDATE <str \"2006-01-01\"> <str \"2006-01-02\"> <str \"2006-01-03\">), at <: input:0:0>",
+		},
+		// values
+		{
+			name: "day valid input",
+			f:    "DAY",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
+			},
+			expected: "<int 7>",
+		},
+		{
+			name: "day invalid input",
+			f:    "DAY",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025-08-07 13:41:55"},
+			},
+			error: "DAY(date) got a wrong argument <str \"2025-08-07 13:41:55\"> in (DAY <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
 		},
 	}
 	for _, tc := range testcases {

@@ -36,3 +36,14 @@ func FromDate(format string, call ast.CallExpression, values ...ast.Expression) 
 
 	return ast.StringExpression{Value: formated, Token: call.Token}, nil
 }
+
+func Day(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeExactTypesGuard(format, ast.IsDate)
+	if err := callGuard(call, values...); err != nil {
+		return nil, err
+	}
+
+	value := values[0].(ast.DateExpression)
+
+	return ast.IntExpression{Value: value.Value.Day(), Token: call.Token}, nil
+}

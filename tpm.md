@@ -141,7 +141,7 @@
 - [ ] #31: Date and Time Functions Implementation
   - [x] #31.1: Implement DATE function
   - [ ] #31.2: Implement DATEDIF function
-  - [ ] #31.3: Implement DAY function
+  - [x] #31.3: Implement DAY function
   - [ ] #31.4: Implement HOUR function
   - [ ] #31.5: Implement MINUTE function
   - [ ] #31.6: Implement MONTH function
