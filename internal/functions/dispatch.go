@@ -134,4 +134,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "YEAR(date)"
 		return Year(format, call, values...)
 	},
+	"WEEKDAY": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "WEEKDAY(date)"
+		return Weekday(format, call, values...)
+	},
 }

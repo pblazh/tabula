@@ -203,6 +203,22 @@ func TestDatesParsing(t *testing.T) {
 			},
 			error: "YEAR(date) got a wrong argument <str \"2025-08-07 13:41:55\"> in (YEAR <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
 		},
+		{
+			name: "weekday valid input",
+			f:    "WEEKDAY",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
+			},
+			expected: "<int 4>",
+		},
+		{
+			name: "weekday invalid input",
+			f:    "WEEKDAY",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025-08-07 13:41:55"},
+			},
+			error: "WEEKDAY(date) got a wrong argument <str \"2025-08-07 13:41:55\"> in (WEEKDAY <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
+		},
 	}
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {

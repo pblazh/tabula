@@ -149,7 +149,7 @@
   - [x] #31.8: Implement SECOND function
   - [ ] #31.9: Implement TIME function
   - [ ] #31.10: Implement TODAY function
-  - [ ] #31.11: Implement WEEKDAY function
+  - [x] #31.11: Implement WEEKDAY function
   - [x] #31.12: Implement YEAR function
 - [ ] #32: Logical Functions Implementation
   - [x] #32.1: Implement AND function
