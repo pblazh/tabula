@@ -126,4 +126,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "MONTH(date)"
 		return Month(format, call, values...)
 	},
+	"SECOND": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "SECOND(date)"
+		return Second(format, call, values...)
+	},
 }

@@ -171,6 +171,22 @@ func TestDatesParsing(t *testing.T) {
 			},
 			error: "MONTH(date) got a wrong argument <str \"2025-08-07 13:41:55\"> in (MONTH <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
 		},
+		{
+			name: "second valid input",
+			f:    "SECOND",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
+			},
+			expected: "<int 55>",
+		},
+		{
+			name: "second invalid input",
+			f:    "SECOND",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025-08-07 13:41:55"},
+			},
+			error: "SECOND(date) got a wrong argument <str \"2025-08-07 13:41:55\"> in (SECOND <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
+		},
 	}
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {

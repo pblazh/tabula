@@ -144,9 +144,9 @@
   - [x] #31.3: Implement DAY function
   - [x] #31.4: Implement HOUR function
   - [x] #31.5: Implement MINUTE function
-  - [ ] #31.6: Implement MONTH function
+  - [x] #31.6: Implement MONTH function
   - [ ] #31.7: Implement NOW function
-  - [ ] #31.8: Implement SECOND function
+  - [x] #31.8: Implement SECOND function
   - [ ] #31.9: Implement TIME function
   - [ ] #31.10: Implement TODAY function
   - [ ] #31.11: Implement WEEKDAY function
