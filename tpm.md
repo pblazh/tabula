@@ -150,7 +150,7 @@
   - [ ] #31.9: Implement TIME function
   - [ ] #31.10: Implement TODAY function
   - [ ] #31.11: Implement WEEKDAY function
-  - [ ] #31.12: Implement YEAR function
+  - [x] #31.12: Implement YEAR function
 - [ ] #32: Logical Functions Implementation
   - [x] #32.1: Implement AND function
   - [x] #32.2: Implement FALSE function
