@@ -136,13 +136,15 @@ func parseDateWithoutFormat(value string) (*time.Time, error) {
 	formats := []string{
 		"2006-01-02",
 		"2006-01-02 15:04",
-		"2006-01-02 15:04:05",
 		"02.01.2006",
 		"02.01.2006 15:04",
 		"02.01.2006 15:04:05",
 		"01/02/2006",
 		"01/02/2006 15:04",
 		"01/02/2006 15:04:05",
+		time.DateTime,
+		time.TimeOnly,
+		time.Kitchen,
 	}
 
 	for _, format := range formats {

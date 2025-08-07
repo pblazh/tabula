@@ -2,10 +2,16 @@ package functions
 
 import (
 	"testing"
+	"time"
 
 	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/lexer"
 )
+
+func parseDate(value string) time.Time {
+	t, _ := time.Parse("2006-01-02 15:04:05", value)
+	return t
+}
 
 func TestDatesParsing(t *testing.T) {
 	testcases := []struct {
@@ -65,18 +71,51 @@ func TestDatesParsing(t *testing.T) {
 			},
 			error: "failed TODATE(string, string) with <: input:0:0> at parsing time \"not a date\" as \"2006-01-02\": cannot parse \"not a date\" as \"2006\"",
 		},
-		// formating
-		// {
-		// 	name:  "parse empty input",
-		// 	f:     "FROMDATE",
-		// 	input: []ast.Expression{},
-		// 	error: "FROMDATE(string, string) expected 2 arguments, but got 0 in (TODATE), at <: input:0:0>",
-		// },
-	}
 
+		// formating
+		{
+			name: "parse valid input",
+			f:    "FROMDATE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2006.01.02"},
+				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
+			},
+			expected: "<str \"2025.08.07\">",
+		},
+		{
+			name:  "parse empty input",
+			f:     "FROMDATE",
+			input: []ast.Expression{},
+			error: "FROMDATE(string, date) expected 2 arguments, but got 0 in (FROMDATE), at <: input:0:0>",
+		},
+		{
+			name: "parse too few arguments",
+			f:    "FROMDATE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2006-01-02"},
+			},
+			error: "FROMDATE(string, date) expected 2 arguments, but got 1 in (FROMDATE <str \"2006-01-02\">), at <: input:0:0>",
+		},
+		{
+			name: "parse too many arguments",
+			f:    "FROMDATE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2006-01-01"},
+				ast.StringExpression{Value: "2006-01-02"},
+				ast.StringExpression{Value: "2006-01-03"},
+			},
+			error: "FROMDATE(string, date) expected 2 arguments, but got 3 in (FROMDATE <str \"2006-01-01\"> <str \"2006-01-02\"> <str \"2006-01-03\">), at <: input:0:0>",
+		},
+	}
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			result, err := DispatchMap[tc.f](ast.CallExpression{
+			funcRef, ok := DispatchMap[tc.f]
+			if !ok {
+				t.Errorf("Unsupported function: %s", tc.f)
+				return
+			}
+
+			result, err := funcRef(ast.CallExpression{
 				Identifier: ast.IdentifierExpression{
 					Value: tc.f,
 					Token: lexer.Token{Literal: tc.f},

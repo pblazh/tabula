@@ -139,7 +139,7 @@
   - [x] #30.11: Implement TRIM function
   - [x] #30.12: Implement UPPER function
 - [ ] #31: Date and Time Functions Implementation
-  - [ ] #31.1: Implement DATE function
+  - [x] #31.1: Implement DATE function
   - [ ] #31.2: Implement DATEDIF function
   - [ ] #31.3: Implement DAY function
   - [ ] #31.4: Implement HOUR function
@@ -187,7 +187,7 @@
     - [ ] #36.1.1: Implement Number format
     - [ ] #36.1.2: Implement Currency format
     - [ ] #36.1.3: Implement Percentage format
-    - [ ] #36.1.4: Implement Date format
+    - [x] #36.1.4: Implement Date format
     - [ ] #36.1.5: Implement Time format
     - [ ] #36.1.6: Implement Scientific format
     - [ ] #36.1.7: Implement Accounting format
