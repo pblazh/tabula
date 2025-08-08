@@ -2,4 +2,4 @@ name,  age,  salary ,
   Alice  ,25,"  50000  ",
 " Bob ",thirty,75000,
 Charlie,35,,
-#csvss:./script.csvs
+#csvssfile:./script.csvs

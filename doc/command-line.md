@@ -122,7 +122,7 @@ CSV files can contain embedded script references in comments. The script path is
 Name,Age,Score
 Alice,25,85
 Bob,30,92
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```
 
 Then run without specifying a script file:

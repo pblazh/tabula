@@ -1,14 +1,13 @@
-# Apartment Utilities Example
+# Embedded Script Example
 
-This example demonstrates utility bill calculations with monetary formatting
-and relative cell references.
+This example demonstrates utility bill calculations with embedded CSVSS scripts directly in the CSV file using `#csvss:` comments.
 
-## What it does
+## Key Features
 
-1. Sets up monetary formatting for rate and payment columns
-2. Calculates utility costs using the formula: (current - previous) × rate
-3. Calculates the total cost by summing all payments
-4. Uses REL function for relative cell references
+- **Embedded Scripts**: Scripts are written directly in the CSV file using `#csvss:` comments
+- **Self-contained**: No separate script files needed - everything is in one CSV file
+- **Mixed Script Types**: You can combine `#csvss:` embedded scripts with `#csvssfile:` file references in the same CSV file
+- **Flexible Organization**: Scripts are processed in the order they appear, allowing fine-grained control over execution sequence
 
 ## Example Files
 
@@ -24,20 +23,9 @@ water delivery,           ,           ,          , $20.00
 maintenance   ,           ,           ,          , $409.49
 apartment     ,           ,           ,          , $8000.00
               ,           ,           , total    , $0.00
-#csvssfile:./script.csvs
-```
-
-### Script
-
-```csvs
-// Setting up a monetary format
-fmt D2:D4,E2:E9 = "$%.2f"
-
-// Calculating utility costs for metered services
-let E2:E4 = (REL(-2,0) - REL(-3,0)) * REL(-1,0)
-
-// Calculating the total cost
-let E9 = SUM(E2:E8)
+#csvss: fmt D2:D4,E2:E9 = "$%.2f"
+#csvss: let E2:E4 = (REL(-2,0) - REL(-3,0)) * REL(-1,0)
+#csvss: let E9 = SUM(E2:E8)
 ```
 
 ### Output
@@ -52,5 +40,8 @@ water delivery ,          ,          ,        , $20.00
 maintenance    ,          ,          ,        , $409.49
 apartment      ,          ,          ,        , $8000.00
                ,          ,          , total  , $9865.83
-#csvssfile:./script.csvs
+#csvss: fmt D2:D4,E2:E9 = "$%.2f"
+#csvss: let E2:E4 = (REL(-2,0) - REL(-3,0)) * REL(-1,0)
+#csvss: let E9 = SUM(E2:E8)
 ```
+

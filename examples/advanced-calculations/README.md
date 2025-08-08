@@ -57,7 +57,7 @@ Widget I,9,450.00
 ,,
 ,,
 ,,
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```
 
 ### Script
@@ -116,5 +116,5 @@ Subtotal , 2275     ,
 Discount , 113.75   ,
 Tax      , 172.9    ,
 Total    , 2334.15  ,
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```

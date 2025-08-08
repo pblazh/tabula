@@ -21,7 +21,7 @@ Student,Math,Science,English,,,,
 Alice,85,92,78,,,,
 Bob,76,84,91,,,,
 Carol,95,88,89,,,,
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```
 
 ### Script
@@ -70,5 +70,5 @@ Student , Math , Science , English , Math Grade , Science Grade , English Grade 
 Alice   , 85   , 92      , 78      , B          , A             , C             , B
 Bob     , 76   , 84      , 91      , C          , B             , A             , B
 Carol   , 95   , 88      , 89      , A          , B             , B             , A
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```

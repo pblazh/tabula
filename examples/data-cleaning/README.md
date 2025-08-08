@@ -27,7 +27,7 @@ name,  age,  salary ,
   Alice  ,25,"  50000  ",
 " Bob ",thirty,75000,
 Charlie,35,,
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```
 
 ### Script
@@ -60,5 +60,5 @@ Name    , Age , Salary , Valid
 Alice   , 25  , 50000  , Yes
 Bob     , 30  , 75000  , Yes
 Charlie , 35  , 0      , No
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```

@@ -51,64 +51,72 @@ func setupOutputWriter(config *Config) (io.Writer, func(), error) {
 }
 
 // setupCSVReader configures CSV data and comments reader
-func setupCSVReader(config *Config) (io.Reader, map[int]string, error) {
+func setupCSVReader(config *Config) (io.Reader, string, map[int]string, error) {
 	// Read from file
 	if config.Input != "" {
 		file, err := os.Open(config.Input)
 		if err != nil {
-			return nil, nil, ErrOpenCSVFile(err)
+			return nil, "", nil, ErrOpenCSVFile(err)
 		}
 		defer dclose(file)
 
 		// Extract comments and embedded script references
-		scriptComment, comments := readComments(file)
+		embedded, comments, err := readComments(config.Input, file)
+		if err != nil {
+			return nil, "", nil, err
+		}
 
 		// Reset file position to beginning
 		if _, err = file.Seek(0, 0); err != nil {
-			return nil, nil, ErrSeekCSVFile(err)
+			return nil, "", nil, ErrSeekCSVFile(err)
 		}
 
-		// Use embedded script if no explicit script provided
-		if scriptComment != "" && config.Script == "" && config.Execute == "" {
-			config.Script = path.Join(path.Dir(config.Input), scriptComment)
-		}
+		// Embedded script will be handled separately in setupScriptReader
 
 		// Re-open file for actual reading (since we need a fresh reader)
 		csvFile, err := os.Open(config.Input)
 		if err != nil {
-			return nil, nil, ErrReopenCSVFile(err)
+			return nil, "", nil, ErrReopenCSVFile(err)
 		}
 
-		return csvFile, comments, nil
+		return csvFile, embedded, comments, nil
 	}
 
 	// Read from stdin
 	stdinContent, err := io.ReadAll(os.Stdin)
 	if err != nil {
-		return nil, nil, ErrReadStdin(err)
+		return nil, "", nil, ErrReadStdin(err)
 	}
 
 	// Parse comments from stdin content
-	_, comments := readComments(bytes.NewReader(stdinContent))
+	embedded, comments, err := readComments(config.Input, bytes.NewReader(stdinContent))
+	if err != nil {
+		return nil, "", nil, err
+	}
 
 	// Create reader from the content
 	csvReader := bytes.NewReader(stdinContent)
 
-	return csvReader, comments, nil
+	return csvReader, embedded, comments, nil
 }
 
 // setupScriptReader configures script input source
-func setupScriptReader(config *Config) (io.Reader, error) {
+func setupScriptReader(config *Config, embeded string) (io.Reader, error) {
 	// Execute inline code
 	if config.Execute != "" {
 		return strings.NewReader(config.Execute), nil
 	}
 
-	// Read script from file
+	// Use embedded script if available (from CSV comments)
+	if embeded != "" {
+		return strings.NewReader(embeded), nil
+	}
+
 	if config.Script != "" {
+		// config.Script is a file path, read the file content
 		file, err := os.Open(config.Script)
 		if err != nil {
-			return nil, ErrOpenScriptFile(err)
+			return nil, fmt.Errorf("failed to open script file %s: %w", config.Script, err)
 		}
 		return file, nil
 	}
@@ -117,24 +125,36 @@ func setupScriptReader(config *Config) (io.Reader, error) {
 	return os.Stdin, nil
 }
 
-// readComments extracts comments and embedded script references from CSV content
-func readComments(f io.Reader) (string, map[int]string) {
+// readComments extracts comments and embedded script references and embedded script from CSV content
+func readComments(base string, f io.Reader) (string, map[int]string, error) {
 	const (
-		commentPrefix = "#"
-		scriptPrefix  = "#csvss:"
+		commentPrefix    = "#"
+		csvssFilePrefix  = "#csvssfile:"
+		csvssEmbedPrefix = "#csvss:"
 	)
 
 	scanner := bufio.NewScanner(f)
 	comments := make(map[int]string)
-	var embeddedScript string
+	var script strings.Builder
+
 	lineNum := 0
 
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 
+		// Check for embedded script
+		if strings.HasPrefix(line, csvssEmbedPrefix) {
+			script.WriteString(line[len(csvssEmbedPrefix):] + "\n")
+		}
+
 		// Check for embedded script reference
-		if strings.HasPrefix(line, scriptPrefix) {
-			embeddedScript = line[len(scriptPrefix):]
+		if strings.HasPrefix(line, csvssFilePrefix) {
+			// config.Script = path.Join(path.Dir(config.Input), scriptComment)
+			content, err := os.ReadFile(path.Join(path.Dir(base), line[len(csvssFilePrefix):]))
+			if err != nil {
+				return "", nil, err
+			}
+			script.WriteString(string(content) + "\n")
 		}
 
 		// Store all comment lines
@@ -145,5 +165,5 @@ func readComments(f io.Reader) (string, map[int]string) {
 		lineNum++
 	}
 
-	return embeddedScript, comments
+	return script.String(), comments, nil
 }

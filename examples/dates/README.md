@@ -25,7 +25,7 @@ date             , iso , us
 2005-07-24       ,     ,
 8:30PM           ,     ,
 24/07 25 AD      ,     ,
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```
 
 ### Script
@@ -51,7 +51,7 @@ date             , iso                 , us
 2005-07-24       , 2005-07-24 00:00:00 , 07/24/2005 12:00AM
 8:30PM           , 0000-01-01 20:30:00 , 01/01/0000 08:30PM
 24/07 25 AD      , 2025-07-24 00:00:00 , 07/24/2025 12:00AM
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```
 
 ## Key Points

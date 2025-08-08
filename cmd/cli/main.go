@@ -24,14 +24,14 @@ func main() {
 	defer cleanup()
 
 	// Setup CSV input reader
-	csvReader, comments, err := setupCSVReader(config)
+	csvReader, embeded, comments, err := setupCSVReader(config)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
 
 	// Setup script reader
-	scriptReader, err := setupScriptReader(config)
+	scriptReader, err := setupScriptReader(config, embeded)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
@@ -43,4 +43,3 @@ func main() {
 		os.Exit(1)
 	}
 }
-
