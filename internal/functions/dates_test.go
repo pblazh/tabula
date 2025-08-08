@@ -219,12 +219,6 @@ func TestDatesParsing(t *testing.T) {
 			},
 			error: "WEEKDAY(date) got a wrong argument <str \"2025-08-07 13:41:55\"> in (WEEKDAY <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
 		},
-		// {
-		// 	name:     "now valid input",
-		// 	f:        "NOW",
-		// 	input:    []ast.Expression{},
-		// 	expected: "<int 4>",
-		// },
 		{
 			name: "now invalid input",
 			f:    "NOW",
@@ -319,6 +313,222 @@ func TestDatesParsing(t *testing.T) {
 				ast.IntExpression{Value: 1},
 			},
 			expected: "<date 0001-01-01 00:00:00>",
+		},
+		// DATEDIF function tests
+		{
+			name: "datedif valid years",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2023-01-01 00:00:00")},
+				ast.StringExpression{Value: "Y"},
+			},
+			expected: "<int 3>",
+		},
+		{
+			name: "datedif valid months",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2020-06-01 00:00:00")},
+				ast.StringExpression{Value: "M"},
+			},
+			expected: "<int 5>",
+		},
+		{
+			name: "datedif valid days",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2020-01-10 00:00:00")},
+				ast.StringExpression{Value: "D"},
+			},
+			expected: "<int 9>",
+		},
+		{
+			name: "datedif valid days ignoring months and years (MD)",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-15 00:00:00")},
+				ast.DateExpression{Value: parseDate("2021-02-20 00:00:00")},
+				ast.StringExpression{Value: "MD"},
+			},
+			expected: "<int 5>",
+		},
+		{
+			name: "datedif valid months ignoring years (YM)",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-03-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2021-06-01 00:00:00")},
+				ast.StringExpression{Value: "YM"},
+			},
+			expected: "<int 3>",
+		},
+		{
+			name: "datedif valid days ignoring years (YD)",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-02-15 00:00:00")},
+				ast.DateExpression{Value: parseDate("2021-03-20 00:00:00")},
+				ast.StringExpression{Value: "YD"},
+			},
+			expected: "<int 5>",
+		},
+		{
+			name:  "datedif empty input",
+			f:     "DATEDIF",
+			input: []ast.Expression{},
+			error: "DATEDIF(from, to, unit) expected 3 arguments, but got 0 in (DATEDIF), at <: input:0:0>",
+		},
+		{
+			name: "datedif too few arguments",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2021-01-01 00:00:00")},
+			},
+			error: "DATEDIF(from, to, unit) expected 3 arguments, but got 2 in (DATEDIF <date 2020-01-01 00:00:00> <date 2021-01-01 00:00:00>), at <: input:0:0>",
+		},
+		{
+			name: "datedif too many arguments",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2021-01-01 00:00:00")},
+				ast.StringExpression{Value: "Y"},
+				ast.StringExpression{Value: "extra"},
+			},
+			error: "DATEDIF(from, to, unit) expected 3 arguments, but got 4 in (DATEDIF <date 2020-01-01 00:00:00> <date 2021-01-01 00:00:00> <str \"Y\"> <str \"extra\">), at <: input:0:0>",
+		},
+		{
+			name: "datedif invalid from type",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2020-01-01"},
+				ast.DateExpression{Value: parseDate("2021-01-01 00:00:00")},
+				ast.StringExpression{Value: "Y"},
+			},
+			error: "DATEDIF(from, to, unit) got a wrong argument <str \"2020-01-01\"> in (DATEDIF <str \"2020-01-01\"> <date 2021-01-01 00:00:00> <str \"Y\">), at <: input:0:0>",
+		},
+		{
+			name: "datedif invalid to type",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.StringExpression{Value: "2021-01-01"},
+				ast.StringExpression{Value: "Y"},
+			},
+			error: "DATEDIF(from, to, unit) got a wrong argument <str \"2021-01-01\"> in (DATEDIF <date 2020-01-01 00:00:00> <str \"2021-01-01\"> <str \"Y\">), at <: input:0:0>",
+		},
+		{
+			name: "datedif invalid unit type",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2021-01-01 00:00:00")},
+				ast.IntExpression{Value: 1},
+			},
+			error: "DATEDIF(from, to, unit) got a wrong argument <int 1> in (DATEDIF <date 2020-01-01 00:00:00> <date 2021-01-01 00:00:00> <int 1>), at <: input:0:0>",
+		},
+		{
+			name: "datedif invalid unit value",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2021-01-01 00:00:00")},
+				ast.StringExpression{Value: "X"},
+			},
+			error: "DATEDIF(from, to, unit) got a wrong argument <str \"X\"> in (DATEDIF <date 2020-01-01 00:00:00> <date 2021-01-01 00:00:00> <str \"X\">), at <: input:0:0>",
+		},
+		{
+			name: "days valid days",
+			f:    "DAYS",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2020-01-10 00:00:00")},
+			},
+			expected: "<int 9>",
+		},
+		// DATEDIF negative distance test cases (start > end)
+		{
+			name: "datedif negative years",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2023-01-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.StringExpression{Value: "Y"},
+			},
+			expected: "<int -3>",
+		},
+		{
+			name: "datedif negative months",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-06-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.StringExpression{Value: "M"},
+			},
+			expected: "<int -5>",
+		},
+		{
+			name: "datedif negative days",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-10 00:00:00")},
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+				ast.StringExpression{Value: "D"},
+			},
+			expected: "<int -9>",
+		},
+		{
+			name: "datedif negative days MD",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2021-02-20 00:00:00")},
+				ast.DateExpression{Value: parseDate("2020-01-15 00:00:00")},
+				ast.StringExpression{Value: "MD"},
+			},
+			expected: "<int -5>",
+		},
+		{
+			name: "datedif negative months YM",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2021-06-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2020-03-01 00:00:00")},
+				ast.StringExpression{Value: "YM"},
+			},
+			expected: "<int -3>",
+		},
+		{
+			name: "datedif negative days YD",
+			f:    "DATEDIF",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2021-03-20 00:00:00")},
+				ast.DateExpression{Value: parseDate("2020-02-15 00:00:00")},
+				ast.StringExpression{Value: "YD"},
+			},
+			expected: "<int -5>",
+		},
+		// DAYS negative distance test cases
+		{
+			name: "days negative days",
+			f:    "DAYS",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2020-01-10 00:00:00")},
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+			},
+			expected: "<int -9>",
+		},
+		{
+			name: "days negative across years",
+			f:    "DAYS",
+			input: []ast.Expression{
+				ast.DateExpression{Value: parseDate("2021-01-01 00:00:00")},
+				ast.DateExpression{Value: parseDate("2020-01-01 00:00:00")},
+			},
+			expected: "<int -366>",
 		},
 	}
 	for _, tc := range testcases {

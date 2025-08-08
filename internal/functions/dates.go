@@ -1,6 +1,7 @@
 package functions
 
 import (
+	"errors"
 	"time"
 
 	"github.com/pblazh/csvss/internal/ast"
@@ -134,4 +135,76 @@ func Date(format string, call ast.CallExpression, values ...ast.Expression) (ast
 	day := values[2].(ast.IntExpression).Value
 
 	return ast.DateExpression{Value: time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC), Token: call.Token}, nil
+}
+
+func Days(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeExactTypesGuard(format, ast.IsDate, ast.IsDate)
+	if err := callGuard(call, values...); err != nil {
+		return nil, err
+	}
+
+	start := values[0].(ast.DateExpression).Value
+	end := values[1].(ast.DateExpression).Value
+
+	result, err := calculatesDatesDifference("D", start, end)
+	if err != nil {
+		return nil, ErrUnsupportedArgument(format, call, values[2])
+	}
+
+	return ast.IntExpression{Value: result, Token: call.Token}, nil
+}
+
+func DateDiff(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeExactTypesGuard(format, ast.IsDate, ast.IsDate, ast.IsString)
+	if err := callGuard(call, values...); err != nil {
+		return nil, err
+	}
+
+	start := values[0].(ast.DateExpression).Value
+	end := values[1].(ast.DateExpression).Value
+	unit := values[2].(ast.StringExpression).Value
+
+	result, err := calculatesDatesDifference(unit, start, end)
+	if err != nil {
+		return nil, ErrUnsupportedArgument(format, call, values[2])
+	}
+
+	return ast.IntExpression{Value: result, Token: call.Token}, nil
+}
+
+func calculatesDatesDifference(unit string, start, end time.Time) (int, error) {
+	if unit != "Y" && unit != "M" && unit != "D" && unit != "MD" && unit != "YM" && unit != "YD" {
+		return 0, errors.New(unit)
+	}
+
+	var result int
+
+	switch unit {
+	case "Y":
+		// Years between dates
+		result = end.Year() - start.Year()
+		if end.Month() < start.Month() || (end.Month() == start.Month() && end.Day() < start.Day()) {
+			result--
+		}
+	case "M":
+		// Months between dates
+		result = int(end.Month()) - int(start.Month()) + (end.Year()-start.Year())*12
+		if end.Day() < start.Day() {
+			result--
+		}
+	case "D":
+		// Days between dates
+		duration := end.Sub(start)
+		result = int(duration.Hours() / 24)
+	case "MD":
+		// Days between dates, ignoring months and years
+		result = end.Day() - start.Day()
+	case "YM":
+		// Months between dates, ignoring years
+		result = int(end.Month()) - int(start.Month())
+	case "YD":
+		// Days between dates, ignoring years
+		result = end.Day() - start.Day()
+	}
+	return result, nil
 }

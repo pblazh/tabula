@@ -140,15 +140,15 @@
   - [x] #30.12: Implement UPPER function
 - [ ] #31: Date and Time Functions Implementation
   - [x] #31.1: Implement DATE function
-  - [ ] #31.2: Implement DATEDIF function
+  - [x] #31.2: Implement DATEDIF function
   - [x] #31.3: Implement DAY function
   - [x] #31.4: Implement HOUR function
   - [x] #31.5: Implement MINUTE function
   - [x] #31.6: Implement MONTH function
   - [x] #31.7: Implement NOW function
   - [x] #31.8: Implement SECOND function
-  - [ ] #31.9: Implement TIME function
-  - [ ] #31.10: Implement TODAY function
+  - [ ] #31.09: Implement DATEVALUE function
+  - [x] #31.10: Implement DAYS function
   - [x] #31.11: Implement WEEKDAY function
   - [x] #31.12: Implement YEAR function
 - [ ] #32: Logical Functions Implementation
