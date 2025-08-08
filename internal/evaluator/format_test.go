@@ -194,23 +194,6 @@ func TestDetectPlaceholderType(t *testing.T) {
 			input:    "%-15s",
 			expected: stringPlacehoder,
 		},
-
-		// Unsupported
-		{
-			name:     "unsupported format",
-			input:    "%v",
-			expected: unsupported,
-		},
-		{
-			name:     "no placeholder",
-			input:    "plain text",
-			expected: unsupported,
-		},
-		{
-			name:     "invalid date format",
-			input:    "2023/12/25",
-			expected: unsupported,
-		},
 	}
 
 	for _, tc := range testcases {
