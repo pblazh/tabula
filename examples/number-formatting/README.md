@@ -18,7 +18,7 @@ Item,Amount,
 Revenue,123456.789,
 Expenses,98765.432,
 Profit,24691.357,
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```
 
 ### Script
@@ -45,5 +45,5 @@ Item     , Amount     , Percentage
 Revenue  , 123456.789 , 100.0%
 Expenses , 98765.432  , 80.0%
 Profit   , 24691.357  , 20.0%
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```

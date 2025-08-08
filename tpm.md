@@ -45,7 +45,7 @@
   - [x] #15.5: Implement actual output handling (stdout/file)
   - [x] #15.6: Align CSV table columns
   - [x] #15.7: Read script file from comment
-  - [ ] #15.8: Read embedded script
+  - [x] #15.8: Read embedded script
   - [x] #15.9: Preserve comments in a file
 - [x] #16: Function Implementation
   - [x] #16.1: Implement function call evaluation in `evaluateCallExpression`
@@ -138,7 +138,7 @@
   - [ ] #30.10: Implement SUBSTITUTE function
   - [x] #30.11: Implement TRIM function
   - [x] #30.12: Implement UPPER function
-- [ ] #31: Date and Time Functions Implementation
+- [x] #31: Date and Time Functions Implementation
   - [x] #31.1: Implement DATE function
   - [x] #31.2: Implement DATEDIF function
   - [x] #31.3: Implement DAY function

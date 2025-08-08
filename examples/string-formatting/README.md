@@ -16,7 +16,7 @@ for formatting names from a CSV file.
 first_name,last_name,email,
 john,doe,john.doe@email.com,
 jane,smith,jane.smith@email.com,
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```
 
 ### Script
@@ -39,5 +39,5 @@ let D3 = CONCATENATE(UPPER(A3), " ", UPPER(B3));
 first_name , last_name , Full Name  , Display Name
 john       , doe       , john doe   , JOHN DOE
 jane       , smith     , jane smith , JANE SMITH
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```

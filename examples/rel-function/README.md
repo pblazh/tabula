@@ -25,7 +25,7 @@ REL creates relative cell references based on the target cell being assigned to:
 6,6,0,0,0,0
 7,7,0,0,0,0
 8,8,0,0,0,0
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```
 
 ### Script
@@ -62,5 +62,5 @@ let B6 = REL(3 / 3, 4 / 2);           // Same as REL(1, 2) - references C8
 0  , 0  , 0 , 0 , 0 , 0
 7  , 7  , 0 , 0 , 0 , 0
 8  , 8  , 0 , 0 , 0 , 0
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```

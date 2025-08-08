@@ -18,7 +18,7 @@ Name,Value1,Value2,Value3,,,,
   John  ,10,20,30,,,,
 " Mary ",15,-5,25,,,,
 Charlie,,35,40,,,,
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```
 
 ### Script
@@ -47,18 +47,18 @@ let F4 = SUM(0, ABS(C4), ABS(D4));
 let G1 = "Grade";
 // Calculate average and assign grade for row 2
 let avg_2 = AVERAGE(B2, C2, D2);
-let G2 = IF(avg_2 > 24, "A", 
-         IF(avg_2 > 19, "B", 
+let G2 = IF(avg_2 > 24, "A",
+         IF(avg_2 > 19, "B",
          IF(avg_2 > 14, "C", "F")));
 // Calculate average and assign grade for row 3
 let avg_3 = AVERAGE(B3, C3, D3);
-let G3 = IF(avg_3 > 24, "A", 
-         IF(avg_3 > 19, "B", 
+let G3 = IF(avg_3 > 24, "A",
+         IF(avg_3 > 19, "B",
          IF(avg_3 > 14, "C", "F")));
 // Calculate average and assign grade for row 4
 let avg_4 = AVERAGE(0, C4, D4);
-let G4 = IF(avg_4 > 24, "A", 
-         IF(avg_4 > 19, "B", 
+let G4 = IF(avg_4 > 24, "A",
+         IF(avg_4 > 19, "B",
          IF(avg_4 > 14, "C", "F")));
 
 // Power and rounding combinations
@@ -75,5 +75,5 @@ Name    , Value1 , Value2 , Value3 , Status  , Abs Sum , Grade , Squared & Round
 JOHN    , 10     , 20     , 30     , JOHN    , 60      , B     , 100
 MARY    , 15     , -5     , 25     , MARY    , 45      , F     , 230
 CHARLIE ,        , 35     , 40     , CHARLIE , 75      , A     , 0
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```

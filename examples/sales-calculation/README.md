@@ -18,7 +18,7 @@ Apple,1.20,10,
 Banana,0.80,15,
 Cherry,2.50,8,
 ,,,
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```
 
 ### Script
@@ -43,5 +43,5 @@ Apple   , 1.20  , 10       , 12
 Banana  , 0.80  , 15       , 12
 Cherry  , 2.50  , 8        , 20
 TOTAL   ,       ,          , 44
-#csvss:./script.csvs
+#csvssfile:./script.csvs
 ```

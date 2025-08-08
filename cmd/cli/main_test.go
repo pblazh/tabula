@@ -85,7 +85,7 @@ func TestExecuteInlineCode(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to read expected output: %v", err)
 	}
-	csvIn := strings.ReplaceAll(string(input), "#csvss:./script.csvs", "")
+	csvIn := strings.ReplaceAll(string(input), "#csvssfile:./script.csvs", "")
 	// Read expected output
 	script, err := os.ReadFile(scriptPath)
 	if err != nil {
@@ -97,7 +97,7 @@ func TestExecuteInlineCode(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to read expected output: %v", err)
 	}
-	csvOut := strings.ReplaceAll(string(output), "#csvss:./script.csvs", "")
+	csvOut := strings.ReplaceAll(string(output), "#csvssfile:./script.csvs", "")
 
 	cmd := exec.Command("go", "run", ".", "-e", string(script), "-a")
 	var stdout, stderr bytes.Buffer
@@ -207,27 +207,27 @@ func TestScriptPathFromCSVComment(t *testing.T) {
 			csvPath:        filepath.Join(subDir, "test.csv"),
 			scriptPath:     filepath.Join(tempDir, "parent_script.csvs"),
 			scriptComment:  "../parent_script.csvs",
-			csvContent:     "A,B\n1,2\n#csvss:../parent_script.csvs\n",
+			csvContent:     "A,B\n1,2\n#csvssfile:../parent_script.csvs\n",
 			scriptContent:  "let A1 = \"ParentScript\"; let B1 = \"Modified\";",
-			expectedOutput: "ParentScript,Modified\n1,2\n#csvss:../parent_script.csvs\n",
+			expectedOutput: "ParentScript,Modified\n1,2\n#csvssfile:../parent_script.csvs\n",
 		},
 		{
 			name:           "same directory script reference",
 			csvPath:        filepath.Join(subDir, "test2.csv"),
 			scriptPath:     filepath.Join(subDir, "local_script.csvs"),
 			scriptComment:  "./local_script.csvs",
-			csvContent:     "A,B\n1,2\n#csvss:./local_script.csvs\n",
+			csvContent:     "A,B\n1,2\n#csvssfile:./local_script.csvs\n",
 			scriptContent:  "let A1 = \"LocalScript\"; let B1 = \"Local\";",
-			expectedOutput: "LocalScript,Local\n1,2\n#csvss:./local_script.csvs\n",
+			expectedOutput: "LocalScript,Local\n1,2\n#csvssfile:./local_script.csvs\n",
 		},
 		{
 			name:           "relative path without dot prefix",
 			csvPath:        filepath.Join(subDir, "test3.csv"),
 			scriptPath:     filepath.Join(subDir, "simple_script.csvs"),
 			scriptComment:  "simple_script.csvs",
-			csvContent:     "A,B\n1,2\n#csvss:simple_script.csvs\n",
+			csvContent:     "A,B\n1,2\n#csvssfile:simple_script.csvs\n",
 			scriptContent:  "let A1 = \"SimpleScript\"; let B1 = \"Simple\";",
-			expectedOutput: "SimpleScript,Simple\n1,2\n#csvss:simple_script.csvs\n",
+			expectedOutput: "SimpleScript,Simple\n1,2\n#csvssfile:simple_script.csvs\n",
 		},
 	}
 
