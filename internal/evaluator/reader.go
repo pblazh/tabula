@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/csvss/internal/functions"
 	"github.com/pblazh/csvss/internal/lexer"
 )
 
@@ -91,7 +92,7 @@ func parseWithoutFormat(value string) (ast.Expression, error) {
 		return ast.StringExpression{Value: value, Token: lexer.Token{Literal: value}}, nil
 	}
 
-	datetime, err := parseDateWithoutFormat(value)
+	datetime, err := functions.ParseDateWithoutFormat(value)
 	if err != nil {
 		return nil, err
 	}
@@ -134,30 +135,6 @@ func parseDate(value, format string) (ast.DateExpression, error) {
 	}
 
 	return ast.DateExpression{Value: date, Token: lexer.Token{Literal: value}}, nil
-}
-
-func parseDateWithoutFormat(value string) (*time.Time, error) {
-	formats := []string{
-		"2006-01-02",
-		"2006-01-02 15:04",
-		"02.01.2006",
-		"02.01.2006 15:04",
-		"02.01.2006 15:04:05",
-		"01/02/2006",
-		"01/02/2006 15:04",
-		"01/02/2006 15:04:05",
-		time.DateTime,
-		time.TimeOnly,
-		time.Kitchen,
-	}
-
-	for _, format := range formats {
-		if t, err := time.Parse(format, value); err == nil {
-			return &t, nil
-		}
-	}
-
-	return nil, nil
 }
 
 // WriteValue writes an AST expression to context with optional format specification

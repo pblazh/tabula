@@ -147,7 +147,7 @@
   - [x] #31.6: Implement MONTH function
   - [x] #31.7: Implement NOW function
   - [x] #31.8: Implement SECOND function
-  - [ ] #31.09: Implement DATEVALUE function
+  - [x] #31.09: Implement DATEVALUE function
   - [x] #31.10: Implement DAYS function
   - [x] #31.11: Implement WEEKDAY function
   - [x] #31.12: Implement YEAR function

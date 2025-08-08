@@ -530,6 +530,142 @@ func TestDatesParsing(t *testing.T) {
 			},
 			expected: "<int -366>",
 		},
+		// DATEVALUE function test cases
+		{
+			name: "datevalue iso date format",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025-08-07"},
+			},
+			expected: "<date 2025-08-07 00:00:00>",
+		},
+		{
+			name: "datevalue iso datetime format",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025-08-07 15:30"},
+			},
+			expected: "<date 2025-08-07 15:30:00>",
+		},
+		{
+			name: "datevalue european date format",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "07.08.2025"},
+			},
+			expected: "<date 2025-08-07 00:00:00>",
+		},
+		{
+			name: "datevalue european datetime format",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "07.08.2025 15:30"},
+			},
+			expected: "<date 2025-08-07 15:30:00>",
+		},
+		{
+			name: "datevalue european datetime with seconds",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "07.08.2025 15:30:45"},
+			},
+			expected: "<date 2025-08-07 15:30:45>",
+		},
+		{
+			name: "datevalue us date format",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "08/07/2025"},
+			},
+			expected: "<date 2025-08-07 00:00:00>",
+		},
+		{
+			name: "datevalue us datetime format",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "08/07/2025 15:30"},
+			},
+			expected: "<date 2025-08-07 15:30:00>",
+		},
+		{
+			name: "datevalue us datetime with seconds",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "08/07/2025 15:30:45"},
+			},
+			expected: "<date 2025-08-07 15:30:45>",
+		},
+		{
+			name: "datevalue datetime format",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025-08-07 15:30:45"},
+			},
+			expected: "<date 2025-08-07 15:30:45>",
+		},
+		{
+			name: "datevalue time only format",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "15:04:05"},
+			},
+			expected: "<date 0000-01-01 15:04:05>",
+		},
+		{
+			name: "datevalue kitchen time format",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "3:04PM"},
+			},
+			expected: "<date 0000-01-01 15:04:00>",
+		},
+		{
+			name:  "datevalue empty input",
+			f:     "DATEVALUE",
+			input: []ast.Expression{},
+			error: "DATEVALUE(string) expected 1 argument, but got 0 in (DATEVALUE), at <: input:0:0>",
+		},
+		{
+			name: "datevalue too many arguments",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025-08-07"},
+				ast.StringExpression{Value: "extra"},
+			},
+			error: "DATEVALUE(string) expected 1 argument, but got 2 in (DATEVALUE <str \"2025-08-07\"> <str \"extra\">), at <: input:0:0>",
+		},
+		{
+			name: "datevalue invalid argument type",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 20250807},
+			},
+			error: "DATEVALUE(string) got a wrong argument <int 20250807> in (DATEVALUE <int 20250807>), at <: input:0:0>",
+		},
+		{
+			name: "datevalue invalid date string",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "not a date"},
+			},
+			error: "failed DATEVALUE(string) with <: input:0:0> at <nil>",
+		},
+		{
+			name: "datevalue empty string",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: ""},
+			},
+			error: "failed DATEVALUE(string) with <: input:0:0> at <nil>",
+		},
+		{
+			name: "datevalue invalid date format",
+			f:    "DATEVALUE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025/13/45"},
+			},
+			error: "failed DATEVALUE(string) with <: input:0:0> at <nil>",
+		},
 	}
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {

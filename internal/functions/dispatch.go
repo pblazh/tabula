@@ -154,4 +154,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "DAYS(from, to)"
 		return Days(format, call, values...)
 	},
+	"DATEVALUE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "DATEVALUE(string)"
+		return DateValue(format, call, values...)
+	},
 }

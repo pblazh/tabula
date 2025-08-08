@@ -24,6 +24,49 @@ func ToDate(format string, call ast.CallExpression, values ...ast.Expression) (a
 	return ast.DateExpression{Value: parsed, Token: call.Token}, nil
 }
 
+func DateValue(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeExactTypesGuard(format, ast.IsString)
+	if err := callGuard(call, values...); err != nil {
+		return nil, err
+	}
+
+	value := values[0].(ast.StringExpression)
+
+	parsed, err := ParseDateWithoutFormat(value.Value)
+	if err != nil {
+		return nil, ErrExecuting(format, call, err)
+	}
+	if parsed == nil {
+		return nil, ErrExecuting(format, call, nil)
+	}
+
+	return ast.DateExpression{Value: *parsed, Token: call.Token}, nil
+}
+
+func ParseDateWithoutFormat(value string) (*time.Time, error) {
+	formats := []string{
+		"2006-01-02",
+		"2006-01-02 15:04",
+		"02.01.2006",
+		"02.01.2006 15:04",
+		"02.01.2006 15:04:05",
+		"01/02/2006",
+		"01/02/2006 15:04",
+		"01/02/2006 15:04:05",
+		time.DateTime,
+		time.TimeOnly,
+		time.Kitchen,
+	}
+
+	for _, format := range formats {
+		if t, err := time.Parse(format, value); err == nil {
+			return &t, nil
+		}
+	}
+
+	return nil, nil
+}
+
 func FromDate(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsString, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
