@@ -233,6 +233,93 @@ func TestDatesParsing(t *testing.T) {
 			},
 			error: "NOW() expected 0 arguments, but got 1 in (NOW <str \"2025-08-07 13:41:55\">), at <: input:0:0>",
 		},
+		// DATE function tests
+		{
+			name: "date valid input",
+			f:    "DATE",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 2025},
+				ast.IntExpression{Value: 8},
+				ast.IntExpression{Value: 7},
+			},
+			expected: "<date 2025-08-07 00:00:00>",
+		},
+		{
+			name:  "date empty input",
+			f:     "DATE",
+			input: []ast.Expression{},
+			error: "DATE(year, month, day) expected 3 arguments, but got 0 in (DATE), at <: input:0:0>",
+		},
+		{
+			name: "date too few arguments",
+			f:    "DATE",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 2025},
+				ast.IntExpression{Value: 8},
+			},
+			error: "DATE(year, month, day) expected 3 arguments, but got 2 in (DATE <int 2025> <int 8>), at <: input:0:0>",
+		},
+		{
+			name: "date too many arguments",
+			f:    "DATE",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 2025},
+				ast.IntExpression{Value: 8},
+				ast.IntExpression{Value: 7},
+				ast.IntExpression{Value: 12},
+			},
+			error: "DATE(year, month, day) expected 3 arguments, but got 4 in (DATE <int 2025> <int 8> <int 7> <int 12>), at <: input:0:0>",
+		},
+		{
+			name: "date invalid year type",
+			f:    "DATE",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025"},
+				ast.IntExpression{Value: 8},
+				ast.IntExpression{Value: 7},
+			},
+			error: "DATE(year, month, day) got a wrong argument <str \"2025\"> in (DATE <str \"2025\"> <int 8> <int 7>), at <: input:0:0>",
+		},
+		{
+			name: "date invalid month type",
+			f:    "DATE",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 2025},
+				ast.StringExpression{Value: "8"},
+				ast.IntExpression{Value: 7},
+			},
+			error: "DATE(year, month, day) got a wrong argument <str \"8\"> in (DATE <int 2025> <str \"8\"> <int 7>), at <: input:0:0>",
+		},
+		{
+			name: "date invalid day type",
+			f:    "DATE",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 2025},
+				ast.IntExpression{Value: 8},
+				ast.StringExpression{Value: "7"},
+			},
+			error: "DATE(year, month, day) got a wrong argument <str \"7\"> in (DATE <int 2025> <int 8> <str \"7\">), at <: input:0:0>",
+		},
+		{
+			name: "date with edge case values",
+			f:    "DATE",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 2000},
+				ast.IntExpression{Value: 12},
+				ast.IntExpression{Value: 31},
+			},
+			expected: "<date 2000-12-31 00:00:00>",
+		},
+		{
+			name: "date with minimum values",
+			f:    "DATE",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 1},
+				ast.IntExpression{Value: 1},
+				ast.IntExpression{Value: 1},
+			},
+			expected: "<date 0001-01-01 00:00:00>",
+		},
 	}
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {

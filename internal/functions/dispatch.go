@@ -142,4 +142,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "NOW()"
 		return Now(format, call, values...)
 	},
+	"DATE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "DATE(year, month, day)"
+		return Date(format, call, values...)
+	},
 }

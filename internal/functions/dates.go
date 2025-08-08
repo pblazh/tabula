@@ -122,3 +122,16 @@ func Now(format string, call ast.CallExpression, values ...ast.Expression) (ast.
 
 	return ast.DateExpression{Value: time.Now(), Token: call.Token}, nil
 }
+
+func Date(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeExactTypesGuard(format, ast.IsInt, ast.IsInt, ast.IsInt)
+	if err := callGuard(call, values...); err != nil {
+		return nil, err
+	}
+
+	year := values[0].(ast.IntExpression).Value
+	month := values[1].(ast.IntExpression).Value
+	day := values[2].(ast.IntExpression).Value
+
+	return ast.DateExpression{Value: time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC), Token: call.Token}, nil
+}
