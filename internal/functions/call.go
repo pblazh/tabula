@@ -13,11 +13,11 @@ func Call(format string, call ast.CallExpression, values ...ast.Expression) (ast
 		return nil, err
 	}
 
-	name, _ := ast.ToString(&(values[0]))
+	name := values[0].(ast.StringExpression)
 
 	args := make([]string, 0, len(values)-1)
 	for _, arg := range values[1:] {
-		str, _ := ast.ToString(&arg)
+		str := arg.(ast.StringExpression)
 		args = append(args, str.Value)
 	}
 

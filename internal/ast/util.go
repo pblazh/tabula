@@ -157,12 +157,12 @@ func IsString(expr Expression) bool {
 	}
 }
 
-func ToString(expr *Expression) (*StringExpression, bool) {
-	switch e := (*expr).(type) {
-	case StringExpression:
-		return &e, true
+func IsDate(expr Expression) bool {
+	switch expr.(type) {
+	case DateExpression:
+		return true
 	default:
-		return nil, false
+		return false
 	}
 }
 
@@ -172,15 +172,6 @@ func IsBoolean(expr Expression) bool {
 		return true
 	default:
 		return false
-	}
-}
-
-func ToBoolean(expr *Expression) (*BooleanExpression, bool) {
-	switch e := (*expr).(type) {
-	case BooleanExpression:
-		return &e, true
-	default:
-		return nil, false
 	}
 }
 

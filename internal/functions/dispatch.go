@@ -100,4 +100,62 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "FALSE()"
 		return False(format, call, values...)
 	},
+
+	// Dates
+	"TODATE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "TODATE(string, string)"
+		return ToDate(format, call, values...)
+	},
+	"FROMDATE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "FROMDATE(string, date)"
+		return FromDate(format, call, values...)
+	},
+	"DAY": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "DAY(date)"
+		return Day(format, call, values...)
+	},
+	"HOUR": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "HOUR(date)"
+		return Hour(format, call, values...)
+	},
+	"MINUTE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "MINUTE(date)"
+		return Minute(format, call, values...)
+	},
+	"MONTH": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "MONTH(date)"
+		return Month(format, call, values...)
+	},
+	"SECOND": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "SECOND(date)"
+		return Second(format, call, values...)
+	},
+	"YEAR": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "YEAR(date)"
+		return Year(format, call, values...)
+	},
+	"WEEKDAY": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "WEEKDAY(date)"
+		return Weekday(format, call, values...)
+	},
+	"NOW": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "NOW()"
+		return Now(format, call, values...)
+	},
+	"DATE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "DATE(year, month, day)"
+		return Date(format, call, values...)
+	},
+	"DATEDIF": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "DATEDIF(from, to, unit)"
+		return DateDiff(format, call, values...)
+	},
+	"DAYS": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "DAYS(from, to)"
+		return Days(format, call, values...)
+	},
+	"DATEVALUE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "DATEVALUE(string)"
+		return DateValue(format, call, values...)
+	},
 }

@@ -3,10 +3,16 @@ package evaluator
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/lexer"
 )
+
+func getTime(value string) time.Time {
+	t, _ := time.Parse("2006-01-02 15:04:05", value)
+	return t
+}
 
 func TestReadValue(t *testing.T) {
 	testcases := []struct {
@@ -72,21 +78,21 @@ func TestReadValue(t *testing.T) {
 			input:    "hello",
 			format:   "%v",
 			expected: nil,
-			error:    "failed to parse \"hello\" with format \"%v\":",
+			error:    "parsing time \"hello\" as \"%v\": cannot parse \"hello\" as \"%v\"",
 		},
 		{
 			name:     "format with no placeholders should error",
 			input:    "hello",
 			format:   "no placeholder here",
 			expected: nil,
-			error:    "invalid format \"no placeholder here\": no scanf placeholder found",
+			error:    "parsing time \"hello\" as \"no placeholder here\": cannot parse \"hello\" as \"no placeholder here\"",
 		},
 		{
 			name:     "format with multiple placeholders should error",
 			input:    "hello",
 			format:   "%s %s",
 			expected: nil,
-			error:    "invalid format \"%s %s\": multiple scanf placeholders found (2), expected exactly one",
+			error:    "failed to parse \"hello\" with format \"%s %s\":too few operands for format '%s'",
 		},
 		{
 			name:     "format validation passes for valid single placeholder",
@@ -99,13 +105,11 @@ func TestReadValue(t *testing.T) {
 		{
 			name:     "quoted string without format",
 			input:    "\"hello world\"",
-			format:   "",
 			expected: ast.StringExpression{Value: "\"hello world\"", Token: lexer.Token{Literal: "\"hello world\""}},
 		},
 		{
 			name:     "empty quoted string",
 			input:    "\"\"",
-			format:   "",
 			expected: ast.StringExpression{Value: "\"\"", Token: lexer.Token{Literal: "\"\""}},
 		},
 
@@ -113,31 +117,26 @@ func TestReadValue(t *testing.T) {
 		{
 			name:     "positive integer without format",
 			input:    "42",
-			format:   "",
 			expected: ast.IntExpression{Value: 42, Token: lexer.Token{Literal: "42"}},
 		},
 		{
 			name:     "negative integer without format",
 			input:    "-42",
-			format:   "",
 			expected: ast.IntExpression{Value: -42, Token: lexer.Token{Literal: "-42"}},
 		},
 		{
 			name:     "positive float without format",
 			input:    "42.3",
-			format:   "",
 			expected: ast.FloatExpression{Value: 42.3, Token: lexer.Token{Literal: "42.3"}},
 		},
 		{
 			name:     "negative float without format",
 			input:    "-42.3",
-			format:   "",
 			expected: ast.FloatExpression{Value: -42.3, Token: lexer.Token{Literal: "-42.3"}},
 		},
 		{
 			name:     "number with plus sign",
 			input:    "+42",
-			format:   "",
 			expected: ast.IntExpression{Value: 42, Token: lexer.Token{Literal: "+42"}},
 		},
 
@@ -145,16 +144,71 @@ func TestReadValue(t *testing.T) {
 		{
 			name:     "boolean true without format",
 			input:    "true",
-			format:   "",
 			expected: ast.BooleanExpression{Value: true, Token: lexer.Token{Literal: "true"}},
 		},
 		{
 			name:     "boolean false without format",
 			input:    "false",
-			format:   "",
 			expected: ast.BooleanExpression{Value: false, Token: lexer.Token{Literal: "false"}},
 		},
+		// Default parsing - date values
+		{
+			name:     "iso date without format",
+			input:    "2023-10-01",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 00:00:00"), Token: lexer.Token{Literal: "2023-10-01"}},
+		},
+		{
+			name:     "iso datetime without format",
+			input:    "2023-10-01 13:41",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:00"), Token: lexer.Token{Literal: "2023-10-01 13:41"}},
+		},
+		{
+			name:     "iso datetime sec without format",
+			input:    "2023-10-01 13:41:51",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:51"), Token: lexer.Token{Literal: "2023-10-01 13:41:51"}},
+		},
 
+		{
+			name:     "eu date without format",
+			input:    "01.10.2023",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 00:00:00"), Token: lexer.Token{Literal: "01.10.2023"}},
+		},
+		{
+			name:     "eu datetime without format",
+			input:    "01.10.2023 13:41",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:00"), Token: lexer.Token{Literal: "01.10.2023 13:41"}},
+		},
+		{
+			name:     "eu datetime sec without format",
+			input:    "01.10.2023 13:41:51",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:51"), Token: lexer.Token{Literal: "01.10.2023 13:41:51"}},
+		},
+
+		{
+			name:     "us date without format",
+			input:    "10/01/2023",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 00:00:00"), Token: lexer.Token{Literal: "10/01/2023"}},
+		},
+		{
+			name:     "us datetime without format",
+			input:    "10/01/2023 13:41",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:00"), Token: lexer.Token{Literal: "10/01/2023 13:41"}},
+		},
+		{
+			name:     "us datetime sec without format",
+			input:    "10/01/2023 13:41:51",
+			expected: ast.DateExpression{Value: getTime("2023-10-01 13:41:51"), Token: lexer.Token{Literal: "10/01/2023 13:41:51"}},
+		},
+		{
+			name:     "timeonly",
+			input:    "13:41:51",
+			expected: ast.DateExpression{Value: getTime("0000-01-01 13:41:51"), Token: lexer.Token{Literal: "13:41:51"}},
+		},
+		{
+			name:     "kitchen",
+			input:    "03:41PM",
+			expected: ast.DateExpression{Value: getTime("0000-01-01 15:41:00"), Token: lexer.Token{Literal: "03:41PM"}},
+		},
 		// Default parsing - fallback to string
 		{
 			name:     "unquoted string without format returns string",

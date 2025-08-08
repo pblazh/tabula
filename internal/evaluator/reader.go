@@ -5,8 +5,10 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/csvss/internal/functions"
 	"github.com/pblazh/csvss/internal/lexer"
 )
 
@@ -14,11 +16,6 @@ func ReadValue(value string, format string) (ast.Expression, error) {
 	if format == "" {
 		return parseWithoutFormat(value)
 	}
-	// Check if format is correct
-	if err := validateFormatString(format); err != nil {
-		return nil, ErrInvalidFormat(format, err.Error())
-	}
-
 	// Use scanf with the format specification
 	placeholderType := detectPlaceholderType(format)
 
@@ -32,7 +29,7 @@ func ReadValue(value string, format string) (ast.Expression, error) {
 	case boolPlacehoder:
 		return parseBool(value, format)
 	default:
-		return nil, ErrParseWithFormat(value, format, "")
+		return parseDate(value, format)
 	}
 }
 
@@ -95,6 +92,14 @@ func parseWithoutFormat(value string) (ast.Expression, error) {
 		return ast.StringExpression{Value: value, Token: lexer.Token{Literal: value}}, nil
 	}
 
+	datetime, err := functions.ParseDateWithoutFormat(value)
+	if err != nil {
+		return nil, err
+	}
+	if datetime != nil {
+		return ast.DateExpression{Value: *datetime, Token: lexer.Token{Literal: value}}, nil
+	}
+
 	// Check if it's a number with a dot
 	floatRegex := regexp.MustCompile(`^[+-]*\d+\.\d+`)
 	if floatRegex.Match([]byte(value)) {
@@ -123,6 +128,15 @@ func parseWithoutFormat(value string) (ast.Expression, error) {
 	return ast.StringExpression{Value: value, Token: lexer.Token{Literal: value}}, nil
 }
 
+func parseDate(value, format string) (ast.DateExpression, error) {
+	date, err := time.Parse(format, value)
+	if err != nil {
+		return ast.DateExpression{}, err
+	}
+
+	return ast.DateExpression{Value: date, Token: lexer.Token{Literal: value}}, nil
+}
+
 // WriteValue writes an AST expression to context with optional format specification
 func WriteValue(value ast.Expression, format string) (string, error) {
 	if format == "" {
@@ -131,10 +145,6 @@ func WriteValue(value ast.Expression, format string) (string, error) {
 			return "", err
 		}
 		return formatted, nil
-	}
-
-	if err := validateFormatString(format); err != nil {
-		return "", ErrInvalidFormatWrapper(format, err)
 	}
 
 	// Format the value using the format specification
@@ -161,6 +171,8 @@ func formatWithSpec(value ast.Expression, format string) (string, error) {
 		return fmt.Sprintf(format, content), nil
 	case ast.BooleanExpression:
 		return fmt.Sprintf(format, expr.Value), nil
+	case ast.DateExpression:
+		return expr.Value.Format(format), nil
 	default:
 		return "", ErrUnsupportedExpressionType(value)
 	}
@@ -177,6 +189,8 @@ func formatWithoutSpec(value ast.Expression) (string, error) {
 		return expr.Value, nil
 	case ast.BooleanExpression:
 		return fmt.Sprintf("%t", expr.Value), nil
+	case ast.DateExpression:
+		return expr.Value.Format(time.DateTime), nil
 	default:
 		return "", ErrUnsupportedExpressionType(value)
 	}
