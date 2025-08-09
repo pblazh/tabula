@@ -72,8 +72,6 @@
   - [ ] #21.1: Add better error recovery in parser
   - [ ] #21.2: Add position tracking for error messages
   - [ ] #21.3: Add semantic analysis phase
-  - [ ] #21.4: Improve identifier resolution for cell references
-  - [ ] #21.5: Add input validation throughout
 - [ ] #22: Feature Extensions
   - [ ] #22.1: Add support for multiple output formats (markdown, rst, etc)
   - [ ] #22.2: Add more data types beyond basic five
@@ -86,7 +84,6 @@
   - [x] #24.3: Add plugin system for custom functions
         (execute external program for evaluation and format)
   - [ ] #24.4: Add debugging capabilities
-  - [ ] #24.5: Add configuration file support
 - [ ] #25: Developer Experience
   - [ ] #25.1: Add development documentation
   - [ ] #25.2: Add contribution guidelines
@@ -105,40 +102,84 @@
 - [ ] #28: Evaluator Enhancements
   - [ ] #28.1: Add proper type system
   - [x] #28.2: Add function argument validation
-  - [ ] #28.3: Add bounds checking for CSV operations
+  - [x] #28.3: Add bounds checking for CSV operations
   - [ ] #28.4: Add format specification improvements
-- [ ] #29: Math Functions Implementation
+- [ ] #29: Math Functions
   - [x] #29.1: Implement ABS function
   - [x] #29.2: Implement AVERAGE function
   - [ ] #29.3: Implement AVERAGEIF function
-  - [x] #29.4: Implement CEILING function
-  - [ ] #29.5: Implement COUNT function
-  - [ ] #29.6: Implement COUNTIF function
-  - [x] #29.7: Implement FLOOR function
-  - [ ] #29.8: Implement MAX function
-  - [ ] #29.9: Implement MIN function
-  - [x] #29.10: Implement POWER function
-  - [x] #29.11: Implement PRODUCT function
-  - [ ] #29.12: Implement ROUND function
-  - [ ] #29.13: Implement SQRT function
-  - [x] #29.14: Implement SUM function
-  - [ ] #29.15: Implement SUMIF function
-  - [ ] #29.16: Implement SUMIFS function
-  - [x] #29.17: Implement INT function
-- [ ] #30: Text Functions Implementation
+  - [ ] #29.4: Implement AVERAGEIFS function
+  - [x] #29.5: Implement CEILING function
+  - [ ] #29.6: **Important** Implement COUNT function
+  - [ ] #29.7: **Important** Implement COUNTA function
+  - [ ] #29.8: Implement COUNTBLANK function
+  - [ ] #29.9: **Important** Implement COUNTIF function
+  - [ ] #29.10: **Important** Implement COUNTIFS function
+  - [ ] #29.11: Implement COUNTUNIQUE function
+  - [x] #29.12: Implement FLOOR function
+  - [ ] #29.13: **Important** Implement MAX function
+  - [ ] #29.14: Implement MAXA function
+  - [ ] #29.15: **Important** Implement MIN function
+  - [ ] #29.16: Implement MINA function
+  - [ ] #29.17: **Important** Implement MOD function
+  - [x] #29.18: Implement POWER function
+  - [x] #29.19: Implement PRODUCT function
+  - [ ] #29.20: **Important** Implement ROUND function
+  - [ ] #29.21: Implement ROUNDDOWN function
+  - [ ] #29.22: Implement ROUNDUP function
+  - [ ] #29.23: Implement SIGN function
+  - [ ] #29.24: **Important** Implement SQRT function
+  - [ ] #29.25: Implement SQRTPI function
+  - [x] #29.26: Implement SUM function
+  - [ ] #29.27: **Important** Implement SUMIF function
+  - [ ] #29.28: **Important** Implement SUMIFS function
+  - [ ] #29.29: Implement SUMPRODUCT function
+  - [ ] #29.30: Implement SUMSQ function
+  - [x] #29.31: Implement INT function
+  - [ ] #29.32: Implement TRUNC function
+  - [ ] #29.33: Implement EVEN function
+  - [ ] #29.34: Implement ODD function
+  - [ ] #29.35: Implement GCD function
+  - [ ] #29.36: Implement LCM function
+  - [ ] #29.37: Implement RAND function
+  - [ ] #29.38: Implement RANDBETWEEN function
+- [ ] #30: Text Functions
   - [x] #30.1: Implement CONCATENATE function
-  - [x] #30.2: Implement EXACT function
-  - [ ] #30.3: Implement FIND function
-  - [ ] #30.4: Implement LEFT function
-  - [x] #30.5: Implement LEN function
-  - [x] #30.6: Implement LOWER function
-  - [ ] #30.7: Implement MID function
-  - [ ] #30.8: Implement REPLACE function
-  - [ ] #30.9: Implement RIGHT function
-  - [ ] #30.10: Implement SUBSTITUTE function
-  - [x] #30.11: Implement TRIM function
-  - [x] #30.12: Implement UPPER function
-- [x] #31: Date and Time Functions Implementation
+  - [ ] #30.2: Implement CONCAT function
+  - [ ] #30.3: Implement JOIN function
+  - [ ] #30.4: Implement TEXTJOIN function
+  - [x] #30.5: Implement EXACT function
+  - [ ] #30.6: **Important** Implement FIND function
+  - [ ] #30.7: Implement FINDB function
+  - [ ] #30.8: Implement SEARCH function
+  - [ ] #30.9: Implement SEARCHB function
+  - [ ] #30.10: **Important** Implement LEFT function
+  - [ ] #30.11: Implement LEFTB function
+  - [ ] #30.12: **Important** Implement RIGHT function
+  - [ ] #30.13: Implement RIGHTB function
+  - [x] #30.14: Implement LEN function
+  - [ ] #30.15: Implement LENB function
+  - [x] #30.16: Implement LOWER function
+  - [x] #30.17: Implement UPPER function
+  - [ ] #30.18: Implement PROPER function
+  - [ ] #30.19: **Important** Implement MID function
+  - [ ] #30.20: Implement MIDB function
+  - [ ] #30.21: Implement REPLACE function
+  - [ ] #30.22: Implement REPLACEB function
+  - [ ] #30.23: **Important** Implement SUBSTITUTE function
+  - [ ] #30.24: Implement REPT function
+  - [ ] #30.25: Implement REVERSE function
+  - [ ] #30.26: Implement SPLIT function
+  - [x] #30.27: Implement TRIM function
+  - [ ] #30.28: Implement CLEAN function
+  - [ ] #30.29: Implement CODE function
+  - [ ] #30.30: Implement CHAR function
+  - [ ] #30.31: **Important** Implement VALUE function
+  - [ ] #30.32: Implement TEXT function
+  - [ ] #30.33: Implement DOLLAR function
+  - [ ] #30.34: Implement FIXED function
+  - [ ] #30.35: Implement T function
+- [ ] #31: Date and Time Functions
   - [x] #31.1: Implement DATE function
   - [x] #31.2: Implement DATEDIF function
   - [x] #31.3: Implement DAY function
@@ -147,42 +188,93 @@
   - [x] #31.6: Implement MONTH function
   - [x] #31.7: Implement NOW function
   - [x] #31.8: Implement SECOND function
-  - [x] #31.09: Implement DATEVALUE function
+  - [x] #31.9: Implement DATEVALUE function
   - [x] #31.10: Implement DAYS function
   - [x] #31.11: Implement WEEKDAY function
   - [x] #31.12: Implement YEAR function
-- [ ] #32: Logical Functions Implementation
+  - [ ] #31.13: Implement TIME function
+  - [ ] #31.14: Implement TIMEVALUE function
+  - [ ] #31.15: **Important** Implement TODAY function
+  - [ ] #31.16: Implement WEEKNUM function
+  - [ ] #31.17: Implement ISOWEEKNUM function
+  - [ ] #31.18: Implement EOMONTH function
+  - [ ] #31.19: Implement EDATE function
+  - [ ] #31.20: Implement YEARFRAC function
+- [ ] #32: Logical Functions
   - [x] #32.1: Implement AND function
   - [x] #32.2: Implement FALSE function
   - [x] #32.3: Implement IF function
-  - [ ] #32.4: Implement IFERROR function
-  - [x] #32.5: Implement NOT function
-  - [x] #32.6: Implement OR function
-  - [x] #32.7: Implement TRUE function
-- [ ] #33: Lookup and Reference Functions Implementation
+  - [ ] #32.4: **Important** Implement IFERROR function
+  - [ ] #32.5: Implement IFNA function
+  - [ ] #32.6: Implement IFS function
+  - [x] #32.7: Implement NOT function
+  - [x] #32.8: Implement OR function
+  - [x] #32.9: Implement TRUE function
+  - [ ] #32.10: Implement XOR function
+  - [ ] #32.11: Implement SWITCH function
+- [ ] #33: Lookup and Reference Functions
   - [ ] #33.1: Implement CHOOSE function
   - [ ] #33.2: Implement COLUMN function
-  - [ ] #33.3: Implement HLOOKUP function
-  - [ ] #33.4: Implement INDEX function
-  - [ ] #33.5: Implement INDIRECT function
-  - [ ] #33.6: Implement LOOKUP function
-  - [ ] #33.7: Implement MATCH function
-  - [ ] #33.8: Implement OFFSET function
-  - [ ] #33.9: Implement ROW function
-  - [ ] #33.10: Implement VLOOKUP function
-- [ ] #34: Statistical Functions Implementation
-  - [ ] #34.1: Implement CORREL function
-  - [ ] #34.2: Implement MEDIAN function
-  - [ ] #34.3: Implement MODE function
-  - [ ] #34.4: Implement PERCENTILE function
-  - [ ] #34.5: Implement STDEV function
-  - [ ] #34.6: Implement VAR function
-- [ ] #35: Array Functions Implementation
+  - [ ] #33.3: Implement COLUMNS function
+  - [ ] #33.4: Implement HLOOKUP function
+  - [ ] #33.5: **Important** Implement INDEX function
+  - [ ] #33.6: Implement INDIRECT function
+  - [ ] #33.7: Implement LOOKUP function
+  - [ ] #33.8: **Important** Implement MATCH function
+  - [ ] #33.9: Implement OFFSET function
+  - [ ] #33.10: Implement ROW function
+  - [ ] #33.11: Implement ROWS function
+  - [ ] #33.12: **Important** Implement VLOOKUP function
+  - [ ] #33.13: Implement XLOOKUP function
+  - [ ] #33.14: Implement GETPIVOTDATA function
+  - [ ] #33.15: Implement HYPERLINK function
+  - [ ] #33.16: Implement ADDRESS function
+  - [ ] #33.17: Implement AREAS function
+  - [ ] #33.18: Implement CELL function
+- [ ] #34: Statistical Functions
+  - [ ] #34.1: Implement AVEDEV function
+  - [ ] #34.2: Implement CORREL function
+  - [ ] #34.3: Implement COVAR function
+  - [ ] #34.4: Implement DEVSQ function
+  - [ ] #34.5: Implement FORECAST function
+  - [ ] #34.6: Implement FREQUENCY function
+  - [ ] #34.7: Implement GEOMEAN function
+  - [ ] #34.8: Implement HARMEAN function
+  - [ ] #34.9: Implement INTERCEPT function
+  - [ ] #34.10: Implement LARGE function
+  - [ ] #34.11: **Important** Implement MEDIAN function
+  - [ ] #34.12: Implement MODE function
+  - [ ] #34.13: Implement MODE.SNGL function
+  - [ ] #34.14: Implement PERCENTILE function
+  - [ ] #34.15: Implement PERCENTILE.EXC function
+  - [ ] #34.16: Implement PERCENTILE.INC function
+  - [ ] #34.17: Implement PERCENTRANK function
+  - [ ] #34.18: Implement PERCENTRANK.EXC function
+  - [ ] #34.19: Implement PERCENTRANK.INC function
+  - [ ] #34.20: Implement QUARTILE function
+  - [ ] #34.21: Implement RANK function
+  - [ ] #34.22: Implement RANK.AVG function
+  - [ ] #34.23: Implement RANK.EQ function
+  - [ ] #34.24: Implement RSQ function
+  - [ ] #34.25: Implement SKEW function
+  - [ ] #34.26: Implement SLOPE function
+  - [ ] #34.27: Implement SMALL function
+  - [ ] #34.28: Implement STANDARDIZE function
+  - [ ] #34.29: Implement STDEV function
+  - [ ] #34.30: Implement STEYX function
+  - [ ] #34.31: Implement VAR function
+  - [ ] #34.32: Implement VARP function
+  - [ ] #34.33: Implement VARS function
+- [ ] #35: Array Functions
   - [ ] #35.1: Implement FILTER function
   - [ ] #35.2: Implement SORT function
-  - [ ] #35.3: Implement TRANSPOSE function
-  - [ ] #35.4: Implement UNIQUE function
-- [ ] #36: Cell Formatting Implementation
+  - [ ] #35.3: Implement SORTBY function
+  - [ ] #35.4: Implement TRANSPOSE function
+  - [ ] #35.5: **Important** Implement UNIQUE function
+  - [ ] #35.6: Implement FLATTEN function
+  - [ ] #35.7: Implement SEQUENCE function
+  - [ ] #35.8: Implement RANDARRAY function
+- [ ] #36: Cell Formatting
   - [x] #36.1: Standard Format Types
     - [x] #36.1.1: Implement Number format
     - [x] #36.1.2: Implement Currency format
@@ -195,3 +287,69 @@
     - [x] #36.1.9: Implement Plain Text format
   - [ ] #36.6: Conditional Formatting
   - [ ] #36.7: Text and Symbol Formatting
+- [ ] #37: Engineering Functions
+  - [ ] #37.1: Implement BITAND function
+  - [ ] #37.2: Implement BITLSHIFT function
+  - [ ] #37.3: Implement BITOR function
+  - [ ] #37.4: Implement BITRSHIFT function
+  - [ ] #37.5: Implement BITXOR function
+  - [ ] #37.6: Implement BIN2DEC function
+  - [ ] #37.7: Implement BIN2HEX function
+  - [ ] #37.8: Implement BIN2OCT function
+  - [ ] #37.9: Implement DEC2BIN function
+  - [ ] #37.10: Implement DEC2HEX function
+  - [ ] #37.11: Implement DEC2OCT function
+  - [ ] #37.12: Implement HEX2BIN function
+  - [ ] #37.13: Implement HEX2DEC function
+  - [ ] #37.14: Implement HEX2OCT function
+  - [ ] #37.15: Implement OCT2BIN function
+  - [ ] #37.16: Implement OCT2DEC function
+  - [ ] #37.17: Implement OCT2HEX function
+- [ ] #38: Financial Functions
+  - [ ] #38.1: Implement FV function
+  - [ ] #38.2: Implement PV function
+  - [ ] #38.3: Implement PMT function
+  - [ ] #38.4: Implement RATE function
+  - [ ] #38.5: Implement NPER function
+  - [ ] #38.6: Implement NPV function
+  - [ ] #38.7: Implement IRR function
+  - [ ] #38.8: Implement MIRR function
+  - [ ] #38.9: Implement XIRR function
+  - [ ] #38.10: Implement XNPV function
+  - [ ] #38.11: Implement DB function
+  - [ ] #38.12: Implement DDB function
+  - [ ] #38.13: Implement SLN function
+  - [ ] #38.14: Implement SYD function
+- [ ] #39: Information Functions
+  - [ ] #39.1: **Important** Implement ISBLANK function
+  - [ ] #39.2: Implement ISERROR function
+  - [ ] #39.3: Implement ISEVEN function
+  - [ ] #39.4: Implement ISLOGICAL function
+  - [ ] #39.5: Implement ISNA function
+  - [ ] #39.6: Implement ISNONTEXT function
+  - [ ] #39.7: **Important** Implement ISNUMBER function
+  - [ ] #39.8: Implement ISODD function
+  - [ ] #39.9: Implement ISREF function
+  - [ ] #39.10: **Important** Implement ISTEXT function
+  - [ ] #39.11: Implement N function
+  - [ ] #39.12: Implement NA function
+  - [ ] #39.13: Implement TYPE function
+  - [ ] #39.14: Implement CELL function
+  - [ ] #39.15: Implement INFO function
+- [ ] #40: Trigonometry Functions
+  - [ ] #40.1: Implement SIN function
+  - [ ] #40.2: Implement COS function
+  - [ ] #40.3: Implement TAN function
+  - [ ] #40.4: Implement ASIN function
+  - [ ] #40.5: Implement ACOS function
+  - [ ] #40.6: Implement ATAN function
+  - [ ] #40.7: Implement ATAN2 function
+  - [ ] #40.8: Implement SINH function
+  - [ ] #40.9: Implement COSH function
+  - [ ] #40.10: Implement TANH function
+  - [ ] #40.11: Implement ASINH function
+  - [ ] #40.12: Implement ACOSH function
+  - [ ] #40.13: Implement ATANH function
+  - [ ] #40.14: Implement DEGREES function
+  - [ ] #40.15: Implement RADIANS function
+  - [ ] #40.16: Implement PI function
