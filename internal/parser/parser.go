@@ -105,7 +105,19 @@ func (p *Parser) Parse() (ast.Program, []string, error) {
 		}
 	}
 
-	return program, p.identifiers, nil
+	return program, uniqueIdentifiers(p.identifiers), nil
+}
+
+func uniqueIdentifiers(ideentifiers []string) []string {
+	unique := make([]string, 0, len(ideentifiers))
+	founcd := make(map[string]bool)
+	for _, id := range ideentifiers {
+		if !founcd[id] {
+			founcd[id] = true
+			unique = append(unique, id)
+		}
+	}
+	return unique
 }
 
 func (p *Parser) advance(steps int) error {

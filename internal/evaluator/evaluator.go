@@ -24,9 +24,8 @@ func Evaluate(program ast.Program, input [][]string) ([][]string, error) {
 	return input, nil
 }
 
-func ParseProgram(r io.Reader, name string) (ast.Program, error) {
+func ParseProgram(r io.Reader, name string) (ast.Program, []string, error) {
 	lex := lexer.New(r, name)
 	p := parser.New(lex)
-	program, _, err := p.Parse()
-	return program, err
+	return p.Parse()
 }

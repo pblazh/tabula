@@ -375,3 +375,102 @@ func fileExists(filename string) bool {
 	_, err := os.Stat(filename)
 	return !os.IsNotExist(err)
 }
+
+func TestCSVDimensionExtension(t *testing.T) {
+	tempDir := os.TempDir()
+
+	tests := []struct {
+		name           string
+		csvContent     string
+		scriptContent  string
+		expectedOutput string
+		description    string
+	}{
+		{
+			name:           "write_beyond_width",
+			csvContent:     "A,B\n1,2\n",
+			scriptContent:  "let D1 = \"Extended\"",
+			expectedOutput: "A,B,,Extended\n1,2,,\n",
+			description:    "Writing to column D should extend width to 4 columns",
+		},
+		{
+			name:           "write_beyond_height",
+			csvContent:     "A,B\n1,2\n",
+			scriptContent:  "let A5 = \"Row5\"",
+			expectedOutput: "A,B\n1,2\n\n\nRow5\n",
+			description:    "Writing to row 5 should extend height to 5 rows",
+		},
+		{
+			name:           "write_beyond_both_dimensions",
+			csvContent:     "1\n2\n",
+			scriptContent:  "let E3 = \"Corner\"",
+			expectedOutput: "1,,,,\n2,,,,\n,,,,Corner\n",
+			description:    "Writing to E3 should extend both width and height",
+		},
+		{
+			name:           "read_and_write_beyond_dimensions",
+			csvContent:     "10,20\n30,40\n",
+			scriptContent:  "let D3 = A1 + B1",
+			expectedOutput: "10,20,,\n30,40,,\n,,,30\n",
+			description:    "Reading existing cells and writing beyond dimensions",
+		},
+		{
+			name:           "range_beyond_dimensions",
+			csvContent:     "5\n10\n15\n",
+			scriptContent:  "let E1 = SUM(A1:A3)",
+			expectedOutput: "5,,,,30\n10,,,,\n15,,,,\n",
+			description:    "Using range operations that extend dimensions",
+		},
+		{
+			name:           "multiple_extensions",
+			csvContent:     "1,2\n3,4\n",
+			scriptContent:  "let F5 = \"Corner\"; let G1 = \"Top\"",
+			expectedOutput: "1,2,,,,,Top\n3,4,,,,,\n,,,,,,\n,,,,,,\n,,,,,Corner,\n",
+			description:    "Multiple writes to different far locations",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create temporary CSV file
+			csvFile := filepath.Join(tempDir, tt.name+".csv")
+			err := os.WriteFile(csvFile, []byte(tt.csvContent), 0644)
+			if err != nil {
+				t.Fatalf("Failed to create CSV file: %v", err)
+			}
+			defer dremove(csvFile)
+
+			// Create temporary script file
+			scriptFile := filepath.Join(tempDir, tt.name+".csvs")
+			err = os.WriteFile(scriptFile, []byte(tt.scriptContent), 0644)
+			if err != nil {
+				t.Fatalf("Failed to create script file: %v", err)
+			}
+			defer dremove(scriptFile)
+
+			// Execute command
+			cmd := exec.Command("go", "run", ".", "-s", scriptFile, "-i", csvFile)
+			var stdout, stderr bytes.Buffer
+			cmd.Stdout = &stdout
+			cmd.Stderr = &stderr
+
+			err = cmd.Run()
+			if err != nil {
+				t.Fatalf("Command failed: %v\nStderr: %s\nDescription: %s", err, stderr.String(), tt.description)
+			}
+
+			// Normalize and compare output
+			expectedStr := normalizeOutput(tt.expectedOutput)
+			actualStr := normalizeOutput(stdout.String())
+
+			if expectedStr != actualStr {
+				t.Errorf("%s\nExpected:\n%s\n\nActual:\n%s", tt.description, expectedStr, actualStr)
+			}
+
+			// Ensure no errors
+			if stderr.String() != "" {
+				t.Errorf("Expected empty stderr but got: %q", stderr.String())
+			}
+		})
+	}
+}

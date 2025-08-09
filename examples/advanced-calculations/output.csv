@@ -8,9 +8,9 @@ Widget F , 4        , 200.00
 Widget G , 7        , 350.00
 Widget H , 1        , 75.00
 Widget I , 9        , 450.00
+#csvssfile:./script.csvs
          ,          , 
 Subtotal , 2275     , 
 Discount , 113.75   , 
 Tax      , 172.9    , 
 Total    , 2334.15  , 
-#csvssfile:./script.csvs
