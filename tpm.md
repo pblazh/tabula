@@ -52,14 +52,14 @@
   - [x] #16.3: Implement range evaluation (A1:C3 expansion)
   - [x] #16.4: Add function registry and dispatch system
 - [ ] #17: Documentation Fixes
-  - [ ] #17.1: Update README with actual working examples
+  - [x] #17.1: Update README with actual working examples
   - [ ] #17.2: Remove/mark unimplemented functions in README
 - [x] #18: Missing Project Files
   - [x] #18.1: Add `go.sum` file (run `go mod tidy`)
   - [x] #18.2: Add CI/CD configuration (GitHub Actions)
   - [x] #18.3: Add proper build/release scripts
 - [ ] #19: Testing Infrastructure
-  - [ ] #19.1: Add integration tests for complete workflows
+  - [x] #19.1: Add integration tests for complete workflows
   - [x] #19.2: Add CLI package tests
   - [ ] #19.3: Add test coverage reporting
   - [ ] #19.4: Add benchmark tests for large CSV files
@@ -76,7 +76,7 @@
   - [ ] #21.5: Add input validation throughout
 - [ ] #22: Feature Extensions
   - [ ] #22.1: Add support for multiple output formats (markdown, rst, etc)
-  - [ ] #22.2: Add more data types beyond basic four
+  - [ ] #22.2: Add more data types beyond basic five
 - [ ] #23: Performance Optimizations
   - [ ] #23.1: Optimize CSV parsing for large files
   - [ ] #23.2: Add memory usage optimization
@@ -183,15 +183,15 @@
   - [ ] #35.3: Implement TRANSPOSE function
   - [ ] #35.4: Implement UNIQUE function
 - [ ] #36: Cell Formatting Implementation
-  - [ ] #36.1: Standard Format Types
-    - [ ] #36.1.1: Implement Number format
-    - [ ] #36.1.2: Implement Currency format
-    - [ ] #36.1.3: Implement Percentage format
+  - [x] #36.1: Standard Format Types
+    - [x] #36.1.1: Implement Number format
+    - [x] #36.1.2: Implement Currency format
+    - [x] #36.1.3: Implement Percentage format
     - [x] #36.1.4: Implement Date format
-    - [ ] #36.1.5: Implement Time format
+    - [x] #36.1.5: Implement Time format
     - [ ] #36.1.6: Implement Scientific format
     - [ ] #36.1.7: Implement Accounting format
     - [ ] #36.1.8: Implement Financial format
-    - [ ] #36.1.9: Implement Plain Text format
+    - [x] #36.1.9: Implement Plain Text format
   - [ ] #36.6: Conditional Formatting
   - [ ] #36.7: Text and Symbol Formatting

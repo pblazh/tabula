@@ -101,6 +101,11 @@ func TestParseArgs(t *testing.T) {
 			args:   []string{"csvss"},
 			errMsg: "either script or data has to be read from a file",
 		},
+		{
+			name:   "help flag",
+			args:   []string{"csvss", "-h"},
+			config: nil, // Help flag returns nil config
+		},
 	}
 
 	for _, tt := range tests {
@@ -123,6 +128,14 @@ func TestParseArgs(t *testing.T) {
 				// Check that error message was written to buffer
 				if err.Error() != tt.errMsg {
 					t.Errorf("Expected output to contain %q, got %q", tt.errMsg, err.Error())
+				}
+				return
+			}
+
+			if tt.config == nil {
+				// For cases like help flag, we expect nil config
+				if config != nil {
+					t.Errorf("Expected nil config but got %+v", config)
 				}
 				return
 			}

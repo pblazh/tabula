@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/csv"
 	"io"
-	"strings"
 
 	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/evaluator"
@@ -21,13 +20,9 @@ func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csv
 		return ErrReadCSV(err)
 	}
 
-	for i, row := range records {
-		for j, cel := range row {
-			records[i][j] = strings.TrimSpace(cel)
-		}
-	}
+	program, identifiers, err := evaluator.ParseProgram(scriptReader, config.Name)
+	records = ensureProgramDimmensions(identifiers, records)
 
-	program, err := evaluator.ParseProgram(scriptReader, config.Name)
 	if err != nil {
 		return ErrParseScript(err)
 	}
