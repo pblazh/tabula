@@ -26,22 +26,22 @@ func callNumbersFunction(
 		return ast.IntExpression{Value: int(intFunction())}, nil
 	}
 
-	first := values[0]
-	switch first.(type) {
-	case ast.IntExpression:
-		var args []int
-		for _, arg := range values {
-			switch a := arg.(type) {
-			case ast.IntExpression:
-				args = append(args, a.Value)
-			case ast.FloatExpression:
-				args = append(args, int(a.Value))
-			default:
-				return nil, ErrUnsupportedArgument(format, call, a)
-			}
+	// Check if any argument is a float to determine result type
+	hasFloat := false
+	for _, arg := range values {
+		switch arg.(type) {
+		case ast.FloatExpression:
+			hasFloat = true
+			break
+		case ast.IntExpression:
+			// continue checking
+		default:
+			return nil, ErrUnsupportedArgument(format, call, arg)
 		}
-		return ast.IntExpression{Value: intFunction(args...)}, nil
-	case ast.FloatExpression:
+	}
+
+	if hasFloat {
+		// If any argument is float, use float processing
 		var args []float64
 		for _, arg := range values {
 			switch a := arg.(type) {
@@ -54,7 +54,17 @@ func callNumbersFunction(
 			}
 		}
 		return ast.FloatExpression{Value: floatFunction(args...)}, nil
-	default:
-		return nil, ErrUnsupportedFunction(call)
+	} else {
+		// All arguments are integers, use int processing
+		var args []int
+		for _, arg := range values {
+			switch a := arg.(type) {
+			case ast.IntExpression:
+				args = append(args, a.Value)
+			default:
+				return nil, ErrUnsupportedArgument(format, call, a)
+			}
+		}
+		return ast.IntExpression{Value: intFunction(args...)}, nil
 	}
 }

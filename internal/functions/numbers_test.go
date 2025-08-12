@@ -338,7 +338,7 @@ func TestMathFunctions(t *testing.T) {
 				},
 			},
 		},
-		// Mixed int and float operations (result type determined by first argument)
+		// Mixed int and float operations (result type is float if any argument is float)
 		{
 			name: "int and float",
 			input: []ast.Expression{
@@ -348,19 +348,19 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:        "PRODUCT",
-					expected: "<int 10>",
+					expected: "<float 12.50>",
 				},
 				{
 					f:        "AVERAGE",
-					expected: "<int 3>",
+					expected: "<float 3.75>",
 				},
 				{
 					f:        "MAX",
-					expected: "<int 5>",
+					expected: "<float 5.00>",
 				},
 				{
 					f:        "SUM",
-					expected: "<int 7>",
+					expected: "<float 7.50>",
 				},
 			},
 		},
@@ -476,19 +476,19 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "unsupported function call (PRODUCT <bool true>) at <: input:0:0>",
+					error: "PRODUCT(number...) got a wrong argument <bool true> in (PRODUCT <bool true>), at <: input:0:0>",
 				},
 				{
 					f:     "AVERAGE",
-					error: "unsupported function call (AVERAGE <bool true>) at <: input:0:0>",
+					error: "AVERAGE(number...) got a wrong argument <bool true> in (AVERAGE <bool true>), at <: input:0:0>",
 				},
 				{
 					f:     "MAX",
-					error: "unsupported function call (MAX <bool true>) at <: input:0:0>",
+					error: "MAX(number...) got a wrong argument <bool true> in (MAX <bool true>), at <: input:0:0>",
 				},
 				{
 					f:     "ABS",
-					error: "unsupported function call (ABS <bool true>) at <: input:0:0>",
+					error: "ABS(number) got a wrong argument <bool true> in (ABS <bool true>), at <: input:0:0>",
 				},
 				{
 					f:     "CEILING",
@@ -570,19 +570,19 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "unsupported function call (PRODUCT <str \"hello\">) at <: input:0:0>",
+					error: "PRODUCT(number...) got a wrong argument <str \"hello\"> in (PRODUCT <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "AVERAGE",
-					error: "unsupported function call (AVERAGE <str \"hello\">) at <: input:0:0>",
+					error: "AVERAGE(number...) got a wrong argument <str \"hello\"> in (AVERAGE <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "MAX",
-					error: "unsupported function call (MAX <str \"hello\">) at <: input:0:0>",
+					error: "MAX(number...) got a wrong argument <str \"hello\"> in (MAX <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "ABS",
-					error: "unsupported function call (ABS <str \"hello\">) at <: input:0:0>",
+					error: "ABS(number) got a wrong argument <str \"hello\"> in (ABS <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "CEILING",
