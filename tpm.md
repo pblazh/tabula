@@ -117,7 +117,7 @@
   - [ ] #29.10: **Important** Implement COUNTIFS function
   - [ ] #29.11: Implement COUNTUNIQUE function
   - [x] #29.12: Implement FLOOR function
-  - [ ] #29.13: **Important** Implement MAX function
+  - [x] #29.13: **Important** Implement MAX function
   - [ ] #29.14: Implement MAXA function
   - [ ] #29.15: **Important** Implement MIN function
   - [ ] #29.16: Implement MINA function

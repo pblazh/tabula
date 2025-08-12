@@ -6,6 +6,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"sort"
 	"strings"
 	"text/tabwriter"
 )
@@ -42,15 +43,8 @@ func writeCompact(csvWriter io.Writer, result [][]string, comments map[int]strin
 	}
 
 	writer.Flush()
-	for j, comment := range comments {
-		if j >= lineNum {
-			if _, err := fmt.Fprintln(csvWriter, comment); err != nil {
-				return err
-			}
-		}
-	}
 
-	return nil
+	return dumpComments(comments, lineNum, csvWriter)
 }
 
 func writeAligned(csvWriter io.Writer, result [][]string, comments map[int]string) error {
@@ -90,14 +84,25 @@ func writeAligned(csvWriter io.Writer, result [][]string, comments map[int]strin
 		lineNum++
 	}
 
-	for j, key := range comments {
-		if j >= lineNum {
-			_, err := fmt.Fprintln(csvWriter, key)
-			if err != nil {
-				return err
-			}
+	return dumpComments(comments, lineNum, csvWriter)
+}
+
+func dumpComments(comments map[int]string, lineNum int, w io.Writer) error {
+	var remainingLines []int
+	for lineNo := range comments {
+		if lineNo >= lineNum {
+			remainingLines = append(remainingLines, lineNo)
 		}
 	}
 
+	// Sort the line numbers to maintain order
+	sort.Ints(remainingLines)
+
+	// Write comments in order
+	for _, lineNo := range remainingLines {
+		if _, err := fmt.Fprintln(w, comments[lineNo]); err != nil {
+			return err
+		}
+	}
 	return nil
 }

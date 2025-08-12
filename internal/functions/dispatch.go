@@ -31,6 +31,9 @@ var DispatchMap dispatchMap = dispatchMap{
 	"AVERAGE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		return callNumbersFunction("AVERAGE(number...)", average, average, EmptyGuard, call, values...)
 	},
+	"MAX": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		return callNumbersFunction("MAX(number...)", max, max, EmptyGuard, call, values...)
+	},
 	"ABS": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		format := "ABS(number)"
 		return callNumbersFunction(format, abs, abs, MakeArityGuard(format, 1), call, values...)

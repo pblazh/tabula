@@ -32,6 +32,20 @@ func average[T Number](values ...T) T {
 	return T(total / T(len(values)))
 }
 
+func max[T Number](values ...T) T {
+	if len(values) == 0 {
+		return T(math.Inf(-1))
+	}
+
+	total := values[0]
+	for _, n := range values {
+		if total < n {
+			total = n
+		}
+	}
+	return T(total)
+}
+
 func abs[T Number](values ...T) T {
 	return T(math.Abs(float64(values[0])))
 }

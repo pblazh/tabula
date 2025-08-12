@@ -33,6 +33,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int 0>",
 				},
 				{
+					f:        "MAX",
+					expected: "<int -9223372036854775808>",
+				},
+				{
 					f:        "SUM",
 					expected: "<int 0>",
 				},
@@ -74,6 +78,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int -5>",
 				},
 				{
+					f:        "MAX",
+					expected: "<int -5>",
+				},
+				{
 					f:        "ABS",
 					expected: "<int 5>",
 				},
@@ -106,6 +114,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "AVERAGE",
 					expected: "<int 3>",
+				},
+				{
+					f:        "MAX",
+					expected: "<int 4>",
 				},
 				{
 					f:        "SUM",
@@ -150,6 +162,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int 5>",
 				},
 				{
+					f:        "MAX",
+					expected: "<int 10>",
+				},
+				{
 					f:        "SUM",
 					expected: "<int 15>",
 				},
@@ -172,6 +188,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int 3>",
 				},
 				{
+					f:        "MAX",
+					expected: "<int 10>",
+				},
+				{
 					f:        "SUM",
 					expected: "<int 9>",
 				},
@@ -190,6 +210,10 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:        "AVERAGE",
+					expected: "<float 5.50>",
+				},
+				{
+					f:        "MAX",
 					expected: "<float 5.50>",
 				},
 				{
@@ -230,6 +254,10 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:        "AVERAGE",
+					expected: "<float -3.70>",
+				},
+				{
+					f:        "MAX",
 					expected: "<float -3.70>",
 				},
 				{
@@ -275,6 +303,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<float 2.17>",
 				},
 				{
+					f:        "MAX",
+					expected: "<float 3.00>",
+				},
+				{
 					f:        "SUM",
 					expected: "<float 6.50>",
 				},
@@ -295,6 +327,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "AVERAGE",
 					expected: "<float 2.67>",
+				},
+				{
+					f:        "MAX",
+					expected: "<float 5.50>",
 				},
 				{
 					f:        "SUM",
@@ -319,6 +355,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int 3>",
 				},
 				{
+					f:        "MAX",
+					expected: "<int 5>",
+				},
+				{
 					f:        "SUM",
 					expected: "<int 7>",
 				},
@@ -338,6 +378,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "AVERAGE",
 					expected: "<float 3.25>",
+				},
+				{
+					f:        "MAX",
+					expected: "<float 4.00>",
 				},
 				{
 					f:        "POWER",
@@ -439,6 +483,10 @@ func TestMathFunctions(t *testing.T) {
 					error: "unsupported function call (AVERAGE <bool true>) at <: input:0:0>",
 				},
 				{
+					f:     "MAX",
+					error: "unsupported function call (MAX <bool true>) at <: input:0:0>",
+				},
+				{
 					f:     "ABS",
 					error: "unsupported function call (ABS <bool true>) at <: input:0:0>",
 				},
@@ -480,6 +528,10 @@ func TestMathFunctions(t *testing.T) {
 					error: "AVERAGE(number...) got a wrong argument <str \"hello\"> in (AVERAGE <int 5> <str \"hello\">), at <: input:0:0>",
 				},
 				{
+					f:     "MAX",
+					error: "MAX(number...) got a wrong argument <str \"hello\"> in (MAX <int 5> <str \"hello\">), at <: input:0:0>",
+				},
+				{
 					f:     "SUM",
 					error: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <int 5> <str \"hello\">), at <: input:0:0>",
 				},
@@ -501,6 +553,10 @@ func TestMathFunctions(t *testing.T) {
 					error: "AVERAGE(number...) got a wrong argument <bool true> in (AVERAGE <float 5.50> <bool true>), at <: input:0:0>",
 				},
 				{
+					f:     "MAX",
+					error: "MAX(number...) got a wrong argument <bool true> in (MAX <float 5.50> <bool true>), at <: input:0:0>",
+				},
+				{
 					f:     "SUM",
 					error: "SUM(number...) got a wrong argument <bool true> in (SUM <float 5.50> <bool true>), at <: input:0:0>",
 				},
@@ -519,6 +575,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "AVERAGE",
 					error: "unsupported function call (AVERAGE <str \"hello\">) at <: input:0:0>",
+				},
+				{
+					f:     "MAX",
+					error: "unsupported function call (MAX <str \"hello\">) at <: input:0:0>",
 				},
 				{
 					f:     "ABS",
