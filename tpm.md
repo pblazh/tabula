@@ -118,9 +118,9 @@
   - [ ] #29.11: Implement COUNTUNIQUE function
   - [x] #29.12: Implement FLOOR function
   - [x] #29.13: **Important** Implement MAX function
-  - [ ] #29.14: Implement MAXA function
-  - [ ] #29.15: **Important** Implement MIN function
-  - [ ] #29.16: Implement MINA function
+  - [x] #29.14: Implement MAXA function
+  - [x] #29.15: **Important** Implement MIN function
+  - [x] #29.16: Implement MINA function
   - [ ] #29.17: **Important** Implement MOD function
   - [x] #29.18: Implement POWER function
   - [x] #29.19: Implement PRODUCT function

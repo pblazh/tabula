@@ -37,6 +37,18 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int -9223372036854775808>",
 				},
 				{
+					f:        "MAXA",
+					expected: "<int -9223372036854775808>",
+				},
+				{
+					f:        "MIN",
+					expected: "<int 9223372036854775807>",
+				},
+				{
+					f:        "MINA",
+					expected: "<int 9223372036854775807>",
+				},
+				{
 					f:        "SUM",
 					expected: "<int 0>",
 				},
@@ -82,6 +94,18 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int -5>",
 				},
 				{
+					f:        "MAXA",
+					expected: "<int -5>",
+				},
+				{
+					f:        "MIN",
+					expected: "<int -5>",
+				},
+				{
+					f:        "MINA",
+					expected: "<int -5>",
+				},
+				{
 					f:        "ABS",
 					expected: "<int 5>",
 				},
@@ -118,6 +142,18 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "MAX",
 					expected: "<int 4>",
+				},
+				{
+					f:        "MAXA",
+					expected: "<int 4>",
+				},
+				{
+					f:        "MIN",
+					expected: "<int 2>",
+				},
+				{
+					f:        "MINA",
+					expected: "<int 2>",
 				},
 				{
 					f:        "SUM",
@@ -166,6 +202,18 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int 10>",
 				},
 				{
+					f:        "MAXA",
+					expected: "<int 10>",
+				},
+				{
+					f:        "MIN",
+					expected: "<int 0>",
+				},
+				{
+					f:        "MINA",
+					expected: "<int 0>",
+				},
+				{
 					f:        "SUM",
 					expected: "<int 15>",
 				},
@@ -192,6 +240,18 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int 10>",
 				},
 				{
+					f:        "MAXA",
+					expected: "<int 10>",
+				},
+				{
+					f:        "MIN",
+					expected: "<int -3>",
+				},
+				{
+					f:        "MINA",
+					expected: "<int -3>",
+				},
+				{
 					f:        "SUM",
 					expected: "<int 9>",
 				},
@@ -214,6 +274,18 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:        "MAX",
+					expected: "<float 5.50>",
+				},
+				{
+					f:        "MAXA",
+					expected: "<float 5.50>",
+				},
+				{
+					f:        "MIN",
+					expected: "<float 5.50>",
+				},
+				{
+					f:        "MINA",
 					expected: "<float 5.50>",
 				},
 				{
@@ -258,6 +330,18 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:        "MAX",
+					expected: "<float -3.70>",
+				},
+				{
+					f:        "MAXA",
+					expected: "<float -3.70>",
+				},
+				{
+					f:        "MIN",
+					expected: "<float -3.70>",
+				},
+				{
+					f:        "MINA",
 					expected: "<float -3.70>",
 				},
 				{
@@ -307,6 +391,18 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<float 3.00>",
 				},
 				{
+					f:        "MAXA",
+					expected: "<float 3.00>",
+				},
+				{
+					f:        "MIN",
+					expected: "<float 1.50>",
+				},
+				{
+					f:        "MINA",
+					expected: "<float 1.50>",
+				},
+				{
 					f:        "SUM",
 					expected: "<float 6.50>",
 				},
@@ -331,6 +427,18 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "MAX",
 					expected: "<float 5.50>",
+				},
+				{
+					f:        "MAXA",
+					expected: "<float 5.50>",
+				},
+				{
+					f:        "MIN",
+					expected: "<float 0.00>",
+				},
+				{
+					f:        "MINA",
+					expected: "<float 0.00>",
 				},
 				{
 					f:        "SUM",
@@ -359,6 +467,18 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<float 5.00>",
 				},
 				{
+					f:        "MAXA",
+					expected: "<float 5.00>",
+				},
+				{
+					f:        "MIN",
+					expected: "<float 2.50>",
+				},
+				{
+					f:        "MINA",
+					expected: "<float 2.50>",
+				},
+				{
 					f:        "SUM",
 					expected: "<float 7.50>",
 				},
@@ -382,6 +502,18 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "MAX",
 					expected: "<float 4.00>",
+				},
+				{
+					f:        "MAXA",
+					expected: "<float 4.00>",
+				},
+				{
+					f:        "MIN",
+					expected: "<float 2.50>",
+				},
+				{
+					f:        "MINA",
+					expected: "<float 2.50>",
 				},
 				{
 					f:        "POWER",
@@ -487,6 +619,18 @@ func TestMathFunctions(t *testing.T) {
 					error: "MAX(number...) got a wrong argument <bool true> in (MAX <bool true>), at <: input:0:0>",
 				},
 				{
+					f:     "MAXA",
+					error: "MAXA(number...) got a wrong argument <bool true> in (MAXA <bool true>), at <: input:0:0>",
+				},
+				{
+					f:     "MIN",
+					error: "MIN(number...) got a wrong argument <bool true> in (MIN <bool true>), at <: input:0:0>",
+				},
+				{
+					f:     "MINA",
+					error: "MINA(number...) got a wrong argument <bool true> in (MINA <bool true>), at <: input:0:0>",
+				},
+				{
 					f:     "ABS",
 					error: "ABS(number) got a wrong argument <bool true> in (ABS <bool true>), at <: input:0:0>",
 				},
@@ -532,6 +676,18 @@ func TestMathFunctions(t *testing.T) {
 					error: "MAX(number...) got a wrong argument <str \"hello\"> in (MAX <int 5> <str \"hello\">), at <: input:0:0>",
 				},
 				{
+					f:     "MAXA",
+					error: "MAXA(number...) got a wrong argument <str \"hello\"> in (MAXA <int 5> <str \"hello\">), at <: input:0:0>",
+				},
+				{
+					f:     "MIN",
+					error: "MIN(number...) got a wrong argument <str \"hello\"> in (MIN <int 5> <str \"hello\">), at <: input:0:0>",
+				},
+				{
+					f:     "MINA",
+					error: "MINA(number...) got a wrong argument <str \"hello\"> in (MINA <int 5> <str \"hello\">), at <: input:0:0>",
+				},
+				{
 					f:     "SUM",
 					error: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <int 5> <str \"hello\">), at <: input:0:0>",
 				},
@@ -555,6 +711,18 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "MAX",
 					error: "MAX(number...) got a wrong argument <bool true> in (MAX <float 5.50> <bool true>), at <: input:0:0>",
+				},
+				{
+					f:     "MAXA",
+					error: "MAXA(number...) got a wrong argument <bool true> in (MAXA <float 5.50> <bool true>), at <: input:0:0>",
+				},
+				{
+					f:     "MIN",
+					error: "MIN(number...) got a wrong argument <bool true> in (MIN <float 5.50> <bool true>), at <: input:0:0>",
+				},
+				{
+					f:     "MINA",
+					error: "MINA(number...) got a wrong argument <bool true> in (MINA <float 5.50> <bool true>), at <: input:0:0>",
 				},
 				{
 					f:     "SUM",
@@ -581,6 +749,10 @@ func TestMathFunctions(t *testing.T) {
 					error: "MAX(number...) got a wrong argument <str \"hello\"> in (MAX <str \"hello\">), at <: input:0:0>",
 				},
 				{
+					f:     "MAXA",
+					error: "MAXA(number...) got a wrong argument <str \"hello\"> in (MAXA <str \"hello\">), at <: input:0:0>",
+				},
+				{
 					f:     "ABS",
 					error: "ABS(number) got a wrong argument <str \"hello\"> in (ABS <str \"hello\">), at <: input:0:0>",
 				},
@@ -597,12 +769,92 @@ func TestMathFunctions(t *testing.T) {
 					error: "INT(number) got a wrong argument <str \"hello\"> in (INT <str \"hello\">), at <: input:0:0>",
 				},
 				{
+					f:     "MIN",
+					error: "MIN(number...) got a wrong argument <str \"hello\"> in (MIN <str \"hello\">), at <: input:0:0>",
+				},
+				{
+					f:     "MINA",
+					error: "MINA(number...) got a wrong argument <str \"hello\"> in (MINA <str \"hello\">), at <: input:0:0>",
+				},
+				{
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "SUM",
 					error: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <str \"hello\">), at <: input:0:0>",
+				},
+			},
+		},
+		// MAXA/MINA-specific tests for string parsing
+		{
+			name: "with string numbers",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "5"},
+				ast.StringExpression{Value: "3.7"},
+				ast.IntExpression{Value: 2},
+			},
+			cases: []inputCase{
+				{
+					f:        "MAXA",
+					expected: "<float 5.00>",
+				},
+				{
+					f:        "MINA",
+					expected: "<float 2.00>",
+				},
+			},
+		},
+		{
+			name: "with integer strings",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "10"},
+				ast.StringExpression{Value: "20"},
+				ast.IntExpression{Value: 15},
+			},
+			cases: []inputCase{
+				{
+					f:        "MAXA",
+					expected: "<int 20>",
+				},
+				{
+					f:        "MINA",
+					expected: "<int 10>",
+				},
+			},
+		},
+		{
+			name: "with mixed valid strings",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "  42  "},
+				ast.StringExpression{Value: "-15"},
+				ast.FloatExpression{Value: 3.14},
+			},
+			cases: []inputCase{
+				{
+					f:        "MAXA",
+					expected: "<float 42.00>",
+				},
+				{
+					f:        "MINA",
+					expected: "<float -15.00>",
+				},
+			},
+		},
+		{
+			name: "with invalid string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "not_a_number"},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:     "MAXA",
+					error: "MAXA(number...) got a wrong argument <str \"not_a_number\"> in (MAXA <str \"not_a_number\"> <int 5>), at <: input:0:0>",
+				},
+				{
+					f:     "MINA",
+					error: "MINA(number...) got a wrong argument <str \"not_a_number\"> in (MINA <str \"not_a_number\"> <int 5>), at <: input:0:0>",
 				},
 			},
 		},

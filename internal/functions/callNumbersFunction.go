@@ -32,7 +32,6 @@ func callNumbersFunction(
 		switch arg.(type) {
 		case ast.FloatExpression:
 			hasFloat = true
-			break
 		case ast.IntExpression:
 			// continue checking
 		default:
@@ -49,8 +48,6 @@ func callNumbersFunction(
 				args = append(args, float64(a.Value))
 			case ast.FloatExpression:
 				args = append(args, a.Value)
-			default:
-				return nil, ErrUnsupportedArgument(format, call, a)
 			}
 		}
 		return ast.FloatExpression{Value: floatFunction(args...)}, nil
@@ -61,8 +58,6 @@ func callNumbersFunction(
 			switch a := arg.(type) {
 			case ast.IntExpression:
 				args = append(args, a.Value)
-			default:
-				return nil, ErrUnsupportedArgument(format, call, a)
 			}
 		}
 		return ast.IntExpression{Value: intFunction(args...)}, nil
