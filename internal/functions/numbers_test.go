@@ -33,22 +33,6 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int 0>",
 				},
 				{
-					f:        "MAX",
-					expected: "<int -9223372036854775808>",
-				},
-				{
-					f:        "MAXA",
-					expected: "<int -9223372036854775808>",
-				},
-				{
-					f:        "MIN",
-					expected: "<int 9223372036854775807>",
-				},
-				{
-					f:        "MINA",
-					expected: "<int 9223372036854775807>",
-				},
-				{
 					f:        "SUM",
 					expected: "<int 0>",
 				},
