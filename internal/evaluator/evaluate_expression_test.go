@@ -326,7 +326,7 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 		{
 			name:     "SUM with mixed int and float (int first)",
 			input:    "SUM(5, 2.5)",
-			expected: "<int 7>",
+			expected: "<float 7.50>",
 		},
 		{
 			name:     "SUM with mixed float and int (float first)",

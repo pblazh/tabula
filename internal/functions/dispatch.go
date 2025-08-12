@@ -31,6 +31,26 @@ var DispatchMap dispatchMap = dispatchMap{
 	"AVERAGE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		return callNumbersFunction("AVERAGE(number...)", average, average, EmptyGuard, call, values...)
 	},
+	"MAX": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		return callNumbersFunction("MAX(number...)", max, max, EmptyGuard, call, values...)
+	},
+	"MAXA": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		converted, failed := parseStringExpressions(call, values)
+		if failed != nil {
+			return nil, ErrUnsupportedArgument("MAXA(number...)", call, failed)
+		}
+		return callNumbersFunction("MAXA(number|string...)", max, max, EmptyGuard, call, converted...)
+	},
+	"MIN": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		return callNumbersFunction("MIN(number...)", min, min, EmptyGuard, call, values...)
+	},
+	"MINA": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		converted, failed := parseStringExpressions(call, values)
+		if failed != nil {
+			return nil, ErrUnsupportedArgument("MINA(number...)", call, failed)
+		}
+		return callNumbersFunction("MINA(number|string...)", min, min, EmptyGuard, call, converted...)
+	},
 	"ABS": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		format := "ABS(number)"
 		return callNumbersFunction(format, abs, abs, MakeArityGuard(format, 1), call, values...)
