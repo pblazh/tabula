@@ -94,3 +94,28 @@ func parseStringExpressions(call ast.CallExpression, values []ast.Expression) ([
 	}
 	return converted, nil
 }
+
+func count(call ast.CallExpression, values ...ast.Expression) ast.IntExpression {
+	var result int
+	for _, value := range values {
+		if ast.IsNumeric(value) || ast.IsDate(value) {
+			result++
+		}
+	}
+	return ast.IntExpression{Value: result, Token: call.Token}
+}
+
+func counta(call ast.CallExpression, values ...ast.Expression) ast.IntExpression {
+	var result int
+	for _, value := range values {
+		switch v := value.(type) {
+		case ast.StringExpression:
+			if v.Value != "" {
+				result++
+			}
+		default:
+			result++
+		}
+	}
+	return ast.IntExpression{Value: result, Token: call.Token}
+}
