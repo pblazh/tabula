@@ -110,8 +110,8 @@
   - [ ] #29.3: Implement AVERAGEIF function
   - [ ] #29.4: Implement AVERAGEIFS function
   - [x] #29.5: Implement CEILING function
-  - [ ] #29.6: **Important** Implement COUNT function
-  - [ ] #29.7: **Important** Implement COUNTA function
+  - [x] #29.6: **Important** Implement COUNT function
+  - [x] #29.7: **Important** Implement COUNTA function
   - [ ] #29.8: Implement COUNTBLANK function
   - [ ] #29.9: **Important** Implement COUNTIF function
   - [ ] #29.10: **Important** Implement COUNTIFS function

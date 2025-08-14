@@ -37,6 +37,14 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int 0>",
 				},
 				{
+					f:        "COUNT",
+					expected: "<int 0>",
+				},
+				{
+					f:        "COUNTA",
+					expected: "<int 0>",
+				},
+				{
 					f:     "ABS",
 					error: "ABS(number) expected 1 argument, but got 0 in (ABS), at <: input:0:0>",
 				},
@@ -102,6 +110,14 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int -5>",
 				},
 				{
+					f:        "COUNT",
+					expected: "<int 1>",
+				},
+				{
+					f:        "COUNTA",
+					expected: "<int 1>",
+				},
+				{
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <int -5>), at <: input:0:0>",
 				},
@@ -142,6 +158,14 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "SUM",
 					expected: "<int 9>",
+				},
+				{
+					f:        "COUNT",
+					expected: "<int 3>",
+				},
+				{
+					f:        "COUNTA",
+					expected: "<int 3>",
 				},
 				{
 					f:     "ABS",
@@ -839,6 +863,139 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "MINA",
 					error: "MINA(number...) got a wrong argument <str \"not_a_number\"> in (MINA <str \"not_a_number\"> <int 5>), at <: input:0:0>",
+				},
+			},
+		},
+		// COUNT and COUNTA specific tests
+		{
+			name: "COUNT: mixed numeric and non-numeric types",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 5},
+				ast.StringExpression{Value: "hello"},
+				ast.FloatExpression{Value: 3.14},
+				ast.BooleanExpression{Value: true},
+			},
+			cases: []inputCase{
+				{
+					f:        "COUNT",
+					expected: "<int 2>",
+				},
+				{
+					f:        "COUNTA",
+					expected: "<int 4>",
+				},
+			},
+		},
+		{
+			name: "COUNT: only strings",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "123"},
+			},
+			cases: []inputCase{
+				{
+					f:        "COUNT",
+					expected: "<int 0>",
+				},
+				{
+					f:        "COUNTA",
+					expected: "<int 3>",
+				},
+			},
+		},
+		{
+			name: "COUNT: only booleans",
+			input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.BooleanExpression{Value: false},
+			},
+			cases: []inputCase{
+				{
+					f:        "COUNT",
+					expected: "<int 0>",
+				},
+				{
+					f:        "COUNTA",
+					expected: "<int 2>",
+				},
+			},
+		},
+		{
+			name: "COUNTA: with empty strings",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: ""},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: ""},
+				ast.IntExpression{Value: 42},
+			},
+			cases: []inputCase{
+				{
+					f:        "COUNT",
+					expected: "<int 1>",
+				},
+				{
+					f:        "COUNTA",
+					expected: "<int 3>",
+				},
+			},
+		},
+		{
+			name: "COUNT and COUNTA: all empty strings",
+			input: []ast.Expression{
+				ast.StringExpression{Value: ""},
+				ast.StringExpression{Value: ""},
+				ast.StringExpression{Value: ""},
+			},
+			cases: []inputCase{
+				{
+					f:        "COUNT",
+					expected: "<int 0>",
+				},
+				{
+					f:        "COUNTA",
+					expected: "<int 0>",
+				},
+			},
+		},
+		{
+			name: "COUNT: zeros should be counted",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 0},
+				ast.FloatExpression{Value: 0.0},
+				ast.IntExpression{Value: 1},
+			},
+			cases: []inputCase{
+				{
+					f:        "COUNT",
+					expected: "<int 3>",
+				},
+				{
+					f:        "COUNTA",
+					expected: "<int 3>",
+				},
+			},
+		},
+		{
+			name: "COUNT: complex mixed scenario",
+			input: []ast.Expression{
+				ast.IntExpression{Value: -5},
+				ast.FloatExpression{Value: 2.5},
+				ast.StringExpression{Value: ""},
+				ast.StringExpression{Value: "text"},
+				ast.DateExpression{},
+				ast.IntExpression{Value: 0},
+				ast.StringExpression{Value: ""},
+			},
+			cases: []inputCase{
+				{
+					f:        "COUNT",
+					expected: "<int 4>",
+				},
+				{
+					f:        "COUNTA",
+					expected: "<int 5>",
 				},
 			},
 		},

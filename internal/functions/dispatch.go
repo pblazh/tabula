@@ -178,4 +178,10 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "DATEVALUE(string)"
 		return DateValue(format, call, values...)
 	},
+	"COUNT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		return count(call, values...), nil
+	},
+	"COUNTA": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		return counta(call, values...), nil
+	},
 }
