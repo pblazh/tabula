@@ -66,11 +66,15 @@ func abs[T Number](values ...T) T {
 	return T(math.Abs(float64(values[0])))
 }
 
-func roundPrecise(up bool, value, precision float64) float64 {
-	if up {
-		return math.Ceil(value/precision) * precision
-	}
+func roundPrecise(value, precision float64) float64 {
+	return math.Round(value/precision) * precision
+}
 
+func roundUpPrecise(value, precision float64) float64 {
+	return math.Ceil(value/precision) * precision
+}
+
+func roundDownPrecise(value, precision float64) float64 {
 	return math.Floor(value/precision) * precision
 }
 

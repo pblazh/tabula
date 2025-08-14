@@ -50,11 +50,15 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 0 in (CEILING), at <: input:0:0>",
+					error: "CEILING(number, [number]) expected 2 arguments, but got 0 in (CEILING), at <: input:0:0>",
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 0 in (FLOOR), at <: input:0:0>",
+					error: "FLOOR(number, [number]) expected 2 arguments, but got 0 in (FLOOR), at <: input:0:0>",
+				},
+				{
+					f:     "ROUND",
+					error: "ROUND(number, [number]) expected 2 arguments, but got 0 in (ROUND), at <: input:0:0>",
 				},
 				{
 					f:     "INT",
@@ -173,11 +177,15 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 3 in (CEILING <int 2> <int 3> <int 4>), at <: input:0:0>",
+					error: "CEILING(number, [number]) expected 2 arguments, but got 3 in (CEILING <int 2> <int 3> <int 4>), at <: input:0:0>",
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 3 in (FLOOR <int 2> <int 3> <int 4>), at <: input:0:0>",
+					error: "FLOOR(number, [number]) expected 2 arguments, but got 3 in (FLOOR <int 2> <int 3> <int 4>), at <: input:0:0>",
+				},
+				{
+					f:     "ROUND",
+					error: "ROUND(number, [number]) expected 2 arguments, but got 3 in (ROUND <int 2> <int 3> <int 4>), at <: input:0:0>",
 				},
 				{
 					f:     "INT",
@@ -309,12 +317,16 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<float 5.50>",
 				},
 				{
-					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <float 5.50>), at <: input:0:0>",
+					f:        "CEILING",
+					expected: "<int 6>",
 				},
 				{
-					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <float 5.50>), at <: input:0:0>",
+					f:        "FLOOR",
+					expected: "<int 5>",
+				},
+				{
+					f:        "ROUND",
+					expected: "<int 6>",
 				},
 				{
 					f:     "POWER",
@@ -365,12 +377,16 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<float -3.70>",
 				},
 				{
-					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <float -3.70>), at <: input:0:0>",
+					f:        "CEILING",
+					expected: "<int -3>",
 				},
 				{
-					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <float -3.70>), at <: input:0:0>",
+					f:        "FLOOR",
+					expected: "<int -4>",
+				},
+				{
+					f:        "ROUND",
+					expected: "<int -4>",
 				},
 				{
 					f:     "POWER",
@@ -542,11 +558,11 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:        "CEILING",
-					expected: "<float 22.00>",
+					expected: "<int 22>",
 				},
 				{
 					f:        "FLOOR",
-					expected: "<float 20.00>",
+					expected: "<int 20>",
 				},
 				{
 					f:        "POWER",
@@ -567,11 +583,11 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:        "CEILING",
-					expected: "<float 3.00>",
+					expected: "<int 3>",
 				},
 				{
 					f:        "FLOOR",
-					expected: "<float 2.00>",
+					expected: "<int 2>",
 				},
 				{
 					f:        "POWER",
@@ -592,11 +608,11 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:        "CEILING",
-					expected: "<float 129.00>",
+					expected: "<int 129>",
 				},
 				{
 					f:        "FLOOR",
-					expected: "<float 126.00>",
+					expected: "<int 126>",
 				},
 				{
 					f:        "POWER",
@@ -644,11 +660,15 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <bool true>), at <: input:0:0>",
+					error: "CEILING(number, [number]) got a wrong argument <bool true> in (CEILING <bool true>), at <: input:0:0>",
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <bool true>), at <: input:0:0>",
+					error: "FLOOR(number, [number]) got a wrong argument <bool true> in (FLOOR <bool true>), at <: input:0:0>",
+				},
+				{
+					f:     "ROUND",
+					error: "ROUND(number, [number]) got a wrong argument <bool true> in (ROUND <bool true>), at <: input:0:0>",
 				},
 				{
 					f:     "INT",
@@ -766,11 +786,15 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, number) expected 2 arguments, but got 1 in (CEILING <str \"hello\">), at <: input:0:0>",
+					error: "CEILING(number) got a wrong argument <str \"hello\"> in (CEILING <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, number) expected 2 arguments, but got 1 in (FLOOR <str \"hello\">), at <: input:0:0>",
+					error: "FLOOR(number) got a wrong argument <str \"hello\"> in (FLOOR <str \"hello\">), at <: input:0:0>",
+				},
+				{
+					f:     "ROUND",
+					error: "ROUND(number) got a wrong argument <str \"hello\"> in (ROUND <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "INT",
