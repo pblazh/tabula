@@ -124,9 +124,9 @@
   - [ ] #29.17: **Important** Implement MOD function
   - [x] #29.18: Implement POWER function
   - [x] #29.19: Implement PRODUCT function
-  - [ ] #29.20: **Important** Implement ROUND function
-  - [ ] #29.21: Implement ROUNDDOWN function
-  - [ ] #29.22: Implement ROUNDUP function
+  - [x] #29.20: **Important** Implement ROUND function
+  - [x] #29.21: Implement ROUNDDOWN function
+  - [x] #29.22: Implement ROUNDUP function
   - [ ] #29.23: Implement SIGN function
   - [ ] #29.24: **Important** Implement SQRT function
   - [ ] #29.25: Implement SQRTPI function
