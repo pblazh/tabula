@@ -6,8 +6,8 @@ import (
 	"github.com/pblazh/csvss/internal/ast"
 )
 
-func Power(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-	callGuard := MakeExactTypesGuard("POWER(number, number)", ast.IsNumeric, ast.IsNumeric)
+func Power(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeExactTypesGuard(format, ast.IsNumeric, ast.IsNumeric)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
 	}
@@ -18,20 +18,23 @@ func Power(call ast.CallExpression, values ...ast.Expression) (ast.Expression, e
 	return ast.FloatExpression{Value: math.Pow(first.Value, second.Value)}, nil
 }
 
-func Add(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-	callGuard := MakeExactTypesGuard("ADD(number, number)", ast.IsNumeric, ast.IsNumeric)
-	if err := callGuard(call, values...); err != nil {
+func Sqrt(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	guard := MakeExactTypesGuard(format, ast.IsNumeric)
+	if err := guard(call, values...); err != nil {
 		return nil, err
 	}
 
-	first, _ := ast.ToFloat(&(values[0]))
-	second, _ := ast.ToFloat(&(values[1]))
-
-	result := first.Value + second.Value
-
-	if ast.IsInt(first) || ast.IsInt(second) {
-		return ast.IntExpression{Value: int(result)}, nil
+	value := values[0]
+	switch v := value.(type) {
+	case ast.IntExpression:
+		if v.Value < 0 {
+			return nil, ErrUnsupportedArgument(format, call, value)
+		}
+	case ast.FloatExpression:
+		if v.Value < 0 {
+			return nil, ErrUnsupportedArgument(format, call, value)
+		}
 	}
 
-	return ast.FloatExpression{Value: result}, nil
+	return callNumbersFunction(format, sqrt, sqrt, EmptyGuard, call, values...)
 }

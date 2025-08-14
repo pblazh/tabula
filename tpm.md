@@ -128,7 +128,7 @@
   - [x] #29.21: Implement ROUNDDOWN function
   - [x] #29.22: Implement ROUNDUP function
   - [ ] #29.23: Implement SIGN function
-  - [ ] #29.24: **Important** Implement SQRT function
+  - [x] #29.24: **Important** Implement SQRT function
   - [ ] #29.25: Implement SQRTPI function
   - [x] #29.26: Implement SUM function
   - [ ] #29.27: **Important** Implement SUMIF function

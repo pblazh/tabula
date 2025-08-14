@@ -72,6 +72,10 @@ func mod[T Number](values ...T) T {
 	return T(math.Mod(float64(a), float64(b)))
 }
 
+func sqrt[T Number](value ...T) T {
+	return T(math.Sqrt(float64(value[0])))
+}
+
 func roundPrecise(value, precision float64) float64 {
 	return math.Round(value/precision) * precision
 }
