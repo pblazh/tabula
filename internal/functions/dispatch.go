@@ -112,6 +112,10 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "FIND(string, string, [int])"
 		return Find(format, call, values...)
 	},
+	"LEFT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "LEFT(string, [int])"
+		return Left(format, call, values...)
+	},
 
 	// bulean functions
 	"IF": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {

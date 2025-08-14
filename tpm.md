@@ -149,11 +149,11 @@
   - [ ] #30.3: Implement JOIN function
   - [ ] #30.4: Implement TEXTJOIN function
   - [x] #30.5: Implement EXACT function
-  - [ ] #30.6: **Important** Implement FIND function
+  - [x] #30.6: **Important** Implement FIND function
   - [ ] #30.7: Implement FINDB function
   - [ ] #30.8: Implement SEARCH function
   - [ ] #30.9: Implement SEARCHB function
-  - [ ] #30.10: **Important** Implement LEFT function
+  - [x] #30.10: **Important** Implement LEFT function
   - [ ] #30.11: Implement LEFTB function
   - [ ] #30.12: **Important** Implement RIGHT function
   - [ ] #30.13: Implement RIGHTB function

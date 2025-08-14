@@ -99,12 +99,12 @@ func Find(format string,
 		return nil, err
 	}
 
+	a := values[0].(ast.StringExpression)
+	b := values[1].(ast.StringExpression)
+
 	if len(values) == 3 {
 		start = values[2].(ast.IntExpression).Value
 	}
-
-	a := values[0].(ast.StringExpression)
-	b := values[1].(ast.StringExpression)
 
 	// Handle edge cases for start position
 	if start < 0 || start > len(a.Value) {
@@ -116,4 +116,38 @@ func Find(format string,
 		return ast.IntExpression{Value: -1, Token: call.Token}, nil
 	}
 	return ast.IntExpression{Value: result + start, Token: call.Token}, nil
+}
+
+func Left(format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	var guard CallGuard
+	var n int
+	if len(values) == 1 {
+		guard = MakeExactTypesGuard(format, ast.IsString)
+	} else {
+		guard = MakeExactTypesGuard(format, ast.IsString, ast.IsInt)
+	}
+
+	if err := guard(call, values...); err != nil {
+		return nil, err
+	}
+
+	a := values[0].(ast.StringExpression)
+
+	if len(values) == 2 {
+		n = values[1].(ast.IntExpression).Value
+	} else {
+		n = 1
+	}
+
+	// Handle edge cases for count
+	if n < 0 {
+		n = 0
+	}
+	if n > len(a.Value) {
+		n = len(a.Value)
+	}
+
+	return ast.StringExpression{Value: a.Value[0:n], Token: call.Token}, nil
 }
