@@ -66,6 +66,12 @@ func abs[T Number](values ...T) T {
 	return T(math.Abs(float64(values[0])))
 }
 
+func mod[T Number](values ...T) T {
+	a := values[0]
+	b := values[1]
+	return T(math.Mod(float64(a), float64(b)))
+}
+
 func roundPrecise(value, precision float64) float64 {
 	return math.Round(value/precision) * precision
 }

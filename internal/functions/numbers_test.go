@@ -68,6 +68,10 @@ func TestMathFunctions(t *testing.T) {
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 0 in (POWER), at <: input:0:0>",
 				},
+				{
+					f:     "MOD",
+					error: "MOD(number, number) expected 2 arguments, but got 0 in (MOD), at <: input:0:0>",
+				},
 			},
 		},
 		// Integer operations
@@ -124,6 +128,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <int -5>), at <: input:0:0>",
+				},
+				{
+					f:     "MOD",
+					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <int -5>), at <: input:0:0>",
 				},
 			},
 		},
@@ -194,6 +202,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 3 in (POWER <int 2> <int 3> <int 4>), at <: input:0:0>",
+				},
+				{
+					f:     "MOD",
+					error: "MOD(number, number) expected 2 arguments, but got 3 in (MOD <int 2> <int 3> <int 4>), at <: input:0:0>",
 				},
 			},
 		},
@@ -332,6 +344,10 @@ func TestMathFunctions(t *testing.T) {
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <float 5.50>), at <: input:0:0>",
 				},
+				{
+					f:     "MOD",
+					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <float 5.50>), at <: input:0:0>",
+				},
 			},
 		},
 		{
@@ -391,6 +407,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <float -3.70>), at <: input:0:0>",
+				},
+				{
+					f:     "MOD",
+					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <float -3.70>), at <: input:0:0>",
 				},
 			},
 		},
@@ -569,6 +589,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<float 441.00>",
 				},
 				{
+					f:        "MOD",
+					expected: "<int 1>",
+				},
+				{
 					f:        "SUM",
 					expected: "<int 23>",
 				},
@@ -594,6 +618,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<float 2.50>",
 				},
 				{
+					f:        "MOD",
+					expected: "<float 0.50>",
+				},
+				{
 					f:        "SUM",
 					expected: "<float 3.50>",
 				},
@@ -617,6 +645,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "POWER",
 					expected: "<float 2026685.91>",
+				},
+				{
+					f:        "MOD",
+					expected: "<float 0.55>",
 				},
 				{
 					f:        "SUM",
@@ -681,6 +713,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <bool true>), at <: input:0:0>",
+				},
+				{
+					f:     "MOD",
+					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <bool true>), at <: input:0:0>",
 				},
 			},
 		},
@@ -786,15 +822,15 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number) got a wrong argument <str \"hello\"> in (CEILING <str \"hello\">), at <: input:0:0>",
+					error: "CEILING(number, [number]) got a wrong argument <str \"hello\"> in (CEILING <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number) got a wrong argument <str \"hello\"> in (FLOOR <str \"hello\">), at <: input:0:0>",
+					error: "FLOOR(number, [number]) got a wrong argument <str \"hello\"> in (FLOOR <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "ROUND",
-					error: "ROUND(number) got a wrong argument <str \"hello\"> in (ROUND <str \"hello\">), at <: input:0:0>",
+					error: "ROUND(number, [number]) got a wrong argument <str \"hello\"> in (ROUND <str \"hello\">), at <: input:0:0>",
 				},
 				{
 					f:     "INT",
@@ -815,6 +851,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "SUM",
 					error: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <str \"hello\">), at <: input:0:0>",
+				},
+				{
+					f:     "MOD",
+					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <str \"hello\">), at <: input:0:0>",
 				},
 			},
 		},
@@ -887,6 +927,124 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "MINA",
 					error: "MINA(number...) got a wrong argument <str \"not_a_number\"> in (MINA <str \"not_a_number\"> <int 5>), at <: input:0:0>",
+				},
+			},
+		},
+		// MOD function specific tests
+		{
+			name: "MOD: positive integers",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 17},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:        "MOD",
+					expected: "<int 2>",
+				},
+			},
+		},
+		{
+			name: "MOD: negative dividend",
+			input: []ast.Expression{
+				ast.IntExpression{Value: -17},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:        "MOD",
+					expected: "<int -2>",
+				},
+			},
+		},
+		{
+			name: "MOD: negative divisor",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 17},
+				ast.IntExpression{Value: -5},
+			},
+			cases: []inputCase{
+				{
+					f:        "MOD",
+					expected: "<int 2>",
+				},
+			},
+		},
+		{
+			name: "MOD: both negative",
+			input: []ast.Expression{
+				ast.IntExpression{Value: -17},
+				ast.IntExpression{Value: -5},
+			},
+			cases: []inputCase{
+				{
+					f:        "MOD",
+					expected: "<int -2>",
+				},
+			},
+		},
+		{
+			name: "MOD: exact division",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 15},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:        "MOD",
+					expected: "<int 0>",
+				},
+			},
+		},
+		{
+			name: "MOD: with floats",
+			input: []ast.Expression{
+				ast.FloatExpression{Value: 7.5},
+				ast.FloatExpression{Value: 2.5},
+			},
+			cases: []inputCase{
+				{
+					f:        "MOD",
+					expected: "<float 0.00>",
+				},
+			},
+		},
+		{
+			name: "MOD: mixed int and float",
+			input: []ast.Expression{
+				ast.FloatExpression{Value: 10.7},
+				ast.IntExpression{Value: 3},
+			},
+			cases: []inputCase{
+				{
+					f:        "MOD",
+					expected: "<float 1.70>",
+				},
+			},
+		},
+		{
+			name: "MOD: division by one",
+			input: []ast.Expression{
+				ast.FloatExpression{Value: 5.7},
+				ast.IntExpression{Value: 1},
+			},
+			cases: []inputCase{
+				{
+					f:        "MOD",
+					expected: "<float 0.70>",
+				},
+			},
+		},
+		{
+			name: "MOD: small dividend, large divisor",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 3},
+				ast.IntExpression{Value: 10},
+			},
+			cases: []inputCase{
+				{
+					f:        "MOD",
+					expected: "<int 3>",
 				},
 			},
 		},
