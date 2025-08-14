@@ -108,6 +108,10 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "EXACT(string, string)"
 		return Exact(format, call, values...)
 	},
+	"FIND": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "FIND(string, string, [int])"
+		return Find(format, call, values...)
+	},
 
 	// bulean functions
 	"IF": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {

@@ -82,3 +82,38 @@ func Exact(format string,
 	b := values[1].(ast.StringExpression)
 	return ast.BooleanExpression{Value: strings.Compare(a.Value, b.Value) == 0, Token: call.Token}, nil
 }
+
+func Find(format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	var guard CallGuard
+	var start int
+	if len(values) == 2 {
+		guard = MakeExactTypesGuard(format, ast.IsString, ast.IsString)
+		start = 0
+	} else {
+		guard = MakeExactTypesGuard(format, ast.IsString, ast.IsString, ast.IsInt)
+	}
+
+	if err := guard(call, values...); err != nil {
+		return nil, err
+	}
+
+	if len(values) == 3 {
+		start = values[2].(ast.IntExpression).Value
+	}
+
+	a := values[0].(ast.StringExpression)
+	b := values[1].(ast.StringExpression)
+
+	// Handle edge cases for start position
+	if start < 0 || start > len(a.Value) {
+		return ast.IntExpression{Value: -1, Token: call.Token}, nil
+	}
+
+	result := strings.Index(a.Value[start:], b.Value)
+	if result == -1 {
+		return ast.IntExpression{Value: -1, Token: call.Token}, nil
+	}
+	return ast.IntExpression{Value: result + start, Token: call.Token}, nil
+}

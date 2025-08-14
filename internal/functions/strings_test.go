@@ -42,6 +42,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "EXACT",
 					error: "EXACT(string, string) expected 2 arguments, but got 0 in (EXACT), at <: input:0:0>",
 				},
+				{
+					f:     "FIND",
+					error: "FIND(string, string, [int]) expected 3 arguments, but got 0 in (FIND), at <: input:0:0>",
+				},
 			},
 		},
 		// Single string
@@ -74,6 +78,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "EXACT",
 					error: "EXACT(string, string) expected 2 arguments, but got 1 in (EXACT <str \"hello\">), at <: input:0:0>",
+				},
+				{
+					f:     "FIND",
+					error: "FIND(string, string, [int]) expected 3 arguments, but got 1 in (FIND <str \"hello\">), at <: input:0:0>",
 				},
 			},
 		},
@@ -235,6 +243,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "EXACT",
 					expected: "<bool true>",
 				},
+				{
+					f:        "FIND",
+					expected: "<int 0>",
+				},
 			},
 		},
 		{
@@ -248,6 +260,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "EXACT",
 					expected: "<bool false>",
 				},
+				{
+					f:        "FIND",
+					expected: "<int -1>",
+				},
 			},
 		},
 		{
@@ -260,6 +276,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "EXACT",
 					expected: "<bool false>",
+				},
+				{
+					f:        "FIND",
+					expected: "<int -1>",
 				},
 			},
 		},
@@ -279,6 +299,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "EXACT",
 					error: `EXACT(string, string) got a wrong argument <int 42> in (EXACT <str "hello"> <int 42>), at <: input:0:0>`,
+				},
+				{
+					f:     "FIND",
+					error: `FIND(string, string, [int]) got a wrong argument <int 42> in (FIND <str "hello"> <int 42>), at <: input:0:0>`,
 				},
 			},
 		},
@@ -377,6 +401,253 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "EXACT",
 					error: "EXACT(string, string) expected 2 arguments, but got 1 in (EXACT <bool false>), at <: input:0:0>",
+				},
+			},
+		},
+
+		// FIND function specific tests
+		{
+			name: "FIND: basic substring search",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "world"},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int 6>",
+				},
+			},
+		},
+		{
+			name: "FIND: substring at beginning",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "hello"},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int 0>",
+				},
+			},
+		},
+		{
+			name: "FIND: substring not found",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "xyz"},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int -1>",
+				},
+			},
+		},
+		{
+			name: "FIND: empty search string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: ""},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int 0>",
+				},
+			},
+		},
+		{
+			name: "FIND: search in empty string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: ""},
+				ast.StringExpression{Value: "hello"},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int -1>",
+				},
+			},
+		},
+		{
+			name: "FIND: both strings empty",
+			input: []ast.Expression{
+				ast.StringExpression{Value: ""},
+				ast.StringExpression{Value: ""},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int 0>",
+				},
+			},
+		},
+		{
+			name: "FIND: case sensitive search",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "Hello World"},
+				ast.StringExpression{Value: "world"},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int -1>",
+				},
+			},
+		},
+		{
+			name: "FIND: multiple occurrences",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello hello world"},
+				ast.StringExpression{Value: "hello"},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int 0>",
+				},
+			},
+		},
+		{
+			name: "FIND: single character",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "abcdef"},
+				ast.StringExpression{Value: "d"},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int 3>",
+				},
+			},
+		},
+		{
+			name: "FIND: special characters",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "Line1\nLine2\tEnd"},
+				ast.StringExpression{Value: "\n"},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int 5>",
+				},
+			},
+		},
+		// FIND with start position (3 arguments)
+		{
+			name: "FIND: with start position",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello hello world"},
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 1},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int 6>",
+				},
+			},
+		},
+		{
+			name: "FIND: start position at exact match",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "world"},
+				ast.IntExpression{Value: 6},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int 6>",
+				},
+			},
+		},
+		{
+			name: "FIND: start position past match",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int -1>",
+				},
+			},
+		},
+		{
+			name: "FIND: start position zero",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 0},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int 0>",
+				},
+			},
+		},
+		{
+			name: "FIND: start position beyond string length",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 10},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int -1>",
+				},
+			},
+		},
+		{
+			name: "FIND: negative start position",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "world"},
+				ast.IntExpression{Value: -1},
+			},
+			cases: []inputCase{
+				{
+					f:        "FIND",
+					expected: "<int -1>",
+				},
+			},
+		},
+		// FIND error cases
+		{
+			name: "FIND: too many arguments",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "world"},
+				ast.IntExpression{Value: 0},
+				ast.StringExpression{Value: "extra"},
+			},
+			cases: []inputCase{
+				{
+					f:     "FIND",
+					error: `FIND(string, string, [int]) expected 3 arguments, but got 4 in (FIND <str "hello"> <str "world"> <int 0> <str "extra">), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "FIND: wrong type for third argument",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "not_int"},
+			},
+			cases: []inputCase{
+				{
+					f:     "FIND",
+					error: `FIND(string, string, [int]) got a wrong argument <str "not_int"> in (FIND <str "hello"> <str "world"> <str "not_int">), at <: input:0:0>`,
 				},
 			},
 		},
