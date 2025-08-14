@@ -50,6 +50,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "LEFT",
 					error: "LEFT(string, [int]) expected 2 arguments, but got 0 in (LEFT), at <: input:0:0>",
 				},
+				{
+					f:     "RIGHT",
+					error: "RIGHT(string, [int]) expected 2 arguments, but got 0 in (RIGHT), at <: input:0:0>",
+				},
 			},
 		},
 		// Single string
@@ -91,6 +95,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "LEFT",
 					expected: `<str "h">`,
 				},
+				{
+					f:        "RIGHT",
+					expected: `<str "o">`,
+				},
 			},
 		},
 		// Mixed case string
@@ -128,6 +136,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "LEFT",
 					expected: `<str "H">`,
 				},
+				{
+					f:        "RIGHT",
+					expected: `<str "d">`,
+				},
 			},
 		},
 		// String with whitespace
@@ -163,6 +175,10 @@ func TestStringFunctions(t *testing.T) {
 				},
 				{
 					f:        "LEFT",
+					expected: `<str " ">`,
+				},
+				{
+					f:        "RIGHT",
 					expected: `<str " ">`,
 				},
 			},
@@ -389,6 +405,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "LEFT",
 					error: "LEFT(string, [int]) got a wrong argument <int 123> in (LEFT <int 123>), at <: input:0:0>",
+				},
+				{
+					f:     "RIGHT",
+					error: "RIGHT(string, [int]) got a wrong argument <int 123> in (RIGHT <int 123>), at <: input:0:0>",
 				},
 			},
 		},
@@ -851,6 +871,189 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "LEFT",
 					error: `LEFT(string, [int]) got a wrong argument <str "not_int"> in (LEFT <str "hello"> <str "not_int">), at <: input:0:0>`,
+				},
+			},
+		},
+
+		// RIGHT function specific tests
+		{
+			name: "RIGHT: basic usage with count",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: `<str "world">`,
+				},
+			},
+		},
+		{
+			name: "RIGHT: count larger than string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 10},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: `<str "hello">`,
+				},
+			},
+		},
+		{
+			name: "RIGHT: count equal to string length",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: `<str "hello">`,
+				},
+			},
+		},
+		{
+			name: "RIGHT: zero count",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 0},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: `<str "">`,
+				},
+			},
+		},
+		{
+			name: "RIGHT: negative count",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: -5},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: `<str "">`,
+				},
+			},
+		},
+		{
+			name: "RIGHT: single character string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "a"},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: `<str "a">`,
+				},
+			},
+		},
+		{
+			name: "RIGHT: empty string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: ""},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: `<str "">`,
+				},
+			},
+		},
+		{
+			name: "RIGHT: empty string with count",
+			input: []ast.Expression{
+				ast.StringExpression{Value: ""},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: `<str "">`,
+				},
+			},
+		},
+		{
+			name: "RIGHT: string with spaces",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "  hello  "},
+				ast.IntExpression{Value: 3},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: `<str "o  ">`,
+				},
+			},
+		},
+		{
+			name: "RIGHT: string with special characters",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "Line1\nLine2\tEnd"},
+				ast.IntExpression{Value: 7},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: "<str \"ne2\tEnd\">",
+				},
+			},
+		},
+		{
+			name: "RIGHT: count one",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 1},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: `<str "o">`,
+				},
+			},
+		},
+		{
+			name: "RIGHT: two character string without count",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hi"},
+			},
+			cases: []inputCase{
+				{
+					f:        "RIGHT",
+					expected: `<str "i">`,
+				},
+			},
+		},
+		// RIGHT error cases
+		{
+			name: "RIGHT: too many arguments",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 3},
+				ast.StringExpression{Value: "extra"},
+			},
+			cases: []inputCase{
+				{
+					f:     "RIGHT",
+					error: `RIGHT(string, [int]) expected 2 arguments, but got 3 in (RIGHT <str "hello"> <int 3> <str "extra">), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "RIGHT: wrong type for second argument",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "not_int"},
+			},
+			cases: []inputCase{
+				{
+					f:     "RIGHT",
+					error: `RIGHT(string, [int]) got a wrong argument <str "not_int"> in (RIGHT <str "hello"> <str "not_int">), at <: input:0:0>`,
 				},
 			},
 		},

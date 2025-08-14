@@ -151,3 +151,43 @@ func Left(format string,
 
 	return ast.StringExpression{Value: a.Value[0:n], Token: call.Token}, nil
 }
+
+func Right(format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	var guard CallGuard
+	var n int
+	if len(values) == 1 {
+		guard = MakeExactTypesGuard(format, ast.IsString)
+	} else {
+		guard = MakeExactTypesGuard(format, ast.IsString, ast.IsInt)
+	}
+
+	if err := guard(call, values...); err != nil {
+		return nil, err
+	}
+
+	a := values[0].(ast.StringExpression)
+
+	if len(values) == 2 {
+		n = values[1].(ast.IntExpression).Value
+	} else {
+		n = 1
+	}
+
+	// Handle edge cases for count
+	if n < 0 {
+		n = 0
+	}
+	if n > len(a.Value) {
+		n = len(a.Value)
+	}
+
+	// Calculate start position for right-side extraction
+	start := len(a.Value) - n
+	if start < 0 {
+		start = 0
+	}
+
+	return ast.StringExpression{Value: a.Value[start:], Token: call.Token}, nil
+}
