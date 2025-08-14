@@ -73,6 +73,11 @@ var DispatchMap dispatchMap = dispatchMap{
 	"INT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		return Int(call, values...)
 	},
+	"MOD": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "MOD(number, number)"
+		guard := MakeExactTypesGuard(format, ast.IsNumeric, ast.IsNumeric)
+		return callNumbersFunction(format, mod, mod, guard, call, values...)
+	},
 	// string functions
 	"CONCATENATE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		format := "CONCATENATE(string...)"

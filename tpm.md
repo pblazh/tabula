@@ -121,7 +121,7 @@
   - [x] #29.14: Implement MAXA function
   - [x] #29.15: **Important** Implement MIN function
   - [x] #29.16: Implement MINA function
-  - [ ] #29.17: **Important** Implement MOD function
+  - [x] #29.17: **Important** Implement MOD function
   - [x] #29.18: Implement POWER function
   - [x] #29.19: Implement PRODUCT function
   - [x] #29.20: **Important** Implement ROUND function
