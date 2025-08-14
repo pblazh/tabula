@@ -72,6 +72,10 @@ func TestMathFunctions(t *testing.T) {
 					f:     "MOD",
 					error: "MOD(number, number) expected 2 arguments, but got 0 in (MOD), at <: input:0:0>",
 				},
+				{
+					f:     "SQRT",
+					error: "SQRT(number) expected 1 argument, but got 0 in (SQRT), at <: input:0:0>",
+				},
 			},
 		},
 		// Integer operations
@@ -124,6 +128,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "COUNTA",
 					expected: "<int 1>",
+				},
+				{
+					f:     "SQRT",
+					error: "SQRT(number) got a wrong argument <int -5> in (SQRT <int -5>), at <: input:0:0>",
 				},
 				{
 					f:     "POWER",
@@ -206,6 +214,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "MOD",
 					error: "MOD(number, number) expected 2 arguments, but got 3 in (MOD <int 2> <int 3> <int 4>), at <: input:0:0>",
+				},
+				{
+					f:     "SQRT",
+					error: "SQRT(number) expected 1 argument, but got 3 in (SQRT <int 2> <int 3> <int 4>), at <: input:0:0>",
 				},
 			},
 		},
@@ -341,6 +353,10 @@ func TestMathFunctions(t *testing.T) {
 					expected: "<int 6>",
 				},
 				{
+					f:        "SQRT",
+					expected: "<float 2.35>",
+				},
+				{
 					f:     "POWER",
 					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <float 5.50>), at <: input:0:0>",
 				},
@@ -403,6 +419,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "ROUND",
 					expected: "<int -4>",
+				},
+				{
+					f:     "SQRT",
+					error: "SQRT(number) got a wrong argument <float -3.70> in (SQRT <float -3.70>), at <: input:0:0>",
 				},
 				{
 					f:     "POWER",
@@ -718,6 +738,10 @@ func TestMathFunctions(t *testing.T) {
 					f:     "MOD",
 					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <bool true>), at <: input:0:0>",
 				},
+				{
+					f:     "SQRT",
+					error: "SQRT(number) got a wrong argument <bool true> in (SQRT <bool true>), at <: input:0:0>",
+				},
 			},
 		},
 		{
@@ -855,6 +879,10 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:     "MOD",
 					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <str \"hello\">), at <: input:0:0>",
+				},
+				{
+					f:     "SQRT",
+					error: "SQRT(number) got a wrong argument <str \"hello\"> in (SQRT <str \"hello\">), at <: input:0:0>",
 				},
 			},
 		},
@@ -1045,6 +1073,103 @@ func TestMathFunctions(t *testing.T) {
 				{
 					f:        "MOD",
 					expected: "<int 3>",
+				},
+			},
+		},
+		// SQRT function specific tests
+		{
+			name: "SQRT: perfect squares",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 25},
+			},
+			cases: []inputCase{
+				{
+					f:        "SQRT",
+					expected: "<int 5>",
+				},
+			},
+		},
+		{
+			name: "SQRT: perfect square floats",
+			input: []ast.Expression{
+				ast.FloatExpression{Value: 16.0},
+			},
+			cases: []inputCase{
+				{
+					f:        "SQRT",
+					expected: "<float 4.00>",
+				},
+			},
+		},
+		{
+			name: "SQRT: non-perfect squares",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 10},
+			},
+			cases: []inputCase{
+				{
+					f:        "SQRT",
+					expected: "<int 3>",
+				},
+			},
+		},
+		{
+			name: "SQRT: decimal values",
+			input: []ast.Expression{
+				ast.FloatExpression{Value: 6.25},
+			},
+			cases: []inputCase{
+				{
+					f:        "SQRT",
+					expected: "<float 2.50>",
+				},
+			},
+		},
+		{
+			name: "SQRT: zero",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 0},
+			},
+			cases: []inputCase{
+				{
+					f:        "SQRT",
+					expected: "<int 0>",
+				},
+			},
+		},
+		{
+			name: "SQRT: one",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 1},
+			},
+			cases: []inputCase{
+				{
+					f:        "SQRT",
+					expected: "<int 1>",
+				},
+			},
+		},
+		{
+			name: "SQRT: large perfect square",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 144},
+			},
+			cases: []inputCase{
+				{
+					f:        "SQRT",
+					expected: "<int 12>",
+				},
+			},
+		},
+		{
+			name: "SQRT: small decimal",
+			input: []ast.Expression{
+				ast.FloatExpression{Value: 0.25},
+			},
+			cases: []inputCase{
+				{
+					f:        "SQRT",
+					expected: "<float 0.50>",
 				},
 			},
 		},

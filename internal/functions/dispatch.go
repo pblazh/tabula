@@ -68,7 +68,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		return Round(format, call, values...)
 	},
 	"POWER": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-		return Power(call, values...)
+		format := "POWER(number, number)"
+		return Power(format, call, values...)
 	},
 	"INT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		return Int(call, values...)
@@ -77,6 +78,10 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "MOD(number, number)"
 		guard := MakeExactTypesGuard(format, ast.IsNumeric, ast.IsNumeric)
 		return callNumbersFunction(format, mod, mod, guard, call, values...)
+	},
+	"SQRT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "SQRT(number)"
+		return Sqrt(format, call, values...)
 	},
 	// string functions
 	"CONCATENATE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
