@@ -142,12 +142,8 @@ func Left(format string,
 	}
 
 	// Handle edge cases for count
-	if n < 0 {
-		n = 0
-	}
-	if n > len(a.Value) {
-		n = len(a.Value)
-	}
+	n = max(0, n)
+	n = min(n, len(a.Value))
 
 	return ast.StringExpression{Value: a.Value[0:n], Token: call.Token}, nil
 }
@@ -176,18 +172,30 @@ func Right(format string,
 	}
 
 	// Handle edge cases for count
-	if n < 0 {
-		n = 0
-	}
-	if n > len(a.Value) {
-		n = len(a.Value)
-	}
+	n = max(0, n)
+	n = min(n, len(a.Value))
 
 	// Calculate start position for right-side extraction
 	start := len(a.Value) - n
-	if start < 0 {
-		start = 0
-	}
+	start = max(0, start)
 
 	return ast.StringExpression{Value: a.Value[start:], Token: call.Token}, nil
+}
+
+func Mid(format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	guard := MakeExactTypesGuard(format, ast.IsString, ast.IsInt, ast.IsInt)
+	if err := guard(call, values...); err != nil {
+		return nil, err
+	}
+
+	str := values[0].(ast.StringExpression).Value
+	start := values[1].(ast.IntExpression).Value - 1
+	start = max(0, start)
+
+	end := start + values[2].(ast.IntExpression).Value
+	end = min(len(str), end)
+
+	return ast.StringExpression{Value: str[start:end], Token: call.Token}, nil
 }
