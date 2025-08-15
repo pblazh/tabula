@@ -155,14 +155,14 @@
   - [ ] #30.9: Implement SEARCHB function
   - [x] #30.10: **Important** Implement LEFT function
   - [ ] #30.11: Implement LEFTB function
-  - [ ] #30.12: **Important** Implement RIGHT function
+  - [x] #30.12: **Important** Implement RIGHT function
   - [ ] #30.13: Implement RIGHTB function
   - [x] #30.14: Implement LEN function
   - [ ] #30.15: Implement LENB function
   - [x] #30.16: Implement LOWER function
   - [x] #30.17: Implement UPPER function
   - [ ] #30.18: Implement PROPER function
-  - [ ] #30.19: **Important** Implement MID function
+  - [x] #30.19: **Important** Implement MID function
   - [ ] #30.20: Implement MIDB function
   - [ ] #30.21: Implement REPLACE function
   - [ ] #30.22: Implement REPLACEB function

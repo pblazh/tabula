@@ -120,6 +120,10 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "RIGHT(string, [int])"
 		return Right(format, call, values...)
 	},
+	"MID": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "MID(string, int, int)"
+		return Mid(format, call, values...)
+	},
 
 	// bulean functions
 	"IF": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {

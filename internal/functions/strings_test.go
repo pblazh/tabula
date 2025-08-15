@@ -54,6 +54,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "RIGHT",
 					error: "RIGHT(string, [int]) expected 2 arguments, but got 0 in (RIGHT), at <: input:0:0>",
 				},
+				{
+					f:     "MID",
+					error: "MID(string, int, int) expected 3 arguments, but got 0 in (MID), at <: input:0:0>",
+				},
 			},
 		},
 		// Single string
@@ -98,6 +102,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "RIGHT",
 					expected: `<str "o">`,
+				},
+				{
+					f:     "MID",
+					error: "MID(string, int, int) expected 3 arguments, but got 1 in (MID <str \"hello\">), at <: input:0:0>",
 				},
 			},
 		},
@@ -409,6 +417,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "RIGHT",
 					error: "RIGHT(string, [int]) got a wrong argument <int 123> in (RIGHT <int 123>), at <: input:0:0>",
+				},
+				{
+					f:     "MID",
+					error: "MID(string, int, int) expected 3 arguments, but got 1 in (MID <int 123>), at <: input:0:0>",
 				},
 			},
 		},
@@ -1054,6 +1066,275 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "RIGHT",
 					error: `RIGHT(string, [int]) got a wrong argument <str "not_int"> in (RIGHT <str "hello"> <str "not_int">), at <: input:0:0>`,
+				},
+			},
+		},
+
+		// MID function specific tests
+		{
+			name: "MID: basic usage",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.IntExpression{Value: 7},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "world">`,
+				},
+			},
+		},
+		{
+			name: "MID: start at beginning",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.IntExpression{Value: 1},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "hello">`,
+				},
+			},
+		},
+		{
+			name: "MID: single character",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 2},
+				ast.IntExpression{Value: 1},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "e">`,
+				},
+			},
+		},
+		{
+			name: "MID: length larger than remaining string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 3},
+				ast.IntExpression{Value: 10},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "llo">`,
+				},
+			},
+		},
+		{
+			name: "MID: start at string boundary",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 4},
+				ast.IntExpression{Value: 3},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "lo">`,
+				},
+			},
+		},
+		{
+			name: "MID: zero length",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 3},
+				ast.IntExpression{Value: 0},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "">`,
+				},
+			},
+		},
+		{
+			name: "MID: negative start position",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: -2},
+				ast.IntExpression{Value: 3},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "hel">`,
+				},
+			},
+		},
+		{
+			name: "MID: empty string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: ""},
+				ast.IntExpression{Value: 1},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "">`,
+				},
+			},
+		},
+		{
+			name: "MID: single character string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "a"},
+				ast.IntExpression{Value: 1},
+				ast.IntExpression{Value: 1},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "a">`,
+				},
+			},
+		},
+		{
+			name: "MID: extract entire string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 1},
+				ast.IntExpression{Value: 5},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "hello">`,
+				},
+			},
+		},
+		{
+			name: "MID: extract with spaces",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "  hello  world  "},
+				ast.IntExpression{Value: 3},
+				ast.IntExpression{Value: 7},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "hello  ">`,
+				},
+			},
+		},
+		{
+			name: "MID: extract with special characters",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "Line1\nLine2\tEnd"},
+				ast.IntExpression{Value: 6},
+				ast.IntExpression{Value: 6},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: "<str \"\nLine2\">",
+				},
+			},
+		},
+		{
+			name: "MID: start near string end",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 5},
+				ast.IntExpression{Value: 3},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "o">`,
+				},
+			},
+		},
+		{
+			name: "MID: start at last character",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 5},
+				ast.IntExpression{Value: 1},
+			},
+			cases: []inputCase{
+				{
+					f:        "MID",
+					expected: `<str "o">`,
+				},
+			},
+		},
+		// MID error cases
+		{
+			name: "MID: missing arguments",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 2},
+			},
+			cases: []inputCase{
+				{
+					f:     "MID",
+					error: `MID(string, int, int) expected 3 arguments, but got 2 in (MID <str "hello"> <int 2>), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "MID: too many arguments",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 2},
+				ast.IntExpression{Value: 3},
+				ast.StringExpression{Value: "extra"},
+			},
+			cases: []inputCase{
+				{
+					f:     "MID",
+					error: `MID(string, int, int) expected 3 arguments, but got 4 in (MID <str "hello"> <int 2> <int 3> <str "extra">), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "MID: wrong type for start position",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "not_int"},
+				ast.IntExpression{Value: 3},
+			},
+			cases: []inputCase{
+				{
+					f:     "MID",
+					error: `MID(string, int, int) got a wrong argument <str "not_int"> in (MID <str "hello"> <str "not_int"> <int 3>), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "MID: wrong type for length",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 2},
+				ast.StringExpression{Value: "not_int"},
+			},
+			cases: []inputCase{
+				{
+					f:     "MID",
+					error: `MID(string, int, int) got a wrong argument <str "not_int"> in (MID <str "hello"> <int 2> <str "not_int">), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "MID: wrong type for string",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 123},
+				ast.IntExpression{Value: 1},
+				ast.IntExpression{Value: 2},
+			},
+			cases: []inputCase{
+				{
+					f:     "MID",
+					error: `MID(string, int, int) got a wrong argument <int 123> in (MID <int 123> <int 1> <int 2>), at <: input:0:0>`,
 				},
 			},
 		},
