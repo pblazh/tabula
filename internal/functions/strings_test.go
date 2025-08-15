@@ -58,6 +58,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "MID",
 					error: "MID(string, int, int) expected 3 arguments, but got 0 in (MID), at <: input:0:0>",
 				},
+				{
+					f:     "SUBSTITUTE",
+					error: "SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 0 in (SUBSTITUTE), at <: input:0:0>",
+				},
 			},
 		},
 		// Single string
@@ -107,6 +111,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "MID",
 					error: "MID(string, int, int) expected 3 arguments, but got 1 in (MID <str \"hello\">), at <: input:0:0>",
 				},
+				{
+					f:     "SUBSTITUTE",
+					error: "SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 1 in (SUBSTITUTE <str \"hello\">), at <: input:0:0>",
+				},
 			},
 		},
 		// Mixed case string
@@ -147,6 +155,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "RIGHT",
 					expected: `<str "d">`,
+				},
+				{
+					f:     "SUBSTITUTE",
+					error: "SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 1 in (SUBSTITUTE <str \"Hello World\">), at <: input:0:0>",
 				},
 			},
 		},
@@ -189,6 +201,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "RIGHT",
 					expected: `<str " ">`,
 				},
+				{
+					f:     "SUBSTITUTE",
+					error: "SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 1 in (SUBSTITUTE <str \"  hello world  \">), at <: input:0:0>",
+				},
 			},
 		},
 		// Multiple strings
@@ -224,6 +240,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "EXACT",
 					error: `EXACT(string, string) expected 2 arguments, but got 3 in (EXACT <str "hello"> <str " "> <str "world">), at <: input:0:0>`,
 				},
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "hello">`,
+				},
 			},
 		},
 		// Empty strings
@@ -238,6 +258,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "CONCATENATE",
 					expected: `<str "startend">`,
+				},
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "start">`,
 				},
 			},
 		},
@@ -254,6 +278,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "CONCATENATE",
 					expected: `<str "">`,
 				},
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "">`,
+				},
 			},
 		},
 		// Special characters
@@ -268,6 +296,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "CONCATENATE",
 					expected: "<str \"Line1\nLine2\tLine3\">",
+				},
+				{
+					f:        "SUBSTITUTE",
+					expected: "<str \"Line1\n\">",
 				},
 			},
 		},
@@ -287,6 +319,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "FIND",
 					expected: "<int 0>",
 				},
+				{
+					f:     "SUBSTITUTE",
+					error: "SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 2 in (SUBSTITUTE <str \"hello\"> <str \"hello\">), at <: input:0:0>",
+				},
 			},
 		},
 		{
@@ -304,6 +340,10 @@ func TestStringFunctions(t *testing.T) {
 					f:        "FIND",
 					expected: "<int -1>",
 				},
+				{
+					f:     "SUBSTITUTE",
+					error: "SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 2 in (SUBSTITUTE <str \"hello\"> <str \"world\">), at <: input:0:0>",
+				},
 			},
 		},
 		{
@@ -320,6 +360,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:        "FIND",
 					expected: "<int -1>",
+				},
+				{
+					f:     "SUBSTITUTE",
+					error: "SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 2 in (SUBSTITUTE <str \"Hello\"> <str \"hello\">), at <: input:0:0>",
 				},
 			},
 		},
@@ -344,6 +388,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "FIND",
 					error: `FIND(string, string, [int]) got a wrong argument <int 42> in (FIND <str "hello"> <int 42>), at <: input:0:0>`,
 				},
+				{
+					f:     "SUBSTITUTE",
+					error: `SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 2 in (SUBSTITUTE <str "hello"> <int 42>), at <: input:0:0>`,
+				},
 			},
 		},
 		{
@@ -361,6 +409,10 @@ func TestStringFunctions(t *testing.T) {
 					f:     "EXACT",
 					error: `EXACT(string, string) got a wrong argument <float 3.14> in (EXACT <str "value: "> <float 3.14>), at <: input:0:0>`,
 				},
+				{
+					f:     "SUBSTITUTE",
+					error: `SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 2 in (SUBSTITUTE <str "value: "> <float 3.14>), at <: input:0:0>`,
+				},
 			},
 		},
 		{
@@ -377,6 +429,10 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "EXACT",
 					error: `EXACT(string, string) got a wrong argument <bool true> in (EXACT <str "result: "> <bool true>), at <: input:0:0>`,
+				},
+				{
+					f:     "SUBSTITUTE",
+					error: `SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 2 in (SUBSTITUTE <str "result: "> <bool true>), at <: input:0:0>`,
 				},
 			},
 		},
@@ -1335,6 +1391,296 @@ func TestStringFunctions(t *testing.T) {
 				{
 					f:     "MID",
 					error: `MID(string, int, int) got a wrong argument <int 123> in (MID <int 123> <int 1> <int 2>), at <: input:0:0>`,
+				},
+			},
+		},
+
+		// SUBSTITUTE function specific tests
+		{
+			name: "SUBSTITUTE: basic replacement",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "universe"},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "hello universe">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: replace first occurrence",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world world"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "universe"},
+				ast.IntExpression{Value: 1},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "hello universe world">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: replace second occurrence",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world world"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "universe"},
+				ast.IntExpression{Value: 2},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "hello world universe">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: replace all occurrences",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world world world"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "universe"},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "hello universe universe universe">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: no match found",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "universe"},
+				ast.StringExpression{Value: "galaxy"},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "hello world">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: empty old value",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: ""},
+				ast.StringExpression{Value: "x"},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "hello">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: empty new value",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: ""},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "hello ">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: empty string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: ""},
+				ast.StringExpression{Value: "x"},
+				ast.StringExpression{Value: "y"},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: case sensitive",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "Hello World"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "universe"},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "Hello World">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: replace with same value",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "world"},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "hello world">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: single character replacement",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "a,b,c,d"},
+				ast.StringExpression{Value: ","},
+				ast.StringExpression{Value: ";"},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "a;b;c;d">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: zero occurrence index",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world world"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "universe"},
+				ast.IntExpression{Value: 0},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "hello universe universe">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: occurrence index beyond matches",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "universe"},
+				ast.IntExpression{Value: 3},
+			},
+			cases: []inputCase{
+				{
+					f:        "SUBSTITUTE",
+					expected: `<str "hello world">`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: negative occurrence index",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello world world"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "universe"},
+				ast.IntExpression{Value: -1},
+			},
+			cases: []inputCase{
+				{
+					f:     "SUBSTITUTE",
+					error: `SUBSTITUTE(string, string, string, [int]) got a wrong argument <int -1> in (SUBSTITUTE <str "hello world world"> <str "world"> <str "universe"> <int -1>), at <: input:0:0>`,
+				},
+			},
+		},
+		// SUBSTITUTE error cases
+		{
+			name: "SUBSTITUTE: missing arguments",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "world"},
+			},
+			cases: []inputCase{
+				{
+					f:     "SUBSTITUTE",
+					error: `SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 2 in (SUBSTITUTE <str "hello"> <str "world">), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: too many arguments",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "universe"},
+				ast.IntExpression{Value: 1},
+				ast.StringExpression{Value: "extra"},
+			},
+			cases: []inputCase{
+				{
+					f:     "SUBSTITUTE",
+					error: `SUBSTITUTE(string, string, string, [int]) expected 4 arguments, but got 5 in (SUBSTITUTE <str "hello"> <str "world"> <str "universe"> <int 1> <str "extra">), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: wrong type for source string",
+			input: []ast.Expression{
+				ast.IntExpression{Value: 123},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "universe"},
+			},
+			cases: []inputCase{
+				{
+					f:     "SUBSTITUTE",
+					error: `SUBSTITUTE(string, string, string, [int]) got a wrong argument <int 123> in (SUBSTITUTE <int 123> <str "world"> <str "universe">), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: wrong type for old value",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.IntExpression{Value: 42},
+				ast.StringExpression{Value: "universe"},
+			},
+			cases: []inputCase{
+				{
+					f:     "SUBSTITUTE",
+					error: `SUBSTITUTE(string, string, string, [int]) got a wrong argument <int 42> in (SUBSTITUTE <str "hello"> <int 42> <str "universe">), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: wrong type for new value",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "world"},
+				ast.IntExpression{Value: 123},
+			},
+			cases: []inputCase{
+				{
+					f:     "SUBSTITUTE",
+					error: `SUBSTITUTE(string, string, string, [int]) got a wrong argument <int 123> in (SUBSTITUTE <str "hello"> <str "world"> <int 123>), at <: input:0:0>`,
+				},
+			},
+		},
+		{
+			name: "SUBSTITUTE: wrong type for occurrence index",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "world"},
+				ast.StringExpression{Value: "universe"},
+				ast.StringExpression{Value: "not_int"},
+			},
+			cases: []inputCase{
+				{
+					f:     "SUBSTITUTE",
+					error: `SUBSTITUTE(string, string, string, [int]) got a wrong argument <str "not_int"> in (SUBSTITUTE <str "hello"> <str "world"> <str "universe"> <str "not_int">), at <: input:0:0>`,
 				},
 			},
 		},
