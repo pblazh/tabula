@@ -257,3 +257,15 @@ func Substitute(format string,
 
 	return ast.StringExpression{Value: source, Token: call.Token}, nil
 }
+
+func Value(format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	guard := MakeExactTypesGuard(format, ast.IsString)
+	if err := guard(call, values...); err != nil {
+		return nil, err
+	}
+
+	a := values[0].(ast.StringExpression)
+	return ParseWithoutFormat(a.Value)
+}

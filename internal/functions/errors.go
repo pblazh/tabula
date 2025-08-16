@@ -22,10 +22,14 @@ func ErrUnsupportedFunction(function ast.CallExpression) error {
 	return fmt.Errorf("unsupported function call %s at %v", function, function.Token)
 }
 
-func ErrCellOutOfBounds(cellRef, dimension string, index int) error {
-	return fmt.Errorf("%s %d out of bounds for cell %s", dimension, index, cellRef)
-}
-
 func ErrExecuting(format string, function ast.CallExpression, err error) error {
 	return fmt.Errorf("failed %s with %v at %v", format, function.Token, err)
+}
+
+func ErrParseWithFormat(input, format, reason string) error {
+	return fmt.Errorf("failed to parse %q with format %q:%s", input, format, reason)
+}
+
+func ErrUnsupportedExpressionType(expr ast.Expression) error {
+	return fmt.Errorf("unsupported expression type: %T", expr)
 }
