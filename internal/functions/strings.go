@@ -199,3 +199,61 @@ func Mid(format string,
 
 	return ast.StringExpression{Value: str[start:end], Token: call.Token}, nil
 }
+
+func Substitute(format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	var guard CallGuard
+	if len(values) == 3 {
+		guard = MakeExactTypesGuard(format, ast.IsString, ast.IsString, ast.IsString)
+	} else {
+		guard = MakeExactTypesGuard(format, ast.IsString, ast.IsString, ast.IsString, ast.IsInt)
+	}
+
+	if err := guard(call, values...); err != nil {
+		return nil, err
+	}
+
+	source := values[0].(ast.StringExpression).Value
+	target := values[1].(ast.StringExpression).Value
+	replacement := values[2].(ast.StringExpression).Value
+
+	if target == "" {
+		return ast.StringExpression{Value: source, Token: call.Token}, nil
+	}
+
+	n := 0
+	if len(values) == 4 {
+		n = values[3].(ast.IntExpression).Value
+		if n < 0 {
+			return nil, ErrUnsupportedArgument(format, call, values[3])
+		}
+	}
+
+	if n == 0 {
+		return ast.StringExpression{Value: strings.ReplaceAll(source, target, replacement), Token: call.Token}, nil
+	}
+
+	indices := []int{}
+	searchStr := source
+	offset := 0
+
+	// Find all occurrences
+	for {
+		idx := strings.Index(searchStr, target)
+		if idx == -1 {
+			break
+		}
+		indices = append(indices, offset+idx)
+		offset += idx + len(target)
+		searchStr = source[offset:]
+	}
+
+	// Replace required one
+	if n > 0 && n <= len(indices) {
+		replaceIdx := indices[n-1]
+		source = source[:replaceIdx] + replacement + source[replaceIdx+len(target):]
+	}
+
+	return ast.StringExpression{Value: source, Token: call.Token}, nil
+}

@@ -166,7 +166,7 @@
   - [ ] #30.20: Implement MIDB function
   - [ ] #30.21: Implement REPLACE function
   - [ ] #30.22: Implement REPLACEB function
-  - [ ] #30.23: **Important** Implement SUBSTITUTE function
+  - [x] #30.23: **Important** Implement SUBSTITUTE function
   - [ ] #30.24: Implement REPT function
   - [ ] #30.25: Implement REVERSE function
   - [ ] #30.26: Implement SPLIT function

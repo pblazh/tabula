@@ -124,6 +124,10 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "MID(string, int, int)"
 		return Mid(format, call, values...)
 	},
+	"SUBSTITUTE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "SUBSTITUTE(string, string, string, [int])"
+		return Substitute(format, call, values...)
+	},
 
 	// bulean functions
 	"IF": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
