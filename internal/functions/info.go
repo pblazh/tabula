@@ -4,16 +4,20 @@ import (
 	"github.com/pblazh/csvss/internal/ast"
 )
 
-func IsNumber(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-	callGuard := MakeExactTypesGuard("ISNUMBER(number)", ast.IsString)
+func IsNumber(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeArityGuard(format, 1)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
 	}
 
-	result, err := ParseWithoutFormat(values[0].(ast.StringExpression).Value)
-	if err != nil {
+	return ast.BooleanExpression{Value: ast.IsNumeric(values[0]), Token: call.Token}, nil
+}
+
+func IsText(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+	callGuard := MakeArityGuard(format, 1)
+	if err := callGuard(call, values...); err != nil {
 		return nil, err
 	}
 
-	return ast.BooleanExpression{Value: ast.IsNumeric(result), Token: call.Token}, nil
+	return ast.BooleanExpression{Value: ast.IsString(values[0]), Token: call.Token}, nil
 }
