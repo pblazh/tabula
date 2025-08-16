@@ -232,4 +232,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "ISTEXT(any)"
 		return IsText(format, call, values...)
 	},
+	"ISLOGICAL": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "ISLOGICAL(any)"
+		return IsBoolean(format, call, values...)
+	},
 }

@@ -324,13 +324,13 @@
   - [ ] #39.1: **Important** Implement ISBLANK function
   - [ ] #39.2: Implement ISERROR function
   - [ ] #39.3: Implement ISEVEN function
-  - [ ] #39.4: Implement ISLOGICAL function
+  - [x] #39.4: Implement ISLOGICAL function
   - [ ] #39.5: Implement ISNA function
   - [ ] #39.6: Implement ISNONTEXT function
   - [x] #39.7: **Important** Implement ISNUMBER function
   - [ ] #39.8: Implement ISODD function
   - [ ] #39.9: Implement ISREF function
-  - [ ] #39.10: **Important** Implement ISTEXT function
+  - [x] #39.10: **Important** Implement ISTEXT function
   - [ ] #39.11: Implement N function
   - [ ] #39.12: Implement NA function
   - [ ] #39.13: Implement TYPE function

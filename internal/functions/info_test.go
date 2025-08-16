@@ -28,6 +28,10 @@ func TestInfoFunctions(t *testing.T) {
 					f:        "ISTEXT",
 					expected: `<bool true>`,
 				},
+				{
+					f:        "ISLOGICAL",
+					expected: `<bool false>`,
+				},
 			},
 		},
 		{
@@ -42,6 +46,10 @@ func TestInfoFunctions(t *testing.T) {
 				},
 				{
 					f:        "ISTEXT",
+					expected: `<bool false>`,
+				},
+				{
+					f:        "ISLOGICAL",
 					expected: `<bool false>`,
 				},
 			},
@@ -60,6 +68,30 @@ func TestInfoFunctions(t *testing.T) {
 					f:        "ISTEXT",
 					expected: `<bool false>`,
 				},
+				{
+					f:        "ISLOGICAL",
+					expected: `<bool false>`,
+				},
+			},
+		},
+		{
+			name: "single bloolean",
+			input: []ast.Expression{
+				ast.BooleanExpression{Value: false},
+			},
+			cases: []inputCase{
+				{
+					f:        "ISNUMBER",
+					expected: `<bool false>`,
+				},
+				{
+					f:        "ISTEXT",
+					expected: `<bool false>`,
+				},
+				{
+					f:        "ISLOGICAL",
+					expected: `<bool true>`,
+				},
 			},
 		},
 		{
@@ -76,6 +108,10 @@ func TestInfoFunctions(t *testing.T) {
 					f:        "ISTEXT",
 					expected: `<bool false>`,
 				},
+				{
+					f:        "ISLOGICAL",
+					expected: `<bool false>`,
+				},
 			},
 		},
 		{
@@ -89,6 +125,10 @@ func TestInfoFunctions(t *testing.T) {
 				{
 					f:     "ISTEXT",
 					error: "ISTEXT(any) expected 1 argument, but got 0 in (ISTEXT), at <: input:0:0>",
+				},
+				{
+					f:     "ISLOGICAL",
+					error: "ISLOGICAL(any) expected 1 argument, but got 0 in (ISLOGICAL), at <: input:0:0>",
 				},
 			},
 		},
@@ -106,6 +146,10 @@ func TestInfoFunctions(t *testing.T) {
 				{
 					f:     "ISTEXT",
 					error: "ISTEXT(any) expected 1 argument, but got 2 in (ISTEXT <str \"2025-08-17 15:39\"> <int 39>), at <: input:0:0>",
+				},
+				{
+					f:     "ISLOGICAL",
+					error: "ISLOGICAL(any) expected 1 argument, but got 2 in (ISLOGICAL <str \"2025-08-17 15:39\"> <int 39>), at <: input:0:0>",
 				},
 			},
 		},
