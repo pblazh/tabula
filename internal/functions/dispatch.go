@@ -225,6 +225,11 @@ var DispatchMap dispatchMap = dispatchMap{
 
 	// Information functions
 	"ISNUMBER": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-		return IsNumber(call, values...)
+		format := "ISNUMBER(any)"
+		return IsNumber(format, call, values...)
+	},
+	"ISTEXT": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "ISTEXT(any)"
+		return IsText(format, call, values...)
 	},
 }

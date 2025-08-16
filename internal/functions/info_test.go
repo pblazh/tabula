@@ -2,6 +2,7 @@ package functions
 
 import (
 	"testing"
+	"time"
 
 	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/lexer"
@@ -14,16 +15,6 @@ func TestInfoFunctions(t *testing.T) {
 		cases []inputCase
 	}{
 		{
-			name:  "empty input",
-			input: []ast.Expression{},
-			cases: []inputCase{
-				{
-					f:     "ISNUMBER",
-					error: "ISNUMBER(number) expected 1 argument, but got 0 in (ISNUMBER), at <: input:0:0>",
-				},
-			},
-		},
-		{
 			name: "single string",
 			input: []ast.Expression{
 				ast.StringExpression{Value: "hello"},
@@ -33,53 +24,71 @@ func TestInfoFunctions(t *testing.T) {
 					f:        "ISNUMBER",
 					expected: `<bool false>`,
 				},
+				{
+					f:        "ISTEXT",
+					expected: `<bool true>`,
+				},
 			},
 		},
 		{
 			name: "single int",
 			input: []ast.Expression{
-				ast.StringExpression{Value: "7"},
+				ast.IntExpression{Value: 7},
 			},
 			cases: []inputCase{
 				{
 					f:        "ISNUMBER",
 					expected: `<bool true>`,
+				},
+				{
+					f:        "ISTEXT",
+					expected: `<bool false>`,
 				},
 			},
 		},
 		{
 			name: "single float",
 			input: []ast.Expression{
-				ast.StringExpression{Value: "7.4"},
+				ast.FloatExpression{Value: 7.4},
 			},
 			cases: []inputCase{
 				{
 					f:        "ISNUMBER",
 					expected: `<bool true>`,
 				},
+				{
+					f:        "ISTEXT",
+					expected: `<bool false>`,
+				},
 			},
 		},
 		{
 			name: "single date",
 			input: []ast.Expression{
-				ast.StringExpression{Value: "2025-08-17 15:39"},
+				ast.DateExpression{Value: time.Now()},
 			},
 			cases: []inputCase{
 				{
 					f:        "ISNUMBER",
 					expected: `<bool false>`,
 				},
+				{
+					f:        "ISTEXT",
+					expected: `<bool false>`,
+				},
 			},
 		},
 		{
-			name: "single float node",
-			input: []ast.Expression{
-				ast.FloatExpression{Value: 2025},
-			},
+			name:  "empty input",
+			input: []ast.Expression{},
 			cases: []inputCase{
 				{
 					f:     "ISNUMBER",
-					error: "ISNUMBER(number) got a wrong argument <float 2025.00> in (ISNUMBER <float 2025.00>), at <: input:0:0>",
+					error: "ISNUMBER(any) expected 1 argument, but got 0 in (ISNUMBER), at <: input:0:0>",
+				},
+				{
+					f:     "ISTEXT",
+					error: "ISTEXT(any) expected 1 argument, but got 0 in (ISTEXT), at <: input:0:0>",
 				},
 			},
 		},
@@ -92,7 +101,11 @@ func TestInfoFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "ISNUMBER",
-					error: "ISNUMBER(number) expected 1 argument, but got 2 in (ISNUMBER <str \"2025-08-17 15:39\"> <int 39>), at <: input:0:0>",
+					error: "ISNUMBER(any) expected 1 argument, but got 2 in (ISNUMBER <str \"2025-08-17 15:39\"> <int 39>), at <: input:0:0>",
+				},
+				{
+					f:     "ISTEXT",
+					error: "ISTEXT(any) expected 1 argument, but got 2 in (ISTEXT <str \"2025-08-17 15:39\"> <int 39>), at <: input:0:0>",
 				},
 			},
 		},
