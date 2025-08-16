@@ -174,7 +174,7 @@
   - [ ] #30.28: Implement CLEAN function
   - [ ] #30.29: Implement CODE function
   - [ ] #30.30: Implement CHAR function
-  - [ ] #30.31: **Important** Implement VALUE function
+  - [x] #30.31: **Important** Implement VALUE function
   - [ ] #30.32: Implement TEXT function
   - [ ] #30.33: Implement DOLLAR function
   - [ ] #30.34: Implement FIXED function
@@ -194,7 +194,7 @@
   - [x] #31.12: Implement YEAR function
   - [ ] #31.13: Implement TIME function
   - [ ] #31.14: Implement TIMEVALUE function
-  - [ ] #31.15: **Important** Implement TODAY function
+  - [ ] #31.15: Implement TODAY function
   - [ ] #31.16: Implement WEEKNUM function
   - [ ] #31.17: Implement ISOWEEKNUM function
   - [ ] #31.18: Implement EOMONTH function
@@ -204,7 +204,7 @@
   - [x] #32.1: Implement AND function
   - [x] #32.2: Implement FALSE function
   - [x] #32.3: Implement IF function
-  - [ ] #32.4: **Important** Implement IFERROR function
+  - [ ] #32.4: Implement IFERROR function
   - [ ] #32.5: Implement IFNA function
   - [ ] #32.6: Implement IFS function
   - [x] #32.7: Implement NOT function
@@ -327,7 +327,7 @@
   - [ ] #39.4: Implement ISLOGICAL function
   - [ ] #39.5: Implement ISNA function
   - [ ] #39.6: Implement ISNONTEXT function
-  - [ ] #39.7: **Important** Implement ISNUMBER function
+  - [x] #39.7: **Important** Implement ISNUMBER function
   - [ ] #39.8: Implement ISODD function
   - [ ] #39.9: Implement ISREF function
   - [ ] #39.10: **Important** Implement ISTEXT function

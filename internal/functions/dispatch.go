@@ -222,4 +222,9 @@ var DispatchMap dispatchMap = dispatchMap{
 	"COUNTA": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 		return counta(call, values...), nil
 	},
+
+	// Information functions
+	"ISNUMBER": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		return IsNumber(call, values...)
+	},
 }
