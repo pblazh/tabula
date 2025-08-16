@@ -139,7 +139,7 @@ func evaluateVariableExpression(expr ast.IdentifierExpression, context map[strin
 	}
 
 	format := formats[name]
-	return ReadValue(value, format)
+	return functions.ReadValue(value, format)
 }
 
 // evaluateCellExpression evaluates a cell reference (like A1, B2) and returns the value from the CSV input
@@ -157,7 +157,7 @@ func evaluateCellExpression(expr ast.IdentifierExpression, input [][]string, for
 
 	// Get the value from the CSV input
 	value := input[row][col]
-	return ReadValue(value, formats[cellRef])
+	return functions.ReadValue(value, formats[cellRef])
 }
 
 // EvaluateRangeExpression evaluates a range cell reference (like A1:A2, A1:B2) and returns the value from the CSV input

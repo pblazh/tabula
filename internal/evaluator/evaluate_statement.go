@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/csvss/internal/functions"
 )
 
 func EvaluateStatement(statement ast.Statement, context map[string]string, input [][]string, formats map[string]string) error {
@@ -14,7 +15,7 @@ func EvaluateStatement(statement ast.Statement, context map[string]string, input
 		}
 
 		format := formats[s.Identifier.Value]
-		output, error := WriteValue(value, format)
+		output, error := functions.WriteValue(value, format)
 		if error != nil {
 			return error
 		}

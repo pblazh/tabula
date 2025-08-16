@@ -1,8 +1,15 @@
 package evaluator
 
 import (
+	"regexp"
 	"testing"
 )
+
+// cleanFormat removes the width and precision parts from format strings (e.g., %-9s → %s, %6f → %f, %6.2f → %f)
+func cleanFormat(format string) string {
+	re := regexp.MustCompile(`%([-+0# ]*)(\d+)?(\.\d+)?([a-zA-Z])`)
+	return re.ReplaceAllString(format, `%$4`)
+}
 
 func TestCleanFormat(t *testing.T) {
 	testcases := []struct {

@@ -1,4 +1,4 @@
-package evaluator
+package functions
 
 import (
 	"reflect"

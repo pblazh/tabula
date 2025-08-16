@@ -1684,6 +1684,66 @@ func TestStringFunctions(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "VALUE of string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+			},
+			cases: []inputCase{
+				{
+					f:        "VALUE",
+					expected: "<str \"hello\">",
+				},
+			},
+		},
+		{
+			name: "VALUE of boolean",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "true"},
+			},
+			cases: []inputCase{
+				{
+					f:        "VALUE",
+					expected: "<bool true>",
+				},
+			},
+		},
+		{
+			name: "VALUE of float",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "1.55"},
+			},
+			cases: []inputCase{
+				{
+					f:        "VALUE",
+					expected: "<float 1.55>",
+				},
+			},
+		},
+		{
+			name: "VALUE of int",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "7"},
+			},
+			cases: []inputCase{
+				{
+					f:        "VALUE",
+					expected: "<int 7>",
+				},
+			},
+		},
+		{
+			name: "VALUE of date",
+			input: []ast.Expression{
+				ast.StringExpression{Value: "2025-08-17 15:39"},
+			},
+			cases: []inputCase{
+				{
+					f:        "VALUE",
+					expected: "<date 2025-08-17 15:39:00>",
+				},
+			},
+		},
 	}
 
 	for _, tc := range testcases {

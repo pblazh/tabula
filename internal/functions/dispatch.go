@@ -128,6 +128,10 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "SUBSTITUTE(string, string, string, [int])"
 		return Substitute(format, call, values...)
 	},
+	"VALUE": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "VALUE(string)"
+		return Value(format, call, values...)
+	},
 
 	// bulean functions
 	"IF": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
