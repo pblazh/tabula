@@ -32,6 +32,34 @@ func TestInfoFunctions(t *testing.T) {
 					f:        "ISLOGICAL",
 					expected: `<bool false>`,
 				},
+				{
+					f:        "ISBLANK",
+					expected: `<bool false>`,
+				},
+			},
+		},
+		{
+			name: "empty string",
+			input: []ast.Expression{
+				ast.StringExpression{Value: ""},
+			},
+			cases: []inputCase{
+				{
+					f:        "ISNUMBER",
+					expected: `<bool false>`,
+				},
+				{
+					f:        "ISTEXT",
+					expected: `<bool true>`,
+				},
+				{
+					f:        "ISLOGICAL",
+					expected: `<bool false>`,
+				},
+				{
+					f:        "ISBLANK",
+					expected: `<bool true>`,
+				},
 			},
 		},
 		{
@@ -50,6 +78,10 @@ func TestInfoFunctions(t *testing.T) {
 				},
 				{
 					f:        "ISLOGICAL",
+					expected: `<bool false>`,
+				},
+				{
+					f:        "ISBLANK",
 					expected: `<bool false>`,
 				},
 			},
@@ -72,6 +104,10 @@ func TestInfoFunctions(t *testing.T) {
 					f:        "ISLOGICAL",
 					expected: `<bool false>`,
 				},
+				{
+					f:        "ISBLANK",
+					expected: `<bool false>`,
+				},
 			},
 		},
 		{
@@ -91,6 +127,10 @@ func TestInfoFunctions(t *testing.T) {
 				{
 					f:        "ISLOGICAL",
 					expected: `<bool true>`,
+				},
+				{
+					f:        "ISBLANK",
+					expected: `<bool false>`,
 				},
 			},
 		},
@@ -112,6 +152,10 @@ func TestInfoFunctions(t *testing.T) {
 					f:        "ISLOGICAL",
 					expected: `<bool false>`,
 				},
+				{
+					f:        "ISBLANK",
+					expected: `<bool false>`,
+				},
 			},
 		},
 		{
@@ -129,6 +173,10 @@ func TestInfoFunctions(t *testing.T) {
 				{
 					f:     "ISLOGICAL",
 					error: "ISLOGICAL(any) expected 1 argument, but got 0 in (ISLOGICAL), at <: input:0:0>",
+				},
+				{
+					f:     "ISBLANK",
+					error: "ISBLANK(any) expected 1 argument, but got 0 in (ISBLANK), at <: input:0:0>",
 				},
 			},
 		},
@@ -150,6 +198,10 @@ func TestInfoFunctions(t *testing.T) {
 				{
 					f:     "ISLOGICAL",
 					error: "ISLOGICAL(any) expected 1 argument, but got 2 in (ISLOGICAL <str \"2025-08-17 15:39\"> <int 39>), at <: input:0:0>",
+				},
+				{
+					f:     "ISBLANK",
+					error: "ISBLANK(any) expected 1 argument, but got 2 in (ISBLANK <str \"2025-08-17 15:39\"> <int 39>), at <: input:0:0>",
 				},
 			},
 		},
