@@ -2,7 +2,7 @@ package evaluator
 
 import (
 	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/functions"
+	functions "github.com/pblazh/csvss/internal/core"
 )
 
 func EvaluateStatement(statement ast.Statement, context map[string]string, input [][]string, formats map[string]string) error {

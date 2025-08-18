@@ -1,5 +1,5 @@
 // Package functions provides built-in functions for the CSV spreadsheet language
-package functions
+package core
 
 import (
 	"fmt"
