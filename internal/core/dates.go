@@ -1,4 +1,4 @@
-package functions
+package core
 
 import (
 	"errors"

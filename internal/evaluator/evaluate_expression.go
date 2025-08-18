@@ -2,7 +2,7 @@ package evaluator
 
 import (
 	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/functions"
+	core "github.com/pblazh/csvss/internal/core"
 	"github.com/pblazh/csvss/internal/lexer"
 )
 
@@ -92,7 +92,7 @@ func evaluateCallExpression(expr ast.CallExpression, context map[string]string, 
 		return evaluateRel(expr, target, args, input, formats)
 	}
 
-	internalFunction, ok := functions.DispatchMap[identifier]
+	internalFunction, ok := core.DispatchMap[identifier]
 	if !ok {
 		return nil, ErrUnsupportedFunctions(identifier)
 	}
@@ -139,7 +139,7 @@ func evaluateVariableExpression(expr ast.IdentifierExpression, context map[strin
 	}
 
 	format := formats[name]
-	return functions.ReadValue(value, format)
+	return core.ReadValue(value, format)
 }
 
 // evaluateCellExpression evaluates a cell reference (like A1, B2) and returns the value from the CSV input
@@ -157,7 +157,7 @@ func evaluateCellExpression(expr ast.IdentifierExpression, input [][]string, for
 
 	// Get the value from the CSV input
 	value := input[row][col]
-	return functions.ReadValue(value, formats[cellRef])
+	return core.ReadValue(value, formats[cellRef])
 }
 
 // EvaluateRangeExpression evaluates a range cell reference (like A1:A2, A1:B2) and returns the value from the CSV input
