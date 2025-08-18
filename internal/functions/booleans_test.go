@@ -4,394 +4,300 @@ import (
 	"testing"
 
 	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/lexer"
 )
 
-func TestBooleanFunctions(t *testing.T) {
-	testcases := []struct {
-		name  string
-		input []ast.Expression
-		cases []inputCase
-	}{
-		// Empty input
+func TestNOT(t *testing.T) {
+	testcases := []InfoTestCase{
 		{
-			name:  "empty input",
-			input: []ast.Expression{},
-			cases: []inputCase{
-				{
-					f:     "NOT",
-					error: "NOT(boolean) expected 1 argument, but got 0 in (NOT), at <: input:0:0>",
-				},
-				{
-					f:     "AND",
-					error: "AND(boolean, boolean) expected 2 arguments, but got 0 in (AND), at <: input:0:0>",
-				},
-				{
-					f:     "OR",
-					error: "OR(boolean, boolean) expected 2 arguments, but got 0 in (OR), at <: input:0:0>",
-				},
-				{
-					f:     "IF",
-					error: "IF(boolean, any, any) expected 3 arguments, but got 0 in (IF), at <: input:0:0>",
-				},
-				{
-					f:        "TRUE",
-					expected: "<bool true>",
-				},
-				{
-					f:        "FALSE",
-					expected: "<bool false>",
-				},
-			},
+			Name:  "empty input",
+			Input: []ast.Expression{},
+			Error: "NOT(boolean) expected 1 argument, but got 0 in (NOT), at <: input:0:0>",
 		},
-		// Single boolean true
 		{
-			name: "single boolean true",
-			input: []ast.Expression{
+			Name: "true input",
+			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 			},
-			cases: []inputCase{
-				{
-					f:        "NOT",
-					expected: "<bool false>",
-				},
-				{
-					f:     "AND",
-					error: "AND(boolean, boolean) expected 2 arguments, but got 1 in (AND <bool true>), at <: input:0:0>",
-				},
-				{
-					f:     "OR",
-					error: "OR(boolean, boolean) expected 2 arguments, but got 1 in (OR <bool true>), at <: input:0:0>",
-				},
-				{
-					f:     "IF",
-					error: "IF(boolean, any, any) expected 3 arguments, but got 1 in (IF <bool true>), at <: input:0:0>",
-				},
-				{
-					f:     "TRUE",
-					error: "TRUE() expected 0 arguments, but got 1 in (TRUE <bool true>), at <: input:0:0>",
-				},
-				{
-					f:     "FALSE",
-					error: "FALSE() expected 0 arguments, but got 1 in (FALSE <bool true>), at <: input:0:0>",
-				},
-			},
+			Expected: "<bool false>",
 		},
-		// Single boolean false
 		{
-			name: "single boolean false",
-			input: []ast.Expression{
+			Name: "false input",
+			Input: []ast.Expression{
 				ast.BooleanExpression{Value: false},
 			},
-			cases: []inputCase{
-				{
-					f:        "NOT",
-					expected: "<bool true>",
-				},
-				{
-					f:     "AND",
-					error: "AND(boolean, boolean) expected 2 arguments, but got 1 in (AND <bool false>), at <: input:0:0>",
-				},
-				{
-					f:     "OR",
-					error: "OR(boolean, boolean) expected 2 arguments, but got 1 in (OR <bool false>), at <: input:0:0>",
-				},
-				{
-					f:     "IF",
-					error: "IF(boolean, any, any) expected 3 arguments, but got 1 in (IF <bool false>), at <: input:0:0>",
-				},
-			},
+			Expected: "<bool true>",
 		},
-		// Two booleans: true AND false
 		{
-			name: "true and false",
-			input: []ast.Expression{
+			Name: "multiple inputs",
+			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 			},
-			cases: []inputCase{
-				{
-					f:     "NOT",
-					error: "NOT(boolean) expected 1 argument, but got 2 in (NOT <bool true> <bool false>), at <: input:0:0>",
-				},
-				{
-					f:        "AND",
-					expected: "<bool false>",
-				},
-				{
-					f:        "OR",
-					expected: "<bool true>",
-				},
-			},
+			Error: "NOT(boolean) expected 1 argument, but got 2 in (NOT <bool true> <bool false>), at <: input:0:0>",
 		},
-		// Two booleans: true AND true
 		{
-			name: "true and true",
-			input: []ast.Expression{
-				ast.BooleanExpression{Value: true},
-				ast.BooleanExpression{Value: true},
-			},
-			cases: []inputCase{
-				{
-					f:        "AND",
-					expected: "<bool true>",
-				},
-				{
-					f:        "OR",
-					expected: "<bool true>",
-				},
-			},
-		},
-		// Two booleans: false AND false
-		{
-			name: "false and false",
-			input: []ast.Expression{
-				ast.BooleanExpression{Value: false},
-				ast.BooleanExpression{Value: false},
-			},
-			cases: []inputCase{
-				{
-					f:        "AND",
-					expected: "<bool false>",
-				},
-				{
-					f:        "OR",
-					expected: "<bool false>",
-				},
-			},
-		},
-		// Three booleans (should error for AND/OR)
-		{
-			name: "three booleans",
-			input: []ast.Expression{
-				ast.BooleanExpression{Value: true},
-				ast.BooleanExpression{Value: false},
-				ast.BooleanExpression{Value: true},
-			},
-			cases: []inputCase{
-				{
-					f:     "AND",
-					error: "AND(boolean, boolean) expected 2 arguments, but got 3 in (AND <bool true> <bool false> <bool true>), at <: input:0:0>",
-				},
-				{
-					f:     "OR",
-					error: "OR(boolean, boolean) expected 2 arguments, but got 3 in (OR <bool true> <bool false> <bool true>), at <: input:0:0>",
-				},
-			},
-		},
-		// String argument (should error)
-		{
-			name: "string argument",
-			input: []ast.Expression{
+			Name: "string input",
+			Input: []ast.Expression{
 				ast.StringExpression{Value: "true"},
 			},
-			cases: []inputCase{
-				{
-					f:     "NOT",
-					error: "NOT(boolean) got a wrong argument <str \"true\"> in (NOT <str \"true\">), at <: input:0:0>",
-				},
-				{
-					f:     "AND",
-					error: "AND(boolean, boolean) expected 2 arguments, but got 1 in (AND <str \"true\">), at <: input:0:0>",
-				},
-				{
-					f:     "OR",
-					error: "OR(boolean, boolean) expected 2 arguments, but got 1 in (OR <str \"true\">), at <: input:0:0>",
-				},
-			},
+			Error: "NOT(boolean) got a wrong argument <str \"true\"> in (NOT <str \"true\">), at <: input:0:0>",
 		},
-		// Mixed types for AND/OR
 		{
-			name: "boolean and string",
-			input: []ast.Expression{
+			Name: "integer input",
+			Input: []ast.Expression{
+				ast.IntExpression{Value: 1},
+			},
+			Error: "NOT(boolean) got a wrong argument <int 1> in (NOT <int 1>), at <: input:0:0>",
+		},
+		{
+			Name: "float input",
+			Input: []ast.Expression{
+				ast.FloatExpression{Value: 1.0},
+			},
+			Error: "NOT(boolean) got a wrong argument <float 1.00> in (NOT <float 1.00>), at <: input:0:0>",
+		},
+	}
+
+	RunFunctionTest(t, "NOT", testcases)
+}
+
+func TestAND(t *testing.T) {
+	testcases := []InfoTestCase{
+		{
+			Name:  "empty input",
+			Input: []ast.Expression{},
+			Error: "AND(boolean, boolean) expected 2 arguments, but got 0 in (AND), at <: input:0:0>",
+		},
+		{
+			Name: "single input",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+			},
+			Error: "AND(boolean, boolean) expected 2 arguments, but got 1 in (AND <bool true>), at <: input:0:0>",
+		},
+		{
+			Name: "true and false",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.BooleanExpression{Value: false},
+			},
+			Expected: "<bool false>",
+		},
+		{
+			Name: "true and true",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.BooleanExpression{Value: true},
+			},
+			Expected: "<bool true>",
+		},
+		{
+			Name: "false and false",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: false},
+				ast.BooleanExpression{Value: false},
+			},
+			Expected: "<bool false>",
+		},
+		{
+			Name: "three arguments",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.BooleanExpression{Value: false},
+				ast.BooleanExpression{Value: true},
+			},
+			Error: "AND(boolean, boolean) expected 2 arguments, but got 3 in (AND <bool true> <bool false> <bool true>), at <: input:0:0>",
+		},
+		{
+			Name: "boolean and string",
+			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "false"},
 			},
-			cases: []inputCase{
-				{
-					f:     "AND",
-					error: "AND(boolean, boolean) got a wrong argument <str \"false\"> in (AND <bool true> <str \"false\">), at <: input:0:0>",
-				},
-				{
-					f:     "OR",
-					error: "OR(boolean, boolean) got a wrong argument <str \"false\"> in (OR <bool true> <str \"false\">), at <: input:0:0>",
-				},
-			},
+			Error: "AND(boolean, boolean) got a wrong argument <str \"false\"> in (AND <bool true> <str \"false\">), at <: input:0:0>",
 		},
-		// Integer argument (should error)
+	}
+
+	RunFunctionTest(t, "AND", testcases)
+}
+
+func TestOR(t *testing.T) {
+	testcases := []InfoTestCase{
 		{
-			name: "integer argument",
-			input: []ast.Expression{
-				ast.IntExpression{Value: 1},
-			},
-			cases: []inputCase{
-				{
-					f:     "NOT",
-					error: "NOT(boolean) got a wrong argument <int 1> in (NOT <int 1>), at <: input:0:0>",
-				},
-				{
-					f:     "AND",
-					error: "AND(boolean, boolean) expected 2 arguments, but got 1 in (AND <int 1>), at <: input:0:0>",
-				},
-				{
-					f:     "OR",
-					error: "OR(boolean, boolean) expected 2 arguments, but got 1 in (OR <int 1>), at <: input:0:0>",
-				},
-			},
+			Name:  "empty input",
+			Input: []ast.Expression{},
+			Error: "OR(boolean, boolean) expected 2 arguments, but got 0 in (OR), at <: input:0:0>",
 		},
-		// Float argument (should error)
 		{
-			name: "float argument",
-			input: []ast.Expression{
-				ast.FloatExpression{Value: 1.0},
+			Name: "single input",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
 			},
-			cases: []inputCase{
-				{
-					f:     "NOT",
-					error: "NOT(boolean) got a wrong argument <float 1.00> in (NOT <float 1.00>), at <: input:0:0>",
-				},
-				{
-					f:     "AND",
-					error: "AND(boolean, boolean) expected 2 arguments, but got 1 in (AND <float 1.00>), at <: input:0:0>",
-				},
-				{
-					f:     "OR",
-					error: "OR(boolean, boolean) expected 2 arguments, but got 1 in (OR <float 1.00>), at <: input:0:0>",
-				},
-			},
+			Error: "OR(boolean, boolean) expected 2 arguments, but got 1 in (OR <bool true>), at <: input:0:0>",
 		},
-		// IF function tests
 		{
-			name: "IF true condition",
-			input: []ast.Expression{
+			Name: "true and false",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.BooleanExpression{Value: false},
+			},
+			Expected: "<bool true>",
+		},
+		{
+			Name: "true and true",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.BooleanExpression{Value: true},
+			},
+			Expected: "<bool true>",
+		},
+		{
+			Name: "false and false",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: false},
+				ast.BooleanExpression{Value: false},
+			},
+			Expected: "<bool false>",
+		},
+		{
+			Name: "three arguments",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.BooleanExpression{Value: false},
+				ast.BooleanExpression{Value: true},
+			},
+			Error: "OR(boolean, boolean) expected 2 arguments, but got 3 in (OR <bool true> <bool false> <bool true>), at <: input:0:0>",
+		},
+		{
+			Name: "boolean and string",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+				ast.StringExpression{Value: "false"},
+			},
+			Error: "OR(boolean, boolean) got a wrong argument <str \"false\"> in (OR <bool true> <str \"false\">), at <: input:0:0>",
+		},
+	}
+
+	RunFunctionTest(t, "OR", testcases)
+}
+
+func TestIF(t *testing.T) {
+	testcases := []InfoTestCase{
+		{
+			Name:  "empty input",
+			Input: []ast.Expression{},
+			Error: "IF(boolean, any, any) expected 3 arguments, but got 0 in (IF), at <: input:0:0>",
+		},
+		{
+			Name: "single input",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+			},
+			Error: "IF(boolean, any, any) expected 3 arguments, but got 1 in (IF <bool true>), at <: input:0:0>",
+		},
+		{
+			Name: "true condition",
+			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
 			},
-			cases: []inputCase{
-				{
-					f:        "IF",
-					expected: `<str "yes">`,
-				},
-			},
+			Expected: `<str "yes">`,
 		},
 		{
-			name: "IF false condition",
-			input: []ast.Expression{
+			Name: "false condition",
+			Input: []ast.Expression{
 				ast.BooleanExpression{Value: false},
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
 			},
-			cases: []inputCase{
-				{
-					f:        "IF",
-					expected: `<str "no">`,
-				},
-			},
+			Expected: `<str "no">`,
 		},
 		{
-			name: "IF with mixed types",
-			input: []ast.Expression{
+			Name: "mixed types true",
+			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 				ast.IntExpression{Value: 42},
 				ast.FloatExpression{Value: 3.14},
 			},
-			cases: []inputCase{
-				{
-					f:        "IF",
-					expected: "<int 42>",
-				},
-			},
+			Expected: "<int 42>",
 		},
 		{
-			name: "IF with mixed types false",
-			input: []ast.Expression{
+			Name: "mixed types false",
+			Input: []ast.Expression{
 				ast.BooleanExpression{Value: false},
 				ast.IntExpression{Value: 42},
 				ast.FloatExpression{Value: 3.14},
 			},
-			cases: []inputCase{
-				{
-					f:        "IF",
-					expected: "<float 3.14>",
-				},
-			},
+			Expected: "<float 3.14>",
 		},
 		{
-			name: "IF with boolean results",
-			input: []ast.Expression{
+			Name: "boolean results",
+			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 				ast.BooleanExpression{Value: true},
 			},
-			cases: []inputCase{
-				{
-					f:        "IF",
-					expected: "<bool false>",
-				},
-			},
+			Expected: "<bool false>",
 		},
 		{
-			name: "IF with non-boolean condition",
-			input: []ast.Expression{
+			Name: "non-boolean condition",
+			Input: []ast.Expression{
 				ast.StringExpression{Value: "true"},
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
 			},
-			cases: []inputCase{
-				{
-					f:     "IF",
-					error: `IF(boolean, any, any) got a wrong argument <str "true"> in (IF <str "true"> <str "yes"> <str "no">), at <: input:0:0>`,
-				},
-			},
+			Error: `IF(boolean, any, any) got a wrong argument <str "true"> in (IF <str "true"> <str "yes"> <str "no">), at <: input:0:0>`,
 		},
 		{
-			name: "IF with too many arguments",
-			input: []ast.Expression{
+			Name: "too many arguments",
+			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
 				ast.StringExpression{Value: "extra"},
 			},
-			cases: []inputCase{
-				{
-					f:     "IF",
-					error: `IF(boolean, any, any) expected 3 arguments, but got 4 in (IF <bool true> <str "yes"> <str "no"> <str "extra">), at <: input:0:0>`,
-				},
-			},
+			Error: `IF(boolean, any, any) expected 3 arguments, but got 4 in (IF <bool true> <str "yes"> <str "no"> <str "extra">), at <: input:0:0>`,
 		},
 	}
 
-	for _, tc := range testcases {
-		for _, c := range tc.cases {
-			t.Run(tc.name+":"+c.f, func(t *testing.T) {
-				result, err := DispatchMap[c.f](ast.CallExpression{
-					Identifier: ast.IdentifierExpression{
-						Value: c.f,
-						Token: lexer.Token{Literal: c.f},
-					}, Arguments: tc.input,
-				}, tc.input...)
+	RunFunctionTest(t, "IF", testcases)
+}
 
-				if c.error != "" {
-					if err == nil {
-						t.Errorf("Expected error %q but got result: %v", c.error, result)
-						return
-					}
-					if err.Error() != c.error {
-						t.Errorf("Expected error %q, got %q", c.error, err.Error())
-					}
-					return
-				}
-
-				if err != nil {
-					t.Errorf("Unexpected error: %v", err)
-					return
-				}
-
-				if result.String() != c.expected {
-					t.Errorf("Expected %s, got %s", c.expected, result.String())
-				}
-			})
-		}
+func TestTRUE(t *testing.T) {
+	testcases := []InfoTestCase{
+		{
+			Name:     "no arguments",
+			Input:    []ast.Expression{},
+			Expected: "<bool true>",
+		},
+		{
+			Name: "with arguments",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+			},
+			Error: "TRUE() expected 0 arguments, but got 1 in (TRUE <bool true>), at <: input:0:0>",
+		},
 	}
+
+	RunFunctionTest(t, "TRUE", testcases)
+}
+
+func TestFALSE(t *testing.T) {
+	testcases := []InfoTestCase{
+		{
+			Name:     "no arguments",
+			Input:    []ast.Expression{},
+			Expected: "<bool false>",
+		},
+		{
+			Name: "with arguments",
+			Input: []ast.Expression{
+				ast.BooleanExpression{Value: true},
+			},
+			Error: "FALSE() expected 0 arguments, but got 1 in (FALSE <bool true>), at <: input:0:0>",
+		},
+	}
+
+	RunFunctionTest(t, "FALSE", testcases)
 }
