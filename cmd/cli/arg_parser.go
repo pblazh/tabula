@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"path"
 )
 
 var (
@@ -12,9 +13,11 @@ var (
 Options:
   -i <file>    Input CSV path (default: stdin)
   -s <file>    Script file path (default: stdin)
+  -e <code>    Execute code
   -o <file>    Output CSV file (default: stdout)
   -u           Update input CSV file in place
   -a           Align output
+  -t           Sort statements topologically
   -h           Show this help
 
 Examples:
@@ -23,6 +26,9 @@ Examples:
 
 	# CSV from file, script from file → stdout
   csvss -i data.csv -s script.file
+
+	# CSV from file, execute code directly → stdout
+	csvss -i data.csv -e "let A1 = SUM(A2:A4)"
 
 	# CSV from file, script from file → file
   csvss -i data.csv -s script.file -o output.csv
@@ -38,25 +44,32 @@ Examples:
 )
 
 type Config struct {
-	Script string
-	Input  string
-	Output string
-	Align  bool
+	Script  string
+	Execute string
+	Name    string
+	Input   string
+	Output  string
+	Align   bool
+	Sort    bool
 }
 
 func parseArgs() (*Config, error) {
 	var script string
+	var execute string
 	var output string
 	var input string
 	var update string
 	var align bool
+	var sort bool
 	var help bool
 
 	flag.StringVar(&input, "i", "", "read CSV file")
 	flag.StringVar(&script, "s", "", "path to a script file")
+	flag.StringVar(&execute, "e", "", "execute code directly")
 	flag.StringVar(&output, "o", "", "output CSV file")
 	flag.StringVar(&update, "u", "", "update CSV file in place")
 	flag.BoolVar(&align, "a", false, "Align CSV output")
+	flag.BoolVar(&sort, "t", false, "Sort statements topologically")
 	flag.BoolVar(&help, "h", false, "usage")
 	flag.Parse()
 
@@ -76,15 +89,32 @@ func parseArgs() (*Config, error) {
 		output = update
 	}
 
-	// Basic validation - need either input file or script file
-	if input == "" && script == "" {
+	// Check conflicting script flags
+	if script != "" && execute != "" {
+		return nil, errors.New("conflicting script flags: -s and -e cannot be used together")
+	}
+
+	// Basic validation - need either input file or script source
+	if input == "" && script == "" && execute == "" {
 		return nil, errors.New(inputConflictMessage)
 	}
 
-	return &Config{
-		Script: script,
-		Input:  input,
-		Output: output,
-		Align:  align,
-	}, nil
+	config := Config{
+		Script:  script,
+		Execute: execute,
+		Input:   input,
+		Output:  output,
+		Align:   align,
+		Sort:    sort,
+	}
+
+	if script != "" {
+		config.Name = path.Base(script)
+	}
+
+	if execute != "" {
+		config.Name = "<inline>"
+	}
+
+	return &config, nil
 }

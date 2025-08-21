@@ -1,0 +1,5 @@
+Command, Arg, Out
+echo,hello,
+ls,examples/call-function/,
+date,Jun 20 1975,
+#csvssfile:./script.csvs

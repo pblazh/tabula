@@ -2,6 +2,7 @@
 package testutil
 
 import (
+	"os"
 	"strings"
 	"testing"
 
@@ -46,4 +47,13 @@ func ParseProgram(input string) (ast.Program, error) {
 	p := parser.New(lex)
 	program, _, err := p.Parse()
 	return program, err
+}
+
+// ParseProgramFromFile is a helper function to parse a program from a file
+func ParseProgramFromFile(filename string) (ast.Program, error) {
+	content, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	return ParseProgram(string(content))
 }

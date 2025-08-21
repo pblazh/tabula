@@ -1,0 +1,12 @@
+2025.08.01     , previous , current  , rate   , payment
+electricity    , 21025.8  , 21200.3  , $4.32  , $753.84
+water          , 82.102   , 89.519   , $56.88 , $421.88
+gas            , 9791.021 , 9808.410 , $7.96  , $138.42
+gas delivery   ,          ,          ,        , $122.20
+water delivery ,          ,          ,        , $20.00
+maintenance    ,          ,          ,        , $409.49
+apartment      ,          ,          ,        , $8000.00
+               ,          ,          , total  , $9865.83
+#csvss: fmt D2:D4,E2:E9 = "$%.2f"
+#csvssfile:./script.csvs
+#csvss: let E9 = SUM(E2:E8)

@@ -1,0 +1,5 @@
+Item,Amount,
+Revenue,123456.789,
+Expenses,98765.432,
+Profit,24691.357,
+#csvssfile:./script.csvs

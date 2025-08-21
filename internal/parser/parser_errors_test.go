@@ -33,6 +33,16 @@ func TestParserErrors(t *testing.T) {
 			input:  "A:B;",
 			output: "range must contain valid cell references (like A1:B2), got A:B",
 		},
+		{
+			name:   "invalid fmt statements int",
+			input:  "fmt A1 = 1;",
+			output: "expected string, but got <INT:1 invalid fmt statements int:1:10>",
+		},
+		{
+			name:   "invalid fmt statements bool",
+			input:  "fmt A1 = true;",
+			output: "expected string, but got <TRUE:true invalid fmt statements bool:1:10>",
+		},
 	}
 
 	for _, tc := range testcases {

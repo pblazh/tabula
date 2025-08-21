@@ -4,6 +4,7 @@ package ast
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/pblazh/csvss/internal/lexer"
 )
@@ -53,10 +54,11 @@ type Expression interface {
 type IdentifierExpression struct {
 	Expression
 	Token lexer.Token
+	Value string
 }
 
 func (expr IdentifierExpression) String() string {
-	return expr.Token.Literal
+	return expr.Value
 }
 
 type BooleanExpression struct {
@@ -97,6 +99,16 @@ type StringExpression struct {
 
 func (expr StringExpression) String() string {
 	return fmt.Sprintf("<str \"%s\">", expr.Value)
+}
+
+type DateExpression struct {
+	Expression
+	Token lexer.Token
+	Value time.Time
+}
+
+func (expr DateExpression) String() string {
+	return fmt.Sprintf("<date %s>", expr.Value.Format("2006-01-02 15:04:05"))
 }
 
 type PrefixExpression struct {

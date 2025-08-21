@@ -21,7 +21,7 @@ func ExtractDependencies(expr Expression) []string {
 	var deps []string
 	switch e := expr.(type) {
 	case IdentifierExpression:
-		deps = append(deps, e.Token.Literal)
+		deps = append(deps, e.Value)
 	case PrefixExpression:
 		deps = append(deps, ExtractDependencies(e.Value)...)
 	case InfixExpression:
@@ -44,7 +44,7 @@ func ExtractDependencies(expr Expression) []string {
 func GetStatementName(stmt Statement) string {
 	switch s := stmt.(type) {
 	case LetStatement:
-		return s.Identifier.Token.Literal
+		return s.Identifier.Value
 	default:
 		return ""
 	}

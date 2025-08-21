@@ -1,0 +1,11 @@
+Item,Quantity,Total
+Widget A,5,250.00
+Widget B,3,180.00
+Widget C,8,320.00
+Widget D,2,150.00
+Widget E,6,300.00
+Widget F,4,200.00
+Widget G,7,350.00
+Widget H,1,75.00
+Widget I,9,450.00
+#csvssfile:./script.csvs

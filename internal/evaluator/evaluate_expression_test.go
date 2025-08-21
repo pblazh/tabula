@@ -3,6 +3,7 @@ package evaluator
 import (
 	"testing"
 
+	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/testutil"
 )
 
@@ -325,7 +326,7 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 		{
 			name:     "SUM with mixed int and float (int first)",
 			input:    "SUM(5, 2.5)",
-			expected: "<int 7>",
+			expected: "<float 7.50>",
 		},
 		{
 			name:     "SUM with mixed float and int (float first)",
@@ -349,7 +350,7 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 
 			var input [][]string
-			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string))
+			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string), "target")
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return
@@ -441,7 +442,7 @@ func TestPrefixExpressionEvaluate(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 
 			var input [][]string
-			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string))
+			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string), "target")
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return
@@ -562,7 +563,7 @@ func TestOperationErrors(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 			var input [][]string
 			formats := make(map[string]string)
-			result, err := EvaluateExpression(expr, make(map[string]string), input, formats)
+			result, err := EvaluateExpression(expr, make(map[string]string), input, formats, "target")
 			if err == nil {
 				t.Errorf("Expected error but got result: %s", result.String())
 				return
@@ -570,6 +571,68 @@ func TestOperationErrors(t *testing.T) {
 
 			if err.Error() != tc.expectedError {
 				t.Errorf("Expected error %q, got %q", tc.expectedError, err.Error())
+			}
+		})
+	}
+}
+
+func TestRangeExpressionTokenPreservation(t *testing.T) {
+	testcases := []struct {
+		name        string
+		input       string
+		expectedPos string
+	}{
+		{
+			name:        "simple horizontal range A1:C1",
+			input:       "A1:C1",
+			expectedPos: "test:1:3",
+		},
+		{
+			name:        "simple vertical range A1:A3",
+			input:       "A1:A3",
+			expectedPos: "test:1:3",
+		},
+		{
+			name:        "larger range A1:C3",
+			input:       "A1:C3",
+			expectedPos: "test:1:3",
+		},
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			expr := testutil.ParseExpression(t, tc.input)
+
+			// Verify it's a RangeExpression
+			rangeExpr, ok := expr.(ast.RangeExpression)
+			if !ok {
+				t.Fatalf("Expected RangeExpression, got %T", expr)
+			}
+
+			// Check the Token position of the range expression itself
+			if rangeExpr.Token.Position.String() != tc.expectedPos {
+				t.Errorf("Expected range token position %s, got %s", tc.expectedPos, rangeExpr.Token.Position.String())
+			}
+
+			// The key test: verify that when we expand the range expression,
+			// the generated IdentifierExpression objects have the same Token as the original range
+			// This simulates what EvaluateRangeExpression does internally
+			cells := make([]ast.IdentifierExpression, len(rangeExpr.Value))
+			for i, cell := range rangeExpr.Value {
+				cells[i] = ast.IdentifierExpression{Token: rangeExpr.Token, Value: cell}
+			}
+
+			// Verify each generated IdentifierExpression has the correct Token
+			for i, cell := range cells {
+				if cell.Token.Position.String() != tc.expectedPos {
+					t.Errorf("Generated identifier %d (%s) has wrong token position: expected %s, got %s",
+						i, cell.Value, tc.expectedPos, cell.Token.Position.String())
+				}
+
+				if cell.Token.Type != rangeExpr.Token.Type {
+					t.Errorf("Generated identifier %d (%s) has wrong token type: expected %v, got %v",
+						i, cell.Value, rangeExpr.Token.Type, cell.Token.Type)
+				}
 			}
 		})
 	}

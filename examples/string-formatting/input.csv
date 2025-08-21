@@ -1,0 +1,4 @@
+first_name,last_name,email,
+john,doe,john.doe@email.com,
+jane,smith,jane.smith@email.com,
+#csvssfile:./script.csvs

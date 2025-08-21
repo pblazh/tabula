@@ -1,8 +1,15 @@
 package evaluator
 
 import (
+	"regexp"
 	"testing"
 )
+
+// cleanFormat removes the width and precision parts from format strings (e.g., %-9s → %s, %6f → %f, %6.2f → %f)
+func cleanFormat(format string) string {
+	re := regexp.MustCompile(`%([-+0# ]*)(\d+)?(\.\d+)?([a-zA-Z])`)
+	return re.ReplaceAllString(format, `%$4`)
+}
 
 func TestCleanFormat(t *testing.T) {
 	testcases := []struct {
@@ -77,3 +84,131 @@ func TestCleanFormat(t *testing.T) {
 	}
 }
 
+func TestDetectPlaceholderType(t *testing.T) {
+	testcases := []struct {
+		name     string
+		input    string
+		expected int
+	}{
+		// Integer placeholders
+		{
+			name:     "integer decimal",
+			input:    "%d",
+			expected: intPlacehoder,
+		},
+		{
+			name:     "integer octal",
+			input:    "%o",
+			expected: intPlacehoder,
+		},
+		{
+			name:     "integer hexadecimal lowercase",
+			input:    "%x",
+			expected: intPlacehoder,
+		},
+		{
+			name:     "integer hexadecimal uppercase",
+			input:    "%X",
+			expected: intPlacehoder,
+		},
+		{
+			name:     "unsigned integer",
+			input:    "%u",
+			expected: intPlacehoder,
+		},
+		{
+			name:     "integer with width",
+			input:    "%5d",
+			expected: intPlacehoder,
+		},
+		{
+			name:     "integer with flags and width",
+			input:    "%+10d",
+			expected: intPlacehoder,
+		},
+
+		// Float placeholders
+		{
+			name:     "float f format",
+			input:    "%f",
+			expected: floatPlacehoder,
+		},
+		{
+			name:     "float F format",
+			input:    "%F",
+			expected: floatPlacehoder,
+		},
+		{
+			name:     "float e format",
+			input:    "%e",
+			expected: floatPlacehoder,
+		},
+		{
+			name:     "float E format",
+			input:    "%E",
+			expected: floatPlacehoder,
+		},
+		{
+			name:     "float g format",
+			input:    "%g",
+			expected: floatPlacehoder,
+		},
+		{
+			name:     "float G format",
+			input:    "%G",
+			expected: floatPlacehoder,
+		},
+		{
+			name:     "float with precision",
+			input:    "%.2f",
+			expected: floatPlacehoder,
+		},
+		{
+			name:     "float with width and precision",
+			input:    "%8.3f",
+			expected: floatPlacehoder,
+		},
+
+		// Boolean placeholders
+		{
+			name:     "boolean",
+			input:    "%t",
+			expected: boolPlacehoder,
+		},
+		{
+			name:     "boolean with width",
+			input:    "%5t",
+			expected: boolPlacehoder,
+		},
+		// String placeholders
+		{
+			name:     "string",
+			input:    "%s",
+			expected: stringPlacehoder,
+		},
+		{
+			name:     "character",
+			input:    "%c",
+			expected: stringPlacehoder,
+		},
+		{
+			name:     "string with width",
+			input:    "%10s",
+			expected: stringPlacehoder,
+		},
+		{
+			name:     "string with left alignment",
+			input:    "%-15s",
+			expected: stringPlacehoder,
+		},
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			result := detectPlaceholderType(tc.input)
+			if result != tc.expected {
+				t.Errorf("Expected %d, got %d", tc.expected, result)
+			}
+		})
+	}
+}

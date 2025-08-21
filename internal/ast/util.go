@@ -76,6 +76,15 @@ func TypeName(expr Expression) string {
 	}
 }
 
+func IsCell(expr Expression) bool {
+	switch c := expr.(type) {
+	case IdentifierExpression:
+		return IsCellIdentifier(c.Value)
+	default:
+		return false
+	}
+}
+
 func IsInt(expr Expression) bool {
 	switch expr.(type) {
 	case IntExpression:
@@ -121,6 +130,24 @@ func IsNumeric(expr Expression) bool {
 	return IsInt(expr) || IsFloat(expr)
 }
 
+func IsIdentifier(expr Expression) bool {
+	switch expr.(type) {
+	case IdentifierExpression:
+		return true
+	default:
+		return false
+	}
+}
+
+func IsFunction(expr Expression) bool {
+	switch expr.(type) {
+	case CallExpression:
+		return true
+	default:
+		return false
+	}
+}
+
 func IsString(expr Expression) bool {
 	switch expr.(type) {
 	case StringExpression:
@@ -130,12 +157,12 @@ func IsString(expr Expression) bool {
 	}
 }
 
-func ToString(expr *Expression) (*StringExpression, bool) {
-	switch e := (*expr).(type) {
-	case StringExpression:
-		return &e, true
+func IsDate(expr Expression) bool {
+	switch expr.(type) {
+	case DateExpression:
+		return true
 	default:
-		return nil, false
+		return false
 	}
 }
 
@@ -145,15 +172,6 @@ func IsBoolean(expr Expression) bool {
 		return true
 	default:
 		return false
-	}
-}
-
-func ToBoolean(expr *Expression) (*BooleanExpression, bool) {
-	switch e := (*expr).(type) {
-	case BooleanExpression:
-		return &e, true
-	default:
-		return nil, false
 	}
 }
 

@@ -13,7 +13,7 @@ func evaluateComparison(operator lexer.Token, left, right ast.Expression, intOp 
 	if ast.IsString(left) && ast.IsString(right) {
 		l := left.(ast.StringExpression)
 		r := right.(ast.StringExpression)
-		return stringOp(l.Token.Literal, r.Token.Literal)
+		return stringOp(l.Value, r.Value)
 	}
 
 	if ast.IsBoolean(left) && ast.IsBoolean(right) {

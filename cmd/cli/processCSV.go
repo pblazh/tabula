@@ -2,10 +2,9 @@ package main
 
 import (
 	"encoding/csv"
-	"fmt"
 	"io"
-	"strings"
 
+	"github.com/pblazh/csvss/internal/ast"
 	"github.com/pblazh/csvss/internal/evaluator"
 )
 
@@ -18,25 +17,28 @@ func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csv
 
 	records, err := reader.ReadAll()
 	if err != nil {
-		return fmt.Errorf("error reading CSV: %v", err)
+		return ErrReadCSV(err)
 	}
 
-	for i, row := range records {
-		for j, cel := range row {
-			records[i][j] = strings.TrimSpace(cel)
-		}
-	}
+	program, identifiers, err := evaluator.ParseProgram(scriptReader, config.Name)
+	records = ensureProgramDimmensions(identifiers, records)
 
-	// Parse script
-	program, err := evaluator.ParseProgram(scriptReader, config.Script)
 	if err != nil {
-		return fmt.Errorf("error parsing script: %v", err)
+		return ErrParseScript(err)
+	}
+
+	// Sort program topologically if Sort flag is set
+	if config.Sort {
+		program, err = ast.SortProgram(program)
+		if err != nil {
+			return ErrSortScriptStatements(err)
+		}
 	}
 
 	// Evaluate the program with CSV data
 	result, err := evaluator.Evaluate(program, records)
 	if err != nil {
-		return fmt.Errorf("error evaluating script %s: %v", config.Script, err)
+		return ErrEvaluateScript(config.Name, err)
 	}
 
 	if config.Align {

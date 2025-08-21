@@ -1,0 +1,7 @@
+Month,Q1,Q2,Q3,Q4,,
+Product A,1000,1200,1100,1300,,
+Product B,800,900,950,1000,,
+Product C,1500,1400,1600,1550,,
+,,,,,,
+,,,,,,
+#csvssfile:./script.csvs

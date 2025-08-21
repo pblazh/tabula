@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -39,39 +40,6 @@ exit status 1
 exit status 1
 `,
 		},
-		{
-			name: "succcess",
-			args: []string{"-i", "../../examples/basic/file.csv", "-s", "../../examples/basic/script.csvs"},
-			stdout: `# Header
-Full Name,Age,Grade
-"Dow, Bob",25,170
-"Dow, Alice",30,184
-#csvss:./script.csvs
-`,
-			stderr: "",
-		},
-		{
-			name: "script path from CSV comment",
-			args: []string{"-i", "../../examples/basic/file.csv"},
-			stdout: `# Header
-Full Name,Age,Grade
-"Dow, Bob",25,170
-"Dow, Alice",30,184
-#csvss:./script.csvs
-`,
-			stderr: "",
-		},
-		{
-			name: "align flag",
-			args: []string{"-i", "../../examples/basic/file.csv", "-a"},
-			stdout: `# Header
-Full Name    , Age , Grade
-"Dow, Bob"   , 25  , 170
-"Dow, Alice" , 30  , 184
-#csvss:./script.csvs
-`,
-			stderr: "",
-		},
 	}
 
 	for _, tt := range tests {
@@ -104,6 +72,55 @@ Full Name    , Age , Grade
 				t.Errorf("Expected stderr %q but got %q", tt.stderr, stderrStr)
 			}
 		})
+	}
+}
+
+func TestExecuteInlineCode(t *testing.T) {
+	scriptPath := filepath.Join("..", "..", "examples", "apartment", "script.csvs")
+	inputPath := filepath.Join("..", "..", "examples", "apartment", "input.csv")
+	outputPath := filepath.Join("..", "..", "examples", "apartment", "output.csv")
+
+	// Read expected output
+	input, err := os.ReadFile(inputPath)
+	if err != nil {
+		t.Fatalf("Failed to read expected output: %v", err)
+	}
+	csvIn := strings.ReplaceAll(string(input), "#csvssfile:./script.csvs", "")
+	// Read expected output
+	script, err := os.ReadFile(scriptPath)
+	if err != nil {
+		t.Fatalf("Failed to read expected output: %v", err)
+	}
+
+	// Read expected output
+	output, err := os.ReadFile(outputPath)
+	if err != nil {
+		t.Fatalf("Failed to read expected output: %v", err)
+	}
+	csvOut := strings.ReplaceAll(string(output), "#csvssfile:./script.csvs", "")
+
+	cmd := exec.Command("go", "run", ".", "-e", string(script), "-a")
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	cmd.Stdin = strings.NewReader(csvIn)
+
+	err = cmd.Run()
+	if err != nil {
+		t.Fatalf("Command failed: %v\nStderr: %s", err, stderr.String())
+	}
+
+	// Normalize outputs for comparison
+	expectedStr := normalizeOutput(csvOut)
+	actualStr := normalizeOutput(stdout.String())
+
+	if expectedStr != actualStr {
+		t.Errorf("Apartment example with -e flag: output mismatch\nExpected:\n%s\n\nActual:\n%s", expectedStr, actualStr)
+	}
+
+	// Ensure stderr is empty (no errors)
+	if stderr.String() != "" {
+		t.Errorf("Expected empty stderr but got: %q", stderr.String())
 	}
 }
 
@@ -162,5 +179,298 @@ func TestUpdateInPlace(t *testing.T) {
 	// Ensure stderr is empty (no errors)
 	if stderr.String() != "" {
 		t.Errorf("Expected empty stderr but got: %q", stderr.String())
+	}
+}
+
+func TestScriptPathFromCSVComment(t *testing.T) {
+	tempDir := os.TempDir()
+
+	// Create subdirectory structure
+	subDir := filepath.Join(tempDir, "csvss_test_subdir")
+	err := os.MkdirAll(subDir, 0755)
+	if err != nil {
+		t.Fatalf("Failed to create test subdirectory: %v", err)
+	}
+	defer dremove(subDir)
+
+	tests := []struct {
+		name           string
+		csvPath        string
+		scriptPath     string
+		scriptComment  string
+		csvContent     string
+		scriptContent  string
+		expectedOutput string
+	}{
+		{
+			name:           "parent directory script reference",
+			csvPath:        filepath.Join(subDir, "test.csv"),
+			scriptPath:     filepath.Join(tempDir, "parent_script.csvs"),
+			scriptComment:  "../parent_script.csvs",
+			csvContent:     "A,B\n1,2\n#csvssfile:../parent_script.csvs\n",
+			scriptContent:  "let A1 = \"ParentScript\"; let B1 = \"Modified\";",
+			expectedOutput: "ParentScript,Modified\n1,2\n#csvssfile:../parent_script.csvs\n",
+		},
+		{
+			name:           "same directory script reference",
+			csvPath:        filepath.Join(subDir, "test2.csv"),
+			scriptPath:     filepath.Join(subDir, "local_script.csvs"),
+			scriptComment:  "./local_script.csvs",
+			csvContent:     "A,B\n1,2\n#csvssfile:./local_script.csvs\n",
+			scriptContent:  "let A1 = \"LocalScript\"; let B1 = \"Local\";",
+			expectedOutput: "LocalScript,Local\n1,2\n#csvssfile:./local_script.csvs\n",
+		},
+		{
+			name:           "relative path without dot prefix",
+			csvPath:        filepath.Join(subDir, "test3.csv"),
+			scriptPath:     filepath.Join(subDir, "simple_script.csvs"),
+			scriptComment:  "simple_script.csvs",
+			csvContent:     "A,B\n1,2\n#csvssfile:simple_script.csvs\n",
+			scriptContent:  "let A1 = \"SimpleScript\"; let B1 = \"Simple\";",
+			expectedOutput: "SimpleScript,Simple\n1,2\n#csvssfile:simple_script.csvs\n",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create CSV file
+			err := os.WriteFile(tt.csvPath, []byte(tt.csvContent), 0644)
+			if err != nil {
+				t.Fatalf("Failed to create CSV file: %v", err)
+			}
+			defer dremove(tt.csvPath)
+
+			// Create script file
+			err = os.WriteFile(tt.scriptPath, []byte(tt.scriptContent), 0644)
+			if err != nil {
+				t.Fatalf("Failed to create script file: %v", err)
+			}
+			defer dremove(tt.scriptPath)
+
+			// Execute command - only specify CSV file, let it find script from comment
+			cmd := exec.Command("go", "run", ".", "-i", tt.csvPath)
+			var stdout, stderr bytes.Buffer
+			cmd.Stdout = &stdout
+			cmd.Stderr = &stderr
+
+			err = cmd.Run()
+			if err != nil {
+				t.Fatalf("Command failed: %v\nStderr: %s", err, stderr.String())
+			}
+
+			// Check output
+			if stdout.String() != tt.expectedOutput {
+				t.Errorf("Expected output:\n%s\nBut got:\n%s", tt.expectedOutput, stdout.String())
+			}
+
+			// Ensure stderr is empty (no errors)
+			if stderr.String() != "" {
+				t.Errorf("Expected empty stderr but got: %q", stderr.String())
+			}
+		})
+	}
+}
+
+func TestExamples(t *testing.T) {
+	// Get the project root directory (go up from cmd/cli to project root)
+	examplesDir := filepath.Join("..", "..", "examples")
+
+	// Walk through all example directories
+	err := filepath.WalkDir(examplesDir, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		// Skip the root examples directory and README.md
+		if path == examplesDir || !d.IsDir() {
+			return nil
+		}
+
+		// Skip if this is a subdirectory of an example (not a direct example folder)
+		rel, _ := filepath.Rel(examplesDir, path)
+		if strings.Contains(rel, string(filepath.Separator)) {
+			return nil
+		}
+
+		exampleName := d.Name()
+
+		// Skip call-function example as it requires external commands
+		if exampleName == "call-function" {
+			return nil
+		}
+
+		// Define required file paths
+		inputFile := filepath.Join(path, "input.csv")
+		outputFile := filepath.Join(path, "output.csv")
+
+		// Check if all required files exist
+		if !fileExists(inputFile) {
+			t.Errorf("Example %s: missing input.csv", exampleName)
+			return nil
+		}
+		if !fileExists(outputFile) {
+			t.Errorf("Example %s: missing output.csv", exampleName)
+			return nil
+		}
+
+		// Run the test for this example
+		t.Run(exampleName, func(t *testing.T) {
+			testExample(t, exampleName, inputFile, outputFile)
+		})
+
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("Failed to walk examples directory: %v", err)
+	}
+}
+
+func testExample(t *testing.T, exampleName, inputFile, outputFile string) {
+	// Read expected output
+	expectedOutput, err := os.ReadFile(outputFile)
+	if err != nil {
+		t.Fatalf("Failed to read expected output file %s: %v", outputFile, err)
+	}
+
+	// Execute csvss command: csvss -i input.csv -s script.csvs
+	actualOutput, err := executeCSVSSCommand(inputFile)
+	if err != nil {
+		t.Fatalf("Failed to execute csvss command for example %s: %v", exampleName, err)
+	}
+
+	// Normalize whitespace for comparison
+	expectedStr := normalizeOutput(string(expectedOutput))
+	actualStr := normalizeOutput(string(actualOutput))
+
+	if expectedStr != actualStr {
+		t.Errorf("Example %s: output mismatch\nExpected:\n%s\n\nActual:\n%s",
+			exampleName, expectedStr, actualStr)
+	}
+}
+
+func executeCSVSSCommand(inputFile string) ([]byte, error) {
+	cmd := exec.Command("go", "run", ".", "-i", inputFile, "-a")
+
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+	if err != nil {
+		return nil, err
+	}
+
+	return stdout.Bytes(), nil
+}
+
+func normalizeOutput(s string) string {
+	// Normalize line endings and trim whitespace
+	s = strings.ReplaceAll(s, "\r\n", "\n")
+	s = strings.ReplaceAll(s, "\r", "\n")
+	s = strings.TrimSpace(s)
+	return s
+}
+
+func fileExists(filename string) bool {
+	_, err := os.Stat(filename)
+	return !os.IsNotExist(err)
+}
+
+func TestCSVDimensionExtension(t *testing.T) {
+	tempDir := os.TempDir()
+
+	tests := []struct {
+		name           string
+		csvContent     string
+		scriptContent  string
+		expectedOutput string
+		description    string
+	}{
+		{
+			name:           "write_beyond_width",
+			csvContent:     "A,B\n1,2\n",
+			scriptContent:  "let D1 = \"Extended\"",
+			expectedOutput: "A,B,,Extended\n1,2,,\n",
+			description:    "Writing to column D should extend width to 4 columns",
+		},
+		{
+			name:           "write_beyond_height",
+			csvContent:     "A,B\n1,2\n",
+			scriptContent:  "let A5 = \"Row5\"",
+			expectedOutput: "A,B\n1,2\n\n\nRow5\n",
+			description:    "Writing to row 5 should extend height to 5 rows",
+		},
+		{
+			name:           "write_beyond_both_dimensions",
+			csvContent:     "1\n2\n",
+			scriptContent:  "let E3 = \"Corner\"",
+			expectedOutput: "1,,,,\n2,,,,\n,,,,Corner\n",
+			description:    "Writing to E3 should extend both width and height",
+		},
+		{
+			name:           "read_and_write_beyond_dimensions",
+			csvContent:     "10,20\n30,40\n",
+			scriptContent:  "let D3 = A1 + B1",
+			expectedOutput: "10,20,,\n30,40,,\n,,,30\n",
+			description:    "Reading existing cells and writing beyond dimensions",
+		},
+		{
+			name:           "range_beyond_dimensions",
+			csvContent:     "5\n10\n15\n",
+			scriptContent:  "let E1 = SUM(A1:A3)",
+			expectedOutput: "5,,,,30\n10,,,,\n15,,,,\n",
+			description:    "Using range operations that extend dimensions",
+		},
+		{
+			name:           "multiple_extensions",
+			csvContent:     "1,2\n3,4\n",
+			scriptContent:  "let F5 = \"Corner\"; let G1 = \"Top\"",
+			expectedOutput: "1,2,,,,,Top\n3,4,,,,,\n,,,,,,\n,,,,,,\n,,,,,Corner,\n",
+			description:    "Multiple writes to different far locations",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create temporary CSV file
+			csvFile := filepath.Join(tempDir, tt.name+".csv")
+			err := os.WriteFile(csvFile, []byte(tt.csvContent), 0644)
+			if err != nil {
+				t.Fatalf("Failed to create CSV file: %v", err)
+			}
+			defer dremove(csvFile)
+
+			// Create temporary script file
+			scriptFile := filepath.Join(tempDir, tt.name+".csvs")
+			err = os.WriteFile(scriptFile, []byte(tt.scriptContent), 0644)
+			if err != nil {
+				t.Fatalf("Failed to create script file: %v", err)
+			}
+			defer dremove(scriptFile)
+
+			// Execute command
+			cmd := exec.Command("go", "run", ".", "-s", scriptFile, "-i", csvFile)
+			var stdout, stderr bytes.Buffer
+			cmd.Stdout = &stdout
+			cmd.Stderr = &stderr
+
+			err = cmd.Run()
+			if err != nil {
+				t.Fatalf("Command failed: %v\nStderr: %s\nDescription: %s", err, stderr.String(), tt.description)
+			}
+
+			// Normalize and compare output
+			expectedStr := normalizeOutput(tt.expectedOutput)
+			actualStr := normalizeOutput(stdout.String())
+
+			if expectedStr != actualStr {
+				t.Errorf("%s\nExpected:\n%s\n\nActual:\n%s", tt.description, expectedStr, actualStr)
+			}
+
+			// Ensure no errors
+			if stderr.String() != "" {
+				t.Errorf("Expected empty stderr but got: %q", stderr.String())
+			}
+		})
 	}
 }
