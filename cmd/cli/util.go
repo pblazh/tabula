@@ -1,6 +1,8 @@
 package main
 
 import (
+	"io"
+	"os"
 	"strings"
 
 	"github.com/pblazh/csvss/internal/ast"
@@ -45,4 +47,25 @@ func getProgramDimensions(identifiers []string) (int, int) {
 	}
 
 	return requiredWidth + 1, requiredHeight + 1
+}
+
+func CopyFile(src, dst string) error {
+	source, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer dclose(source)
+
+	destination, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer dclose(destination)
+
+	_, err = io.Copy(destination, source)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
