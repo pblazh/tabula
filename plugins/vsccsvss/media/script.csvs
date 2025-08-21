@@ -1,0 +1,20 @@
+let hrn = "%.2fгрн."
+
+fmt D2 = hrn
+fmt D3 = hrn
+fmt D4 = hrn
+
+fmt E2 = hrn
+fmt E3 = hrn
+fmt E4 = hrn
+fmt E5 = hrn
+fmt E6 = hrn
+fmt E7 = hrn
+fmt E8 = hrn
+fmt E9 = hrn
+
+let E2 = (C2 - B2) * D2
+let E3 = (C3 - B3) * D3
+let E4 = (C4 - B4) * D4
+
+let E9 = SUM(E2:E8)

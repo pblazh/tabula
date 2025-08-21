@@ -3,6 +3,7 @@
 import { parseString, format } from "fast-csv";
 import * as vscode from "vscode";
 import * as tableTemplate from "./templates/table";
+import { exec } from "child_process";
 
 type receivedMessage = {
   command: string;
@@ -78,6 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
                   )
                 )
                   .then(showSavingResult(csvPath))
+                  .then(runScript(csvPath))
                   .catch(showSavingError);
                 return;
             }
@@ -198,4 +200,25 @@ function showSavingError(error: unknown): void {
 
 const showSavingResult = (path: vscode.Uri) => () => {
   vscode.window.showInformationMessage(`File was saved: ${path}`);
+};
+
+const runScript = (path: vscode.Uri) => () => {
+  const pathParts = path.path.split("/");
+  const fileName = pathParts[pathParts.length - 1];
+  const command = `csvss -i "${fileName}"`;
+
+  console.log(command);
+
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      vscode.window.showErrorMessage(`Run script error: ${error.message}`);
+      console.error(`exec error: ${error}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+    }
+    console.log(`stdout: ${stdout}`);
+    vscode.window.showInformationMessage(`Script for ${fileName} done.`);
+  });
 };
