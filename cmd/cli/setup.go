@@ -23,7 +23,8 @@ func setupOutputWriter(config *Config) (io.Writer, func(), error) {
 
 		cleanup := func() {
 			_ = tempFile.Close()
-			if err := os.Rename(tempFile.Name(), config.Input); err != nil {
+
+			if err := CopyFile(tempFile.Name(), config.Input); err != nil {
 				fmt.Fprintf(os.Stderr, "Error updating file: %v\n", err)
 				os.Exit(1)
 			}
