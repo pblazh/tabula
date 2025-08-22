@@ -15,14 +15,6 @@ func main() {
 		os.Exit(0)
 	}
 
-	// Setup output writer
-	csvWriter, cleanup, err := setupOutputWriter(config)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
-	}
-	defer cleanup()
-
 	// Setup CSV input reader
 	csvReader, embeded, comments, err := setupCSVReader(config)
 	if err != nil {
@@ -36,6 +28,14 @@ func main() {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
+
+	// Setup output writer
+	csvWriter, cleanup, err := setupOutputWriter(config)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
+	defer cleanup()
 
 	// Process CSV with script
 	if err := processCSV(config, scriptReader, csvReader, csvWriter, comments); err != nil {

@@ -14,27 +14,30 @@ import (
 func setupOutputWriter(config *Config) (io.Writer, func(), error) {
 	noop := func() {}
 
-	// Update in place - write to temp file then rename
+	// Update in place - use memory buffer then write to original file
 	if config.Input == config.Output && config.Input != "" {
-		tempFile, err := os.CreateTemp("", "csvss_temp_*.csv")
+		// Read original file permissions
+		fileInfo, err := os.Stat(config.Input)
 		if err != nil {
-			return nil, noop, ErrCreateTempFile(err)
+			return nil, noop, ErrOpenCSVFile(err)
 		}
+		perm := fileInfo.Mode().Perm()
+
+		var buffer bytes.Buffer
 
 		cleanup := func() {
-			_ = tempFile.Close()
-
-			if err := CopyFile(tempFile.Name(), config.Input); err != nil {
-				fmt.Fprintf(os.Stderr, "Error updating file: %v\n", err)
+			// Write buffer contents to original file with original permissions
+			if err := os.WriteFile(config.Input, buffer.Bytes(), perm); err != nil {
+				fmt.Fprint(os.Stderr, ErrWriteCSVOutput(err))
 				os.Exit(1)
 			}
 		}
 
-		return tempFile, cleanup, nil
+		return &buffer, cleanup, nil
 	}
 
 	// Write to specific output file
-	if config.Input != config.Output && config.Output != "" {
+	if config.Output != "" {
 		file, err := os.Create(config.Output)
 		if err != nil {
 			return nil, noop, ErrCreateOutputFile(err)
