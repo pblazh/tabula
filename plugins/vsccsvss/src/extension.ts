@@ -33,7 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
       const csvPath = vscode.Uri.joinPath(
         context.extensionUri,
         "media",
-        "test.csv"
+        "input.csv"
       );
 
       const scriptPath = vscode.Uri.joinPath(
@@ -53,15 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         const csvContent = await readFileContent(csvPath);
 
-        const { head, body, foot } = parseTable(csvContent);
-
-        const thead = tableTemplate.createTableHead(head);
-
-        const tbody = tableTemplate.createTableBody(body);
-
-        const tfoot = tableTemplate.createTableFooter(foot);
-
-        panel.webview.html = template(thead, tbody, tfoot);
+        buildWebview(panel, template, csvContent);
 
         panel.webview.onDidReceiveMessage(
           (message: receivedMessage) => {
@@ -71,7 +63,11 @@ export function activate(context: vscode.ExtensionContext) {
                   message.value;
                 saveFileContent(csvPath, csvContent)
                   .then(showSavingResult(csvPath))
-                  .then(runScript(csvPath))
+                  .then(() => runScript(csvPath))
+                  .then(() => readFileContent(csvPath))
+                  .then((csvContentUpdated) =>
+                    buildWebview(panel, template, csvContentUpdated)
+                  )
                   .catch(showSavingError);
                 return;
             }
@@ -115,6 +111,22 @@ function parseTable(table: string[][]): {
 
 //TODO create functions: getWebviewTable and getWebviewNotTable
 
+function buildWebview(
+  panel: vscode.WebviewPanel,
+  template: (head: string, table: string, footer: string) => string,
+  csvContent: string[][]
+) {
+  const { head, body, foot } = parseTable(csvContent);
+
+  const thead = tableTemplate.createTableHead(head);
+
+  const tbody = tableTemplate.createTableBody(body);
+
+  const tfoot = tableTemplate.createTableFooter(foot);
+
+  panel.webview.html = template(thead, tbody, tfoot);
+}
+
 async function readFileContent(fileUri: vscode.Uri) {
   const readData: Uint8Array = await vscode.workspace.fs.readFile(fileUri);
   const fileContent: string = new TextDecoder("utf-8").decode(readData);
@@ -142,7 +154,7 @@ async function saveFileContent(
   const csvString = await new Promise<string>((resolve, reject) => {
     const chunks: Buffer[] = [];
 
-    const stringifyStream = format({ headers: true });
+    const stringifyStream = format({ headers: false });
 
     stringifyStream.on("data", (chunk: Buffer) => {
       chunks.push(chunk);
@@ -163,7 +175,7 @@ async function saveFileContent(
 
   const writeData: Uint8Array = new TextEncoder().encode(csvString);
 
-  vscode.workspace.fs.writeFile(fileUri, writeData);
+  return vscode.workspace.fs.writeFile(fileUri, writeData);
 }
 
 // This method is called when your extension is deactivated
@@ -182,23 +194,23 @@ const showSavingResult = (path: vscode.Uri) => () => {
   vscode.window.showInformationMessage(`File was saved: ${path}`);
 };
 
-const runScript = (path: vscode.Uri) => () => {
-  const pathParts = path.path.split("/");
-  const fileName = pathParts[pathParts.length - 1];
-  const command = `csvss -i "${fileName}"`;
+const runScript = (path: vscode.Uri): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const pathParts = path.path.split("/");
+    const fileName = pathParts[pathParts.length - 1];
+    const command = `csvss -a -u "${path.path}"`;
 
-  console.log(command);
-
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      vscode.window.showErrorMessage(`Run script error: ${error.message}`);
-      console.error(`exec error: ${error}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`stderr: ${stderr}`);
-    }
-    console.log(`stdout: ${stdout}`);
-    vscode.window.showInformationMessage(`Script for ${fileName} done.`);
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        vscode.window.showErrorMessage(`Run script error: ${error.message}`);
+        console.error(`exec error: ${error}`);
+        return reject(error);
+      }
+      if (stderr) {
+        console.error(`stderr: ${stderr}`);
+      }
+      vscode.window.showInformationMessage(`Script for ${fileName} done.`);
+      resolve();
+    });
   });
 };
