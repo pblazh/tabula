@@ -69,15 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
               case "updateCell":
                 csvContent[message.rowIndex][message.columnIndex] =
                   message.value;
-                saveFileContent(
-                  csvPath,
-                  updateContent(
-                    csvContent,
-                    message.columnIndex,
-                    message.rowIndex,
-                    message.value
-                  )
-                )
+                saveFileContent(csvPath, csvContent)
                   .then(showSavingResult(csvPath))
                   .then(runScript(csvPath))
                   .catch(showSavingError);
@@ -96,18 +88,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(webViewCommand);
 }
 
-function updateContent(
-  content: string[][],
-  column: number,
-  row: number,
-  value: string
-): string[][] {
-  const updatedContent = content;
-  if (updatedContent[row][column]) {
-    updatedContent[row][column] = value;
-  }
-  return updatedContent;
-}
 function parseTable(table: string[][]): {
   head: string[];
   body: string[][];
