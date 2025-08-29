@@ -1,29 +1,18 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { parseString } from "fast-csv";
+import { parseString, format } from "fast-csv";
 import * as vscode from "vscode";
-type CsvRowType = {
-  [key: string]: string;
+import * as tableTemplate from "./templates/table";
+import { exec } from "child_process";
+
+type receivedMessage = {
+  command: string;
+  rowIndex: number;
+  columnIndex: number;
+  value: string;
 };
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+
 export function activate(context: vscode.ExtensionContext) {
-  // Use the console to output diagnostic information (console.log) and errors (console.error)
-  // This line of code will only be executed once when your extension is activated
-  console.log('Congratulations, your extension "vsccsvss" is now active!');
-
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
-  const disposable = vscode.commands.registerCommand(
-    "vsccsvss.helloWorld",
-    () => {
-      // The code you place here will be executed every time your command is executed
-      // Display a message box to the user
-      vscode.window.showInformationMessage("Hello World from VS CODE!");
-    }
-  );
-
   const webViewCommand = vscode.commands.registerCommand(
     "vsccsvss.start",
     async () => {
@@ -32,95 +21,118 @@ export function activate(context: vscode.ExtensionContext) {
         "csvEditing", // Identifies the type of the webview. Used internally
         "File Content to Edit", // Title of the panel displayed to the user
         vscode.ViewColumn.One, // Editor column to show the new webview panel in.
-        {} // Webview options. More on these later.
+        {
+          enableScripts: true,
+          localResourceRoots: [
+            vscode.Uri.joinPath(context.extensionUri, "media"),
+            vscode.Uri.joinPath(context.extensionUri, "src", "js"),
+          ],
+        }
       );
 
-      const onDiskPathCsv = vscode.Uri.joinPath(
+      const csvPath = vscode.Uri.joinPath(
         context.extensionUri,
         "media",
-        "test.csv"
+        "input.csv"
       );
-      try {
-        const csvContent = await readFileContent(onDiskPathCsv);
 
-        panel.webview.html = getWebviewContent(csvContent);
+      const scriptPath = vscode.Uri.joinPath(
+        context.extensionUri,
+        "src",
+        "js",
+        "script.js"
+      );
+      const scriptUri = panel.webview.asWebviewUri(scriptPath);
+      const cspSource = panel.webview.cspSource;
+
+      const template = tableTemplate.createTablePage(
+        scriptUri.toString(),
+        cspSource
+      );
+
+      try {
+        const csvContent = await readFileContent(csvPath);
+
+        buildWebview(panel, template, csvContent);
+
+        panel.webview.onDidReceiveMessage(
+          (message: receivedMessage) => {
+            switch (message.command) {
+              case "updateCell":
+                csvContent[message.rowIndex][message.columnIndex] =
+                  message.value;
+                saveFileContent(csvPath, csvContent)
+                  .then(showSavingResult(csvPath))
+                  .then(() => runScript(csvPath))
+                  .then(() => readFileContent(csvPath))
+                  .then((csvContentUpdated) =>
+                    buildWebview(panel, template, csvContentUpdated)
+                  )
+                  .catch(showSavingError);
+                return;
+            }
+          },
+          undefined,
+          context.subscriptions
+        );
       } catch (error) {
         console.log(error);
       }
     }
   );
 
-  context.subscriptions.push(disposable, webViewCommand);
+  context.subscriptions.push(webViewCommand);
 }
 
-function getWebviewContent(csvRows: CsvRowType[] | undefined) {
-  if (!csvRows) return "No file to edit";
-
-  const columnNames = Object.keys(csvRows[0]);
-  const rows = csvRows.reduce<{
-    content: typeof csvRows;
-    comments: typeof csvRows;
+function parseTable(table: string[][]): {
+  head: string[];
+  body: string[][];
+  foot: string[][];
+} {
+  const head = Object.keys(table[0]);
+  const { body, foot } = table.reduce<{
+    body: typeof table;
+    foot: typeof table;
   }>(
     (acc, row) => {
-      const updatedAcc = { content: acc.content, comments: acc.comments };
-      if (Object.values(row)[0].includes("#")) updatedAcc.comments.push(row);
-      else updatedAcc.content.push(row);
+      const updatedAcc = { body: acc.body, foot: acc.foot };
+      if (Object.values(row)[0].includes("#")) {
+        updatedAcc.foot.push(row);
+      } else {
+        updatedAcc.body.push(row);
+      }
       return updatedAcc;
     },
-    { content: [], comments: [] }
+    { body: [], foot: [] }
   );
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Content</title>
-</head>
-<body>
-<section>
-<h2>Table View of CSV</h2>
-<table>
-  <thead>
-    <tr>
-	${columnNames?.map((item) => `<td>${item}</td>`).join("")}
-    </tr>
-  </thead>
-  <tbody>
-   ${rows.content
-     ?.map(
-       (row) =>
-         `<tr>${columnNames
-           .map((column) => `<td><input value="${row[column]}" /></td>`)
-           .join("")}</tr>`
-     )
-     .join("")}
-  </tbody>
-<!--  <tfoot>
-     ${rows.comments
-       ?.map(
-         (row) =>
-           `<tr colspan="${columnNames.length}"><td>${
-             Object.values(row)[0]
-           }</td></tr>`
-       )
-       .join("")}
-  </tfoot> -->
-</table>
-</section>
-<section>
-<h2>Parsed Rows of CSV</h2>
-    ${csvRows?.map((item) => `<div>${JSON.stringify(item)}</div><br>`).join("")}
-</section>
-	</body>
-</html>`;
+
+  return { head, body, foot };
+}
+
+//TODO create functions: getWebviewTable and getWebviewNotTable
+
+function buildWebview(
+  panel: vscode.WebviewPanel,
+  template: (head: string, table: string, footer: string) => string,
+  csvContent: string[][]
+) {
+  const { head, body, foot } = parseTable(csvContent);
+
+  const thead = tableTemplate.createTableHead(head);
+
+  const tbody = tableTemplate.createTableBody(body);
+
+  const tfoot = tableTemplate.createTableFooter(foot);
+
+  panel.webview.html = template(thead, tbody, tfoot);
 }
 
 async function readFileContent(fileUri: vscode.Uri) {
   const readData: Uint8Array = await vscode.workspace.fs.readFile(fileUri);
   const fileContent: string = new TextDecoder("utf-8").decode(readData);
 
-  return new Promise<CsvRowType[]>((resolve, reject) => {
-    const results: CsvRowType[] = [];
+  return new Promise<string[][]>((resolve, reject) => {
+    const results: string[][] = [];
 
     parseString(fileContent)
       .on("error", (error) => {
@@ -129,12 +141,76 @@ async function readFileContent(fileUri: vscode.Uri) {
       .on("data", (row) => {
         results.push(row);
       })
-      .on("end", (rowCount: number) => {
-        console.log(`Parsing ended. Number of rows: ${rowCount}`);
+      .on("end", () => {
         resolve(results);
       });
   });
 }
 
+async function saveFileContent(
+  fileUri: vscode.Uri,
+  data: string[][]
+): Promise<void> {
+  const csvString = await new Promise<string>((resolve, reject) => {
+    const chunks: Buffer[] = [];
+
+    const stringifyStream = format({ headers: false });
+
+    stringifyStream.on("data", (chunk: Buffer) => {
+      chunks.push(chunk);
+    });
+
+    stringifyStream.on("error", (err) => {
+      reject(err);
+    });
+
+    stringifyStream.on("end", () => {
+      resolve(Buffer.concat(chunks).toString("utf-8"));
+    });
+
+    data.forEach((row) => stringifyStream.write(row));
+
+    stringifyStream.end();
+  });
+
+  const writeData: Uint8Array = new TextEncoder().encode(csvString);
+
+  return vscode.workspace.fs.writeFile(fileUri, writeData);
+}
+
 // This method is called when your extension is deactivated
 export function deactivate() {}
+
+//TODO try to check is it dev mode now
+function showSavingError(error: unknown): void {
+  vscode.window.showErrorMessage(
+    `Saving file failure: ${
+      error instanceof Error ? error.message : String(error)
+    }`
+  );
+}
+
+const showSavingResult = (path: vscode.Uri) => () => {
+  vscode.window.showInformationMessage(`File was saved: ${path}`);
+};
+
+const runScript = (path: vscode.Uri): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const pathParts = path.path.split("/");
+    const fileName = pathParts[pathParts.length - 1];
+    const command = `csvss -a -u "${path.path}"`;
+
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        vscode.window.showErrorMessage(`Run script error: ${error.message}`);
+        console.error(`exec error: ${error}`);
+        return reject(error);
+      }
+      if (stderr) {
+        console.error(`stderr: ${stderr}`);
+      }
+      vscode.window.showInformationMessage(`Script for ${fileName} done.`);
+      resolve();
+    });
+  });
+};
