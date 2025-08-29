@@ -1,0 +1,39 @@
+// Add total column
+let F1 = "Total";
+let F2 = SUM(B2:E2);
+let F3 = SUM(B3:E3);
+let F4 = SUM(B4:E4);
+
+// Add quarterly totals row
+let A5 = "Quarter Total";
+let B5 = SUM(B2:B4);
+let C5 = SUM(C2:C4);
+let D5 = SUM(D2:D4);
+let E5 = SUM(E2:E4);
+let F5 = SUM(F2:F4);
+
+// Add average row
+let A6 = "Quarter Average";
+let B6 = AVERAGE(B2:B4);
+let C6 = AVERAGE(C2:C4);
+let D6 = AVERAGE(D2:D4);
+let E6 = AVERAGE(E2:E4);
+let F6 = AVERAGE(F2:F4);
+
+// Calculate best performing quarter for each product
+let G1 = "Best Quarter";
+let G2 = IF(B2 > C2, 
+             IF(B2 > D2, IF(B2 > E2, "Q1", "Q4"), 
+                         IF(D2 > E2, "Q3", "Q4")), 
+             IF(C2 > D2, IF(C2 > E2, "Q2", "Q4"), 
+                         IF(D2 > E2, "Q3", "Q4")));
+let G3 = IF(B3 > C3, 
+             IF(B3 > D3, IF(B3 > E3, "Q1", "Q4"), 
+                         IF(D3 > E3, "Q3", "Q4")), 
+             IF(C3 > D3, IF(C3 > E3, "Q2", "Q4"), 
+                         IF(D3 > E3, "Q3", "Q4")));
+let G4 = IF(B4 > C4, 
+             IF(B4 > D4, IF(B4 > E4, "Q1", "Q4"), 
+                         IF(D4 > E4, "Q3", "Q4")), 
+             IF(C4 > D4, IF(C4 > E4, "Q2", "Q4"), 
+                         IF(D4 > E4, "Q3", "Q4")));
