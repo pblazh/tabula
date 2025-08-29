@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pblazh/csvss/internal/lexer"
+	"github.com/pblazh/tabula/internal/lexer"
 )
 
 type Node interface {

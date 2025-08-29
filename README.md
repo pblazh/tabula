@@ -1,10 +1,10 @@
-# CSVSS - CSV Spreadsheet Language
+# Tabula - CSV Spreadsheet Language
 
-## What is CSVSS?
+## What is Tabula?
 
-CSVSS is a command-line tool that lets you transform and manipulate CSV files using a simple scripting language. Think of it as a way to apply Excel-like formulas and calculations to your CSV data from the command line.
+Tabula is a command-line tool that lets you transform and manipulate CSV files using a simple scripting language. Think of it as a way to apply Excel-like formulas and calculations to your CSV data from the command line.
 
-## Why Use CSVSS?
+## Why Use Tabula?
 
 - **Automate CSV processing** - Perfect for data pipelines and batch operations
 - **Familiar syntax** - Uses spreadsheet-style cell references (A1, B2, etc.)
@@ -16,7 +16,7 @@ CSVSS is a command-line tool that lets you transform and manipulate CSV files us
 
 Fetch a binary for your system and put in path
 
-<https://pblazh.github.io/csvss/>
+<https://pblazh.github.io/tabula/>
 
 ## Quick Start
 
@@ -40,7 +40,7 @@ Fetch a binary for your system and put in path
 4. **Run the command**:
 
    ```bash
-   csvss -s transform.csvs data.csv
+   tabula -s transform.csvs data.csv
    ```
 
 5. **See the result**:
@@ -53,7 +53,7 @@ Fetch a binary for your system and put in path
 
 ## How It Works
 
-CSVSS reads your CSV file and applies the transformations defined in your script. You can:
+Tabula reads your CSV file and applies the transformations defined in your script. You can:
 
 - **Reference cells** using spreadsheet notation (A1, B2, C3, etc.)
 - **Assign values** to cells or variables using `let` statements

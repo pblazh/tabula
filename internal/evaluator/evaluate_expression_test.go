@@ -3,8 +3,8 @@ package evaluator
 import (
 	"testing"
 
-	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/testutil"
+	"github.com/pblazh/tabula/internal/ast"
+	"github.com/pblazh/tabula/internal/testutil"
 )
 
 func TestInfixExpressionEvaluate(t *testing.T) {

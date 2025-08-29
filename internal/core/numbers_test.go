@@ -3,8 +3,8 @@ package core
 import (
 	"testing"
 
-	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/lexer"
+	"github.com/pblazh/tabula/internal/ast"
+	"github.com/pblazh/tabula/internal/lexer"
 )
 
 type inputCase struct {

@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/tabula/internal/ast"
 	"golang.org/x/exp/constraints"
 )
 

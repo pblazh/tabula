@@ -1,8 +1,8 @@
 package evaluator
 
 import (
-	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/lexer"
+	"github.com/pblazh/tabula/internal/ast"
+	"github.com/pblazh/tabula/internal/lexer"
 )
 
 func evaluateComparison(operator lexer.Token, left, right ast.Expression, intOp func(int, int) (ast.Expression, error), floatOp func(float64, float64) (ast.Expression, error), stringOp func(string, string) (ast.Expression, error), boolOp func(bool, bool) (ast.Expression, error)) (ast.Expression, error) {

@@ -3,7 +3,7 @@ package core
 import (
 	"testing"
 
-	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/tabula/internal/ast"
 )
 
 func TestCONCATENATE(t *testing.T) {

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/lexer"
+	"github.com/pblazh/tabula/internal/ast"
+	"github.com/pblazh/tabula/internal/lexer"
 )
 
 // ParseWithoutFormat parses a value without format specification using default rules

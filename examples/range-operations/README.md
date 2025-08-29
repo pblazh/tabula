@@ -20,7 +20,7 @@ Product B,800,900,950,1000,,
 Product C,1500,1400,1600,1550,,
 ,,,,,,
 ,,,,,,
-#csvssfile:./script.csvs
+#tabulafile:./script.csvs
 ```
 
 ### Script
@@ -76,5 +76,5 @@ Product B       , 800  , 900  , 950  , 1000 , 3650  , Q4
 Product C       , 1500 , 1400 , 1600 , 1550 , 6050  , Q3
 Quarter Total   , 3300 , 3500 , 3650 , 3850 , 14300 ,
 Quarter Average , 1100 , 1166 , 1216 , 1283 , 4766  ,
-#csvssfile:./script.csvs
+#tabulafile:./script.csvs
 ```

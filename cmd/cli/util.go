@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/tabula/internal/ast"
 )
 
 func ensureProgramDimmensions(identifiers []string, records [][]string) [][]string {

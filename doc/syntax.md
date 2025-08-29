@@ -1,8 +1,8 @@
-# CSVSS Syntax Guide
+# Tabula Syntax Guide
 
 ## Basic Syntax
 
-CSVSS uses a simple, spreadsheet-inspired syntax. Each line in your script is a statement that performs an operation.
+Tabula uses a simple, spreadsheet-inspired syntax. Each line in your script is a statement that performs an operation.
 
 ### Statements
 
@@ -171,7 +171,7 @@ Variables follow the same naming rules as programming languages:
 
 ## Expressions and Precedence
 
-CSVSS follows standard mathematical precedence:
+Tabula follows standard mathematical precedence:
 
 1. Parentheses `()`
 2. Multiplication `*` and Division `/`
@@ -203,12 +203,12 @@ let A1 = CONCATENATE(B1, " ", C1);  # Join strings
 
 ## Script Processing Order
 
-CSVSS automatically analyzes dependencies and executes statements in the correct order:
+Tabula automatically analyzes dependencies and executes statements in the correct order:
 
 ```
 let B1 = A1 * 2;    # This depends on A1
 let A1 = 10;        # This will be executed first
 ```
 
-This means you can write statements in any order, and CSVSS will figure out the correct execution sequence.
+This means you can write statements in any order, and Tabula will figure out the correct execution sequence.
 

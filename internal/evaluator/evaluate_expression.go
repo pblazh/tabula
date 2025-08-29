@@ -1,9 +1,9 @@
 package evaluator
 
 import (
-	"github.com/pblazh/csvss/internal/ast"
-	core "github.com/pblazh/csvss/internal/core"
-	"github.com/pblazh/csvss/internal/lexer"
+	"github.com/pblazh/tabula/internal/ast"
+	core "github.com/pblazh/tabula/internal/core"
+	"github.com/pblazh/tabula/internal/lexer"
 )
 
 // EvaluateExpression evaluates any AST expression and returns the result

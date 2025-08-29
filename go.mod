@@ -1,4 +1,4 @@
-module github.com/pblazh/csvss
+module github.com/pblazh/tabula
 
 go 1.24.2
 

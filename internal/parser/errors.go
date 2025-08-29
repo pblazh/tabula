@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"text/scanner"
 
-	"github.com/pblazh/csvss/internal/lexer"
+	"github.com/pblazh/tabula/internal/lexer"
 )
 
 func ErrExpectedIdentifier(literal string, position scanner.Position) error {

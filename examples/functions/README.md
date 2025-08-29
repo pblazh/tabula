@@ -16,7 +16,7 @@ This example demonstrates the SUM function with various argument patterns.
 1,2,3,4,
 1.1,2.1,3.1,4.1,
 1,2,3,4,
-#csvssfile:./script.csvs
+#tabulafile:./script.csvs
 ```
 
 ### Script
@@ -33,5 +33,5 @@ let E3 = SUM(B3:D3, A3);
 1   , 2   , 3   , 4   , 10
 1.1 , 2.1 , 3.1 , 4.1 , 9.3
 1   , 2   , 3   , 4   , 10
-#csvssfile:./script.csvs
+#tabulafile:./script.csvs
 ```

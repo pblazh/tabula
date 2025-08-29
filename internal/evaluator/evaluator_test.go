@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pblazh/csvss/internal/lexer"
-	"github.com/pblazh/csvss/internal/parser"
+	"github.com/pblazh/tabula/internal/lexer"
+	"github.com/pblazh/tabula/internal/parser"
 )
 
 func TestEvaluate(t *testing.T) {

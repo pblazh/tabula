@@ -1,6 +1,6 @@
 package parser
 
-import "github.com/pblazh/csvss/internal/lexer"
+import "github.com/pblazh/tabula/internal/lexer"
 
 const (
 	_ int = iota

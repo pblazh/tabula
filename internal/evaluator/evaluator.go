@@ -5,9 +5,9 @@ package evaluator
 import (
 	"io"
 
-	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/lexer"
-	"github.com/pblazh/csvss/internal/parser"
+	"github.com/pblazh/tabula/internal/ast"
+	"github.com/pblazh/tabula/internal/lexer"
+	"github.com/pblazh/tabula/internal/parser"
 )
 
 // Evaluate evaluates a program (list of statements) with the given context

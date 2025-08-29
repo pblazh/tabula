@@ -6,7 +6,7 @@ business logic, and formatting.
 ## Files
 
 - `input.csv` - Sample item data with quantities and totals
-- `script.csvs` - CSVSS script with tax, discount, and total calculations
+- `script.csvs` - Tabula script with tax, discount, and total calculations
 - `output.csv` - Expected output after applying transformations
 
 ## What it does
@@ -26,7 +26,7 @@ business logic, and formatting.
 ## Usage
 
 ```bash
-csvss -s script.csvs input.csv
+tabula -s script.csvs input.csv
 ```
 
 ## Features Demonstrated
@@ -57,7 +57,7 @@ Widget I,9,450.00
 ,,
 ,,
 ,,
-#csvssfile:./script.csvs
+#tabulafile:./script.csvs
 ```
 
 ### Script
@@ -116,5 +116,5 @@ Subtotal , 2275     ,
 Discount , 113.75   ,
 Tax      , 172.9    ,
 Total    , 2334.15  ,
-#csvssfile:./script.csvs
+#tabulafile:./script.csvs
 ```

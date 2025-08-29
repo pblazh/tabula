@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/lexer"
+	"github.com/pblazh/tabula/internal/ast"
+	"github.com/pblazh/tabula/internal/lexer"
 )
 
 func TestProgramSorting(t *testing.T) {
