@@ -1,1 +1,1 @@
-# Tabula plugin for VSCode
+# Tabula vscode extension

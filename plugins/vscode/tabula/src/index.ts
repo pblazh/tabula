@@ -1,9 +1,8 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import { parseString, format } from "fast-csv";
 import * as vscode from "vscode";
-import * as tableTemplate from "./templates/table";
 import { exec } from "child_process";
+import { parseString, format } from "fast-csv";
+
+import * as tableTemplate from "./templates/table";
 
 type receivedMessage = {
   command: string;
@@ -14,40 +13,39 @@ type receivedMessage = {
 
 export function activate(context: vscode.ExtensionContext) {
   const webViewCommand = vscode.commands.registerCommand(
-    "vsccsvss.start",
+    "tabula.start",
     async () => {
-      // Create and show a new webview
       const panel = vscode.window.createWebviewPanel(
-        "csvEditing", // Identifies the type of the webview. Used internally
-        "File Content to Edit", // Title of the panel displayed to the user
-        vscode.ViewColumn.One, // Editor column to show the new webview panel in.
+        "csvEditing",
+        "File Content to Edit",
+        vscode.ViewColumn.One,
         {
           enableScripts: true,
           localResourceRoots: [
             vscode.Uri.joinPath(context.extensionUri, "media"),
             vscode.Uri.joinPath(context.extensionUri, "src", "js"),
           ],
-        }
+        },
       );
 
       const csvPath = vscode.Uri.joinPath(
         context.extensionUri,
         "media",
-        "input.csv"
+        "input.csv",
       );
 
       const scriptPath = vscode.Uri.joinPath(
         context.extensionUri,
         "src",
         "js",
-        "script.js"
+        "script.js",
       );
       const scriptUri = panel.webview.asWebviewUri(scriptPath);
       const cspSource = panel.webview.cspSource;
 
       const template = tableTemplate.createTablePage(
         scriptUri.toString(),
-        cspSource
+        cspSource,
       );
 
       try {
@@ -66,19 +64,19 @@ export function activate(context: vscode.ExtensionContext) {
                   .then(() => runScript(csvPath))
                   .then(() => readFileContent(csvPath))
                   .then((csvContentUpdated) =>
-                    buildWebview(panel, template, csvContentUpdated)
+                    buildWebview(panel, template, csvContentUpdated),
                   )
                   .catch(showSavingError);
                 return;
             }
           },
           undefined,
-          context.subscriptions
+          context.subscriptions,
         );
       } catch (error) {
-        console.log(error);
+        //TODO: Disaplay an error a user
       }
-    }
+    },
   );
 
   context.subscriptions.push(webViewCommand);
@@ -103,18 +101,16 @@ function parseTable(table: string[][]): {
       }
       return updatedAcc;
     },
-    { body: [], foot: [] }
+    { body: [], foot: [] },
   );
 
   return { head, body, foot };
 }
 
-//TODO create functions: getWebviewTable and getWebviewNotTable
-
 function buildWebview(
   panel: vscode.WebviewPanel,
   template: (head: string, table: string, footer: string) => string,
-  csvContent: string[][]
+  csvContent: string[][],
 ) {
   const { head, body, foot } = parseTable(csvContent);
 
@@ -149,7 +145,7 @@ async function readFileContent(fileUri: vscode.Uri) {
 
 async function saveFileContent(
   fileUri: vscode.Uri,
-  data: string[][]
+  data: string[][],
 ): Promise<void> {
   const csvString = await new Promise<string>((resolve, reject) => {
     const chunks: Buffer[] = [];
@@ -186,7 +182,7 @@ function showSavingError(error: unknown): void {
   vscode.window.showErrorMessage(
     `Saving file failure: ${
       error instanceof Error ? error.message : String(error)
-    }`
+    }`,
   );
 }
 

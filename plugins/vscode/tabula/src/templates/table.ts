@@ -31,7 +31,7 @@ export function createTableHead(head: string[]): string {
   return `<tr> ${head
     .map(
       (item) =>
-        `<td>${String.fromCharCode("A".charCodeAt(0) + parseInt(item))}</td>`
+        `<td>${String.fromCharCode("A".charCodeAt(0) + parseInt(item))}</td>`,
     )
     .join("")}
     </tr>`;
@@ -49,9 +49,9 @@ export function createTableBody(content: string[][]): string {
                     id="${indexColumn}-${indexRow}"
                     value="${column}"
                   />
-                </td>`
+                </td>`,
           )
-          .join("")}</tr>`
+          .join("")}</tr>`,
     )
     .join("")}`;
 }
