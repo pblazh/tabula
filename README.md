@@ -29,7 +29,7 @@ Fetch a binary for your system and put in path
    Bob,30,92
    ```
 
-3. **Create a script** (transform.csvs):
+3. **Create a script** (transform.tbl):
 
    ```
    let D1 = "Grade";
@@ -40,7 +40,7 @@ Fetch a binary for your system and put in path
 4. **Run the command**:
 
    ```bash
-   tabula -s transform.csvs data.csv
+   tabula -s transform.tbl data.csv
    ```
 
 5. **See the result**:

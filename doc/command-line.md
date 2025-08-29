@@ -13,7 +13,7 @@ tabula [options] [input.csv]
 Specify the script file containing Tabula commands.
 
 ```bash
-tabula -s script.csvs data.csv
+tabula -s script.tbl data.csv
 ```
 
 If not specified, Tabula reads the script from standard input:
@@ -27,7 +27,7 @@ echo "let A1 = 'Hello';" | tabula data.csv
 Write the processed CSV to a specific file instead of standard output.
 
 ```bash
-tabula -s script.csvs data.csv -o output.csv
+tabula -s script.tbl data.csv -o output.csv
 ```
 
 ### `-u` - Update In Place
@@ -35,7 +35,7 @@ tabula -s script.csvs data.csv -o output.csv
 Update the input CSV file directly instead of creating a new output.
 
 ```bash
-tabula -s script.csvs -u data.csv
+tabula -s script.tbl -u data.csv
 ```
 
 **Warning:** This overwrites the original file. Make backups of important data.
@@ -45,7 +45,7 @@ tabula -s script.csvs -u data.csv
 Align CSV columns for better readability when viewing the output.
 
 ```bash
-tabula -s script.csvs data.csv -a
+tabula -s script.tbl data.csv -a
 ```
 
 This formats the output with consistent column spacing:
@@ -61,7 +61,7 @@ Bob      , 30  , 92
 Sort statements in the script based on their dependencies before execution. This ensures that variables are defined before they are used.
 
 ```bash
-tabula -s script.csvs data.csv -t
+tabula -s script.tbl data.csv -t
 ```
 
 **When to use `-t`:**
@@ -103,7 +103,7 @@ tabula -h
 Specify the CSV file as the last argument:
 
 ```bash
-tabula -s script.csvs input.csv
+tabula -s script.tbl input.csv
 ```
 
 ### Standard Input
@@ -111,7 +111,7 @@ tabula -s script.csvs input.csv
 If no CSV file is specified, read from standard input:
 
 ```bash
-cat data.csv | tabula -s script.csvs
+cat data.csv | tabula -s script.tbl
 ```
 
 ### Embedded Scripts
@@ -122,7 +122,7 @@ CSV files can contain embedded script references in comments. The script path is
 Name,Age,Score
 Alice,25,85
 Bob,30,92
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
 
 Then run without specifying a script file:
@@ -138,7 +138,7 @@ tabula data.csv
 By default, output goes to standard output:
 
 ```bash
-tabula -s script.csvs data.csv > output.csv
+tabula -s script.tbl data.csv > output.csv
 ```
 
 ### File Output
@@ -146,7 +146,7 @@ tabula -s script.csvs data.csv > output.csv
 Use `-o` to write directly to a file:
 
 ```bash
-tabula -s script.csvs data.csv -o output.csv
+tabula -s script.tbl data.csv -o output.csv
 ```
 
 ### In-Place Update
@@ -154,7 +154,7 @@ tabula -s script.csvs data.csv -o output.csv
 Use `-u` to modify the input file directly:
 
 ```bash
-tabula -s script.csvs -u data.csv
+tabula -s script.tbl -u data.csv
 ```
 
 ## Common Usage Patterns
@@ -163,33 +163,33 @@ tabula -s script.csvs -u data.csv
 
 ```bash
 # Script from file, CSV from file → stdout
-tabula -s transform.csvs data.csv
+tabula -s transform.tbl data.csv
 
 # Script from stdin, CSV from file → stdout
-tabula data.csv < script.csvs
+tabula data.csv < script.tbl
 
 # Script from file, CSV from stdin → stdout
-cat data.csv | tabula -s transform.csvs
+cat data.csv | tabula -s transform.tbl
 
 # With topological sorting for dependency resolution
-tabula -s complex_script.csvs data.csv -t
+tabula -s complex_script.tbl data.csv -t
 
 # Aligned output with dependency sorting
-tabula -s script.csvs data.csv -t -a
+tabula -s script.tbl data.csv -t -a
 ```
 
 ### File Operations
 
 ```bash
 # Save to new file
-tabula -s script.csvs input.csv -o output.csv
+tabula -s script.tbl input.csv -o output.csv
 
 # Update original file
-tabula -s script.csvs -u data.csv
+tabula -s script.tbl -u data.csv
 
 # Process multiple files
-tabula -s script.csvs file1.csv -o processed1.csv
-tabula -s script.csvs file2.csv -o processed2.csv
+tabula -s script.tbl file1.csv -o processed1.csv
+tabula -s script.tbl file2.csv -o processed2.csv
 ```
 
 ### Pipeline Integration
@@ -197,13 +197,13 @@ tabula -s script.csvs file2.csv -o processed2.csv
 ```bash
 # Part of a data pipeline
 curl -s "https://api.example.com/data.csv" | \
-  tabula -s transform.csvs | \
+  tabula -s transform.tbl | \
   sort -t',' -k2 > final.csv
 
 # Multiple processing steps
-tabula -s step1.csvs data.csv | \
-  tabula -s step2.csvs | \
-  tabula -s step3.csvs -o result.csv
+tabula -s step1.tbl data.csv | \
+  tabula -s step2.tbl | \
+  tabula -s step3.tbl -o result.csv
 ```
 
 ### Batch Processing
@@ -211,12 +211,12 @@ tabula -s step1.csvs data.csv | \
 ```bash
 # Process all CSV files in directory
 for file in *.csv; do
-  tabula -s common_script.csvs "$file" -o "processed_$file"
+  tabula -s common_script.tbl "$file" -o "processed_$file"
 done
 
 # Update all files in place
 for file in *.csv; do
-  tabula -s cleanup.csvs -u "$file"
+  tabula -s cleanup.tbl -u "$file"
 done
 ```
 
@@ -227,7 +227,7 @@ done
 If there are syntax errors in your script, Tabula will display the error location:
 
 ```bash
-$ tabula -s bad_script.csvs data.csv
+$ tabula -s bad_script.tbl data.csv
 Error: unexpected token at line 3, column 15
 ```
 
@@ -236,7 +236,7 @@ Error: unexpected token at line 3, column 15
 Errors during script execution show the context:
 
 ```bash
-$ tabula -s script.csvs data.csv
+$ tabula -s script.tbl data.csv
 Error: division by zero in expression at line 5: let A1 = B1 / C1;
 ```
 

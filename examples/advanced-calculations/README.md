@@ -6,7 +6,7 @@ business logic, and formatting.
 ## Files
 
 - `input.csv` - Sample item data with quantities and totals
-- `script.csvs` - Tabula script with tax, discount, and total calculations
+- `script.tbl` - Tabula script with tax, discount, and total calculations
 - `output.csv` - Expected output after applying transformations
 
 ## What it does
@@ -26,7 +26,7 @@ business logic, and formatting.
 ## Usage
 
 ```bash
-tabula -s script.csvs input.csv
+tabula -s script.tbl input.csv
 ```
 
 ## Features Demonstrated
@@ -57,12 +57,12 @@ Widget I,9,450.00
 ,,
 ,,
 ,,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
 
 ### Script
 
-```csvs
+```tbl
 // Define constants
 let tax_rate = 0.08;
 let discount_threshold = 1000;
@@ -116,5 +116,5 @@ Subtotal , 2275     ,
 Discount , 113.75   ,
 Tax      , 172.9    ,
 Total    , 2334.15  ,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```

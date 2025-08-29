@@ -18,12 +18,12 @@ Item,Amount,
 Revenue,123456.789,
 Expenses,98765.432,
 Profit,24691.357,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
 
 ### Script
 
-```csvs
+```tbl
 // Format amounts as currency with 2 decimal places
 fmt B2:B4 = "%.2f";
 
@@ -45,5 +45,5 @@ Item     , Amount     , Percentage
 Revenue  , 123456.789 , 100.0%
 Expenses , 98765.432  , 80.0%
 Profit   , 24691.357  , 20.0%
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```

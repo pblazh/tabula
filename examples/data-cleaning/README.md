@@ -27,12 +27,12 @@ name,  age,  salary ,
   Alice  ,25,"  50000  ",
 " Bob ",thirty,75000,
 Charlie,35,,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
 
 ### Script
 
-```csvs
+```tbl
 // Clean up headers
 let A1 = "Name";
 let B1 = "Age";
@@ -60,5 +60,5 @@ Name    , Age , Salary , Valid
 Alice   , 25  , 50000  , Yes
 Bob     , 30  , 75000  , Yes
 Charlie , 35  , 0      , No
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```

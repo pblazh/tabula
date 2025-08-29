@@ -27,12 +27,12 @@ Command, Arg, Out
 echo,hello,
 ls,examples/call-function/,
 date,Jun 20 1975,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
 
 ### Script
 
-```csvs
+```tbl
 let C2 = CALL(A2, B2);
 let C3 = CALL(A3, B3);
 let C4 = CALL(A4, "-j", "-f", "%b %d %Y", B4, "+%A");
@@ -45,5 +45,5 @@ Command , Arg                     , Out
 echo    , hello                   , hello
 ls      , examples/call-function/ , input.csv output.csv README.md script.csvs
 date    , Jun 20 1975             , Friday
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```

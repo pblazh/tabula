@@ -76,7 +76,7 @@ exit status 1
 }
 
 func TestExecuteInlineCode(t *testing.T) {
-	scriptPath := filepath.Join("..", "..", "examples", "apartment", "script.csvs")
+	scriptPath := filepath.Join("..", "..", "examples", "apartment", "script.tbl")
 	inputPath := filepath.Join("..", "..", "examples", "apartment", "input.csv")
 	outputPath := filepath.Join("..", "..", "examples", "apartment", "output.csv")
 
@@ -85,7 +85,7 @@ func TestExecuteInlineCode(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to read expected output: %v", err)
 	}
-	csvIn := strings.ReplaceAll(string(input), "#tabulafile:./script.csvs", "")
+	csvIn := strings.ReplaceAll(string(input), "#tabulafile:./script.tbl", "")
 	// Read expected output
 	script, err := os.ReadFile(scriptPath)
 	if err != nil {
@@ -97,7 +97,7 @@ func TestExecuteInlineCode(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to read expected output: %v", err)
 	}
-	csvOut := strings.ReplaceAll(string(output), "#tabulafile:./script.csvs", "")
+	csvOut := strings.ReplaceAll(string(output), "#tabulafile:./script.tbl", "")
 
 	cmd := exec.Command("go", "run", ".", "-e", string(script), "-a")
 	var stdout, stderr bytes.Buffer
@@ -138,7 +138,7 @@ func TestUpdateInPlace(t *testing.T) {
 	defer dremove(csvFile)
 
 	// Create test script file (copy the working example)
-	scriptFile := filepath.Join(tempDir, "script.csvs")
+	scriptFile := filepath.Join(tempDir, "script.tbl")
 	scriptContent := "let C1 = A1 + B1;"
 
 	err = os.WriteFile(scriptFile, []byte(scriptContent), 0644)
@@ -205,29 +205,29 @@ func TestScriptPathFromCSVComment(t *testing.T) {
 		{
 			name:           "parent directory script reference",
 			csvPath:        filepath.Join(subDir, "test.csv"),
-			scriptPath:     filepath.Join(tempDir, "parent_script.csvs"),
-			scriptComment:  "../parent_script.csvs",
-			csvContent:     "A,B\n1,2\n#tabulafile:../parent_script.csvs\n",
+			scriptPath:     filepath.Join(tempDir, "parent_script.tbl"),
+			scriptComment:  "../parent_script.tbl",
+			csvContent:     "A,B\n1,2\n#tabulafile:../parent_script.tbl\n",
 			scriptContent:  "let A1 = \"ParentScript\"; let B1 = \"Modified\";",
-			expectedOutput: "ParentScript,Modified\n1,2\n#tabulafile:../parent_script.csvs\n",
+			expectedOutput: "ParentScript,Modified\n1,2\n#tabulafile:../parent_script.tbl\n",
 		},
 		{
 			name:           "same directory script reference",
 			csvPath:        filepath.Join(subDir, "test2.csv"),
-			scriptPath:     filepath.Join(subDir, "local_script.csvs"),
-			scriptComment:  "./local_script.csvs",
-			csvContent:     "A,B\n1,2\n#tabulafile:./local_script.csvs\n",
+			scriptPath:     filepath.Join(subDir, "local_script.tbl"),
+			scriptComment:  "./local_script.tbl",
+			csvContent:     "A,B\n1,2\n#tabulafile:./local_script.tbl\n",
 			scriptContent:  "let A1 = \"LocalScript\"; let B1 = \"Local\";",
-			expectedOutput: "LocalScript,Local\n1,2\n#tabulafile:./local_script.csvs\n",
+			expectedOutput: "LocalScript,Local\n1,2\n#tabulafile:./local_script.tbl\n",
 		},
 		{
 			name:           "relative path without dot prefix",
 			csvPath:        filepath.Join(subDir, "test3.csv"),
-			scriptPath:     filepath.Join(subDir, "simple_script.csvs"),
-			scriptComment:  "simple_script.csvs",
-			csvContent:     "A,B\n1,2\n#tabulafile:simple_script.csvs\n",
+			scriptPath:     filepath.Join(subDir, "simple_script.tbl"),
+			scriptComment:  "simple_script.tbl",
+			csvContent:     "A,B\n1,2\n#tabulafile:simple_script.tbl\n",
 			scriptContent:  "let A1 = \"SimpleScript\"; let B1 = \"Simple\";",
-			expectedOutput: "SimpleScript,Simple\n1,2\n#tabulafile:simple_script.csvs\n",
+			expectedOutput: "SimpleScript,Simple\n1,2\n#tabulafile:simple_script.tbl\n",
 		},
 	}
 
@@ -441,7 +441,7 @@ func TestCSVDimensionExtension(t *testing.T) {
 			defer dremove(csvFile)
 
 			// Create temporary script file
-			scriptFile := filepath.Join(tempDir, tt.name+".csvs")
+			scriptFile := filepath.Join(tempDir, tt.name+".tbl")
 			err = os.WriteFile(scriptFile, []byte(tt.scriptContent), 0644)
 			if err != nil {
 				t.Fatalf("Failed to create script file: %v", err)
