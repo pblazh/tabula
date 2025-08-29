@@ -4,4 +4,4 @@ Product B,800,900,950,1000,,
 Product C,1500,1400,1600,1550,,
 ,,,,,,
 ,,,,,,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl

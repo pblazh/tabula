@@ -1,9 +1,0 @@
-// Create formatted full name column
-let C1 = "Full Name";
-let C2 = CONCATENATE(A2, " ", B2);
-let C3 = CONCATENATE(A3, " ", B3);
-
-// Create display name with uppercase
-let D1 = "Display Name";
-let D2 = CONCATENATE(UPPER(A2), " ", UPPER(B2));
-let D3 = CONCATENATE(UPPER(A3), " ", UPPER(B3));

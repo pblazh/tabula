@@ -1,4 +1,0 @@
-let C2 = CALL(A2, B2);
-let C3 = CALL(A3, B3);
-let C4 = CALL(A4, "-j", "-f", "%b %d %Y", B4, "+%A");
-

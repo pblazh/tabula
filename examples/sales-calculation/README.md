@@ -18,12 +18,12 @@ Apple,1.20,10,
 Banana,0.80,15,
 Cherry,2.50,8,
 ,,,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
 
 ### Script
 
-```csvs
+```tbl
 // Add header for total column
 let D1 = "Total";
 
@@ -43,5 +43,5 @@ Apple   , 1.20  , 10       , 12
 Banana  , 0.80  , 15       , 12
 Cherry  , 2.50  , 8        , 20
 TOTAL   ,       ,          , 44
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```

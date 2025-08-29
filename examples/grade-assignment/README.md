@@ -21,12 +21,12 @@ Student,Math,Science,English,,,,
 Alice,85,92,78,,,,
 Bob,76,84,91,,,,
 Carol,95,88,89,,,,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
 
 ### Script
 
-```csvs
+```tbl
 // Add grade columns
 let E1 = "Math Grade";
 let F1 = "Science Grade";
@@ -70,5 +70,5 @@ Student , Math , Science , English , Math Grade , Science Grade , English Grade 
 Alice   , 85   , 92      , 78      , B          , A             , C             , B
 Bob     , 76   , 84      , 91      , C          , B             , A             , B
 Carol   , 95   , 88      , 89      , A          , B             , B             , A
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```

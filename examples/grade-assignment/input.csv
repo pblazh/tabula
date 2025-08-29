@@ -2,4 +2,4 @@ Student,Math,Science,English,,,,
 Alice,85,92,78,,,,
 Bob,76,84,91,,,,
 Carol,95,88,89,,,,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl

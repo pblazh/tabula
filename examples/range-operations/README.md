@@ -20,12 +20,12 @@ Product B,800,900,950,1000,,
 Product C,1500,1400,1600,1550,,
 ,,,,,,
 ,,,,,,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
 
 ### Script
 
-```csvs
+```tbl
 // Add total column
 let F1 = "Total";
 let F2 = SUM(B2:E2);
@@ -76,5 +76,5 @@ Product B       , 800  , 900  , 950  , 1000 , 3650  , Q4
 Product C       , 1500 , 1400 , 1600 , 1550 , 6050  , Q3
 Quarter Total   , 3300 , 3500 , 3650 , 3850 , 14300 ,
 Quarter Average , 1100 , 1166 , 1216 , 1283 , 4766  ,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```

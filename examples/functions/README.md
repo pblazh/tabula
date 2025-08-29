@@ -16,12 +16,12 @@ This example demonstrates the SUM function with various argument patterns.
 1,2,3,4,
 1.1,2.1,3.1,4.1,
 1,2,3,4,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
 
 ### Script
 
-```csvs
+```tbl
 let E1 = SUM(A1, B1, C1, D1);
 let E2 = SUM(B2:D2);
 let E3 = SUM(B3:D3, A3);
@@ -33,5 +33,5 @@ let E3 = SUM(B3:D3, A3);
 1   , 2   , 3   , 4   , 10
 1.1 , 2.1 , 3.1 , 4.1 , 9.3
 1   , 2   , 3   , 4   , 10
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```

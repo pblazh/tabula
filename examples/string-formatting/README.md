@@ -16,12 +16,12 @@ for formatting names from a CSV file.
 first_name,last_name,email,
 john,doe,john.doe@email.com,
 jane,smith,jane.smith@email.com,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
 
 ### Script
 
-```csvs
+```tbl
 // Create formatted full name column
 let C1 = "Full Name";
 let C2 = CONCATENATE(A2, " ", B2);
@@ -39,5 +39,5 @@ let D3 = CONCATENATE(UPPER(A3), " ", UPPER(B3));
 first_name , last_name , Full Name  , Display Name
 john       , doe       , john doe   , JOHN DOE
 jane       , smith     , jane smith , JANE SMITH
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```

@@ -18,12 +18,12 @@ Name,Value1,Value2,Value3,,,,
   John  ,10,20,30,,,,
 " Mary ",15,-5,25,,,,
 Charlie,,35,40,,,,
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
 
 ### Script
 
-```csvs
+```tbl
 // Combining Functions Examples
 
 // Clean and format text
@@ -75,5 +75,5 @@ Name    , Value1 , Value2 , Value3 , Status  , Abs Sum , Grade , Squared & Round
 JOHN    , 10     , 20     , 30     , JOHN    , 60      , B     , 100
 MARY    , 15     , -5     , 25     , MARY    , 45      , F     , 230
 CHARLIE ,        , 35     , 40     , CHARLIE , 75      , A     , 0
-#tabulafile:./script.csvs
+#tabulafile:./script.tbl
 ```
