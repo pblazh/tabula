@@ -1,7 +1,7 @@
 {
-  "name": "vsccsvss",
-  "displayName": "vsccsvss",
-  "description": "",
+  "name": "tabula",
+  "displayName": "tabula",
+  "description": "VSCode tabula plugin",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.102.0"
@@ -10,11 +10,11 @@
     "Other"
   ],
   "activationEvents": [],
-  "main": "./out/extension.js",
+  "main": "./out/index.js",
   "contributes": {
     "commands": [
       {
-        "command": "vsccsvss.start",
+        "command": "tabula.start",
         "title": "Start editing file",
         "category": "Edit"
       }
@@ -28,6 +28,9 @@
     "lint": "eslint src",
     "test": "vscode-test"
   },
+  "dependencies": {
+    "fast-csv": "5.0.2"
+  },
   "devDependencies": {
     "@types/vscode": "^1.102.0",
     "@types/mocha": "^10.0.10",
@@ -38,8 +41,5 @@
     "typescript": "^5.8.3",
     "@vscode/test-cli": "^0.0.11",
     "@vscode/test-electron": "^2.5.2"
-  },
-  "dependencies": {
-    "fast-csv": "^5.0.2"
   }
 }
