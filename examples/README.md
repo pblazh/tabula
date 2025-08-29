@@ -1,6 +1,6 @@
-# CSVSS Examples
+# Tabula Examples
 
-This directory contains examples demonstrating various CSVSS features and use cases.
+This directory contains examples demonstrating various Tabula features and use cases.
 
 ## Examples
 

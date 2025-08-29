@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/tabula/internal/ast"
 )
 
 // WriteValue writes an AST expression to context with optional format specification

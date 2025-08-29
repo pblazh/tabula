@@ -4,7 +4,7 @@ package core
 import (
 	"fmt"
 
-	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/tabula/internal/ast"
 )
 
 func ErrUnsupportedArity(format string, function ast.CallExpression, expected, given int) error {

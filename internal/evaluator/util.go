@@ -1,8 +1,8 @@
 package evaluator
 
 import (
-	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/lexer"
+	"github.com/pblazh/tabula/internal/ast"
+	"github.com/pblazh/tabula/internal/lexer"
 )
 
 func evaluateNumericOperation(

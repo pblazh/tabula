@@ -1,4 +1,4 @@
-# CSVSS Examples
+# Tabula Examples
 
 - [data-cleaning](../examples/data-cleaning/README.md)
 - [number-formatting](../examples/number-formatting/README.md)

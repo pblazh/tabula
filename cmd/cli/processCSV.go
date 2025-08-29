@@ -4,8 +4,8 @@ import (
 	"encoding/csv"
 	"io"
 
-	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/evaluator"
+	"github.com/pblazh/tabula/internal/ast"
+	"github.com/pblazh/tabula/internal/evaluator"
 )
 
 func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csvWriter io.Writer, comments map[int]string) error {

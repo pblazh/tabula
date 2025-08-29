@@ -3,7 +3,7 @@ package core
 import (
 	"math"
 
-	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/tabula/internal/ast"
 )
 
 func sum[T Number](values ...T) T {

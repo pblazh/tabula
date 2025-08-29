@@ -3,7 +3,7 @@ package testutil
 import (
 	"fmt"
 
-	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/tabula/internal/ast"
 )
 
 func ErrNoStatementsParsed() error {

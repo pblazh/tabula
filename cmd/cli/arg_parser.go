@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	usageMessage = `Usage: csvss [OPTIONS]
+	usageMessage = `Usage: tabula [OPTIONS]
 
 Options:
   -i <file>    Input CSV path (default: stdin)
@@ -22,22 +22,22 @@ Options:
 
 Examples:
 	# CSV from file, script from stdin → stdout
-  csvss -i data.csv
+  tabula -i data.csv
 
 	# CSV from file, script from file → stdout
-  csvss -i data.csv -s script.file
+  tabula -i data.csv -s script.file
 
 	# CSV from file, execute code directly → stdout
-	csvss -i data.csv -e "let A1 = SUM(A2:A4)"
+	tabula -i data.csv -e "let A1 = SUM(A2:A4)"
 
 	# CSV from file, script from file → file
-  csvss -i data.csv -s script.file -o output.csv
+  tabula -i data.csv -s script.file -o output.csv
 
 	# CSV from file, script from file → update in place
-  csvss -s script.file -u data.csv
+  tabula -s script.file -u data.csv
 
 	# CSV from file, script from stdin → update in place
-  csvss -u data.csv
+  tabula -u data.csv
 `
 	outputConflictMessage = "conflicting output flags: -o and -u cannot be used together"
 	inputConflictMessage  = "either script or data has to be read from a file"

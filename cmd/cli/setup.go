@@ -133,8 +133,8 @@ func setupScriptReader(config *Config, embeded string) (io.Reader, error) {
 func readComments(base string, f io.Reader) (string, map[int]string, error) {
 	const (
 		commentPrefix    = "#"
-		csvssFilePrefix  = "#csvssfile:"
-		csvssEmbedPrefix = "#csvss:"
+		tabulaFilePrefix  = "#tabulafile:"
+		tabulaEmbedPrefix = "#tabula:"
 	)
 
 	scanner := bufio.NewScanner(f)
@@ -147,14 +147,14 @@ func readComments(base string, f io.Reader) (string, map[int]string, error) {
 		line := strings.TrimSpace(scanner.Text())
 
 		// Check for embedded script
-		if strings.HasPrefix(line, csvssEmbedPrefix) {
-			script.WriteString(line[len(csvssEmbedPrefix):] + "\n")
+		if strings.HasPrefix(line, tabulaEmbedPrefix) {
+			script.WriteString(line[len(tabulaEmbedPrefix):] + "\n")
 		}
 
 		// Check for embedded script reference
-		if strings.HasPrefix(line, csvssFilePrefix) {
+		if strings.HasPrefix(line, tabulaFilePrefix) {
 			// config.Script = path.Join(path.Dir(config.Input), scriptComment)
-			content, err := os.ReadFile(path.Join(path.Dir(base), line[len(csvssFilePrefix):]))
+			content, err := os.ReadFile(path.Join(path.Dir(base), line[len(tabulaFilePrefix):]))
 			if err != nil {
 				return "", nil, err
 			}

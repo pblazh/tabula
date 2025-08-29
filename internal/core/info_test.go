@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/tabula/internal/ast"
 )
 
 func TestISNUMBER(t *testing.T) {

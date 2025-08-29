@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/lexer"
-	"github.com/pblazh/csvss/internal/parser"
+	"github.com/pblazh/tabula/internal/ast"
+	"github.com/pblazh/tabula/internal/lexer"
+	"github.com/pblazh/tabula/internal/parser"
 )
 
 // ParseExpression parses an input string as an expression and returns the AST.

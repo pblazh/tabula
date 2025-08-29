@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pblazh/csvss/internal/testutil"
+	"github.com/pblazh/tabula/internal/testutil"
 )
 
 func TestEvaluateStatement(t *testing.T) {

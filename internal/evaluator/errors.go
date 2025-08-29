@@ -3,8 +3,8 @@ package evaluator
 import (
 	"fmt"
 
-	"github.com/pblazh/csvss/internal/ast"
-	"github.com/pblazh/csvss/internal/lexer"
+	"github.com/pblazh/tabula/internal/ast"
+	"github.com/pblazh/tabula/internal/lexer"
 )
 
 func ErrDivisionByZero(token lexer.Token) error {

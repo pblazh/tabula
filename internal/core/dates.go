@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/pblazh/csvss/internal/ast"
+	"github.com/pblazh/tabula/internal/ast"
 )
 
 func ToDate(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {

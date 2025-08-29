@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pblazh/csvss/internal/lexer"
+	"github.com/pblazh/tabula/internal/lexer"
 )
 
 func TestParserErrors(t *testing.T) {
