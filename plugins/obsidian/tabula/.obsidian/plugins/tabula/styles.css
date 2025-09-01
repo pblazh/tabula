@@ -1,0 +1,197 @@
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  position: relative;
+  overflow: visible;
+}
+
+.table td,
+.table th {
+  border: 1px solid var(--background-modifier-border);
+  position: relative;
+  overflow: visible;
+  padding: 0;
+  line-height: 1.8;
+}
+
+.table th {
+  background-color: var(--background-secondary);
+}
+
+.csv-cell-input {
+  width: 100%;
+  border: solid 1px transparent;
+  line-height: 1.8;
+  padding: 0.2em;
+  display: block;
+  background: var(--background-primary);
+  border-bottom: 1px solid transparent;
+  background: var(--background-modifier-box-shadow-hover);
+}
+.csv-cell-input:focus {
+  border-bottom: 1px solid var(--interactive-accent);
+}
+
+/* === CONTAINER LAYOUT STYLES === */
+.table-container {
+  position: relative;
+  overflow: auto;
+  width: 100%;
+}
+
+.table-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 8px;
+}
+
+.scroll-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-height: 8px;
+  max-height: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--background-modifier-border) transparent;
+}
+
+/* Webkit scrollbar styles */
+.scroll-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: var(--background-modifier-border);
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: var(--background-modifier-border-hover);
+}
+
+.main-scroll {
+  overflow-y: auto;
+  flex-grow: 1;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+}
+
+.top-scroll {
+  margin: 0;
+}
+
+/* === ROW AND COLUMN NUMBER STYLES === */
+.csv-row-number,
+.csv-column-number {
+  background-color: var(--background-secondary);
+  color: var(--text-muted);
+  text-align: center;
+  font-weight: bold;
+  user-select: none;
+  cursor: default;
+}
+
+.csv-row-number {
+  position: sticky;
+  left: 0;
+  overflow: visible;
+}
+
+.csv-column-number {
+  position: sticky;
+  top: 0;
+}
+
+.csv-column-number-first {
+  width: 3em;
+}
+
+.csv-row-number:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+.csv-column-number:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+/* === PARSER SETTINGS === */
+.csv-parser-settings {
+  display: none;
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  background-color: var(--background-secondary);
+}
+
+/* === OPERATIONS CONTAINER === */
+.csv-operations {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+/* === SOURCE VIEW STYLES === */
+.csv-source-mode {
+  font-family: var(--font-monospace, monospace);
+  font-size: 1em;
+  width: 100%;
+  min-height: 300px;
+  resize: vertical;
+  box-sizing: border-box;
+  margin: 1em 0;
+  padding: 0.5em;
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+}
+
+.csv-source-editor-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.csv-source-cm-container {
+  flex: 1;
+  overflow: auto;
+  height: 100%;
+}
+
+.context-menu {
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 4px 0;
+  position: absolute;
+  z-index: 9999;
+  min-width: 160px;
+}
+
+.context-menu-item {
+  cursor: pointer;
+  padding: 0.2em 1em;
+  color: var(--text-normal);
+}
+
+.context-menu-item:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+.csv-error {
+  color: var(--text-error);
+  background-color: var(--background-modifier-error);
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin: 8px 0;
+  border: 1px solid var(--background-modifier-border);
+}

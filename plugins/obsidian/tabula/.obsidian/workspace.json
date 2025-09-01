@@ -1,0 +1,216 @@
+{
+  "main": {
+    "id": "e11b17fb1a377598",
+    "type": "split",
+    "children": [
+      {
+        "id": "95bea0460f019fc0",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5a97504a70da458f",
+            "type": "leaf",
+            "state": {
+              "type": "csv-view",
+              "state": {
+                "file": "example/input.csv"
+              },
+              "icon": "table",
+              "title": "input"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "677d090d9cb85a00",
+    "type": "split",
+    "children": [
+      {
+        "id": "7c47e1d29b8e753e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2fe815fb5606a99a",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "581f3b81e252fbec",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "aa671812ea67bd99",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 238.5
+  },
+  "right": {
+    "id": "5b71a38b9b61dfeb",
+    "type": "split",
+    "children": [
+      {
+        "id": "eac8dadf39ca58ec",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "24dda0f953dd3daa",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "bbb46dfad05fb1c3",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "7ef9df4780dfd2bc",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "703d4bf29c9bdae5",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "bases:Create new base": false,
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "5a97504a70da458f",
+  "lastOpenFiles": [
+    "readme.md",
+    "example/input.csv",
+    "example/input.csv~",
+    "src/views/table-view.ts~",
+    "example/copy.tbl~",
+    "example/copy.tbl",
+    "src/views/source-view.ts~",
+    "src/utils/file-utils.ts~",
+    "src/utils/csv-utils.ts~",
+    "src/main.ts~",
+    "package.json~",
+    "node_modules/@babel/helper-compilation-targets/node_modules/semver/README.md",
+    "node_modules/fast-glob/node_modules/glob-parent/README.md",
+    "node_modules/fast-glob/node_modules/glob-parent/CHANGELOG.md",
+    "node_modules/@jest/reporters/assets/jest_logo.png",
+    "node_modules/istanbul-reports/lib/html-spa/assets/sort-arrow-sprite.png",
+    "node_modules/istanbul-reports/lib/html/assets/sort-arrow-sprite.png",
+    "node_modules/istanbul-reports/lib/html/assets/favicon.png",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/unified-signatures.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/unbound-method.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/typedef.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/type-annotation-spacing.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/triple-slash-reference.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/switch-exhaustiveness-check.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/strict-boolean-expressions.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/space-infix-ops.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/space-before-function-paren.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/space-before-blocks.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/sort-type-union-intersection-members.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/sort-type-constituents.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/semi.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/return-await.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/restrict-template-expressions.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/restrict-plus-operands.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/require-await.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/require-array-sort-compare.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/quotes.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/promise-function-async.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/prefer-ts-expect-error.md",
+    "node_modules/pdfjs-dist/web/images/toolbarButton-menuArrow.svg",
+    "node_modules/pdfjs-dist/web/images/toolbarButton-editorHighlight.svg",
+    "node_modules/pdfjs-dist/web/images/messageBar_warning.svg",
+    "node_modules/pdfjs-dist/web/images/messageBar_info.svg",
+    "node_modules/pdfjs-dist/web/images/messageBar_closingButton.svg",
+    "node_modules/pdfjs-dist/web/images/loading-icon.gif"
+  ]
+}
+

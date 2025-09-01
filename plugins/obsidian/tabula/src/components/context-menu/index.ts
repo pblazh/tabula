@@ -1,0 +1,1 @@
+export { setupContextMenu } from "./menu";

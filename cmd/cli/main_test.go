@@ -76,9 +76,9 @@ exit status 1
 }
 
 func TestExecuteInlineCode(t *testing.T) {
-	scriptPath := filepath.Join("..", "..", "examples", "apartment", "script.tbl")
+	scriptPath := filepath.Join("..", "..", "examples", "apartment", "copy.tbl")
 	inputPath := filepath.Join("..", "..", "examples", "apartment", "input.csv")
-	outputPath := filepath.Join("..", "..", "examples", "apartment", "output.csv")
+	outputPath := filepath.Join("..", "..", "examples", "apartment", "copied.csv")
 
 	// Read expected output
 	input, err := os.ReadFile(inputPath)
