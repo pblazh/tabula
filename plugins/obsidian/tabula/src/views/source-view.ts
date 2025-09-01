@@ -35,7 +35,7 @@ const separatorHighlightPlugin = ViewPlugin.fromClass(
 function getSeparatorDecorations(view: EditorView): DecorationSet {
   const builder = new RangeSetBuilder<Decoration>();
   const sepRegex = /[;,	]/g;
-  for (const { from, to } of view.visibleRanges) {
+  for (let { from, to } of view.visibleRanges) {
     const text = view.state.doc.sliceString(from, to);
     let match;
     while ((match = sepRegex.exec(text)) !== null) {

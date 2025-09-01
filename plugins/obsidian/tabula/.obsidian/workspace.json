@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "95bea0460f019fc0",
+        "id": "ad762e62ab2fc74b",
         "type": "tabs",
         "children": [
           {
-            "id": "5a97504a70da458f",
+            "id": "576593486fe91df0",
             "type": "leaf",
             "state": {
               "type": "csv-view",
@@ -164,19 +164,19 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "5a97504a70da458f",
+  "active": "576593486fe91df0",
   "lastOpenFiles": [
-    "readme.md",
-    "example/input.csv",
-    "example/input.csv~",
     "src/views/table-view.ts~",
-    "example/copy.tbl~",
-    "example/copy.tbl",
-    "src/views/source-view.ts~",
-    "src/utils/file-utils.ts~",
     "src/utils/csv-utils.ts~",
     "src/main.ts~",
     "package.json~",
+    "example/input.csv~",
+    "example/input.csv",
+    "node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml/lib/js-yaml/type/js/regexp.js",
+    "node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml/lib/js-yaml/type/js/undefined.js",
+    "node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml/lib/js-yaml/type/js/function.js",
+    "node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml/lib/js-yaml/type/timestamp.js",
+    "node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml/lib/js-yaml/type/str.js",
     "node_modules/@babel/helper-compilation-targets/node_modules/semver/README.md",
     "node_modules/fast-glob/node_modules/glob-parent/README.md",
     "node_modules/fast-glob/node_modules/glob-parent/CHANGELOG.md",
@@ -205,6 +205,7 @@
     "node_modules/@typescript-eslint/eslint-plugin/docs/rules/quotes.md",
     "node_modules/@typescript-eslint/eslint-plugin/docs/rules/promise-function-async.md",
     "node_modules/@typescript-eslint/eslint-plugin/docs/rules/prefer-ts-expect-error.md",
+    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/prefer-string-starts-ends-with.md",
     "node_modules/pdfjs-dist/web/images/toolbarButton-menuArrow.svg",
     "node_modules/pdfjs-dist/web/images/toolbarButton-editorHighlight.svg",
     "node_modules/pdfjs-dist/web/images/messageBar_warning.svg",
@@ -213,4 +214,3 @@
     "node_modules/pdfjs-dist/web/images/loading-icon.gif"
   ]
 }
-

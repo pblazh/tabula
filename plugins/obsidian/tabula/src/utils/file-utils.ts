@@ -10,8 +10,8 @@ export class FileUtils {
    */
   static async withRetry<T>(
     operation: () => Promise<T>,
-    maxRetries = 3,
-    delayMs = 500,
+    maxRetries: number = 3,
+    delayMs: number = 500,
   ): Promise<T> {
     let lastError: Error = new Error("Unknown error occurred");
 

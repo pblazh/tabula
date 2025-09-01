@@ -17,13 +17,13 @@ export const parseCSV = (
   const lines = csvString.split("\n");
 
   let lineNumber = 0;
-  for (const line of lines) {
+  for (let line of lines) {
     if (line.startsWith(settings.comment)) {
       comments[lineNumber] = line;
     } else {
       const parsed = parse<string[]>(line, config);
       if (parsed.data.length === 0) continue;
-      data.push(parsed.data[0].map((str: string) => str.trim()));
+      data.push(parsed.data[0].map((str) => str.trim()));
     }
     lineNumber++;
   }
@@ -37,9 +37,10 @@ export const unparseCSV = (
   comments: TableComments,
 ): string => {
   const lines: string[] = [];
-  for (const row of data) {
+  let lineNumber = 0;
+  for (let row of data) {
     if (comments[lines.length]) {
-      lines.push(comments[lines.length]);
+      lines.push(comments[lineNumber]);
     }
     const line = unparse([row], settings);
     lines.push(line);
@@ -48,8 +49,8 @@ export const unparseCSV = (
     ([k]) => parseInt(k) >= lines.length,
   );
 
-  rest.sort(([k]: string[], [j]: string[]) => parseInt(k) - parseInt(j));
-  for (const [, comment] of rest) {
+  rest.sort(([k], [j]) => parseInt(k) - parseInt(j));
+  for (let [, comment] of rest) {
     lines.push(comment);
   }
   return lines.join("\n");

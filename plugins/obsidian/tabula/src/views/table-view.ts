@@ -8,7 +8,6 @@ import { normalizeTableData } from "../utils/util";
 import { renderTable } from "../components/table";
 import { setupContextMenu } from "../components/context-menu";
 import { Settings, TableComments, TableData } from "../types";
-import { readFileSync } from "fs";
 
 export const VIEW_TYPE = "csv-view";
 
@@ -34,23 +33,7 @@ export class TableView extends TextFileView {
     return "table";
   }
   getViewData() {
-    if (!this.file) return "";
-
-    const csv = unparseCSV(this.settings, this.tableData, this.tableComments);
-    const basePath = path.join(
-      //@ts-expect-error xxxx
-      this.file?.vault.adapter.basePath,
-      this.file.path,
-    );
-    const programm = extractProgram(basePath, this.tableComments);
-
-    console.log("proramm", programm);
-    const update = child_process.execSync(
-      `${this.settings.tabula} -a -e '${programm}'`,
-      { input: csv },
-    );
-    console.log(update.toString());
-    return update.toString();
+    return unparseCSV(this.settings, this.tableData, this.tableComments);
   }
 
   // We need to create a wrapper for the original requestSave
@@ -73,18 +56,18 @@ export class TableView extends TextFileView {
           // Return a resolved promise to satisfy the async function
           return Promise.resolve();
         }).then(async () => {
-          //globalThis.clearInterval(this.interval);
-          //await new Promise((r) => {
-          //  this.interval = globalThis.setTimeout(r, 1000);
-          //});
-          // if (this.file) {
-          //const fullPath = path.join(
-          //  //@ts-expect-error xxxx
-          //  this.file.vault.adapter.basePath,
-          //  this.file.path,
-          //);
-          // await this.execute(fullPath);
-          //}
+          globalThis.clearInterval(this.interval);
+          await new Promise((r) => {
+            this.interval = globalThis.setTimeout(r, 1000);
+          });
+          if (this.file) {
+            const fullPath = path.join(
+              //@ts-ignore
+              this.file.vault.adapter.basePath,
+              this.file.path,
+            );
+            await this.execute(fullPath);
+          }
         });
       } catch (error) {
         new Notice(
@@ -290,40 +273,4 @@ export class TableView extends TextFileView {
     }
     this.contentEl.empty();
   }
-}
-
-function extractProgram(sourcePath: string, comments: TableComments): string {
-  const out: string[] = [];
-  const lines = Object.entries(comments);
-  lines.sort(([k], [j]) => parseInt(k) - parseInt(j));
-  const commentLines = lines.map(([, line]) => line);
-  console.log("comments", commentLines);
-
-  for (const comment of commentLines) {
-    if (!comment.startsWith("#")) {
-      continue;
-    }
-
-    if (comment.startsWith("#tabulafile:")) {
-      const filePath = comment.slice("#tabulafile:".length);
-      const code = readScriptFile(sourcePath, filePath);
-      out.push(...code.split("\n"));
-    }
-    if (comment.startsWith("#tabula:")) {
-      const line = comment.slice("#tabula:".length);
-      out.push(line);
-    }
-  }
-
-  const withoutComments = out
-    .filter((line) => !/^\s*\/\/.*/.test(line))
-    .filter(Boolean);
-
-  console.log("raw", out);
-  console.log("stripped", withoutComments);
-  return withoutComments.join("");
-}
-function readScriptFile(sourcePath: string, filePath: string): string {
-  const absPath = path.join(path.dirname(sourcePath), filePath);
-  return readFileSync(absPath).toString();
 }
