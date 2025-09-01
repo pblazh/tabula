@@ -1,0 +1,11 @@
+{
+  "manifest_version": 2,
+  "id": "tabula",
+  "name": "tabula",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "Tabula obsidian plugin.",
+  "author": "Paweł Błażejewski",
+  "authorUrl": "https://pblazh.github.com/tabula",
+  "isDesktopOnly": true
+}

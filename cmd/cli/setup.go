@@ -65,7 +65,7 @@ func setupCSVReader(config *Config) (io.Reader, string, map[int]string, error) {
 		defer dclose(file)
 
 		// Extract comments and embedded script references
-		embedded, comments, err := readComments(config.Input, file)
+		embedded, comments, err := readComments(config, file)
 		if err != nil {
 			return nil, "", nil, err
 		}
@@ -93,7 +93,7 @@ func setupCSVReader(config *Config) (io.Reader, string, map[int]string, error) {
 	}
 
 	// Parse comments from stdin content
-	embedded, comments, err := readComments(config.Input, bytes.NewReader(stdinContent))
+	embedded, comments, err := readComments(config, bytes.NewReader(stdinContent))
 	if err != nil {
 		return nil, "", nil, err
 	}
@@ -130,9 +130,9 @@ func setupScriptReader(config *Config, embeded string) (io.Reader, error) {
 }
 
 // readComments extracts comments and embedded script references and embedded script from CSV content
-func readComments(base string, f io.Reader) (string, map[int]string, error) {
+func readComments(config *Config, f io.Reader) (string, map[int]string, error) {
 	const (
-		commentPrefix    = "#"
+		commentPrefix     = "#"
 		tabulaFilePrefix  = "#tabulafile:"
 		tabulaEmbedPrefix = "#tabula:"
 	)
@@ -152,9 +152,8 @@ func readComments(base string, f io.Reader) (string, map[int]string, error) {
 		}
 
 		// Check for embedded script reference
-		if strings.HasPrefix(line, tabulaFilePrefix) {
-			// config.Script = path.Join(path.Dir(config.Input), scriptComment)
-			content, err := os.ReadFile(path.Join(path.Dir(base), line[len(tabulaFilePrefix):]))
+		if strings.HasPrefix(line, tabulaFilePrefix) && config.Execute == "" {
+			content, err := os.ReadFile(path.Join(path.Dir(config.Input), line[len(tabulaFilePrefix):]))
 			if err != nil {
 				return "", nil, err
 			}

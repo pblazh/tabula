@@ -1,0 +1,10 @@
+2025.08.01     , previous , current  , rate   , payment
+electricity    , 21200.3  , 21200.3  , $4.32  , 0
+water          , 89.519   , 89.519   , $56.88 , 0
+gas            , 9808.41  , 9808.410 , $7.96  , 0
+gas delivery   ,          ,          ,        , $122.20
+water delivery ,          ,          ,        , $20.00
+maintenance    ,          ,          ,        , $409.49
+apartment      ,          ,          ,        , $8000.00
+               ,          ,          , total  , 0
+#tabulafile:./script.tbl
