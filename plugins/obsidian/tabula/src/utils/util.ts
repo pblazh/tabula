@@ -12,7 +12,7 @@ export const appendColumn = (colIdx: number, tableData: TableData) => {
   tableData.forEach((row) => row.splice(colIdx + 1, 0, ""));
 };
 
-export const preppendColumn = (colIdx: number, tableData: TableData) => {
+export const prependColumn = (colIdx: number, tableData: TableData) => {
   tableData.forEach((row) => row.splice(colIdx, 0, ""));
 };
 

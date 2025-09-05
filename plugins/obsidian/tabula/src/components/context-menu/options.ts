@@ -1,4 +1,4 @@
-import { TableData } from "types";
+import { TableData } from "../../types";
 import {
   appendRow,
   prependRow,
@@ -6,7 +6,7 @@ import {
   deleteRow,
   moveColumn,
   moveRow,
-  preppendColumn,
+  prependColumn,
   appendColumn,
 } from "../../utils/util";
 
@@ -72,7 +72,7 @@ export const createColumnOptions = (
   {
     label: "contextMenu.insertBefore",
     action: () => {
-      preppendColumn(idx, tableData);
+      prependColumn(idx, tableData);
       refresh();
     },
   },

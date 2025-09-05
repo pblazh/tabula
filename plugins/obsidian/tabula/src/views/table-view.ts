@@ -1,13 +1,14 @@
 import { TextFileView, Notice, IconName, TFile, WorkspaceLeaf } from "obsidian";
-import * as child_process from "child_process";
 import * as path from "path";
-import { parseCSV, unparseCSV } from "../utils/csv-utils";
+import { parseCSVContent, unparseCSVContent } from "../services/csv-service";
+import { executeTabula } from "../services/process-service";
 import { FileUtils } from "../utils/file-utils";
 import { normalizeTableData } from "../utils/util";
+import { safeAsync, handleOperationResult, showErrorNotice } from "../utils/error-utils";
 
 import { renderTable } from "../components/table";
 import { setupContextMenu } from "../components/context-menu";
-import { Settings, TableComments, TableData } from "../types";
+import { Settings, TableComments, TableData, ViewState } from "../types";
 
 export const VIEW_TYPE = "csv-view";
 
@@ -20,6 +21,7 @@ export class TableView extends TextFileView {
   private tableComments: TableComments = {};
   private tableEl: HTMLElement;
   private headerContextMenuCleanup: (() => void) | null = null;
+  private viewState: ViewState = { isLoading: false, hasError: false };
 
   constructor(
     leaf: WorkspaceLeaf,
@@ -33,7 +35,12 @@ export class TableView extends TextFileView {
     return "table";
   }
   getViewData() {
-    return unparseCSV(this.settings, this.tableData, this.tableComments);
+    try {
+      return unparseCSVContent(this.settings, this.tableData, this.tableComments);
+    } catch (error) {
+      showErrorNotice(`Failed to generate CSV content: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      return "";
+    }
   }
 
   // We need to create a wrapper for the original requestSave
@@ -48,78 +55,91 @@ export class TableView extends TextFileView {
 
     // Replace with our version that includes retry logic
     this.requestSave = async () => {
-      try {
+      const result = await safeAsync(async () => {
         // Use our retry utility to handle file busy errors
         await FileUtils.withRetry(async () => {
           // Call the original requestSave method
           this.originalRequestSave();
           // Return a resolved promise to satisfy the async function
           return Promise.resolve();
-        }).then(async () => {
-          globalThis.clearInterval(this.interval);
-          await new Promise((r) => {
-            this.interval = globalThis.setTimeout(r, 1000);
-          });
-          if (this.file) {
-            const fullPath = path.join(
-              //@ts-ignore
-              this.file.vault.adapter.basePath,
-              this.file.path,
-            );
-            await this.execute(fullPath);
-          }
         });
-      } catch (error) {
-        new Notice(
-          `Failed to save file: ${error.message}. The file might be open in another program.`,
-        );
+        
+        // Execute tabula after save
+        await this.executeTabula();
+      }, "Failed to save file");
+      
+      if (!result.success && result.error) {
+        showErrorNotice(`${result.error}. The file might be open in another program.`);
       }
     };
   }
 
-  execute(file: string) {
-    return new Promise<void>((resolve, reject) => {
-      new Notice("executing");
-      const child = child_process.spawn(
-        this.settings.tabula,
-        ["-a", "-u", file],
-        {
-          env: process.env,
-          shell: true,
-        },
-      );
+  private async executeTabula(): Promise<void> {
+    if (!this.file) {
+      showErrorNotice("No file available for tabula execution");
+      return;
+    }
 
-      child.stderr.on("data", (data) => {
-        new Notice("Err:" + data.toString());
-        reject();
+    try {
+      // Clear any existing timeout
+      globalThis.clearInterval(this.interval);
+      
+      // Wait a moment before executing
+      await new Promise((resolve) => {
+        this.interval = globalThis.setTimeout(resolve, 1000);
       });
 
-      child.stdout.on("data", (data) => {
-        new Notice("Out:" + data.toString());
-        reject();
-      });
+      const vaultAdapter = (this.file.vault as any).adapter;
+      if (!vaultAdapter?.basePath) {
+        showErrorNotice("Could not determine file path for tabula execution");
+        return;
+      }
 
-      child.on("close", () => {
-        new Notice("executing");
-
-        resolve();
-      });
-    });
+      const fullPath = path.join(vaultAdapter.basePath, this.file.path);
+      const result = await executeTabula(this.settings.tabula, fullPath);
+      
+      if (!result.success) {
+        showErrorNotice(result.error || "Tabula execution failed");
+      }
+    } catch (error) {
+      showErrorNotice(`Tabula execution error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   setViewData(data: string, clear: boolean) {
-    // if (clear) {
-    //   this.tableData = [];
-    //   this.refresh();
-    //   return;
-    // }
+    if (clear) {
+      this.tableData = [];
+      this.tableComments = {};
+      this.viewState = { isLoading: false, hasError: false };
+      this.refresh();
+      return;
+    }
 
-    const { data: tableData, comments: tableComments } = parseCSV(
-      this.settings,
-      data,
-    );
-    this.tableData = normalizeTableData(tableData || []);
-    this.tableComments = tableComments;
+    try {
+      this.viewState.isLoading = true;
+      this.viewState.hasError = false;
+      
+      const parseResult = parseCSVContent(this.settings, data);
+      
+      if (parseResult.errors && parseResult.errors.length > 0) {
+        console.warn('CSV parse warnings:', parseResult.errors);
+        // Don't show all errors as notices, just log them
+      }
+      
+      this.tableData = normalizeTableData(parseResult.data || []);
+      this.tableComments = parseResult.comments;
+      
+      this.viewState.isLoading = false;
+    } catch (error) {
+      this.viewState.isLoading = false;
+      this.viewState.hasError = true;
+      this.viewState.errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      showErrorNotice(`Failed to parse CSV data: ${this.viewState.errorMessage}`);
+      
+      // Set minimal data to prevent crashes
+      this.tableData = [[""]];
+      this.tableComments = {};
+    }
 
     this.refresh();
   }

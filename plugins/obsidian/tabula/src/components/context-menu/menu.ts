@@ -1,4 +1,4 @@
-import { TableData } from "types";
+import { TableData } from "../../types";
 import { createColumnOptions, createRowOptions } from "./options";
 import { render } from "./render";
 
@@ -14,7 +14,7 @@ export function setupContextMenu(
     const isRowNumber = target.classList.contains("csv-row-number");
     const isColumnNumber = target.classList.contains("csv-column-number");
 
-    if (!isRowNumber && !isColumnNumber) return () => {};
+    if (!isRowNumber && !isColumnNumber) return;
 
     ev.preventDefault();
 

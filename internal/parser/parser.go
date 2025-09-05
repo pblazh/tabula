@@ -505,36 +505,6 @@ func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
 	return expression, nil
 }
 
-func (p *Parser) parseAssignDestination(left ast.Expression) ([]ast.IdentifierExpression, error) {
-	var identifiers []ast.IdentifierExpression
-
-	if !p.expectCurrentToken(lexer.IDENT) {
-		return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
-	}
-
-	var first ast.IdentifierExpression
-	for {
-		first = ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal}
-		err := p.advance(1)
-		if err != nil {
-			return nil, err
-		}
-		if p.expectCurrentToken(lexer.COLUMN) {
-			err := p.advance(1)
-			if err != nil {
-				return nil, err
-			}
-			second := ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal}
-			_, err = ast.ExpandRange(first.Value, second.Value)
-			if err != nil {
-				return nil, err
-			}
-		}
-
-		break
-	}
-	return identifiers, nil
-}
 
 func (p *Parser) parseRange(left ast.Expression) (ast.Expression, error) {
 	// store the ':' token
