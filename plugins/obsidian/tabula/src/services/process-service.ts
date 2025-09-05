@@ -7,6 +7,7 @@ export interface ProcessExecutionResult {
   stdout?: string;
   stderr?: string;
   error?: string;
+  hasStderr?: boolean;
 }
 
 /**
@@ -87,10 +88,9 @@ export async function executeTabula(
             return;
           }
 
-          if (stderr && stderr.trim()) {
-            if (showNotices) {
-              new Notice(`Tabula stderr: ${stderr}`);
-            }
+          const hasStderr = stderr && stderr.trim();
+          if (hasStderr && showNotices) {
+            new Notice("Tabula execution completed with errors - check error panel for details");
           }
 
           if (stdout && stdout.trim() && showNotices) {
@@ -105,6 +105,7 @@ export async function executeTabula(
             success: true,
             stdout: stdout?.toString(),
             stderr: stderr?.toString(),
+            hasStderr: !!(stderr && stderr.trim()),
           });
         },
       );

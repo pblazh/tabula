@@ -27,3 +27,4 @@ go.work.sum
 
 # built files
 bin
+coverage

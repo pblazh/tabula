@@ -8,6 +8,7 @@ import { safeAsync, showErrorNotice } from "../utils/error-utils";
 
 import { renderTable } from "../components/table";
 import { setupContextMenu } from "../components/context-menu";
+import { ErrorDisplay } from "../components/error-display";
 import { Settings, TableComments, TableData, ViewState } from "../types";
 
 export const VIEW_TYPE = "csv-view";
@@ -19,6 +20,7 @@ export class TableView extends TextFileView {
   private tableData: TableData = [];
   private tableComments: TableComments = {};
   private tableEl: HTMLElement;
+  private errorDisplay: ErrorDisplay | null = null;
   private headerContextMenuCleanup: (() => void) | null = null;
   private viewState: ViewState = { isLoading: false, hasError: false };
 
@@ -108,12 +110,23 @@ export class TableView extends TextFileView {
       const result = await executeTabula(this.settings.tabula, fullPath);
 
       if (!result.success) {
-        showErrorNotice(result.error || "Tabula execution failed");
+        showErrorNotice("Tabula execution failed");
+        if (this.errorDisplay && result.error) {
+          this.errorDisplay.show(result.error);
+        }
+      } else if (result.hasStderr && result.stderr) {
+        if (this.errorDisplay) {
+          this.errorDisplay.show(result.stderr);
+        }
+      } else if (this.errorDisplay) {
+        this.errorDisplay.clear();
       }
     } catch (error) {
-      showErrorNotice(
-        `Tabula execution error: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+      const errorMsg = error instanceof Error ? error.message : "Unknown error";
+      showErrorNotice("Tabula execution error occurred");
+      if (this.errorDisplay) {
+        this.errorDisplay.show(errorMsg);
+      }
     }
   }
 
@@ -244,6 +257,12 @@ export class TableView extends TextFileView {
 
       this.contentEl.empty();
 
+      this.errorDisplay = new ErrorDisplay(this.contentEl, {
+        title: "Tabula Execution Errors",
+        collapsible: true,
+        maxHeight: "200px"
+      });
+
       const tableWrapper = this.contentEl.createEl("div", {
         cls: "table-wrapper",
       });
@@ -305,6 +324,10 @@ export class TableView extends TextFileView {
     if (this.headerContextMenuCleanup) {
       this.headerContextMenuCleanup();
       this.headerContextMenuCleanup = null;
+    }
+    if (this.errorDisplay) {
+      this.errorDisplay.destroy();
+      this.errorDisplay = null;
     }
     this.contentEl.empty();
   }
