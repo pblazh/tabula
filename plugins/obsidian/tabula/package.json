@@ -4,7 +4,7 @@
   "description": "CSV viewer and editor for Obsidian",
   "main": "main.js",
   "scripts": {
-    "prebuild": "cp ./src/styles.css ./.obsidian/plugins/tabula/; cp ./manifest.json ./.obsidian/plugins/tabula/; cp ./src/data.json ./.obsidian/plugins/tabula/",
+    "prebuild": "cp ./src/styles.css ./.obsidian/plugins/tabula/; cp ./manifest.json ./.obsidian/plugins/tabula/",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
     "predev": "npm run prebuild",
     "dev": "node esbuild.config.mjs",

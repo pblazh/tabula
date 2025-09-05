@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "ad762e62ab2fc74b",
+        "id": "4f76edfa86b4744f",
         "type": "tabs",
         "children": [
           {
-            "id": "576593486fe91df0",
+            "id": "f689f14501179027",
             "type": "leaf",
             "state": {
               "type": "csv-view",
@@ -164,19 +164,21 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "576593486fe91df0",
+  "active": "f689f14501179027",
   "lastOpenFiles": [
-    "src/views/table-view.ts~",
-    "src/utils/csv-utils.ts~",
-    "src/main.ts~",
-    "package.json~",
-    "example/input.csv~",
-    "example/input.csv",
-    "node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml/lib/js-yaml/type/js/regexp.js",
-    "node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml/lib/js-yaml/type/js/undefined.js",
-    "node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml/lib/js-yaml/type/js/function.js",
-    "node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml/lib/js-yaml/type/timestamp.js",
-    "node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml/lib/js-yaml/type/str.js",
+    "src/__tests__/utils/util.test.ts",
+    "src/__tests__/utils/file-utils.test.ts",
+    "src/__tests__/utils/error-utils.test.ts",
+    "src/__tests__/utils/csv-utils.test.ts",
+    "src/__tests__/services/process-service.test.ts",
+    "src/__tests__/services/csv-service.test.ts",
+    "src/__tests__/integration/main.test.ts",
+    "src/__tests__/components/table.test.ts",
+    "src/__tests__/utils",
+    "src/__tests__/test-runner.ts",
+    "src/__tests__/setup.ts",
+    "src/__tests__/README.md",
+    "readme.md",
     "node_modules/@babel/helper-compilation-targets/node_modules/semver/README.md",
     "node_modules/fast-glob/node_modules/glob-parent/README.md",
     "node_modules/fast-glob/node_modules/glob-parent/CHANGELOG.md",
@@ -204,8 +206,6 @@
     "node_modules/@typescript-eslint/eslint-plugin/docs/rules/require-array-sort-compare.md",
     "node_modules/@typescript-eslint/eslint-plugin/docs/rules/quotes.md",
     "node_modules/@typescript-eslint/eslint-plugin/docs/rules/promise-function-async.md",
-    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/prefer-ts-expect-error.md",
-    "node_modules/@typescript-eslint/eslint-plugin/docs/rules/prefer-string-starts-ends-with.md",
     "node_modules/pdfjs-dist/web/images/toolbarButton-menuArrow.svg",
     "node_modules/pdfjs-dist/web/images/toolbarButton-editorHighlight.svg",
     "node_modules/pdfjs-dist/web/images/messageBar_warning.svg",

@@ -13,16 +13,16 @@ export interface ProcessExecutionResult {
  * Sanitize file path to prevent path traversal attacks
  */
 function sanitizeFilePath(filePath: string): string {
-  if (!filePath || typeof filePath !== 'string') {
-    throw new Error('Invalid file path provided');
+  if (!filePath || typeof filePath !== "string") {
+    throw new Error("Invalid file path provided");
   }
 
   // Resolve the path to handle any relative components
   const resolvedPath = path.resolve(filePath);
-  
+
   // Basic validation - ensure it's a reasonable file path
-  if (resolvedPath.includes('..') || resolvedPath.includes('~')) {
-    throw new Error('File path contains unsafe components');
+  if (resolvedPath.includes("..") || resolvedPath.includes("~")) {
+    throw new Error("File path contains unsafe components");
   }
 
   return resolvedPath;
@@ -32,26 +32,23 @@ function sanitizeFilePath(filePath: string): string {
  * Validate executable name to prevent command injection
  */
 function validateExecutableName(executable: string): string {
-  if (!executable || typeof executable !== 'string') {
-    throw new Error('Invalid executable name');
+  if (!executable || typeof executable !== "string") {
+    throw new Error("Invalid executable name");
   }
 
   // Only allow alphanumeric characters, hyphens, underscores, and dots
   const validPattern = /^[a-zA-Z0-9._-]+$/;
   if (!validPattern.test(executable)) {
-    throw new Error('Executable name contains invalid characters');
+    throw new Error("Executable name contains invalid characters");
   }
 
   return executable.trim();
 }
 
-/**
- * Execute tabula process with security measures
- */
 export async function executeTabula(
-  executable: string, 
-  filePath: string, 
-  showNotices = true
+  executable: string,
+  filePath: string,
+  showNotices = true,
 ): Promise<ProcessExecutionResult> {
   try {
     const sanitizedPath = sanitizeFilePath(filePath);
@@ -109,11 +106,11 @@ export async function executeTabula(
             stdout: stdout?.toString(),
             stderr: stderr?.toString(),
           });
-        }
+        },
       );
 
       // Handle process errors
-      child.on('error', (error) => {
+      child.on("error", (error) => {
         const errorMsg = `Process error: ${error.message}`;
         if (showNotices) {
           new Notice(errorMsg);
@@ -124,9 +121,8 @@ export async function executeTabula(
         });
       });
     });
-
   } catch (error) {
-    const errorMsg = `Security validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`;
+    const errorMsg = `Security validation failed: ${error instanceof Error ? error.message : "Unknown error"}`;
     if (showNotices) {
       new Notice(errorMsg);
     }
@@ -137,24 +133,19 @@ export async function executeTabula(
   }
 }
 
-/**
- * Check if tabula executable is available
- */
-export async function checkTabulaAvailable(executable: string): Promise<boolean> {
+export async function checkTabulaExecutableAvailable(
+  executable: string,
+): Promise<boolean> {
   try {
     const validatedExecutable = validateExecutableName(executable);
-    
+
     return new Promise<boolean>((resolve) => {
-      child_process.execFile(
-        validatedExecutable,
-        ["--version"],
-        { timeout: 5000 },
-        (error) => {
-          resolve(!error);
-        }
+      child_process.exec(`${validatedExecutable} --help`, (error) =>
+        resolve(!error),
       );
     });
   } catch {
     return false;
   }
 }
+

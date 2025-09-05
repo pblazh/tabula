@@ -1,8 +1,8 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import Tabula from "../main";
-import { validateCSVSettings } from "../services/csv-service";
-import { checkTabulaAvailable } from "../services/process-service";
-import { showErrorNotice, showWarningNotice, showSuccessNotice } from "../utils/error-utils";
+import { validateSettings } from "../services/validateSettings";
+import { checkTabulaExecutableAvailable } from "../services/process-service";
+import { showErrorNotice } from "../utils/error-utils";
 
 export class SettingTab extends PluginSettingTab {
   plugin: Tabula;
@@ -20,8 +20,13 @@ export class SettingTab extends PluginSettingTab {
 
     // Add validation info section
     const validationEl = containerEl.createDiv({ cls: "setting-item-info" });
-    validationEl.createDiv({ cls: "setting-item-name", text: "Settings Validation" });
-    const validationDesc = validationEl.createDiv({ cls: "setting-item-description" });
+    validationEl.createDiv({
+      cls: "setting-item-name",
+      text: "Settings Validation",
+    });
+    const validationDesc = validationEl.createDiv({
+      cls: "setting-item-description",
+    });
     this.updateValidationStatus(validationDesc);
 
     new Setting(containerEl)
@@ -80,74 +85,51 @@ export class SettingTab extends PluginSettingTab {
     if (this.validationTimeout) {
       clearTimeout(this.validationTimeout);
     }
-    
+
     this.validationTimeout = setTimeout(() => {
       this.updateValidationStatus(validationEl);
     }, 500);
   }
 
-  private async updateValidationStatus(validationEl: HTMLElement): Promise<void> {
+  private async updateValidationStatus(
+    validationEl: HTMLElement,
+  ): Promise<void> {
     validationEl.empty();
-    
+
     // Validate CSV settings
-    const csvErrors = validateCSVSettings(this.plugin.settings);
-    
+    const csvErrors = validateSettings(this.plugin.settings);
+
     // Check tabula availability
     let tabulaAvailable = false;
     try {
-      tabulaAvailable = await checkTabulaAvailable(this.plugin.settings.tabula);
+      tabulaAvailable = await checkTabulaExecutableAvailable(
+        this.plugin.settings.tabula,
+      );
     } catch (error) {
       // Ignore errors for now
     }
-    
+
     if (csvErrors.length === 0 && tabulaAvailable) {
-      validationEl.createSpan({ 
-        text: "✓ All settings are valid", 
-        cls: "setting-validation-success" 
+      validationEl.createSpan({
+        text: "✓ All settings are valid",
+        cls: "setting-validation-success",
       });
     } else {
       const issues: string[] = [];
-      
+
       if (csvErrors.length > 0) {
         issues.push(...csvErrors);
       }
-      
+
       if (!tabulaAvailable) {
         issues.push("Tabula executable not found or not accessible");
       }
-      
-      const issueText = issues.length === 1 ? "Issue" : "Issues";
-      validationEl.createSpan({ 
-        text: `⚠ ${issueText}: ${issues.join(", ")}`, 
-        cls: "setting-validation-error" 
-      });
-    }
-    
-    // Add CSS for validation styling
-    this.addValidationStyles();
-  }
 
-  private addValidationStyles(): void {
-    if (!document.getElementById("tabula-validation-styles")) {
-      const style = document.createElement("style");
-      style.id = "tabula-validation-styles";
-      style.textContent = `
-        .setting-validation-success {
-          color: var(--text-success);
-          font-weight: 500;
-        }
-        .setting-validation-error {
-          color: var(--text-error);
-          font-weight: 500;
-        }
-        .setting-item-info {
-          margin-bottom: 1rem;
-          padding: 0.5rem;
-          background: var(--background-secondary);
-          border-radius: var(--radius-s);
-        }
-      `;
-      document.head.appendChild(style);
+      const issueText = issues.length === 1 ? "Issue" : "Issues";
+      validationEl.createSpan({
+        text: `⚠ ${issueText}: ${issues.join(", ")}`,
+        cls: "setting-validation-error",
+      });
     }
   }
 }

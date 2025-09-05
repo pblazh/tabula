@@ -130,6 +130,20 @@
   border-radius: 6px;
   background-color: var(--background-secondary);
 }
+.setting-validation-success {
+  color: var(--text-success);
+  font-weight: 500;
+}
+.setting-validation-error {
+  color: var(--text-error);
+  font-weight: 500;
+}
+.setting-item-info {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: var(--background-secondary);
+  border-radius: var(--radius-s);
+}
 
 /* === OPERATIONS CONTAINER === */
 .csv-operations {

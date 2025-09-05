@@ -1,3 +1,7 @@
 {
+  "tabula": "tabula",
+  "delimiter": ",",
+  "comment": "#",
+  "quote": "\"",
   "separator": ","
 }

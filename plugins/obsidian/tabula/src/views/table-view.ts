@@ -4,7 +4,7 @@ import { parseCSVContent, unparseCSVContent } from "../services/csv-service";
 import { executeTabula } from "../services/process-service";
 import { FileUtils } from "../utils/file-utils";
 import { normalizeTableData } from "../utils/util";
-import { safeAsync, handleOperationResult, showErrorNotice } from "../utils/error-utils";
+import { safeAsync, showErrorNotice } from "../utils/error-utils";
 
 import { renderTable } from "../components/table";
 import { setupContextMenu } from "../components/context-menu";
@@ -13,7 +13,6 @@ import { Settings, TableComments, TableData, ViewState } from "../types";
 export const VIEW_TYPE = "csv-view";
 
 export class TableView extends TextFileView {
-  public file: TFile | null;
   private headerEl: HTMLElement;
   private interval: NodeJS.Timeout;
 
@@ -36,9 +35,15 @@ export class TableView extends TextFileView {
   }
   getViewData() {
     try {
-      return unparseCSVContent(this.settings, this.tableData, this.tableComments);
+      return unparseCSVContent(
+        this.settings,
+        this.tableData,
+        this.tableComments,
+      );
     } catch (error) {
-      showErrorNotice(`Failed to generate CSV content: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showErrorNotice(
+        `Failed to generate CSV content: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
       return "";
     }
   }
@@ -63,13 +68,15 @@ export class TableView extends TextFileView {
           // Return a resolved promise to satisfy the async function
           return Promise.resolve();
         });
-        
+
         // Execute tabula after save
         await this.executeTabula();
       }, "Failed to save file");
-      
+
       if (!result.success && result.error) {
-        showErrorNotice(`${result.error}. The file might be open in another program.`);
+        showErrorNotice(
+          `${result.error}. The file might be open in another program.`,
+        );
       }
     };
   }
@@ -83,59 +90,67 @@ export class TableView extends TextFileView {
     try {
       // Clear any existing timeout
       globalThis.clearInterval(this.interval);
-      
+
       // Wait a moment before executing
       await new Promise((resolve) => {
         this.interval = globalThis.setTimeout(resolve, 1000);
       });
 
-      const vaultAdapter = (this.file.vault as any).adapter;
-      if (!vaultAdapter?.basePath) {
+      const vaultAdapter = this.file.vault.adapter;
+      // @ts-expect-error xxx
+      const basePath: string | undefined = vaultAdapter?.basePath;
+      if (!basePath) {
         showErrorNotice("Could not determine file path for tabula execution");
         return;
       }
 
-      const fullPath = path.join(vaultAdapter.basePath, this.file.path);
+      const fullPath = path.join(basePath, this.file.path);
       const result = await executeTabula(this.settings.tabula, fullPath);
-      
+
       if (!result.success) {
         showErrorNotice(result.error || "Tabula execution failed");
       }
     } catch (error) {
-      showErrorNotice(`Tabula execution error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showErrorNotice(
+        `Tabula execution error: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
     }
   }
 
   setViewData(data: string, clear: boolean) {
-    if (clear) {
-      this.tableData = [];
-      this.tableComments = {};
-      this.viewState = { isLoading: false, hasError: false };
-      this.refresh();
-      return;
-    }
+    console.log("set view data:", data, clear);
+    // if (clear) {
+    //   this.tableData = [];
+    //   this.tableComments = {};
+    //   this.viewState = { isLoading: false, hasError: false };
+    //   this.refresh();
+    //   return;
+    // }
 
     try {
       this.viewState.isLoading = true;
       this.viewState.hasError = false;
-      
+
       const parseResult = parseCSVContent(this.settings, data);
-      
+
       if (parseResult.errors && parseResult.errors.length > 0) {
-        console.warn('CSV parse warnings:', parseResult.errors);
+        console.warn("CSV parse warnings:", parseResult.errors);
         // Don't show all errors as notices, just log them
       }
-      
+
       this.tableData = normalizeTableData(parseResult.data || []);
       this.tableComments = parseResult.comments;
-      
+
       this.viewState.isLoading = false;
     } catch (error) {
       this.viewState.isLoading = false;
       this.viewState.hasError = true;
-      this.viewState.errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      showErrorNotice(`Failed to parse CSV data: ${this.viewState.errorMessage}`);
-      
+      this.viewState.errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      showErrorNotice(
+        `Failed to parse CSV data: ${this.viewState.errorMessage}`,
+      );
+
       // Set minimal data to prevent crashes
       this.tableData = [[""]];
       this.tableComments = {};
