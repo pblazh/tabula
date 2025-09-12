@@ -213,7 +213,7 @@
   - [ ] #32.10: Implement XOR function
   - [ ] #32.11: Implement SWITCH function
 - [ ] #33: Lookup and Reference Functions
-  - [ ] #33.1: Implement CHOOSE function
+  - [x] #33.1: Implement ADDRESS function
   - [ ] #33.2: Implement COLUMN function
   - [ ] #33.3: Implement COLUMNS function
   - [ ] #33.4: Implement HLOOKUP function
