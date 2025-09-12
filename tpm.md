@@ -222,13 +222,13 @@
   - [ ] #33.7: Implement LOOKUP function
   - [ ] #33.8: **Important** Implement MATCH function
   - [ ] #33.9: Implement OFFSET function
-  - [ ] #33.10: Implement ROW function
+  - [x] #33.10: Implement ROW function
   - [ ] #33.11: Implement ROWS function
   - [ ] #33.12: **Important** Implement VLOOKUP function
   - [ ] #33.13: Implement XLOOKUP function
   - [ ] #33.14: Implement GETPIVOTDATA function
   - [ ] #33.15: Implement HYPERLINK function
-  - [ ] #33.16: Implement ADDRESS function
+  - [ ] #33.16: Implement CHOOSE function
   - [ ] #33.17: Implement AREAS function
   - [ ] #33.18: Implement CELL function
 - [ ] #34: Statistical Functions
