@@ -1,4 +1,4 @@
-// Package functions provides built-in functions for the CSV spreadsheet language
+// Package core provides built-in functions for the CSV spreadsheet language
 package core
 
 import (

@@ -19,7 +19,7 @@ func IsCellIdentifier(identifier string) bool {
 }
 
 // ParseCell parses a cell reference like "A1" into a zero based column and row components
-func ParseCell(cell string) (int, int) {
+func ParseCell(cell string) (c, r int) {
 	matches := cellParseRegex.FindStringSubmatch(cell)
 	if len(matches) != 3 {
 		return -1, -1
@@ -133,6 +133,15 @@ func IsNumeric(expr Expression) bool {
 func IsIdentifier(expr Expression) bool {
 	switch expr.(type) {
 	case IdentifierExpression:
+		return true
+	default:
+		return false
+	}
+}
+
+func IsRange(expr Expression) bool {
+	switch expr.(type) {
+	case RangeExpression:
 		return true
 	default:
 		return false

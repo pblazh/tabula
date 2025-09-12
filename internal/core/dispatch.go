@@ -246,4 +246,8 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "ADDRESS(row:int, column:int)"
 		return Address(format, call, values...)
 	},
+	"COLUMN": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "COLUMN(cell:string)"
+		return Column(format, call, values...)
+	},
 }

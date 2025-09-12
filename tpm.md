@@ -214,8 +214,8 @@
   - [ ] #32.11: Implement SWITCH function
 - [ ] #33: Lookup and Reference Functions
   - [x] #33.1: Implement ADDRESS function
-  - [ ] #33.2: Implement COLUMN function
-  - [ ] #33.3: Implement COLUMNS function
+  - [x] #33.2: Implement COLUMN function
+  - [x] #33.3: Implement COLUMNS function
   - [ ] #33.4: Implement HLOOKUP function
   - [ ] #33.5: **Important** Implement INDEX function
   - [ ] #33.6: Implement INDIRECT function

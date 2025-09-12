@@ -49,3 +49,44 @@ func TestADDRESS(t *testing.T) {
 
 	RunFunctionTest(t, "ADDRESS", testcases)
 }
+
+func TestCOLUMN(t *testing.T) {
+	testcases := []InfoTestCase{
+		{
+			Name:  "empty input",
+			Input: []ast.Expression{},
+			Error: `COLUMN(cell:string) expected 1 argument, but got 0 in (COLUMN), at <: input:0:0>`,
+		},
+		{
+			Name: "multiple strings",
+			Input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+				ast.StringExpression{Value: "world"},
+			},
+			Error: `COLUMN(cell:string) expected 1 argument, but got 2 in (COLUMN <str "hello"> <str "world">), at <: input:0:0>`,
+		},
+		{
+			Name: "with an int column",
+			Input: []ast.Expression{
+				ast.IntExpression{Value: 42},
+			},
+			Error: `COLUMN(cell:string) got a wrong argument <int 42> in (COLUMN <int 42>), at <: input:0:0>`,
+		},
+		{
+			Name: "with an Identifier",
+			Input: []ast.Expression{
+				ast.IdentifierExpression{Value: "B4"},
+			},
+			Expected: `<int 2>`,
+		},
+		{
+			Name: "with a Range",
+			Input: []ast.Expression{
+				ast.RangeExpression{Value: []string{"B4", "C5"}},
+			},
+			Expected: `<int 2>`,
+		},
+	}
+
+	RunFunctionTest(t, "COLUMN", testcases)
+}
