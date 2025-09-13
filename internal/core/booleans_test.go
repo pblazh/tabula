@@ -11,7 +11,7 @@ func TestNOT(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "NOT(boolean) expected 1 argument, got 0 in (NOT), at <: input:0:0>",
+			Error: "NOT(value:boolean):boolean expects 1 argument, got 0 in (NOT), at <: input:0:0>",
 		},
 		{
 			Name: "true input",
@@ -33,28 +33,28 @@ func TestNOT(t *testing.T) {
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 			},
-			Error: "NOT(boolean) expected 1 argument, got 2 in (NOT <bool true> <bool false>), at <: input:0:0>",
+			Error: "NOT(value:boolean):boolean expects 1 argument, got 2 in (NOT <bool true> <bool false>), at <: input:0:0>",
 		},
 		{
 			Name: "string input",
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "true"},
 			},
-			Error: "NOT(boolean) invalid argument <str \"true\"> in (NOT <str \"true\">), at <: input:0:0>",
+			Error: "NOT(value:boolean):boolean received invalid argument <str \"true\"> in (NOT <str \"true\">), at <: input:0:0>",
 		},
 		{
 			Name: "integer input",
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 1},
 			},
-			Error: "NOT(boolean) invalid argument <int 1> in (NOT <int 1>), at <: input:0:0>",
+			Error: "NOT(value:boolean):boolean received invalid argument <int 1> in (NOT <int 1>), at <: input:0:0>",
 		},
 		{
 			Name: "float input",
 			Input: []ast.Expression{
 				ast.FloatExpression{Value: 1.0},
 			},
-			Error: "NOT(boolean) invalid argument <float 1.00> in (NOT <float 1.00>), at <: input:0:0>",
+			Error: "NOT(value:boolean):boolean received invalid argument <float 1.00> in (NOT <float 1.00>), at <: input:0:0>",
 		},
 	}
 
@@ -66,14 +66,14 @@ func TestAND(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "AND(boolean, boolean) expected 2 arguments, got 0 in (AND), at <: input:0:0>",
+			Error: "AND(a:boolean, b:boolean):boolean expects 2 arguments, got 0 in (AND), at <: input:0:0>",
 		},
 		{
 			Name: "single input",
 			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 			},
-			Error: "AND(boolean, boolean) expected 2 arguments, got 1 in (AND <bool true>), at <: input:0:0>",
+			Error: "AND(a:boolean, b:boolean):boolean expects 2 arguments, got 1 in (AND <bool true>), at <: input:0:0>",
 		},
 		{
 			Name: "true and false",
@@ -106,7 +106,7 @@ func TestAND(t *testing.T) {
 				ast.BooleanExpression{Value: false},
 				ast.BooleanExpression{Value: true},
 			},
-			Error: "AND(boolean, boolean) expected 2 arguments, got 3 in (AND <bool true> <bool false> <bool true>), at <: input:0:0>",
+			Error: "AND(a:boolean, b:boolean):boolean expects 2 arguments, got 3 in (AND <bool true> <bool false> <bool true>), at <: input:0:0>",
 		},
 		{
 			Name: "boolean and string",
@@ -114,7 +114,7 @@ func TestAND(t *testing.T) {
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "false"},
 			},
-			Error: "AND(boolean, boolean) invalid argument <str \"false\"> in (AND <bool true> <str \"false\">), at <: input:0:0>",
+			Error: "AND(a:boolean, b:boolean):boolean received invalid argument <str \"false\"> in (AND <bool true> <str \"false\">), at <: input:0:0>",
 		},
 	}
 
@@ -126,14 +126,14 @@ func TestOR(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "OR(boolean, boolean) expected 2 arguments, got 0 in (OR), at <: input:0:0>",
+			Error: "OR(a:boolean, b:boolean):boolean expects 2 arguments, got 0 in (OR), at <: input:0:0>",
 		},
 		{
 			Name: "single input",
 			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 			},
-			Error: "OR(boolean, boolean) expected 2 arguments, got 1 in (OR <bool true>), at <: input:0:0>",
+			Error: "OR(a:boolean, b:boolean):boolean expects 2 arguments, got 1 in (OR <bool true>), at <: input:0:0>",
 		},
 		{
 			Name: "true and false",
@@ -166,7 +166,7 @@ func TestOR(t *testing.T) {
 				ast.BooleanExpression{Value: false},
 				ast.BooleanExpression{Value: true},
 			},
-			Error: "OR(boolean, boolean) expected 2 arguments, got 3 in (OR <bool true> <bool false> <bool true>), at <: input:0:0>",
+			Error: "OR(a:boolean, b:boolean):boolean expects 2 arguments, got 3 in (OR <bool true> <bool false> <bool true>), at <: input:0:0>",
 		},
 		{
 			Name: "boolean and string",
@@ -174,7 +174,7 @@ func TestOR(t *testing.T) {
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "false"},
 			},
-			Error: "OR(boolean, boolean) invalid argument <str \"false\"> in (OR <bool true> <str \"false\">), at <: input:0:0>",
+			Error: "OR(a:boolean, b:boolean):boolean received invalid argument <str \"false\"> in (OR <bool true> <str \"false\">), at <: input:0:0>",
 		},
 	}
 
@@ -186,14 +186,14 @@ func TestIF(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "IF(boolean, any, any) expected 3 arguments, got 0 in (IF), at <: input:0:0>",
+			Error: "IF(predicate:boolean, positive:any, negative:any):any expects 3 arguments, got 0 in (IF), at <: input:0:0>",
 		},
 		{
 			Name: "single input",
 			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 			},
-			Error: "IF(boolean, any, any) expected 3 arguments, got 1 in (IF <bool true>), at <: input:0:0>",
+			Error: "IF(predicate:boolean, positive:any, negative:any):any expects 3 arguments, got 1 in (IF <bool true>), at <: input:0:0>",
 		},
 		{
 			Name: "true condition",
@@ -202,7 +202,7 @@ func TestIF(t *testing.T) {
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
 			},
-			Expected: `<str "yes">`,
+			Expected: "<str \"yes\">",
 		},
 		{
 			Name: "false condition",
@@ -211,7 +211,7 @@ func TestIF(t *testing.T) {
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
 			},
-			Expected: `<str "no">`,
+			Expected: "<str \"no\">",
 		},
 		{
 			Name: "mixed types true",
@@ -247,7 +247,7 @@ func TestIF(t *testing.T) {
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
 			},
-			Error: `IF(boolean, any, any) invalid argument <str "true"> in (IF <str "true"> <str "yes"> <str "no">), at <: input:0:0>`,
+			Error: "IF(predicate:boolean, positive:any, negative:any):any received invalid argument <str \"true\"> in (IF <str \"true\"> <str \"yes\"> <str \"no\">), at <: input:0:0>",
 		},
 		{
 			Name: "too many arguments",
@@ -257,7 +257,7 @@ func TestIF(t *testing.T) {
 				ast.StringExpression{Value: "no"},
 				ast.StringExpression{Value: "extra"},
 			},
-			Error: `IF(boolean, any, any) expected 3 arguments, got 4 in (IF <bool true> <str "yes"> <str "no"> <str "extra">), at <: input:0:0>`,
+			Error: "IF(predicate:boolean, positive:any, negative:any):any expects 3 arguments, got 4 in (IF <bool true> <str \"yes\"> <str \"no\"> <str \"extra\">), at <: input:0:0>",
 		},
 	}
 
@@ -276,7 +276,7 @@ func TestTRUE(t *testing.T) {
 			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 			},
-			Error: "TRUE() expected 0 arguments, got 1 in (TRUE <bool true>), at <: input:0:0>",
+			Error: "TRUE():boolean expects 0 arguments, got 1 in (TRUE <bool true>), at <: input:0:0>",
 		},
 	}
 
@@ -295,10 +295,9 @@ func TestFALSE(t *testing.T) {
 			Input: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 			},
-			Error: "FALSE() expected 0 arguments, got 1 in (FALSE <bool true>), at <: input:0:0>",
+			Error: "FALSE():boolean expects 0 arguments, got 1 in (FALSE <bool true>), at <: input:0:0>",
 		},
 	}
 
 	RunFunctionTest(t, "FALSE", testcases)
 }
-
