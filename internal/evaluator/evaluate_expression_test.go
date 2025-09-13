@@ -539,22 +539,22 @@ func TestOperationErrors(t *testing.T) {
 		{
 			name:          "SUM with unsupported boolean first argument",
 			input:         "SUM(true)",
-			expectedError: "SUM(number...) got a wrong argument <bool true> in (SUM <bool true>), at <IDENT:SUM test:1:1>",
+			expectedError: "SUM(number...) invalid argument <bool true> in (SUM <bool true>), at <IDENT:SUM test:1:1>",
 		},
 		{
 			name:          "SUM with mixed incompatible types in integer sum",
 			input:         "SUM(5, \"hello\")",
-			expectedError: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <int 5> <str \"hello\">), at <IDENT:SUM test:1:1>",
+			expectedError: "SUM(number...) invalid argument <str \"hello\"> in (SUM <int 5> <str \"hello\">), at <IDENT:SUM test:1:1>",
 		},
 		{
 			name:          "SUM with mixed incompatible types in float sum",
 			input:         "SUM(5.5, true)",
-			expectedError: "SUM(number...) got a wrong argument <bool true> in (SUM <float 5.50> <bool true>), at <IDENT:SUM test:1:1>",
+			expectedError: "SUM(number...) invalid argument <bool true> in (SUM <float 5.50> <bool true>), at <IDENT:SUM test:1:1>",
 		},
 		{
 			name:          "SUM with mixed incompatible types in string sum",
 			input:         "SUM(\"hello\", 42)",
-			expectedError: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <str \"hello\"> <int 42>), at <IDENT:SUM test:1:1>",
+			expectedError: "SUM(number...) invalid argument <str \"hello\"> in (SUM <str \"hello\"> <int 42>), at <IDENT:SUM test:1:1>",
 		},
 	}
 
@@ -565,7 +565,7 @@ func TestOperationErrors(t *testing.T) {
 			formats := make(map[string]string)
 			result, err := EvaluateExpression(expr, make(map[string]string), input, formats, "target")
 			if err == nil {
-				t.Errorf("Expected error but got result: %s", result.String())
+				t.Errorf("Expected error, got result: %s", result.String())
 				return
 			}
 
@@ -625,12 +625,12 @@ func TestRangeExpressionTokenPreservation(t *testing.T) {
 			// Verify each generated IdentifierExpression has the correct Token
 			for i, cell := range cells {
 				if cell.Token.Position.String() != tc.expectedPos {
-					t.Errorf("Generated identifier %d (%s) has wrong token position: expected %s, got %s",
+					t.Errorf("Generated identifier %d (%s) has wrong token position expected %s, got %s",
 						i, cell.Value, tc.expectedPos, cell.Token.Position.String())
 				}
 
 				if cell.Token.Type != rangeExpr.Token.Type {
-					t.Errorf("Generated identifier %d (%s) has wrong token type: expected %v, got %v",
+					t.Errorf("Generated identifier %d (%s) has wrong token type expected %v, got %v",
 						i, cell.Value, rangeExpr.Token.Type, cell.Token.Type)
 				}
 			}

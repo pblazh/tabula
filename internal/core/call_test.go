@@ -61,7 +61,7 @@ func TestCall(t *testing.T) {
 			result, err := Call("CALL(command, string...)", call, tt.args...)
 
 			if tt.hasError && err == nil {
-				t.Errorf("Expected error but got none")
+				t.Errorf("Expected error got none")
 				return
 			}
 
@@ -77,18 +77,18 @@ func TestCall(t *testing.T) {
 
 			// Check result type
 			if result == nil {
-				t.Errorf("Expected result but got nil")
+				t.Errorf("Expected result got nil")
 				return
 			}
 
 			strResult, ok := result.(ast.StringExpression)
 			if !ok {
-				t.Errorf("Expected StringExpression but got %T", result)
+				t.Errorf("Expected StringExpression got %T", result)
 				return
 			}
 
 			if strResult.Value != tt.expected {
-				t.Errorf("Expected %q but got %q", tt.expected, strResult.Value)
+				t.Errorf("Expected %q got %q", tt.expected, strResult.Value)
 			}
 		})
 	}

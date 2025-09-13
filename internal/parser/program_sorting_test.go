@@ -105,7 +105,7 @@ let C1 = A1;`,
 
 			if tc.shouldError {
 				if err == nil {
-					t.Error("Expected error but got none")
+					t.Error("Expected error, got none")
 				}
 				return
 			}

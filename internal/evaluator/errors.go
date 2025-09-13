@@ -12,7 +12,7 @@ func ErrDivisionByZero(token lexer.Token) error {
 }
 
 func ErrUnsupportedCall(expr ast.Expression, target string) error {
-	return fmt.Errorf("wrong argument %s for %s", target, expr)
+	return fmt.Errorf("invalid argument %s for %s", target, expr)
 }
 
 func ErrCellOutOfBounds(cellRef, dimension string, index int) error {
@@ -52,7 +52,7 @@ func ErrUnsupportedOperator(operator string) error {
 }
 
 func ErrFmtExpectedString(identifier lexer.Token, actualValue string) error {
-	return fmt.Errorf("fmt %s accepts only strings, but got %s", identifier, actualValue)
+	return fmt.Errorf("fmt %s accepts only strings, got %s", identifier, actualValue)
 }
 
 func ErrStatementExecution(statement string, err error) error {

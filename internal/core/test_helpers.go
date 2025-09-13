@@ -29,7 +29,7 @@ func RunFunctionTest(t *testing.T, functionName string, testcases []InfoTestCase
 
 			if tc.Error != "" {
 				if err == nil {
-					t.Errorf("Expected error %q but got result: %v", tc.Error, result)
+					t.Errorf("Expected error %q, got result: %v", tc.Error, result)
 					return
 				}
 				if err.Error() != tc.Error {
@@ -49,4 +49,3 @@ func RunFunctionTest(t *testing.T, functionName string, testcases []InfoTestCase
 		})
 	}
 }
-

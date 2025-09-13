@@ -8,11 +8,11 @@ import (
 )
 
 func ErrExpectedIdentifier(literal string, position scanner.Position) error {
-	return fmt.Errorf("expected an identifier, but got %s at %v", literal, position)
+	return fmt.Errorf("expected an identifier, got %s at %v", literal, position)
 }
 
 func ErrExpectedToken(expected string, actual lexer.Token) error {
-	return fmt.Errorf("expected %s, but got %v", expected, actual)
+	return fmt.Errorf("expected %s, got %v", expected, actual)
 }
 
 func ErrUnexpectedToken(literal string, position scanner.Position) error {
@@ -20,5 +20,5 @@ func ErrUnexpectedToken(literal string, position scanner.Position) error {
 }
 
 func ErrExpectedPrefix(actual lexer.Token) error {
-	return fmt.Errorf("expected prefix, but got %v", actual)
+	return fmt.Errorf("expected prefix, got %v", actual)
 }

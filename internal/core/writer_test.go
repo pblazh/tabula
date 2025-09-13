@@ -126,7 +126,7 @@ func TestWriteValue(t *testing.T) {
 
 			if tc.error != "" {
 				if err == nil {
-					t.Errorf("Expected error but got none. Result: %v", result)
+					t.Errorf("Expected error got none. Result: %v", result)
 					return
 				}
 				if tc.error != "" && err.Error() != tc.error {

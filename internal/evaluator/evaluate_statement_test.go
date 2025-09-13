@@ -122,17 +122,17 @@ func TestEvaluateStatementErrors(t *testing.T) {
 		{
 			name:          "fmt statement with integer should error",
 			statement:     "fmt result = A1;",
-			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, but got <int 5>",
+			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, got <int 5>",
 		},
 		{
 			name:          "fmt statement with float should error",
 			statement:     "fmt result = B1;",
-			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, but got <float 5.50>",
+			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, got <float 5.50>",
 		},
 		{
 			name:          "fmt statement with boolean should error",
 			statement:     "fmt result = C1;",
-			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, but got <bool true>",
+			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, got <bool true>",
 		},
 	}
 
@@ -153,7 +153,7 @@ func TestEvaluateStatementErrors(t *testing.T) {
 			for _, statement := range program {
 				err = EvaluateStatement(statement, context, input, format)
 				if err == nil {
-					t.Errorf("Expected error but got none")
+					t.Errorf("Expected error, got none")
 					return
 				}
 
@@ -311,7 +311,7 @@ func TestEvaluateREL(t *testing.T) {
 				// Error case
 				if tc.error != "" {
 					if err == nil {
-						t.Errorf("Expected error but got none")
+						t.Errorf("Expected error, got none")
 						return
 					}
 					if !strings.Contains(err.Error(), tc.error) {

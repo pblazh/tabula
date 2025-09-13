@@ -64,12 +64,12 @@ exit status 1
 
 			// Check stdout
 			if stdoutStr != tt.stdout {
-				t.Errorf("Expected stdout %q but got %q", tt.stdout, stdoutStr)
+				t.Errorf("Expected stdout %q, got %q", tt.stdout, stdoutStr)
 			}
 
 			// Check stderr
 			if stderrStr != tt.stderr {
-				t.Errorf("Expected stderr %q but got %q", tt.stderr, stderrStr)
+				t.Errorf("Expected stderr %q, got %q", tt.stderr, stderrStr)
 			}
 		})
 	}
@@ -120,7 +120,7 @@ func TestExecuteInlineCode(t *testing.T) {
 
 	// Ensure stderr is empty (no errors)
 	if stderr.String() != "" {
-		t.Errorf("Expected empty stderr but got: %q", stderr.String())
+		t.Errorf("Expected empty stderr, got: %q", stderr.String())
 	}
 }
 
@@ -131,7 +131,7 @@ func TestUpdateInPlace(t *testing.T) {
 	// Create test CSV file (copy the working example)
 	csvFile := filepath.Join(tempDir, "test.csv")
 	csvContent := "1, 2, 0\n"
-	err := os.WriteFile(csvFile, []byte(csvContent), 0644)
+	err := os.WriteFile(csvFile, []byte(csvContent), 0o644)
 	if err != nil {
 		t.Fatalf("Failed to create test CSV file: %v", err)
 	}
@@ -141,7 +141,7 @@ func TestUpdateInPlace(t *testing.T) {
 	scriptFile := filepath.Join(tempDir, "script.tbl")
 	scriptContent := "let C1 = A1 + B1;"
 
-	err = os.WriteFile(scriptFile, []byte(scriptContent), 0644)
+	err = os.WriteFile(scriptFile, []byte(scriptContent), 0o644)
 	if err != nil {
 		t.Fatalf("Failed to create test script file: %v", err)
 	}
@@ -173,12 +173,12 @@ func TestUpdateInPlace(t *testing.T) {
 
 	// Ensure stdout is empty (since we're updating in place)
 	if stdout.String() != "" {
-		t.Errorf("Expected empty stdout but got: %q", stdout.String())
+		t.Errorf("Expected empty stdout, got: %q", stdout.String())
 	}
 
 	// Ensure stderr is empty (no errors)
 	if stderr.String() != "" {
-		t.Errorf("Expected empty stderr but got: %q", stderr.String())
+		t.Errorf("Expected empty stderr, got: %q", stderr.String())
 	}
 }
 
@@ -187,7 +187,7 @@ func TestScriptPathFromCSVComment(t *testing.T) {
 
 	// Create subdirectory structure
 	subDir := filepath.Join(tempDir, "tabula_test_subdir")
-	err := os.MkdirAll(subDir, 0755)
+	err := os.MkdirAll(subDir, 0o755)
 	if err != nil {
 		t.Fatalf("Failed to create test subdirectory: %v", err)
 	}
@@ -234,14 +234,14 @@ func TestScriptPathFromCSVComment(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Create CSV file
-			err := os.WriteFile(tt.csvPath, []byte(tt.csvContent), 0644)
+			err := os.WriteFile(tt.csvPath, []byte(tt.csvContent), 0o644)
 			if err != nil {
 				t.Fatalf("Failed to create CSV file: %v", err)
 			}
 			defer dremove(tt.csvPath)
 
 			// Create script file
-			err = os.WriteFile(tt.scriptPath, []byte(tt.scriptContent), 0644)
+			err = os.WriteFile(tt.scriptPath, []byte(tt.scriptContent), 0o644)
 			if err != nil {
 				t.Fatalf("Failed to create script file: %v", err)
 			}
@@ -265,7 +265,7 @@ func TestScriptPathFromCSVComment(t *testing.T) {
 
 			// Ensure stderr is empty (no errors)
 			if stderr.String() != "" {
-				t.Errorf("Expected empty stderr but got: %q", stderr.String())
+				t.Errorf("Expected empty stderr, got: %q", stderr.String())
 			}
 		})
 	}
@@ -434,7 +434,7 @@ func TestCSVDimensionExtension(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Create temporary CSV file
 			csvFile := filepath.Join(tempDir, tt.name+".csv")
-			err := os.WriteFile(csvFile, []byte(tt.csvContent), 0644)
+			err := os.WriteFile(csvFile, []byte(tt.csvContent), 0o644)
 			if err != nil {
 				t.Fatalf("Failed to create CSV file: %v", err)
 			}
@@ -442,7 +442,7 @@ func TestCSVDimensionExtension(t *testing.T) {
 
 			// Create temporary script file
 			scriptFile := filepath.Join(tempDir, tt.name+".tbl")
-			err = os.WriteFile(scriptFile, []byte(tt.scriptContent), 0644)
+			err = os.WriteFile(scriptFile, []byte(tt.scriptContent), 0o644)
 			if err != nil {
 				t.Fatalf("Failed to create script file: %v", err)
 			}
@@ -469,7 +469,7 @@ func TestCSVDimensionExtension(t *testing.T) {
 
 			// Ensure no errors
 			if stderr.String() != "" {
-				t.Errorf("Expected empty stderr but got: %q", stderr.String())
+				t.Errorf("Expected empty stderr, got: %q", stderr.String())
 			}
 		})
 	}

@@ -21,7 +21,7 @@ func TestParserErrors(t *testing.T) {
 		{
 			name:   "missed assign identifier",
 			input:  "let = 8;",
-			output: "expected an identifier, but got = at missed assign identifier:1:5",
+			output: "expected an identifier, got = at missed assign identifier:1:5",
 		},
 		{
 			name:   "not terminated quote",
@@ -36,12 +36,12 @@ func TestParserErrors(t *testing.T) {
 		{
 			name:   "invalid fmt statements int",
 			input:  "fmt A1 = 1;",
-			output: "expected string, but got <INT:1 invalid fmt statements int:1:10>",
+			output: "expected string, got <INT:1 invalid fmt statements int:1:10>",
 		},
 		{
 			name:   "invalid fmt statements bool",
 			input:  "fmt A1 = true;",
-			output: "expected string, but got <TRUE:true invalid fmt statements bool:1:10>",
+			output: "expected string, got <TRUE:true invalid fmt statements bool:1:10>",
 		},
 	}
 
@@ -52,7 +52,7 @@ func TestParserErrors(t *testing.T) {
 			res, _, err := parser.Parse()
 
 			if err == nil {
-				t.Errorf("Expected '%s' to return error '%s', but got %s", tc.input, tc.output, res)
+				t.Errorf("Expected '%s' to return error '%s', got %s", tc.input, tc.output, res)
 			}
 			if err != nil && err.Error() != tc.output {
 				t.Errorf("Expected '%s' to equal '%s'", err.Error(), tc.output)
