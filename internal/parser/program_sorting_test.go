@@ -20,7 +20,7 @@ func TestProgramSorting(t *testing.T) {
 			input: `let A1 = B1 + C1;
 let B1 = 10;
 let C1 = 20;`,
-			output: "let B1 = <int 10>;let C1 = <int 20>;let A1 = (+ B1 C1);",
+			output: "let B1 = 10;let C1 = 20;let A1 = B1 + C1;",
 		},
 		{
 			name: "complex dependency chain",
@@ -28,14 +28,14 @@ let C1 = 20;`,
 let B1 = A1;
 let A1 = 10;
 let C1 = 20;`,
-			output: "let A1 = <int 10>;let B1 = A1;let C1 = <int 20>;let D1 = (+ B1 C1);",
+			output: "let A1 = 10;let B1 = A1;let C1 = 20;let D1 = B1 + C1;",
 		},
 		{
 			name: "no dependencies",
 			input: `let A1 = 10;
 let B1 = 20;
 let C1 = 30;`,
-			output: "let A1 = <int 10>;let B1 = <int 20>;let C1 = <int 30>;",
+			output: "let A1 = 10;let B1 = 20;let C1 = 30;",
 		},
 		{
 			name: "circular dependency",
@@ -49,7 +49,7 @@ let B1 = A1;`,
 let B1 = 20;
 let A1 = 10;
 let C1 = 30;`,
-			output: "let A1 = <int 10>;let B1 = <int 20>;let C1 = <int 30>;let D1 = (SUM A1 B1 C1);",
+			output: "let A1 = 10;let B1 = 20;let C1 = 30;let D1 = SUM(A1, B1, C1);",
 		},
 		{
 			name: "mixed statements with expressions",
@@ -58,7 +58,7 @@ A1 + B1;
 let A1 = 10;
 let B1 = 20;
 C1 * 2;`,
-			output: "let A1 = <int 10>;let B1 = <int 20>;let C1 = (+ A1 B1);(+ A1 B1);(* C1 <int 2>);",
+			output: "let A1 = 10;let B1 = 20;let C1 = A1 + B1;A1 + B1;C1 * 2;",
 		},
 		{
 			name: "range expression dependencies",
@@ -66,13 +66,13 @@ C1 * 2;`,
 let B1 = 10;
 let C1 = 20;
 let E1 = 30;`,
-			output: "let B1 = <int 10>;let C1 = <int 20>;let D1 = (SUM A1 B1 C1);let E1 = <int 30>;",
+			output: "let B1 = 10;let C1 = 20;let D1 = SUM(A1, B1, C1);let E1 = 30;",
 		},
 		{
 			name: "prefix expression dependencies",
 			input: `let B1 = -A1;
 let A1 = 10;`,
-			output: "let A1 = <int 10>;let B1 = (- A1);",
+			output: "let A1 = 10;let B1 = -A1;",
 		},
 		{
 			name: "nested expression dependencies",
@@ -80,7 +80,7 @@ let A1 = 10;`,
 let A1 = 10;
 let B1 = 20;
 let C1 = 30;`,
-			output: "let A1 = <int 10>;let B1 = <int 20>;let C1 = <int 30>;let D1 = (* (+ A1 B1) C1);",
+			output: "let A1 = 10;let B1 = 20;let C1 = 30;let D1 = A1 + B1 * C1;",
 		},
 		{
 			name: "three-level circular dependency",
