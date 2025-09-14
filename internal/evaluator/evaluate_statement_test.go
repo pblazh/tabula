@@ -122,17 +122,17 @@ func TestEvaluateStatementErrors(t *testing.T) {
 		{
 			name:          "fmt statement with integer should error",
 			statement:     "fmt result = A1;",
-			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, but got <int 5>",
+			expectedError: `fmt accepts only strings, got 5 at test:1:5`,
 		},
 		{
 			name:          "fmt statement with float should error",
 			statement:     "fmt result = B1;",
-			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, but got <float 5.50>",
+			expectedError: `fmt accepts only strings, got 5.50 at test:1:5`,
 		},
 		{
 			name:          "fmt statement with boolean should error",
 			statement:     "fmt result = C1;",
-			expectedError: "fmt <IDENT:result test:1:5> accepts only strings, but got <bool true>",
+			expectedError: `fmt accepts only strings, got true at test:1:5`,
 		},
 	}
 
@@ -153,7 +153,7 @@ func TestEvaluateStatementErrors(t *testing.T) {
 			for _, statement := range program {
 				err = EvaluateStatement(statement, context, input, format)
 				if err == nil {
-					t.Errorf("Expected error but got none")
+					t.Errorf("Expected error, got none")
 					return
 				}
 
@@ -269,25 +269,25 @@ func TestEvaluateREL(t *testing.T) {
 			name:      "REL out of bounds row",
 			statement: "let A1 = REL(0, 5);",
 			input:     [][]string{{"10", "20"}},
-			error:     "(REL <int 0> <int 5>) is outof bounds",
+			error:     "REL(0, 5) is outof bounds",
 		},
 		{
 			name:      "REL out of bounds column",
 			statement: "let A1 = REL(5, 0);",
 			input:     [][]string{{"10", "20"}},
-			error:     "(REL <int 5> <int 0>) is outof bounds",
+			error:     "REL(5, 0) is outof bounds",
 		},
 		{
 			name:      "REL negative coordinates",
 			statement: "let A1 = REL(-1, 0);",
 			input:     [][]string{{"10", "20"}},
-			error:     "(REL (- <int 1>) <int 0>) is outof bounds",
+			error:     "REL(-1, 0) is outof bounds",
 		},
 		{
 			name:      "REL with non-integer offset",
 			statement: "let A1 = REL(\"hello\", 0);",
 			input:     [][]string{{"10", "20"}},
-			error:     "string is not supported by (REL <str \"hello\"> <int 0>)",
+			error:     "string is not supported by REL(\"hello\", 0)",
 		},
 	}
 
@@ -311,7 +311,7 @@ func TestEvaluateREL(t *testing.T) {
 				// Error case
 				if tc.error != "" {
 					if err == nil {
-						t.Errorf("Expected error but got none")
+						t.Errorf("Expected error, got none")
 						return
 					}
 					if !strings.Contains(err.Error(), tc.error) {

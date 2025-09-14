@@ -135,13 +135,13 @@ func TestParseArgs(t *testing.T) {
 			if tt.config == nil {
 				// For cases like help flag, we expect nil config
 				if config != nil {
-					t.Errorf("Expected nil config but got %+v", config)
+					t.Errorf("Expected nil config, got %+v", config)
 				}
 				return
 			}
 
 			if config == nil {
-				t.Error("Expected config but got nil")
+				t.Error("Expected config, got nil")
 				return
 			}
 

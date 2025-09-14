@@ -68,7 +68,7 @@ type BooleanExpression struct {
 }
 
 func (expr BooleanExpression) String() string {
-	return fmt.Sprintf("<bool %v>", expr.Value)
+	return fmt.Sprintf("%v", expr.Value)
 }
 
 type IntExpression struct {
@@ -78,7 +78,7 @@ type IntExpression struct {
 }
 
 func (expr IntExpression) String() string {
-	return fmt.Sprintf("<int %d>", expr.Value)
+	return fmt.Sprintf("%d", expr.Value)
 }
 
 type FloatExpression struct {
@@ -88,7 +88,7 @@ type FloatExpression struct {
 }
 
 func (expr FloatExpression) String() string {
-	return fmt.Sprintf("<float %.2f>", expr.Value)
+	return fmt.Sprintf("%.2f", expr.Value)
 }
 
 type StringExpression struct {
@@ -98,7 +98,7 @@ type StringExpression struct {
 }
 
 func (expr StringExpression) String() string {
-	return fmt.Sprintf("<str \"%s\">", expr.Value)
+	return fmt.Sprintf("\"%s\"", expr.Value)
 }
 
 type DateExpression struct {
@@ -108,7 +108,7 @@ type DateExpression struct {
 }
 
 func (expr DateExpression) String() string {
-	return fmt.Sprintf("<date %s>", expr.Value.Format("2006-01-02 15:04:05"))
+	return fmt.Sprintf("<%s>", expr.Value.Format("2006-01-02 15:04:05"))
 }
 
 type PrefixExpression struct {
@@ -119,7 +119,7 @@ type PrefixExpression struct {
 }
 
 func (expr PrefixExpression) String() string {
-	return fmt.Sprintf("(%s %s)", expr.Operator.Literal, expr.Value)
+	return fmt.Sprintf("%s%s", expr.Operator.Literal, expr.Value)
 }
 
 type InfixExpression struct {
@@ -131,7 +131,7 @@ type InfixExpression struct {
 }
 
 func (expr InfixExpression) String() string {
-	return fmt.Sprintf("(%s %s %s)", expr.Operator.Literal, expr.Left, expr.Right)
+	return fmt.Sprintf("%s %s %s", expr.Left, expr.Operator.Literal, expr.Right)
 }
 
 type CallExpression struct {
@@ -143,16 +143,13 @@ type CallExpression struct {
 
 func (expr CallExpression) String() string {
 	b := strings.Builder{}
-	b.WriteString("(")
 	b.WriteString(expr.Identifier.String())
-	if len(expr.Arguments) > 0 {
-		b.WriteString(" ")
-	}
+	b.WriteString("(")
 
 	for i, arg := range expr.Arguments {
 		b.WriteString(arg.String())
 		if i < len(expr.Arguments)-1 {
-			b.WriteString(" ")
+			b.WriteString(", ")
 		}
 	}
 	b.WriteString(")")
@@ -167,7 +164,7 @@ type RangeExpression struct {
 }
 
 func (expr RangeExpression) String() string {
-	return fmt.Sprintf("(: %s)", strings.Join(expr.Value, " "))
+	return fmt.Sprintf("[%s]", strings.Join(expr.Value, ", "))
 }
 
 type Program []Statement

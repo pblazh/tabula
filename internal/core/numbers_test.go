@@ -8,9 +8,9 @@ import (
 )
 
 type inputCase struct {
-	f        string
-	expected string
-	error    string
+	f       string
+	expects string
+	error   string
 }
 
 func TestMathFunctions(t *testing.T) {
@@ -25,56 +25,56 @@ func TestMathFunctions(t *testing.T) {
 			input: []ast.Expression{},
 			cases: []inputCase{
 				{
-					f:        "PRODUCT",
-					expected: "<int 1>",
+					f:       "PRODUCT",
+					expects: "1",
 				},
 				{
-					f:        "AVERAGE",
-					expected: "<int 0>",
+					f:       "AVERAGE",
+					expects: "0",
 				},
 				{
-					f:        "SUM",
-					expected: "<int 0>",
+					f:       "SUM",
+					expects: "0",
 				},
 				{
-					f:        "COUNT",
-					expected: "<int 0>",
+					f:       "COUNT",
+					expects: "0",
 				},
 				{
-					f:        "COUNTA",
-					expected: "<int 0>",
+					f:       "COUNTA",
+					expects: "0",
 				},
 				{
 					f:     "ABS",
-					error: "ABS(number) expected 1 argument, but got 0 in (ABS), at <: input:0:0>",
+					error: `ABS(value:number):number expects 1 argument, got 0 in ABS(), at <: input:0:0>`,
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, [number]) expected 2 arguments, but got 0 in (CEILING), at <: input:0:0>",
+					error: `CEILING(value:number, significance:[number]):number expects 2 arguments, got 0 in CEILING(), at <: input:0:0>`,
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, [number]) expected 2 arguments, but got 0 in (FLOOR), at <: input:0:0>",
+					error: `FLOOR(value:number, significance:[number]):number expects 2 arguments, got 0 in FLOOR(), at <: input:0:0>`,
 				},
 				{
 					f:     "ROUND",
-					error: "ROUND(number, [number]) expected 2 arguments, but got 0 in (ROUND), at <: input:0:0>",
+					error: `ROUND(value:number, places:[number]):number expects 2 arguments, got 0 in ROUND(), at <: input:0:0>`,
 				},
 				{
 					f:     "INT",
-					error: "INT(number) expected 1 argument, but got 0 in (INT), at <: input:0:0>",
+					error: `INT(number) expects 1 argument, got 0 in INT(), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 0 in (POWER), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 0 in POWER(), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(number, number) expected 2 arguments, but got 0 in (MOD), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 0 in MOD(), at <: input:0:0>`,
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(number) expected 1 argument, but got 0 in (SQRT), at <: input:0:0>",
+					error: `SQRT(value:number):number expects 1 argument, got 0 in SQRT(), at <: input:0:0>`,
 				},
 			},
 		},
@@ -86,60 +86,60 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "PRODUCT",
-					expected: "<int -5>",
+					f:       "PRODUCT",
+					expects: "-5",
 				},
 				{
-					f:        "AVERAGE",
-					expected: "<int -5>",
+					f:       "AVERAGE",
+					expects: "-5",
 				},
 				{
-					f:        "MAX",
-					expected: "<int -5>",
+					f:       "MAX",
+					expects: "-5",
 				},
 				{
-					f:        "MAXA",
-					expected: "<int -5>",
+					f:       "MAXA",
+					expects: "-5",
 				},
 				{
-					f:        "MIN",
-					expected: "<int -5>",
+					f:       "MIN",
+					expects: "-5",
 				},
 				{
-					f:        "MINA",
-					expected: "<int -5>",
+					f:       "MINA",
+					expects: "-5",
 				},
 				{
-					f:        "ABS",
-					expected: "<int 5>",
+					f:       "ABS",
+					expects: "5",
 				},
 				{
-					f:        "INT",
-					expected: "<int -5>",
+					f:       "INT",
+					expects: "-5",
 				},
 				{
-					f:        "SUM",
-					expected: "<int -5>",
+					f:       "SUM",
+					expects: "-5",
 				},
 				{
-					f:        "COUNT",
-					expected: "<int 1>",
+					f:       "COUNT",
+					expects: "1",
 				},
 				{
-					f:        "COUNTA",
-					expected: "<int 1>",
+					f:       "COUNTA",
+					expects: "1",
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(number) got a wrong argument <int -5> in (SQRT <int -5>), at <: input:0:0>",
+					error: `SQRT(value:number):number received invalid argument -5 in SQRT(-5), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <int -5>), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(-5), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <int -5>), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(-5), at <: input:0:0>`,
 				},
 			},
 		},
@@ -152,72 +152,72 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "PRODUCT",
-					expected: "<int 24>",
+					f:       "PRODUCT",
+					expects: "24",
 				},
 				{
-					f:        "AVERAGE",
-					expected: "<int 3>",
+					f:       "AVERAGE",
+					expects: "3",
 				},
 				{
-					f:        "MAX",
-					expected: "<int 4>",
+					f:       "MAX",
+					expects: "4",
 				},
 				{
-					f:        "MAXA",
-					expected: "<int 4>",
+					f:       "MAXA",
+					expects: "4",
 				},
 				{
-					f:        "MIN",
-					expected: "<int 2>",
+					f:       "MIN",
+					expects: "2",
 				},
 				{
-					f:        "MINA",
-					expected: "<int 2>",
+					f:       "MINA",
+					expects: "2",
 				},
 				{
-					f:        "SUM",
-					expected: "<int 9>",
+					f:       "SUM",
+					expects: "9",
 				},
 				{
-					f:        "COUNT",
-					expected: "<int 3>",
+					f:       "COUNT",
+					expects: "3",
 				},
 				{
-					f:        "COUNTA",
-					expected: "<int 3>",
+					f:       "COUNTA",
+					expects: "3",
 				},
 				{
 					f:     "ABS",
-					error: "ABS(number) expected 1 argument, but got 3 in (ABS <int 2> <int 3> <int 4>), at <: input:0:0>",
+					error: `ABS(value:number):number expects 1 argument, got 3 in ABS(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, [number]) expected 2 arguments, but got 3 in (CEILING <int 2> <int 3> <int 4>), at <: input:0:0>",
+					error: `CEILING(value:number, significance:[number]):number expects 2 arguments, got 3 in CEILING(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, [number]) expected 2 arguments, but got 3 in (FLOOR <int 2> <int 3> <int 4>), at <: input:0:0>",
+					error: `FLOOR(value:number, significance:[number]):number expects 2 arguments, got 3 in FLOOR(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "ROUND",
-					error: "ROUND(number, [number]) expected 2 arguments, but got 3 in (ROUND <int 2> <int 3> <int 4>), at <: input:0:0>",
+					error: `ROUND(value:number, places:[number]):number expects 2 arguments, got 3 in ROUND(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "INT",
-					error: "INT(number) expected 1 argument, but got 3 in (INT <int 2> <int 3> <int 4>), at <: input:0:0>",
+					error: `INT(number) expects 1 argument, got 3 in INT(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 3 in (POWER <int 2> <int 3> <int 4>), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 3 in POWER(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(number, number) expected 2 arguments, but got 3 in (MOD <int 2> <int 3> <int 4>), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 3 in MOD(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(number) expected 1 argument, but got 3 in (SQRT <int 2> <int 3> <int 4>), at <: input:0:0>",
+					error: `SQRT(value:number):number expects 1 argument, got 3 in SQRT(2, 3, 4), at <: input:0:0>`,
 				},
 			},
 		},
@@ -230,32 +230,32 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "PRODUCT",
-					expected: "<int 0>",
+					f:       "PRODUCT",
+					expects: "0",
 				},
 				{
-					f:        "AVERAGE",
-					expected: "<int 5>",
+					f:       "AVERAGE",
+					expects: "5",
 				},
 				{
-					f:        "MAX",
-					expected: "<int 10>",
+					f:       "MAX",
+					expects: "10",
 				},
 				{
-					f:        "MAXA",
-					expected: "<int 10>",
+					f:       "MAXA",
+					expects: "10",
 				},
 				{
-					f:        "MIN",
-					expected: "<int 0>",
+					f:       "MIN",
+					expects: "0",
 				},
 				{
-					f:        "MINA",
-					expected: "<int 0>",
+					f:       "MINA",
+					expects: "0",
 				},
 				{
-					f:        "SUM",
-					expected: "<int 15>",
+					f:       "SUM",
+					expects: "15",
 				},
 			},
 		},
@@ -268,32 +268,32 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "PRODUCT",
-					expected: "<int -60>",
+					f:       "PRODUCT",
+					expects: "-60",
 				},
 				{
-					f:        "AVERAGE",
-					expected: "<int 3>",
+					f:       "AVERAGE",
+					expects: "3",
 				},
 				{
-					f:        "MAX",
-					expected: "<int 10>",
+					f:       "MAX",
+					expects: "10",
 				},
 				{
-					f:        "MAXA",
-					expected: "<int 10>",
+					f:       "MAXA",
+					expects: "10",
 				},
 				{
-					f:        "MIN",
-					expected: "<int -3>",
+					f:       "MIN",
+					expects: "-3",
 				},
 				{
-					f:        "MINA",
-					expected: "<int -3>",
+					f:       "MINA",
+					expects: "-3",
 				},
 				{
-					f:        "SUM",
-					expected: "<int 9>",
+					f:       "SUM",
+					expects: "9",
 				},
 			},
 		},
@@ -305,64 +305,64 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "PRODUCT",
-					expected: "<float 5.50>",
+					f:       "PRODUCT",
+					expects: "5.50",
 				},
 				{
-					f:        "AVERAGE",
-					expected: "<float 5.50>",
+					f:       "AVERAGE",
+					expects: "5.50",
 				},
 				{
-					f:        "MAX",
-					expected: "<float 5.50>",
+					f:       "MAX",
+					expects: "5.50",
 				},
 				{
-					f:        "MAXA",
-					expected: "<float 5.50>",
+					f:       "MAXA",
+					expects: "5.50",
 				},
 				{
-					f:        "MIN",
-					expected: "<float 5.50>",
+					f:       "MIN",
+					expects: "5.50",
 				},
 				{
-					f:        "MINA",
-					expected: "<float 5.50>",
+					f:       "MINA",
+					expects: "5.50",
 				},
 				{
-					f:        "ABS",
-					expected: "<float 5.50>",
+					f:       "ABS",
+					expects: "5.50",
 				},
 				{
-					f:        "INT",
-					expected: "<int 5>",
+					f:       "INT",
+					expects: "5",
 				},
 				{
-					f:        "SUM",
-					expected: "<float 5.50>",
+					f:       "SUM",
+					expects: "5.50",
 				},
 				{
-					f:        "CEILING",
-					expected: "<int 6>",
+					f:       "CEILING",
+					expects: "6",
 				},
 				{
-					f:        "FLOOR",
-					expected: "<int 5>",
+					f:       "FLOOR",
+					expects: "5",
 				},
 				{
-					f:        "ROUND",
-					expected: "<int 6>",
+					f:       "ROUND",
+					expects: "6",
 				},
 				{
-					f:        "SQRT",
-					expected: "<float 2.35>",
+					f:       "SQRT",
+					expects: "2.35",
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <float 5.50>), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(5.50), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <float 5.50>), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(5.50), at <: input:0:0>`,
 				},
 			},
 		},
@@ -373,64 +373,64 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "PRODUCT",
-					expected: "<float -3.70>",
+					f:       "PRODUCT",
+					expects: "-3.70",
 				},
 				{
-					f:        "AVERAGE",
-					expected: "<float -3.70>",
+					f:       "AVERAGE",
+					expects: "-3.70",
 				},
 				{
-					f:        "MAX",
-					expected: "<float -3.70>",
+					f:       "MAX",
+					expects: "-3.70",
 				},
 				{
-					f:        "MAXA",
-					expected: "<float -3.70>",
+					f:       "MAXA",
+					expects: "-3.70",
 				},
 				{
-					f:        "MIN",
-					expected: "<float -3.70>",
+					f:       "MIN",
+					expects: "-3.70",
 				},
 				{
-					f:        "MINA",
-					expected: "<float -3.70>",
+					f:       "MINA",
+					expects: "-3.70",
 				},
 				{
-					f:        "ABS",
-					expected: "<float 3.70>",
+					f:       "ABS",
+					expects: "3.70",
 				},
 				{
-					f:        "INT",
-					expected: "<int -3>",
+					f:       "INT",
+					expects: "-3",
 				},
 				{
-					f:        "SUM",
-					expected: "<float -3.70>",
+					f:       "SUM",
+					expects: "-3.70",
 				},
 				{
-					f:        "CEILING",
-					expected: "<int -3>",
+					f:       "CEILING",
+					expects: "-3",
 				},
 				{
-					f:        "FLOOR",
-					expected: "<int -4>",
+					f:       "FLOOR",
+					expects: "-4",
 				},
 				{
-					f:        "ROUND",
-					expected: "<int -4>",
+					f:       "ROUND",
+					expects: "-4",
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(number) got a wrong argument <float -3.70> in (SQRT <float -3.70>), at <: input:0:0>",
+					error: `SQRT(value:number):number received invalid argument -3.70 in SQRT(-3.70), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <float -3.70>), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(-3.70), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <float -3.70>), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(-3.70), at <: input:0:0>`,
 				},
 			},
 		},
@@ -443,32 +443,32 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "PRODUCT",
-					expected: "<float 9.00>",
+					f:       "PRODUCT",
+					expects: "9.00",
 				},
 				{
-					f:        "AVERAGE",
-					expected: "<float 2.17>",
+					f:       "AVERAGE",
+					expects: "2.17",
 				},
 				{
-					f:        "MAX",
-					expected: "<float 3.00>",
+					f:       "MAX",
+					expects: "3.00",
 				},
 				{
-					f:        "MAXA",
-					expected: "<float 3.00>",
+					f:       "MAXA",
+					expects: "3.00",
 				},
 				{
-					f:        "MIN",
-					expected: "<float 1.50>",
+					f:       "MIN",
+					expects: "1.50",
 				},
 				{
-					f:        "MINA",
-					expected: "<float 1.50>",
+					f:       "MINA",
+					expects: "1.50",
 				},
 				{
-					f:        "SUM",
-					expected: "<float 6.50>",
+					f:       "SUM",
+					expects: "6.50",
 				},
 			},
 		},
@@ -481,32 +481,32 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "PRODUCT",
-					expected: "<float 0.00>",
+					f:       "PRODUCT",
+					expects: "0.00",
 				},
 				{
-					f:        "AVERAGE",
-					expected: "<float 2.67>",
+					f:       "AVERAGE",
+					expects: "2.67",
 				},
 				{
-					f:        "MAX",
-					expected: "<float 5.50>",
+					f:       "MAX",
+					expects: "5.50",
 				},
 				{
-					f:        "MAXA",
-					expected: "<float 5.50>",
+					f:       "MAXA",
+					expects: "5.50",
 				},
 				{
-					f:        "MIN",
-					expected: "<float 0.00>",
+					f:       "MIN",
+					expects: "0.00",
 				},
 				{
-					f:        "MINA",
-					expected: "<float 0.00>",
+					f:       "MINA",
+					expects: "0.00",
 				},
 				{
-					f:        "SUM",
-					expected: "<float 8.00>",
+					f:       "SUM",
+					expects: "8.00",
 				},
 			},
 		},
@@ -519,32 +519,32 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "PRODUCT",
-					expected: "<float 12.50>",
+					f:       "PRODUCT",
+					expects: "12.50",
 				},
 				{
-					f:        "AVERAGE",
-					expected: "<float 3.75>",
+					f:       "AVERAGE",
+					expects: "3.75",
 				},
 				{
-					f:        "MAX",
-					expected: "<float 5.00>",
+					f:       "MAX",
+					expects: "5.00",
 				},
 				{
-					f:        "MAXA",
-					expected: "<float 5.00>",
+					f:       "MAXA",
+					expects: "5.00",
 				},
 				{
-					f:        "MIN",
-					expected: "<float 2.50>",
+					f:       "MIN",
+					expects: "2.50",
 				},
 				{
-					f:        "MINA",
-					expected: "<float 2.50>",
+					f:       "MINA",
+					expects: "2.50",
 				},
 				{
-					f:        "SUM",
-					expected: "<float 7.50>",
+					f:       "SUM",
+					expects: "7.50",
 				},
 			},
 		},
@@ -556,36 +556,36 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "PRODUCT",
-					expected: "<float 10.00>",
+					f:       "PRODUCT",
+					expects: "10.00",
 				},
 				{
-					f:        "AVERAGE",
-					expected: "<float 3.25>",
+					f:       "AVERAGE",
+					expects: "3.25",
 				},
 				{
-					f:        "MAX",
-					expected: "<float 4.00>",
+					f:       "MAX",
+					expects: "4.00",
 				},
 				{
-					f:        "MAXA",
-					expected: "<float 4.00>",
+					f:       "MAXA",
+					expects: "4.00",
 				},
 				{
-					f:        "MIN",
-					expected: "<float 2.50>",
+					f:       "MIN",
+					expects: "2.50",
 				},
 				{
-					f:        "MINA",
-					expected: "<float 2.50>",
+					f:       "MINA",
+					expects: "2.50",
 				},
 				{
-					f:        "POWER",
-					expected: "<float 39.06>",
+					f:       "POWER",
+					expects: "39.06",
 				},
 				{
-					f:        "SUM",
-					expected: "<float 6.50>",
+					f:       "SUM",
+					expects: "6.50",
 				},
 			},
 		},
@@ -597,24 +597,24 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "CEILING",
-					expected: "<int 22>",
+					f:       "CEILING",
+					expects: "22",
 				},
 				{
-					f:        "FLOOR",
-					expected: "<int 20>",
+					f:       "FLOOR",
+					expects: "20",
 				},
 				{
-					f:        "POWER",
-					expected: "<float 441.00>",
+					f:       "POWER",
+					expects: "441.00",
 				},
 				{
-					f:        "MOD",
-					expected: "<int 1>",
+					f:       "MOD",
+					expects: "1",
 				},
 				{
-					f:        "SUM",
-					expected: "<int 23>",
+					f:       "SUM",
+					expects: "23",
 				},
 			},
 		},
@@ -626,24 +626,24 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "CEILING",
-					expected: "<int 3>",
+					f:       "CEILING",
+					expects: "3",
 				},
 				{
-					f:        "FLOOR",
-					expected: "<int 2>",
+					f:       "FLOOR",
+					expects: "2",
 				},
 				{
-					f:        "POWER",
-					expected: "<float 2.50>",
+					f:       "POWER",
+					expects: "2.50",
 				},
 				{
-					f:        "MOD",
-					expected: "<float 0.50>",
+					f:       "MOD",
+					expects: "0.50",
 				},
 				{
-					f:        "SUM",
-					expected: "<float 3.50>",
+					f:       "SUM",
+					expects: "3.50",
 				},
 			},
 		},
@@ -655,24 +655,24 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "CEILING",
-					expected: "<int 129>",
+					f:       "CEILING",
+					expects: "129",
 				},
 				{
-					f:        "FLOOR",
-					expected: "<int 126>",
+					f:       "FLOOR",
+					expects: "126",
 				},
 				{
-					f:        "POWER",
-					expected: "<float 2026685.91>",
+					f:       "POWER",
+					expects: "2026685.91",
 				},
 				{
-					f:        "MOD",
-					expected: "<float 0.55>",
+					f:       "MOD",
+					expects: "0.55",
 				},
 				{
-					f:        "SUM",
-					expected: "<float 129.55>",
+					f:       "SUM",
+					expects: "129.55",
 				},
 			},
 		},
@@ -684,63 +684,63 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "PRODUCT(number...) got a wrong argument <bool true> in (PRODUCT <bool true>), at <: input:0:0>",
+					error: `PRODUCT(values:number...):number received invalid argument true in PRODUCT(true), at <: input:0:0>`,
 				},
 				{
 					f:     "AVERAGE",
-					error: "AVERAGE(number...) got a wrong argument <bool true> in (AVERAGE <bool true>), at <: input:0:0>",
+					error: `AVERAGE(values:number...):number received invalid argument true in AVERAGE(true), at <: input:0:0>`,
 				},
 				{
 					f:     "MAX",
-					error: "MAX(number...) got a wrong argument <bool true> in (MAX <bool true>), at <: input:0:0>",
+					error: `MAX(values:number...):number received invalid argument true in MAX(true), at <: input:0:0>`,
 				},
 				{
 					f:     "MAXA",
-					error: "MAXA(number...) got a wrong argument <bool true> in (MAXA <bool true>), at <: input:0:0>",
+					error: `MAXA(values:number|string...):number received invalid argument true in MAXA(true), at <: input:0:0>`,
 				},
 				{
 					f:     "MIN",
-					error: "MIN(number...) got a wrong argument <bool true> in (MIN <bool true>), at <: input:0:0>",
+					error: `MIN(values:number...):number received invalid argument true in MIN(true), at <: input:0:0>`,
 				},
 				{
 					f:     "MINA",
-					error: "MINA(number...) got a wrong argument <bool true> in (MINA <bool true>), at <: input:0:0>",
+					error: `MINA(values:number|string...):number received invalid argument true in MINA(true), at <: input:0:0>`,
 				},
 				{
 					f:     "ABS",
-					error: "ABS(number) got a wrong argument <bool true> in (ABS <bool true>), at <: input:0:0>",
+					error: `ABS(value:number):number received invalid argument true in ABS(true), at <: input:0:0>`,
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, [number]) got a wrong argument <bool true> in (CEILING <bool true>), at <: input:0:0>",
+					error: `CEILING(value:number, significance:[number]):number received invalid argument true in CEILING(true), at <: input:0:0>`,
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, [number]) got a wrong argument <bool true> in (FLOOR <bool true>), at <: input:0:0>",
+					error: `FLOOR(value:number, significance:[number]):number received invalid argument true in FLOOR(true), at <: input:0:0>`,
 				},
 				{
 					f:     "ROUND",
-					error: "ROUND(number, [number]) got a wrong argument <bool true> in (ROUND <bool true>), at <: input:0:0>",
+					error: `ROUND(value:number, places:[number]):number received invalid argument true in ROUND(true), at <: input:0:0>`,
 				},
 				{
 					f:     "INT",
-					error: "INT(number) got a wrong argument <bool true> in (INT <bool true>), at <: input:0:0>",
+					error: `INT(number) received invalid argument true in INT(true), at <: input:0:0>`,
 				},
 				{
 					f:     "SUM",
-					error: "SUM(number...) got a wrong argument <bool true> in (SUM <bool true>), at <: input:0:0>",
+					error: `SUM(values:number...):number received invalid argument true in SUM(true), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <bool true>), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(true), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <bool true>), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(true), at <: input:0:0>`,
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(number) got a wrong argument <bool true> in (SQRT <bool true>), at <: input:0:0>",
+					error: `SQRT(value:number):number received invalid argument true in SQRT(true), at <: input:0:0>`,
 				},
 			},
 		},
@@ -753,31 +753,31 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "PRODUCT(number...) got a wrong argument <str \"hello\"> in (PRODUCT <int 5> <str \"hello\">), at <: input:0:0>",
+					error: `PRODUCT(values:number...):number received invalid argument "hello" in PRODUCT(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "AVERAGE",
-					error: "AVERAGE(number...) got a wrong argument <str \"hello\"> in (AVERAGE <int 5> <str \"hello\">), at <: input:0:0>",
+					error: `AVERAGE(values:number...):number received invalid argument "hello" in AVERAGE(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MAX",
-					error: "MAX(number...) got a wrong argument <str \"hello\"> in (MAX <int 5> <str \"hello\">), at <: input:0:0>",
+					error: `MAX(values:number...):number received invalid argument "hello" in MAX(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MAXA",
-					error: "MAXA(number...) got a wrong argument <str \"hello\"> in (MAXA <int 5> <str \"hello\">), at <: input:0:0>",
+					error: `MAXA(values:number|string...):number received invalid argument "hello" in MAXA(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MIN",
-					error: "MIN(number...) got a wrong argument <str \"hello\"> in (MIN <int 5> <str \"hello\">), at <: input:0:0>",
+					error: `MIN(values:number...):number received invalid argument "hello" in MIN(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MINA",
-					error: "MINA(number...) got a wrong argument <str \"hello\"> in (MINA <int 5> <str \"hello\">), at <: input:0:0>",
+					error: `MINA(values:number|string...):number received invalid argument "hello" in MINA(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "SUM",
-					error: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <int 5> <str \"hello\">), at <: input:0:0>",
+					error: `SUM(values:number...):number received invalid argument "hello" in SUM(5, "hello"), at <: input:0:0>`,
 				},
 			},
 		},
@@ -790,31 +790,31 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "PRODUCT(number...) got a wrong argument <bool true> in (PRODUCT <float 5.50> <bool true>), at <: input:0:0>",
+					error: `PRODUCT(values:number...):number received invalid argument true in PRODUCT(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "AVERAGE",
-					error: "AVERAGE(number...) got a wrong argument <bool true> in (AVERAGE <float 5.50> <bool true>), at <: input:0:0>",
+					error: `AVERAGE(values:number...):number received invalid argument true in AVERAGE(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "MAX",
-					error: "MAX(number...) got a wrong argument <bool true> in (MAX <float 5.50> <bool true>), at <: input:0:0>",
+					error: `MAX(values:number...):number received invalid argument true in MAX(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "MAXA",
-					error: "MAXA(number...) got a wrong argument <bool true> in (MAXA <float 5.50> <bool true>), at <: input:0:0>",
+					error: `MAXA(values:number|string...):number received invalid argument true in MAXA(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "MIN",
-					error: "MIN(number...) got a wrong argument <bool true> in (MIN <float 5.50> <bool true>), at <: input:0:0>",
+					error: `MIN(values:number...):number received invalid argument true in MIN(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "MINA",
-					error: "MINA(number...) got a wrong argument <bool true> in (MINA <float 5.50> <bool true>), at <: input:0:0>",
+					error: `MINA(values:number|string...):number received invalid argument true in MINA(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "SUM",
-					error: "SUM(number...) got a wrong argument <bool true> in (SUM <float 5.50> <bool true>), at <: input:0:0>",
+					error: `SUM(values:number...):number received invalid argument true in SUM(5.50, true), at <: input:0:0>`,
 				},
 			},
 		},
@@ -826,63 +826,63 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "PRODUCT(number...) got a wrong argument <str \"hello\"> in (PRODUCT <str \"hello\">), at <: input:0:0>",
+					error: `PRODUCT(values:number...):number received invalid argument "hello" in PRODUCT("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "AVERAGE",
-					error: "AVERAGE(number...) got a wrong argument <str \"hello\"> in (AVERAGE <str \"hello\">), at <: input:0:0>",
+					error: `AVERAGE(values:number...):number received invalid argument "hello" in AVERAGE("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MAX",
-					error: "MAX(number...) got a wrong argument <str \"hello\"> in (MAX <str \"hello\">), at <: input:0:0>",
+					error: `MAX(values:number...):number received invalid argument "hello" in MAX("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MAXA",
-					error: "MAXA(number...) got a wrong argument <str \"hello\"> in (MAXA <str \"hello\">), at <: input:0:0>",
+					error: `MAXA(values:number|string...):number received invalid argument "hello" in MAXA("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "ABS",
-					error: "ABS(number) got a wrong argument <str \"hello\"> in (ABS <str \"hello\">), at <: input:0:0>",
+					error: `ABS(value:number):number received invalid argument "hello" in ABS("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(number, [number]) got a wrong argument <str \"hello\"> in (CEILING <str \"hello\">), at <: input:0:0>",
+					error: `CEILING(value:number, significance:[number]):number received invalid argument "hello" in CEILING("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(number, [number]) got a wrong argument <str \"hello\"> in (FLOOR <str \"hello\">), at <: input:0:0>",
+					error: `FLOOR(value:number, significance:[number]):number received invalid argument "hello" in FLOOR("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "ROUND",
-					error: "ROUND(number, [number]) got a wrong argument <str \"hello\"> in (ROUND <str \"hello\">), at <: input:0:0>",
+					error: `ROUND(value:number, places:[number]):number received invalid argument "hello" in ROUND("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "INT",
-					error: "INT(number) got a wrong argument <str \"hello\"> in (INT <str \"hello\">), at <: input:0:0>",
+					error: `INT(number) received invalid argument "hello" in INT("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MIN",
-					error: "MIN(number...) got a wrong argument <str \"hello\"> in (MIN <str \"hello\">), at <: input:0:0>",
+					error: `MIN(values:number...):number received invalid argument "hello" in MIN("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MINA",
-					error: "MINA(number...) got a wrong argument <str \"hello\"> in (MINA <str \"hello\">), at <: input:0:0>",
+					error: `MINA(values:number|string...):number received invalid argument "hello" in MINA("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(number, number) expected 2 arguments, but got 1 in (POWER <str \"hello\">), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "SUM",
-					error: "SUM(number...) got a wrong argument <str \"hello\"> in (SUM <str \"hello\">), at <: input:0:0>",
+					error: `SUM(values:number...):number received invalid argument "hello" in SUM("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(number, number) expected 2 arguments, but got 1 in (MOD <str \"hello\">), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(number) got a wrong argument <str \"hello\"> in (SQRT <str \"hello\">), at <: input:0:0>",
+					error: `SQRT(value:number):number received invalid argument "hello" in SQRT("hello"), at <: input:0:0>`,
 				},
 			},
 		},
@@ -896,12 +896,12 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MAXA",
-					expected: "<float 5.00>",
+					f:       "MAXA",
+					expects: "5.00",
 				},
 				{
-					f:        "MINA",
-					expected: "<float 2.00>",
+					f:       "MINA",
+					expects: "2.00",
 				},
 			},
 		},
@@ -914,12 +914,12 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MAXA",
-					expected: "<int 20>",
+					f:       "MAXA",
+					expects: "20",
 				},
 				{
-					f:        "MINA",
-					expected: "<int 10>",
+					f:       "MINA",
+					expects: "10",
 				},
 			},
 		},
@@ -932,12 +932,12 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MAXA",
-					expected: "<float 42.00>",
+					f:       "MAXA",
+					expects: "42.00",
 				},
 				{
-					f:        "MINA",
-					expected: "<float -15.00>",
+					f:       "MINA",
+					expects: "-15.00",
 				},
 			},
 		},
@@ -950,11 +950,11 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "MAXA",
-					error: "MAXA(number...) got a wrong argument <str \"not_a_number\"> in (MAXA <str \"not_a_number\"> <int 5>), at <: input:0:0>",
+					error: `MAXA(values:number|string...):number received invalid argument "not_a_number" in MAXA("not_a_number", 5), at <: input:0:0>`,
 				},
 				{
 					f:     "MINA",
-					error: "MINA(number...) got a wrong argument <str \"not_a_number\"> in (MINA <str \"not_a_number\"> <int 5>), at <: input:0:0>",
+					error: `MINA(values:number|string...):number received invalid argument "not_a_number" in MINA("not_a_number", 5), at <: input:0:0>`,
 				},
 			},
 		},
@@ -967,8 +967,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MOD",
-					expected: "<int 2>",
+					f:       "MOD",
+					expects: "2",
 				},
 			},
 		},
@@ -980,8 +980,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MOD",
-					expected: "<int -2>",
+					f:       "MOD",
+					expects: "-2",
 				},
 			},
 		},
@@ -993,8 +993,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MOD",
-					expected: "<int 2>",
+					f:       "MOD",
+					expects: "2",
 				},
 			},
 		},
@@ -1006,8 +1006,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MOD",
-					expected: "<int -2>",
+					f:       "MOD",
+					expects: "-2",
 				},
 			},
 		},
@@ -1019,8 +1019,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MOD",
-					expected: "<int 0>",
+					f:       "MOD",
+					expects: "0",
 				},
 			},
 		},
@@ -1032,8 +1032,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MOD",
-					expected: "<float 0.00>",
+					f:       "MOD",
+					expects: "0.00",
 				},
 			},
 		},
@@ -1045,8 +1045,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MOD",
-					expected: "<float 1.70>",
+					f:       "MOD",
+					expects: "1.70",
 				},
 			},
 		},
@@ -1058,8 +1058,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MOD",
-					expected: "<float 0.70>",
+					f:       "MOD",
+					expects: "0.70",
 				},
 			},
 		},
@@ -1071,8 +1071,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "MOD",
-					expected: "<int 3>",
+					f:       "MOD",
+					expects: "3",
 				},
 			},
 		},
@@ -1084,8 +1084,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "SQRT",
-					expected: "<int 5>",
+					f:       "SQRT",
+					expects: "5",
 				},
 			},
 		},
@@ -1096,8 +1096,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "SQRT",
-					expected: "<float 4.00>",
+					f:       "SQRT",
+					expects: "4.00",
 				},
 			},
 		},
@@ -1108,8 +1108,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "SQRT",
-					expected: "<int 3>",
+					f:       "SQRT",
+					expects: "3",
 				},
 			},
 		},
@@ -1120,8 +1120,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "SQRT",
-					expected: "<float 2.50>",
+					f:       "SQRT",
+					expects: "2.50",
 				},
 			},
 		},
@@ -1132,8 +1132,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "SQRT",
-					expected: "<int 0>",
+					f:       "SQRT",
+					expects: "0",
 				},
 			},
 		},
@@ -1144,8 +1144,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "SQRT",
-					expected: "<int 1>",
+					f:       "SQRT",
+					expects: "1",
 				},
 			},
 		},
@@ -1156,8 +1156,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "SQRT",
-					expected: "<int 12>",
+					f:       "SQRT",
+					expects: "12",
 				},
 			},
 		},
@@ -1168,8 +1168,8 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "SQRT",
-					expected: "<float 0.50>",
+					f:       "SQRT",
+					expects: "0.50",
 				},
 			},
 		},
@@ -1184,12 +1184,12 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "COUNT",
-					expected: "<int 2>",
+					f:       "COUNT",
+					expects: "2",
 				},
 				{
-					f:        "COUNTA",
-					expected: "<int 4>",
+					f:       "COUNTA",
+					expects: "4",
 				},
 			},
 		},
@@ -1202,12 +1202,12 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "COUNT",
-					expected: "<int 0>",
+					f:       "COUNT",
+					expects: "0",
 				},
 				{
-					f:        "COUNTA",
-					expected: "<int 3>",
+					f:       "COUNTA",
+					expects: "3",
 				},
 			},
 		},
@@ -1219,12 +1219,12 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "COUNT",
-					expected: "<int 0>",
+					f:       "COUNT",
+					expects: "0",
 				},
 				{
-					f:        "COUNTA",
-					expected: "<int 2>",
+					f:       "COUNTA",
+					expects: "2",
 				},
 			},
 		},
@@ -1239,12 +1239,12 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "COUNT",
-					expected: "<int 1>",
+					f:       "COUNT",
+					expects: "1",
 				},
 				{
-					f:        "COUNTA",
-					expected: "<int 3>",
+					f:       "COUNTA",
+					expects: "3",
 				},
 			},
 		},
@@ -1257,12 +1257,12 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "COUNT",
-					expected: "<int 0>",
+					f:       "COUNT",
+					expects: "0",
 				},
 				{
-					f:        "COUNTA",
-					expected: "<int 0>",
+					f:       "COUNTA",
+					expects: "0",
 				},
 			},
 		},
@@ -1275,12 +1275,12 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "COUNT",
-					expected: "<int 3>",
+					f:       "COUNT",
+					expects: "3",
 				},
 				{
-					f:        "COUNTA",
-					expected: "<int 3>",
+					f:       "COUNTA",
+					expects: "3",
 				},
 			},
 		},
@@ -1297,12 +1297,12 @@ func TestMathFunctions(t *testing.T) {
 			},
 			cases: []inputCase{
 				{
-					f:        "COUNT",
-					expected: "<int 4>",
+					f:       "COUNT",
+					expects: "4",
 				},
 				{
-					f:        "COUNTA",
-					expected: "<int 5>",
+					f:       "COUNTA",
+					expects: "5",
 				},
 			},
 		},
@@ -1320,7 +1320,7 @@ func TestMathFunctions(t *testing.T) {
 
 				if c.error != "" {
 					if err == nil {
-						t.Errorf("Expected error %q but got result: %v", c.error, result)
+						t.Errorf("Expected error %q got result: %v", c.error, result)
 						return
 					}
 					if err.Error() != c.error {
@@ -1330,12 +1330,12 @@ func TestMathFunctions(t *testing.T) {
 				}
 
 				if err != nil {
-					t.Errorf("Unexpected error: %v", err)
+					t.Errorf("Unexpects error: %v", err)
 					return
 				}
 
-				if result.String() != c.expected {
-					t.Errorf("Expected %s, got %s", c.expected, result.String())
+				if result.String() != c.expects {
+					t.Errorf("Expected %s, got %s", c.expects, result.String())
 				}
 			})
 		}

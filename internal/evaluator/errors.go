@@ -12,7 +12,7 @@ func ErrDivisionByZero(token lexer.Token) error {
 }
 
 func ErrUnsupportedCall(expr ast.Expression, target string) error {
-	return fmt.Errorf("wrong argument %s for %s", target, expr)
+	return fmt.Errorf("invalid argument %s for %s", target, expr)
 }
 
 func ErrCellOutOfBounds(cellRef, dimension string, index int) error {
@@ -28,11 +28,11 @@ func ErrVariableNotFound(expr ast.Expression) error {
 }
 
 func ErrUnknownExpressionType(expr ast.Expression) error {
-	return fmt.Errorf("unknown expression type: %T", expr)
+	return fmt.Errorf("unknown expression type %T", expr)
 }
 
 func ErrUnsupportedOperation(operator lexer.Token, expr ast.Expression) error {
-	return fmt.Errorf("%s is not supported for type: %s", operator, ast.TypeName(expr))
+	return fmt.Errorf("operator %s is not supported for type %s at %v", operator.Literal, ast.TypeName(expr), operator.Position)
 }
 
 func ErrUnsupportedType(receiver ast.Expression, expr ast.Expression) error {
@@ -40,19 +40,19 @@ func ErrUnsupportedType(receiver ast.Expression, expr ast.Expression) error {
 }
 
 func ErrUnsupportedBinaryOperation(operator lexer.Token, left, right ast.Expression) error {
-	return fmt.Errorf("operator %s is not supported for type: %s and %s", operator, ast.TypeName(left), ast.TypeName(right))
+	return fmt.Errorf("operator %s is not supported for type %s and %s at %v", operator.Literal, ast.TypeName(left), ast.TypeName(right), operator.Position)
 }
 
-func ErrUnsupportedPrefixOperator(operator string) error {
-	return fmt.Errorf("unsupported prefix operator: %s", operator)
+func ErrUnsupportedPrefixOperator(operator lexer.Token) error {
+	return fmt.Errorf("unsupported prefix operator %s at %v", operator.Literal, operator.Position)
 }
 
-func ErrUnsupportedOperator(operator string) error {
-	return fmt.Errorf("unsupported operator: %s", operator)
+func ErrUnsupportedOperator(operator lexer.Token) error {
+	return fmt.Errorf("unsupported operator %s at %v", operator.Literal, operator.Position)
 }
 
 func ErrFmtExpectedString(identifier lexer.Token, actualValue string) error {
-	return fmt.Errorf("fmt %s accepts only strings, but got %s", identifier, actualValue)
+	return fmt.Errorf("fmt accepts only strings, got %s at %v", actualValue, identifier.Position)
 }
 
 func ErrStatementExecution(statement string, err error) error {
