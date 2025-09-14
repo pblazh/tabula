@@ -8,7 +8,7 @@ import (
 )
 
 func TestCall(t *testing.T) {
-	t.Skip("Skipping CALL function tests - external command execution is environment-dependent")
+	t.Skip("Skipping EXEC function tests - external command execution is environment-dependent")
 	tests := []struct {
 		name     string
 		args     []ast.Expression
@@ -55,10 +55,10 @@ func TestCall(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Create a dummy CallExpression
-			token := lexer.Token{Type: lexer.IDENT, Literal: "CALL"}
+			token := lexer.Token{Type: lexer.IDENT, Literal: "EXEC"}
 			call := ast.CallExpression{Token: token}
 
-			result, err := Call("CALL(command, string...)", call, tt.args...)
+			result, err := Exec("EXEC(command, string...)", call, tt.args...)
 
 			if tt.hasError && err == nil {
 				t.Errorf("Expected error got none")
@@ -93,4 +93,3 @@ func TestCall(t *testing.T) {
 		})
 	}
 }
-

@@ -3,10 +3,13 @@ name: Test, Build, and Publish to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - "*"
+  pull_request:
+    branches:
+      - "*"
 
 jobs:
-  test-build-deploy:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,6 +23,20 @@ jobs:
 
       - name: Run Tests
         run: make test
+
+  build-deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: test
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go (if using Go)
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
 
       - name: Build Executable
         run: make build

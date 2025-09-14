@@ -11,3 +11,5 @@
 - [grade-assignment](../examples/grade-assignment/README.md)
 - [sales-calculation](../examples/sales-calculation/README.md)
 - [apartment](../examples/apartment/README.md)
+- [dates](../examples/dates/README.md)
+- [embed](../examples/embed/README.md)

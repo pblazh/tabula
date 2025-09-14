@@ -7,7 +7,7 @@ import (
 	"github.com/pblazh/tabula/internal/ast"
 )
 
-func Call(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Exec(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
 	callGuard := MakeSameTypeGuard(format, ast.IsString)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
