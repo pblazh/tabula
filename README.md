@@ -14,7 +14,7 @@ Tabula is a command-line tool that lets you transform and manipulate CSV files u
 
 ## Installation
 
-Fetch a binary for your system and put in path
+Download a binary for your system and add it to your PATH
 
 <https://pblazh.github.io/tabula/>
 

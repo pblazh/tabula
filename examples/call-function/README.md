@@ -1,21 +1,21 @@
-# CALL Function Example
+# EXEC Function Example
 
-This example demonstrates how to use the CALL function to execute external
+This example demonstrates how to use the EXEC function to execute external
 programs and integrate their output into your CSV processing.
 
-The CALL function allows you to run system commands and capture their output
+The EXEC function allows you to run system commands and capture their output
 as strings that can be used in your CSV transformations. Output from commands
 is processed to replace newlines with spaces for CSV compatibility.
 
 ## Security Notes
 
-When using the CALL function with user-provided data, be careful about:
+When using the EXEC function with user-provided data, be careful about:
 
 - Command injection vulnerabilities
 - Path traversal attacks
 - Validating input before passing to commands
 
-The CALL function is powerful but should be used responsibly, especially
+The EXEC function is powerful but should be used responsibly, especially
 when processing untrusted CSV data.
 
 ## Example Files
@@ -33,9 +33,9 @@ date,Jun 20 1975,
 ### Script
 
 ```tbl
-let C2 = CALL(A2, B2);
-let C3 = CALL(A3, B3);
-let C4 = CALL(A4, "-j", "-f", "%b %d %Y", B4, "+%A");
+let C2 = EXEC(A2, B2);
+let C3 = EXEC(A3, B3);
+let C4 = EXEC(A4, "-j", "-f", "%b %d %Y", B4, "+%A");
 ```
 
 ### Output

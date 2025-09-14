@@ -10,9 +10,9 @@ type (
 )
 
 var DispatchMap dispatchMap = dispatchMap{
-	"CALL": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
-		format := "CALL(command:string, args:string...):string"
-		return Call(format, call, values...)
+	"EXEC": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "EXEC(command:string, args:string...):string"
+		return Exec(format, call, values...)
 	},
 	// numberic functions
 	"SUM": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {

@@ -211,4 +211,3 @@ let A1 = 10;        # This will be executed first
 ```
 
 This means you can write statements in any order, and Tabula will figure out the correct execution sequence.
-
