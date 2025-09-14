@@ -486,54 +486,54 @@ func TestOperationErrors(t *testing.T) {
 		{
 			name:         "bool + int",
 			input:        `true + 5`,
-			expectsError: `operator <PLUS:+ test:1:6> is not supported for type: boolean and integer`,
+			expectsError: `operator + is not supported for type boolean and integer at test:1:6`,
 		},
 		{
 			name:         "int + bool",
 			input:        `5 + true`,
-			expectsError: `operator <PLUS:+ test:1:3> is not supported for type: integer and boolean`,
+			expectsError: `operator + is not supported for type integer and boolean at test:1:3`,
 		},
 		{
 			name:         "bool - int",
 			input:        `true - 5`,
-			expectsError: `operator <MINUS:- test:1:6> is not supported for type: boolean and integer`,
+			expectsError: `operator - is not supported for type boolean and integer at test:1:6`,
 		},
 		{
 			name:         "bool * int",
 			input:        `true * 5`,
-			expectsError: `operator <MULT:* test:1:6> is not supported for type: boolean and integer`,
+			expectsError: `operator * is not supported for type boolean and integer at test:1:6`,
 		},
 		{
 			name:         "bool / int",
 			input:        `true / 5`,
-			expectsError: `operator <DIV:/ test:1:6> is not supported for type: boolean and integer`,
+			expectsError: `operator / is not supported for type boolean and integer at test:1:6`,
 		},
 		// Type mismatch errors for comparison operations
 		{
 			name:         "int < bool",
 			input:        `5 < true`,
-			expectsError: `operator <LESS:< test:1:3> is not supported for type: integer and boolean`,
+			expectsError: `operator < is not supported for type integer and boolean at test:1:3`,
 		},
 		{
 			name:         "bool > int",
 			input:        `true > 5`,
-			expectsError: `operator <GREATER:> test:1:6> is not supported for type: boolean and integer`,
+			expectsError: `operator > is not supported for type boolean and integer at test:1:6`,
 		},
 		// Prefix operation errors
 		{
 			name:         "negation of bool",
 			input:        `-true`,
-			expectsError: `<MINUS:- test:1:1> is not supported for type: boolean`,
+			expectsError: `operator - is not supported for type boolean at test:1:1`,
 		},
 		{
 			name:         "logical not of int",
 			input:        `!5`,
-			expectsError: `<NOT:! test:1:1> is not supported for type: integer`,
+			expectsError: `operator ! is not supported for type integer at test:1:1`,
 		},
 		{
 			name:         "logical not of float",
 			input:        `!3.14`,
-			expectsError: `<NOT:! test:1:1> is not supported for type: float`,
+			expectsError: `operator ! is not supported for type float at test:1:1`,
 		},
 		// Function call errors
 		{

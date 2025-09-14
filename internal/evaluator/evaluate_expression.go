@@ -41,7 +41,7 @@ func evaluatePrefixExpression(expr ast.PrefixExpression, context map[string]stri
 	case lexer.NOT:
 		return evaluateNot(value, expr.Operator)
 	default:
-		return nil, ErrUnsupportedPrefixOperator(expr.Operator.Literal)
+		return nil, ErrUnsupportedPrefixOperator(expr.Operator)
 	}
 }
 
@@ -73,7 +73,7 @@ func evaluateInfixExpression(expr ast.InfixExpression, context map[string]string
 	case lexer.GREATER:
 		return evaluateGreaterThan(expr.Operator, left, right)
 	default:
-		return nil, ErrUnsupportedOperator(expr.Operator.Literal)
+		return nil, ErrUnsupportedOperator(expr.Operator)
 	}
 }
 

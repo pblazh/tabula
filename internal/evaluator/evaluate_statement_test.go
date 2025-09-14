@@ -122,17 +122,17 @@ func TestEvaluateStatementErrors(t *testing.T) {
 		{
 			name:          "fmt statement with integer should error",
 			statement:     "fmt result = A1;",
-			expectedError: `fmt <IDENT:result test:1:5> accepts only strings, got 5`,
+			expectedError: `fmt accepts only strings, got 5 at test:1:5`,
 		},
 		{
 			name:          "fmt statement with float should error",
 			statement:     "fmt result = B1;",
-			expectedError: `fmt <IDENT:result test:1:5> accepts only strings, got 5.50`,
+			expectedError: `fmt accepts only strings, got 5.50 at test:1:5`,
 		},
 		{
 			name:          "fmt statement with boolean should error",
 			statement:     "fmt result = C1;",
-			expectedError: `fmt <IDENT:result test:1:5> accepts only strings, got true`,
+			expectedError: `fmt accepts only strings, got true at test:1:5`,
 		},
 	}
 
