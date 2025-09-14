@@ -46,35 +46,35 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "ABS",
-					error: "ABS(value:number):number expects 1 argument, got 0 in ABS(), at <: input:0:0>",
+					error: `ABS(value:number):number expects 1 argument, got 0 in ABS(), at <: input:0:0>`,
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(value:number, significance:[number]):number expects 2 arguments, got 0 in CEILING(), at <: input:0:0>",
+					error: `CEILING(value:number, significance:[number]):number expects 2 arguments, got 0 in CEILING(), at <: input:0:0>`,
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(value:number, significance:[number]):number expects 2 arguments, got 0 in FLOOR(), at <: input:0:0>",
+					error: `FLOOR(value:number, significance:[number]):number expects 2 arguments, got 0 in FLOOR(), at <: input:0:0>`,
 				},
 				{
 					f:     "ROUND",
-					error: "ROUND(value:number, places:[number]):number expects 2 arguments, got 0 in ROUND(), at <: input:0:0>",
+					error: `ROUND(value:number, places:[number]):number expects 2 arguments, got 0 in ROUND(), at <: input:0:0>`,
 				},
 				{
 					f:     "INT",
-					error: "INT(number) expects 1 argument, got 0 in INT(), at <: input:0:0>",
+					error: `INT(number) expects 1 argument, got 0 in INT(), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(base:number, exponent:number):number expects 2 arguments, got 0 in POWER(), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 0 in POWER(), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(dividend:number, divisor:number):number expects 2 arguments, got 0 in MOD(), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 0 in MOD(), at <: input:0:0>`,
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(value:number):number expects 1 argument, got 0 in SQRT(), at <: input:0:0>",
+					error: `SQRT(value:number):number expects 1 argument, got 0 in SQRT(), at <: input:0:0>`,
 				},
 			},
 		},
@@ -131,15 +131,15 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(value:number):number received invalid argument -5 in SQRT(-5), at <: input:0:0>",
+					error: `SQRT(value:number):number received invalid argument -5 in SQRT(-5), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(-5), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(-5), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(-5), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(-5), at <: input:0:0>`,
 				},
 			},
 		},
@@ -189,35 +189,35 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "ABS",
-					error: "ABS(value:number):number expects 1 argument, got 3 in ABS(2, 3, 4), at <: input:0:0>",
+					error: `ABS(value:number):number expects 1 argument, got 3 in ABS(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(value:number, significance:[number]):number expects 2 arguments, got 3 in CEILING(2, 3, 4), at <: input:0:0>",
+					error: `CEILING(value:number, significance:[number]):number expects 2 arguments, got 3 in CEILING(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(value:number, significance:[number]):number expects 2 arguments, got 3 in FLOOR(2, 3, 4), at <: input:0:0>",
+					error: `FLOOR(value:number, significance:[number]):number expects 2 arguments, got 3 in FLOOR(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "ROUND",
-					error: "ROUND(value:number, places:[number]):number expects 2 arguments, got 3 in ROUND(2, 3, 4), at <: input:0:0>",
+					error: `ROUND(value:number, places:[number]):number expects 2 arguments, got 3 in ROUND(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "INT",
-					error: "INT(number) expects 1 argument, got 3 in INT(2, 3, 4), at <: input:0:0>",
+					error: `INT(number) expects 1 argument, got 3 in INT(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(base:number, exponent:number):number expects 2 arguments, got 3 in POWER(2, 3, 4), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 3 in POWER(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(dividend:number, divisor:number):number expects 2 arguments, got 3 in MOD(2, 3, 4), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 3 in MOD(2, 3, 4), at <: input:0:0>`,
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(value:number):number expects 1 argument, got 3 in SQRT(2, 3, 4), at <: input:0:0>",
+					error: `SQRT(value:number):number expects 1 argument, got 3 in SQRT(2, 3, 4), at <: input:0:0>`,
 				},
 			},
 		},
@@ -358,11 +358,11 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "POWER",
-					error: "POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(5.50), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(5.50), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(5.50), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(5.50), at <: input:0:0>`,
 				},
 			},
 		},
@@ -422,15 +422,15 @@ func TestMathFunctions(t *testing.T) {
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(value:number):number received invalid argument -3.70 in SQRT(-3.70), at <: input:0:0>",
+					error: `SQRT(value:number):number received invalid argument -3.70 in SQRT(-3.70), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(-3.70), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(-3.70), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(-3.70), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(-3.70), at <: input:0:0>`,
 				},
 			},
 		},
@@ -684,63 +684,63 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "PRODUCT(values:number...):number received invalid argument true in PRODUCT(true), at <: input:0:0>",
+					error: `PRODUCT(values:number...):number received invalid argument true in PRODUCT(true), at <: input:0:0>`,
 				},
 				{
 					f:     "AVERAGE",
-					error: "AVERAGE(values:number...):number received invalid argument true in AVERAGE(true), at <: input:0:0>",
+					error: `AVERAGE(values:number...):number received invalid argument true in AVERAGE(true), at <: input:0:0>`,
 				},
 				{
 					f:     "MAX",
-					error: "MAX(values:number...):number received invalid argument true in MAX(true), at <: input:0:0>",
+					error: `MAX(values:number...):number received invalid argument true in MAX(true), at <: input:0:0>`,
 				},
 				{
 					f:     "MAXA",
-					error: "MAXA(values:number|string...):number received invalid argument true in MAXA(true), at <: input:0:0>",
+					error: `MAXA(values:number|string...):number received invalid argument true in MAXA(true), at <: input:0:0>`,
 				},
 				{
 					f:     "MIN",
-					error: "MIN(values:number...):number received invalid argument true in MIN(true), at <: input:0:0>",
+					error: `MIN(values:number...):number received invalid argument true in MIN(true), at <: input:0:0>`,
 				},
 				{
 					f:     "MINA",
-					error: "MINA(values:number|string...):number received invalid argument true in MINA(true), at <: input:0:0>",
+					error: `MINA(values:number|string...):number received invalid argument true in MINA(true), at <: input:0:0>`,
 				},
 				{
 					f:     "ABS",
-					error: "ABS(value:number):number received invalid argument true in ABS(true), at <: input:0:0>",
+					error: `ABS(value:number):number received invalid argument true in ABS(true), at <: input:0:0>`,
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(value:number, significance:[number]):number received invalid argument true in CEILING(true), at <: input:0:0>",
+					error: `CEILING(value:number, significance:[number]):number received invalid argument true in CEILING(true), at <: input:0:0>`,
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(value:number, significance:[number]):number received invalid argument true in FLOOR(true), at <: input:0:0>",
+					error: `FLOOR(value:number, significance:[number]):number received invalid argument true in FLOOR(true), at <: input:0:0>`,
 				},
 				{
 					f:     "ROUND",
-					error: "ROUND(value:number, places:[number]):number received invalid argument true in ROUND(true), at <: input:0:0>",
+					error: `ROUND(value:number, places:[number]):number received invalid argument true in ROUND(true), at <: input:0:0>`,
 				},
 				{
 					f:     "INT",
-					error: "INT(number) received invalid argument true in INT(true), at <: input:0:0>",
+					error: `INT(number) received invalid argument true in INT(true), at <: input:0:0>`,
 				},
 				{
 					f:     "SUM",
-					error: "SUM(values:number...):number received invalid argument true in SUM(true), at <: input:0:0>",
+					error: `SUM(values:number...):number received invalid argument true in SUM(true), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(true), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(true), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(true), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(true), at <: input:0:0>`,
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(value:number):number received invalid argument true in SQRT(true), at <: input:0:0>",
+					error: `SQRT(value:number):number received invalid argument true in SQRT(true), at <: input:0:0>`,
 				},
 			},
 		},
@@ -753,31 +753,31 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "PRODUCT(values:number...):number received invalid argument \"hello\" in PRODUCT(5, \"hello\"), at <: input:0:0>",
+					error: `PRODUCT(values:number...):number received invalid argument "hello" in PRODUCT(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "AVERAGE",
-					error: "AVERAGE(values:number...):number received invalid argument \"hello\" in AVERAGE(5, \"hello\"), at <: input:0:0>",
+					error: `AVERAGE(values:number...):number received invalid argument "hello" in AVERAGE(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MAX",
-					error: "MAX(values:number...):number received invalid argument \"hello\" in MAX(5, \"hello\"), at <: input:0:0>",
+					error: `MAX(values:number...):number received invalid argument "hello" in MAX(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MAXA",
-					error: "MAXA(values:number|string...):number received invalid argument \"hello\" in MAXA(5, \"hello\"), at <: input:0:0>",
+					error: `MAXA(values:number|string...):number received invalid argument "hello" in MAXA(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MIN",
-					error: "MIN(values:number...):number received invalid argument \"hello\" in MIN(5, \"hello\"), at <: input:0:0>",
+					error: `MIN(values:number...):number received invalid argument "hello" in MIN(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MINA",
-					error: "MINA(values:number|string...):number received invalid argument \"hello\" in MINA(5, \"hello\"), at <: input:0:0>",
+					error: `MINA(values:number|string...):number received invalid argument "hello" in MINA(5, "hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "SUM",
-					error: "SUM(values:number...):number received invalid argument \"hello\" in SUM(5, \"hello\"), at <: input:0:0>",
+					error: `SUM(values:number...):number received invalid argument "hello" in SUM(5, "hello"), at <: input:0:0>`,
 				},
 			},
 		},
@@ -790,31 +790,31 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "PRODUCT(values:number...):number received invalid argument true in PRODUCT(5.50, true), at <: input:0:0>",
+					error: `PRODUCT(values:number...):number received invalid argument true in PRODUCT(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "AVERAGE",
-					error: "AVERAGE(values:number...):number received invalid argument true in AVERAGE(5.50, true), at <: input:0:0>",
+					error: `AVERAGE(values:number...):number received invalid argument true in AVERAGE(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "MAX",
-					error: "MAX(values:number...):number received invalid argument true in MAX(5.50, true), at <: input:0:0>",
+					error: `MAX(values:number...):number received invalid argument true in MAX(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "MAXA",
-					error: "MAXA(values:number|string...):number received invalid argument true in MAXA(5.50, true), at <: input:0:0>",
+					error: `MAXA(values:number|string...):number received invalid argument true in MAXA(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "MIN",
-					error: "MIN(values:number...):number received invalid argument true in MIN(5.50, true), at <: input:0:0>",
+					error: `MIN(values:number...):number received invalid argument true in MIN(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "MINA",
-					error: "MINA(values:number|string...):number received invalid argument true in MINA(5.50, true), at <: input:0:0>",
+					error: `MINA(values:number|string...):number received invalid argument true in MINA(5.50, true), at <: input:0:0>`,
 				},
 				{
 					f:     "SUM",
-					error: "SUM(values:number...):number received invalid argument true in SUM(5.50, true), at <: input:0:0>",
+					error: `SUM(values:number...):number received invalid argument true in SUM(5.50, true), at <: input:0:0>`,
 				},
 			},
 		},
@@ -826,63 +826,63 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "PRODUCT",
-					error: "PRODUCT(values:number...):number received invalid argument \"hello\" in PRODUCT(\"hello\"), at <: input:0:0>",
+					error: `PRODUCT(values:number...):number received invalid argument "hello" in PRODUCT("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "AVERAGE",
-					error: "AVERAGE(values:number...):number received invalid argument \"hello\" in AVERAGE(\"hello\"), at <: input:0:0>",
+					error: `AVERAGE(values:number...):number received invalid argument "hello" in AVERAGE("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MAX",
-					error: "MAX(values:number...):number received invalid argument \"hello\" in MAX(\"hello\"), at <: input:0:0>",
+					error: `MAX(values:number...):number received invalid argument "hello" in MAX("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MAXA",
-					error: "MAXA(values:number|string...):number received invalid argument \"hello\" in MAXA(\"hello\"), at <: input:0:0>",
+					error: `MAXA(values:number|string...):number received invalid argument "hello" in MAXA("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "ABS",
-					error: "ABS(value:number):number received invalid argument \"hello\" in ABS(\"hello\"), at <: input:0:0>",
+					error: `ABS(value:number):number received invalid argument "hello" in ABS("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "CEILING",
-					error: "CEILING(value:number, significance:[number]):number received invalid argument \"hello\" in CEILING(\"hello\"), at <: input:0:0>",
+					error: `CEILING(value:number, significance:[number]):number received invalid argument "hello" in CEILING("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "FLOOR",
-					error: "FLOOR(value:number, significance:[number]):number received invalid argument \"hello\" in FLOOR(\"hello\"), at <: input:0:0>",
+					error: `FLOOR(value:number, significance:[number]):number received invalid argument "hello" in FLOOR("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "ROUND",
-					error: "ROUND(value:number, places:[number]):number received invalid argument \"hello\" in ROUND(\"hello\"), at <: input:0:0>",
+					error: `ROUND(value:number, places:[number]):number received invalid argument "hello" in ROUND("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "INT",
-					error: "INT(number) received invalid argument \"hello\" in INT(\"hello\"), at <: input:0:0>",
+					error: `INT(number) received invalid argument "hello" in INT("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MIN",
-					error: "MIN(values:number...):number received invalid argument \"hello\" in MIN(\"hello\"), at <: input:0:0>",
+					error: `MIN(values:number...):number received invalid argument "hello" in MIN("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MINA",
-					error: "MINA(values:number|string...):number received invalid argument \"hello\" in MINA(\"hello\"), at <: input:0:0>",
+					error: `MINA(values:number|string...):number received invalid argument "hello" in MINA("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "POWER",
-					error: "POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER(\"hello\"), at <: input:0:0>",
+					error: `POWER(base:number, exponent:number):number expects 2 arguments, got 1 in POWER("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "SUM",
-					error: "SUM(values:number...):number received invalid argument \"hello\" in SUM(\"hello\"), at <: input:0:0>",
+					error: `SUM(values:number...):number received invalid argument "hello" in SUM("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "MOD",
-					error: "MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD(\"hello\"), at <: input:0:0>",
+					error: `MOD(dividend:number, divisor:number):number expects 2 arguments, got 1 in MOD("hello"), at <: input:0:0>`,
 				},
 				{
 					f:     "SQRT",
-					error: "SQRT(value:number):number received invalid argument \"hello\" in SQRT(\"hello\"), at <: input:0:0>",
+					error: `SQRT(value:number):number received invalid argument "hello" in SQRT("hello"), at <: input:0:0>`,
 				},
 			},
 		},
@@ -950,11 +950,11 @@ func TestMathFunctions(t *testing.T) {
 			cases: []inputCase{
 				{
 					f:     "MAXA",
-					error: "MAXA(values:number|string...):number received invalid argument \"not_a_number\" in MAXA(\"not_a_number\", 5), at <: input:0:0>",
+					error: `MAXA(values:number|string...):number received invalid argument "not_a_number" in MAXA("not_a_number", 5), at <: input:0:0>`,
 				},
 				{
 					f:     "MINA",
-					error: "MINA(values:number|string...):number received invalid argument \"not_a_number\" in MINA(\"not_a_number\", 5), at <: input:0:0>",
+					error: `MINA(values:number|string...):number received invalid argument "not_a_number" in MINA("not_a_number", 5), at <: input:0:0>`,
 				},
 			},
 		},

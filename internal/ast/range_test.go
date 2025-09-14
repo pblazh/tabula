@@ -14,31 +14,31 @@ func TestParseCell(t *testing.T) {
 	}{
 		{
 			name:   "valid uppercase cell",
-			input:  "A1",
+			input:  `A1`,
 			column: 0,
 			row:    0,
 		},
 		{
 			name:   "valid uppercase cell",
-			input:  "Z1",
+			input:  `Z1`,
 			column: 25,
 			row:    0,
 		},
 		{
 			name:   "valid lowercase cell",
-			input:  "a1",
+			input:  `a1`,
 			column: 0,
 			row:    0,
 		},
 		{
 			name:   "valid mixed case cell",
-			input:  "aB10",
+			input:  `aB10`,
 			column: 27,
 			row:    9,
 		},
 		{
 			name:   "valid multi-letter column",
-			input:  "AA123",
+			input:  `AA123`,
 			column: 26,
 			row:    122,
 		},

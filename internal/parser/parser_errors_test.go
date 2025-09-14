@@ -15,32 +15,32 @@ func TestParserErrors(t *testing.T) {
 	}{
 		{
 			name:   "missed assign value",
-			input:  "let A1 = ;",
+			input:  `let A1 = ;`,
 			output: "unexpected ; at missed assign value:1:10",
 		},
 		{
 			name:   "missed assign identifier",
-			input:  "let = 8;",
+			input:  `let = 8;`,
 			output: "expected an identifier, got = at missed assign identifier:1:5",
 		},
 		{
 			name:   "not terminated quote",
-			input:  "let x = \"9;",
+			input:  `let x = "9;`,
 			output: "Lexer error: literal not terminated at not terminated quote:1:9",
 		},
 		{
 			name:   "invalid range with variables",
-			input:  "A:B;",
+			input:  `A:B;`,
 			output: "range must contain valid cell references (like A1:B2), got A:B",
 		},
 		{
 			name:   "invalid fmt statements int",
-			input:  "fmt A1 = 1;",
+			input:  `fmt A1 = 1;`,
 			output: "expected string, got <INT:1 invalid fmt statements int:1:10>",
 		},
 		{
 			name:   "invalid fmt statements bool",
-			input:  "fmt A1 = true;",
+			input:  `fmt A1 = true;`,
 			output: "expected string, got <TRUE:true invalid fmt statements bool:1:10>",
 		},
 	}

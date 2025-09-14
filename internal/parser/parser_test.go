@@ -15,162 +15,166 @@ func TestParser(t *testing.T) {
 	}{
 		{
 			name:   "simple assign",
-			input:  "let A1 = -10;",
+			input:  `let A1 = -10;`,
 			output: "let A1 = -10;",
 		},
 		{
 			name:   "range assign",
-			input:  "let A1:A3 = 1;",
+			input:  `let A1:A3 = 1;`,
 			output: "let A1 = 1;let A2 = 1;let A3 = 1;",
 		},
 		{
 			name:   "multy values assign",
-			input:  "let A1,A3 = 1;",
+			input:  `let A1,A3 = 1;`,
 			output: "let A1 = 1;let A3 = 1;",
 		},
 		{
 			name:   "multy range assign",
-			input:  "let A1:A3, B1:b3 = 1;",
+			input:  `let A1:A3, B1:b3 = 1;`,
 			output: "let A1 = 1;let A2 = 1;let A3 = 1;let B1 = 1;let B2 = 1;let B3 = 1;",
 		},
 		{
 			name:   "mixed range values assign",
-			input:  "let a, A1:A3, B1:b3, C2, b = 1;",
+			input:  `let a, A1:A3, B1:b3, C2, b = 1;`,
 			output: "let a = 1;let A1 = 1;let A2 = 1;let A3 = 1;let B1 = 1;let B2 = 1;let B3 = 1;let C2 = 1;let b = 1;",
 		},
 		{
 			name:   "range fmt",
-			input:  "fmt A1:A3 = \"%s\";",
+			input:  `fmt A1:A3 = "%s";`,
 			output: "fmt A1 = \"%s\";fmt A2 = \"%s\";fmt A3 = \"%s\";",
 		},
 		{
 			name:   "multy values fmt",
-			input:  "fmt A1,A3 = \"%s\";",
+			input:  `fmt A1,A3 = "%s";`,
 			output: "fmt A1 = \"%s\";fmt A3 = \"%s\";",
 		},
 		{
 			name:   "multy range fmt",
-			input:  "fmt A1:A3, B1:b3 = \"%s\";",
+			input:  `fmt A1:A3, B1:b3 = "%s";`,
 			output: "fmt A1 = \"%s\";fmt A2 = \"%s\";fmt A3 = \"%s\";fmt B1 = \"%s\";fmt B2 = \"%s\";fmt B3 = \"%s\";",
 		},
 		{
 			name:   "mixed range values fmt",
-			input:  "fmt a, A1:A3, B1:b3, C2, b = \"%s\";",
+			input:  `fmt a, A1:A3, B1:b3, C2, b = "%s";`,
 			output: "fmt a = \"%s\";fmt A1 = \"%s\";fmt A2 = \"%s\";fmt A3 = \"%s\";fmt B1 = \"%s\";fmt B2 = \"%s\";fmt B3 = \"%s\";fmt C2 = \"%s\";fmt b = \"%s\";",
 		},
 		{
 			name:   "identifier",
-			input:  "something;",
+			input:  `something;`,
 			output: "something;",
 		},
 		{
 			name:   "not identifier",
-			input:  "!something;",
+			input:  `!something;`,
 			output: "!something;",
 		},
 		{
 			name:   "number",
-			input:  "10;",
+			input:  `10;`,
 			output: "10;",
 		},
 		{
 			name:   "number",
-			input:  "-10;",
+			input:  `-10;`,
 			output: "-10;",
 		},
 		{
 			name:   "true",
-			input:  "true;",
+			input:  `true;`,
 			output: "true;",
 		},
 		{
 			name:   "false",
-			input:  "false;",
+			input:  `false;`,
 			output: "false;",
 		},
 		{
 			name:   "compare with boolen",
-			input:  "3 > 5 == false;",
+			input:  `3 > 5 == false;`,
 			output: "3 > 5 == false;",
 		},
 		{
 			name:   "compare boolen",
-			input:  "true == 3 < 5;",
+			input:  `true == 3 < 5;`,
 			output: "true == 3 < 5;",
 		},
 		{
 			name:   "infix",
-			input:  "5 + 6 - 2;",
+			input:  `5 + 6 - 2;`,
 			output: "5 + 6 - 2;",
 		},
 		{
 			name:   "infix reverse precedence",
-			input:  "5 + 6 * 2;",
+			input:  `5 + 6 * 2;`,
 			output: "5 + 6 * 2;",
 		},
 		{
 			name:   "infix precedence",
-			input:  "5 / 6 + 2;",
+			input:  `5 / 6 + 2;`,
 			output: "5 / 6 + 2;",
 		},
 		{
 			name:   "multiple statements",
-			input:  "let A1 = 5.6;\nlet A2 = x;\n",
+			input:  `let A1 = 5.6;
+let A2 = x;
+`,
 			output: "let A1 = 5.60;let A2 = x;",
 		},
 		{
 			name:   "parenteces precedence",
-			input:  "(5 + 6) * 2;",
+			input:  `(5 + 6) * 2;`,
 			output: "5 + 6 * 2;",
 		},
 		{
 			name:   "call expression with no arguments",
-			input:  "SUM();",
+			input:  `SUM();`,
 			output: "SUM();",
 		},
 		{
 			name:   "call expression with one argument",
-			input:  "SUM(5);",
+			input:  `SUM(5);`,
 			output: "SUM(5);",
 		},
 		{
 			name:   "call expression with multiple numbers",
-			input:  "SUM(5, 6);",
+			input:  `SUM(5, 6);`,
 			output: "SUM(5, 6);",
 		},
 		{
 			name:   "call expression with multiple strings",
-			input:  "SUM(\"5\", \"6\");",
+			input:  `SUM("5", "6");`,
 			output: "SUM(\"5\", \"6\");",
 		},
 		{
 			name:   "cell expression",
-			input:  "a1;",
+			input:  `a1;`,
 			output: "A1;",
 		},
 		{
 			name:   "range expression",
-			input:  "a1:B1;",
+			input:  `a1:B1;`,
 			output: "[A1, B1];",
 		},
 		{
 			name:   "string expression",
-			input:  "let a = \"hello\";",
+			input:  `let a = "hello";`,
 			output: "let a = \"hello\";",
 		},
 		{
 			name:   "multiple statements",
-			input:  "let A1 = 5.6;\nlet A2 = x;\nlet A3 = sum(A1:A2);",
+			input:  `let A1 = 5.6;
+let A2 = x;
+let A3 = sum(A1:A2);`,
 			output: "let A1 = 5.60;let A2 = x;let A3 = sum(A1, A2);",
 		},
 		{
 			name:   "one statements",
-			input:  "A1",
+			input:  `A1`,
 			output: "A1;",
 		},
 		{
 			name:   "no statements",
-			input:  "",
+			input:  ``,
 			output: "",
 		},
 	}

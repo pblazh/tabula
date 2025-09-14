@@ -15,7 +15,7 @@ func TestLexer(t *testing.T) {
 	}{
 		{
 			name:  "supported tokens",
-			input: "=+-*/()%",
+			input: `=+-*/()%`,
 			expected: []Token{
 				{
 					Type:    ASSIGN,
@@ -84,7 +84,7 @@ func TestLexer(t *testing.T) {
 
 		{
 			name:  "expression",
-			input: "let A1=A2+34 * SUM(B1:B2, 9.1) % 9;",
+			input: `let A1=A2+34 * SUM(B1:B2, 9.1) % 9;`,
 			expected: []Token{
 				{
 					Type:    LET,
@@ -223,7 +223,7 @@ func TestLexer(t *testing.T) {
 
 		{
 			name:  "equal expression",
-			input: "a == b",
+			input: `a == b`,
 			expected: []Token{
 				{
 					Type:    IDENT,
@@ -251,7 +251,7 @@ func TestLexer(t *testing.T) {
 
 		{
 			name:  "not equal expression",
-			input: "a != b",
+			input: `a != b`,
 			expected: []Token{
 				{
 					Type:    IDENT,
@@ -279,7 +279,7 @@ func TestLexer(t *testing.T) {
 
 		{
 			name:  "greater equal expression",
-			input: "a >= b",
+			input: `a >= b`,
 			expected: []Token{
 				{
 					Type:    IDENT,
@@ -307,7 +307,7 @@ func TestLexer(t *testing.T) {
 
 		{
 			name:  "less equal expression",
-			input: "a <= b",
+			input: `a <= b`,
 			expected: []Token{
 				{
 					Type:    IDENT,
@@ -335,7 +335,7 @@ func TestLexer(t *testing.T) {
 
 		{
 			name:  "bool expressions",
-			input: "true false",
+			input: `true false`,
 			expected: []Token{
 				{
 					Type:    TRUE,
@@ -355,11 +355,11 @@ func TestLexer(t *testing.T) {
 		},
 		{
 			name:  "string expressions",
-			input: "\"some \\\"string\"",
+			input: `"some string"`,
 			expected: []Token{
 				{
 					Type:    STRING,
-					Literal: "\"some \\\"string\"",
+					Literal: `"some string"`,
 					Position: scanner.Position{
 						Column: 1,
 					},
@@ -368,7 +368,7 @@ func TestLexer(t *testing.T) {
 		},
 		{
 			name:  "invalid quotes",
-			input: "'somestring",
+			input: `'somestring`,
 			expected: []Token{
 				{
 					Type: ERROR,
@@ -381,7 +381,7 @@ func TestLexer(t *testing.T) {
 		},
 		{
 			name:  "unmached quote",
-			input: " \"some",
+			input: ` "some`,
 			expected: []Token{
 				{
 					Type: ERROR,

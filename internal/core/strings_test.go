@@ -54,7 +54,8 @@ func TestCONCATENATE(t *testing.T) {
 				ast.StringExpression{Value: "Line2\t"},
 				ast.StringExpression{Value: "Line3"},
 			},
-			Expected: "\"Line1\nLine2\tLine3\"",
+			Expected: `"Line1
+Line2	Line3"`,
 		},
 		{
 			Name: "string and integer",
@@ -74,28 +75,28 @@ func TestLEN(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "LEN(value:string):number expects 1 argument, got 0 in LEN(), at <: input:0:0>",
+			Error: `LEN(value:string):number expects 1 argument, got 0 in LEN(), at <: input:0:0>`,
 		},
 		{
 			Name: "simple string",
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "hello"},
 			},
-			Expected: "5",
+			Expected: `5`,
 		},
 		{
 			Name: "empty string",
 			Input: []ast.Expression{
 				ast.StringExpression{Value: ""},
 			},
-			Expected: "0",
+			Expected: `0`,
 		},
 		{
 			Name: "string with spaces",
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "  hello world  "},
 			},
-			Expected: "15",
+			Expected: `15`,
 		},
 		{
 			Name: "multiple arguments",
@@ -110,7 +111,7 @@ func TestLEN(t *testing.T) {
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 123},
 			},
-			Error: "LEN(value:string):number received invalid argument 123 in LEN(123), at <: input:0:0>",
+			Error: `LEN(value:string):number received invalid argument 123 in LEN(123), at <: input:0:0>`,
 		},
 	}
 
@@ -122,7 +123,7 @@ func TestLOWER(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "LOWER(value:string):string expects 1 argument, got 0 in LOWER(), at <: input:0:0>",
+			Error: `LOWER(value:string):string expects 1 argument, got 0 in LOWER(), at <: input:0:0>`,
 		},
 		{
 			Name: "simple string",
@@ -170,7 +171,7 @@ func TestUPPER(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "UPPER(value:string):string expects 1 argument, got 0 in UPPER(), at <: input:0:0>",
+			Error: `UPPER(value:string):string expects 1 argument, got 0 in UPPER(), at <: input:0:0>`,
 		},
 		{
 			Name: "simple string",
@@ -218,7 +219,7 @@ func TestTRIM(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "TRIM(value:string):string expects 1 argument, got 0 in TRIM(), at <: input:0:0>",
+			Error: `TRIM(value:string):string expects 1 argument, got 0 in TRIM(), at <: input:0:0>`,
 		},
 		{
 			Name: "string without spaces",
@@ -273,7 +274,7 @@ func TestEXACT(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "EXACT(a:string, b:string):boolean expects 2 arguments, got 0 in EXACT(), at <: input:0:0>",
+			Error: `EXACT(a:string, b:string):boolean expects 2 arguments, got 0 in EXACT(), at <: input:0:0>`,
 		},
 		{
 			Name: "single argument",
@@ -288,7 +289,7 @@ func TestEXACT(t *testing.T) {
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "hello"},
 			},
-			Expected: "true",
+			Expected: `true`,
 		},
 		{
 			Name: "different strings",
@@ -296,7 +297,7 @@ func TestEXACT(t *testing.T) {
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 			},
-			Expected: "false",
+			Expected: `false`,
 		},
 		{
 			Name: "case sensitive test",
@@ -304,7 +305,7 @@ func TestEXACT(t *testing.T) {
 				ast.StringExpression{Value: "Hello"},
 				ast.StringExpression{Value: "hello"},
 			},
-			Expected: "false",
+			Expected: `false`,
 		},
 		{
 			Name: "empty strings",
@@ -312,7 +313,7 @@ func TestEXACT(t *testing.T) {
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: ""},
 			},
-			Expected: "true",
+			Expected: `true`,
 		},
 		{
 			Name: "spaces matter",
@@ -320,7 +321,7 @@ func TestEXACT(t *testing.T) {
 				ast.StringExpression{Value: "hello "},
 				ast.StringExpression{Value: "hello"},
 			},
-			Expected: "false",
+			Expected: `false`,
 		},
 		{
 			Name: "too many arguments",
@@ -341,7 +342,7 @@ func TestFIND(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "FIND(what:string, where:string, [start:int]):number expects 3 arguments, got 0 in FIND(), at <: input:0:0>",
+			Error: `FIND(what:string, where:string, [start:int]):number expects 3 arguments, got 0 in FIND(), at <: input:0:0>`,
 		},
 		{
 			Name: "basic substring search",
@@ -349,7 +350,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: "hello world"},
 				ast.StringExpression{Value: "world"},
 			},
-			Expected: "6",
+			Expected: `6`,
 		},
 		{
 			Name: "substring at beginning",
@@ -357,7 +358,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: "hello world"},
 				ast.StringExpression{Value: "hello"},
 			},
-			Expected: "0",
+			Expected: `0`,
 		},
 		{
 			Name: "substring not found",
@@ -365,7 +366,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: "hello world"},
 				ast.StringExpression{Value: "xyz"},
 			},
-			Expected: "-1",
+			Expected: `-1`,
 		},
 		{
 			Name: "empty search string",
@@ -373,7 +374,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: ""},
 			},
-			Expected: "0",
+			Expected: `0`,
 		},
 		{
 			Name: "search in empty string",
@@ -381,7 +382,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: "hello"},
 			},
-			Expected: "-1",
+			Expected: `-1`,
 		},
 		{
 			Name: "both strings empty",
@@ -389,7 +390,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: ""},
 			},
-			Expected: "0",
+			Expected: `0`,
 		},
 		{
 			Name: "case sensitive search",
@@ -397,7 +398,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: "Hello World"},
 				ast.StringExpression{Value: "world"},
 			},
-			Expected: "-1",
+			Expected: `-1`,
 		},
 		{
 			Name: "with start position",
@@ -406,7 +407,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 1},
 			},
-			Expected: "6",
+			Expected: `6`,
 		},
 		{
 			Name: "start position beyond string",
@@ -415,7 +416,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 10},
 			},
-			Expected: "-1",
+			Expected: `-1`,
 		},
 		{
 			Name: "negative start position",
@@ -424,7 +425,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: "world"},
 				ast.IntExpression{Value: -1},
 			},
-			Expected: "-1",
+			Expected: `-1`,
 		},
 		{
 			Name: "wrong type for third argument",
@@ -445,7 +446,7 @@ func TestLEFT(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "LEFT(value:string, [amount:int]):string expects 2 arguments, got 0 in LEFT(), at <: input:0:0>",
+			Error: `LEFT(value:string, [amount:int]):string expects 2 arguments, got 0 in LEFT(), at <: input:0:0>`,
 		},
 		{
 			Name: "single character default",
@@ -520,7 +521,7 @@ func TestRIGHT(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "RIGHT(value:string, [amount:int]):string expects 2 arguments, got 0 in RIGHT(), at <: input:0:0>",
+			Error: `RIGHT(value:string, [amount:int]):string expects 2 arguments, got 0 in RIGHT(), at <: input:0:0>`,
 		},
 		{
 			Name: "single character default",
@@ -595,7 +596,7 @@ func TestMID(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "MID(value:string, start:int, amount:int):string expects 3 arguments, got 0 in MID(), at <: input:0:0>",
+			Error: `MID(value:string, start:int, amount:int):string expects 3 arguments, got 0 in MID(), at <: input:0:0>`,
 		},
 		{
 			Name: "basic usage",
@@ -697,7 +698,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "SUBSTITUTE(text:string, old:string, new:string, [instances:int]):string expects 4 arguments, got 0 in SUBSTITUTE(), at <: input:0:0>",
+			Error: `SUBSTITUTE(text:string, old:string, new:string, [instances:int]):string expects 4 arguments, got 0 in SUBSTITUTE(), at <: input:0:0>`,
 		},
 		{
 			Name: "basic replacement",
@@ -812,7 +813,7 @@ func TestVALUE(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: "VALUE(value:string):number expects 1 argument, got 0 in VALUE(), at <: input:0:0>",
+			Error: `VALUE(value:string):number expects 1 argument, got 0 in VALUE(), at <: input:0:0>`,
 		},
 		{
 			Name: "string input",
@@ -826,42 +827,42 @@ func TestVALUE(t *testing.T) {
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "true"},
 			},
-			Expected: "true",
+			Expected: `true`,
 		},
 		{
 			Name: "false boolean string",
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "false"},
 			},
-			Expected: "false",
+			Expected: `false`,
 		},
 		{
 			Name: "integer string",
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "7"},
 			},
-			Expected: "7",
+			Expected: `7`,
 		},
 		{
 			Name: "float string",
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "1.55"},
 			},
-			Expected: "1.55",
+			Expected: `1.55`,
 		},
 		{
 			Name: "negative integer string",
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "-42"},
 			},
-			Expected: "-42",
+			Expected: `-42`,
 		},
 		{
 			Name: "date string",
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "2025-08-17 15:39"},
 			},
-			Expected: "<2025-08-17 15:39:00>",
+			Expected: `<2025-08-17 15:39:00>`,
 		},
 		{
 			Name: "multiple arguments",
@@ -876,7 +877,7 @@ func TestVALUE(t *testing.T) {
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 42},
 			},
-			Error: "VALUE(value:string):number received invalid argument 42 in VALUE(42), at <: input:0:0>",
+			Error: `VALUE(value:string):number received invalid argument 42 in VALUE(42), at <: input:0:0>`,
 		},
 	}
 

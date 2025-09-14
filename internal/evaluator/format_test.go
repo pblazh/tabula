@@ -19,57 +19,57 @@ func TestCleanFormat(t *testing.T) {
 	}{
 		{
 			name:     "string with left alignment and width",
-			input:    "%-15s",
+			input:    `%-15s`,
 			expected: "%s",
 		},
 		{
 			name:     "string with width",
-			input:    "%9s",
+			input:    `%9s`,
 			expected: "%s",
 		},
 		{
 			name:     "float with width",
-			input:    "%9f",
+			input:    `%9f`,
 			expected: "%f",
 		},
 		{
 			name:     "float with width and precision",
-			input:    "%6.2f",
+			input:    `%6.2f`,
 			expected: "%f",
 		},
 		{
 			name:     "integer with width",
-			input:    "%5d",
+			input:    `%5d`,
 			expected: "%d",
 		},
 		{
 			name:     "integer with zero padding and width",
-			input:    "%05d",
+			input:    `%05d`,
 			expected: "%d",
 		},
 		{
 			name:     "float with plus sign, width and precision",
-			input:    "%+8.3f",
+			input:    `%+8.3f`,
 			expected: "%f",
 		},
 		{
 			name:     "format without width",
-			input:    "%s",
+			input:    `%s`,
 			expected: "%s",
 		},
 		{
 			name:     "format with only precision",
-			input:    "%.2f",
+			input:    `%.2f`,
 			expected: "%f",
 		},
 		{
 			name:     "complex format with prefix and suffix",
-			input:    "Value: %10.2f units",
+			input:    `Value: %10.2f units`,
 			expected: "Value: %f units",
 		},
 		{
 			name:     "multiple formats in string",
-			input:    "%5d %8.2f %-10s",
+			input:    `%5d %8.2f %-10s`,
 			expected: "%d %f %s",
 		},
 	}
@@ -93,112 +93,112 @@ func TestDetectPlaceholderType(t *testing.T) {
 		// Integer placeholders
 		{
 			name:     "integer decimal",
-			input:    "%d",
+			input:    `%d`,
 			expected: intPlacehoder,
 		},
 		{
 			name:     "integer octal",
-			input:    "%o",
+			input:    `%o`,
 			expected: intPlacehoder,
 		},
 		{
 			name:     "integer hexadecimal lowercase",
-			input:    "%x",
+			input:    `%x`,
 			expected: intPlacehoder,
 		},
 		{
 			name:     "integer hexadecimal uppercase",
-			input:    "%X",
+			input:    `%X`,
 			expected: intPlacehoder,
 		},
 		{
 			name:     "unsigned integer",
-			input:    "%u",
+			input:    `%u`,
 			expected: intPlacehoder,
 		},
 		{
 			name:     "integer with width",
-			input:    "%5d",
+			input:    `%5d`,
 			expected: intPlacehoder,
 		},
 		{
 			name:     "integer with flags and width",
-			input:    "%+10d",
+			input:    `%+10d`,
 			expected: intPlacehoder,
 		},
 
 		// Float placeholders
 		{
 			name:     "float f format",
-			input:    "%f",
+			input:    `%f`,
 			expected: floatPlacehoder,
 		},
 		{
 			name:     "float F format",
-			input:    "%F",
+			input:    `%F`,
 			expected: floatPlacehoder,
 		},
 		{
 			name:     "float e format",
-			input:    "%e",
+			input:    `%e`,
 			expected: floatPlacehoder,
 		},
 		{
 			name:     "float E format",
-			input:    "%E",
+			input:    `%E`,
 			expected: floatPlacehoder,
 		},
 		{
 			name:     "float g format",
-			input:    "%g",
+			input:    `%g`,
 			expected: floatPlacehoder,
 		},
 		{
 			name:     "float G format",
-			input:    "%G",
+			input:    `%G`,
 			expected: floatPlacehoder,
 		},
 		{
 			name:     "float with precision",
-			input:    "%.2f",
+			input:    `%.2f`,
 			expected: floatPlacehoder,
 		},
 		{
 			name:     "float with width and precision",
-			input:    "%8.3f",
+			input:    `%8.3f`,
 			expected: floatPlacehoder,
 		},
 
 		// Boolean placeholders
 		{
 			name:     "boolean",
-			input:    "%t",
+			input:    `%t`,
 			expected: boolPlacehoder,
 		},
 		{
 			name:     "boolean with width",
-			input:    "%5t",
+			input:    `%5t`,
 			expected: boolPlacehoder,
 		},
 		// String placeholders
 		{
 			name:     "string",
-			input:    "%s",
+			input:    `%s`,
 			expected: stringPlacehoder,
 		},
 		{
 			name:     "character",
-			input:    "%c",
+			input:    `%c`,
 			expected: stringPlacehoder,
 		},
 		{
 			name:     "string with width",
-			input:    "%10s",
+			input:    `%10s`,
 			expected: stringPlacehoder,
 		},
 		{
 			name:     "string with left alignment",
-			input:    "%-15s",
+			input:    `%-15s`,
 			expected: stringPlacehoder,
 		},
 	}

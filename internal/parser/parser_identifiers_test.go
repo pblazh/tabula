@@ -15,32 +15,32 @@ func TestParserIdentifiers(t *testing.T) {
 	}{
 		{
 			name:        "single identifier",
-			input:       "something;",
+			input:       `something;`,
 			expectedIds: []string{"something"},
 		},
 		{
 			name:        "multiple identifiers",
-			input:       "a + b;",
+			input:       `a + b;`,
 			expectedIds: []string{"a", "b"},
 		},
 		{
 			name:        "let statement identifier",
-			input:       "let x = y;",
+			input:       `let x = y;`,
 			expectedIds: []string{"x", "y"},
 		},
 		{
 			name:        "call expression",
-			input:       "SUM(a, b);",
+			input:       `SUM(a, b);`,
 			expectedIds: []string{"SUM", "a", "b"},
 		},
 		{
 			name:        "range expression",
-			input:       "a1:B2;",
+			input:       `a1:B2;`,
 			expectedIds: []string{"A1", "B2"},
 		},
 		{
 			name:        "no identifiers",
-			input:       "5 + 10;",
+			input:       `5 + 10;`,
 			expectedIds: []string{},
 		},
 	}
