@@ -11,14 +11,15 @@ func TestADDRESS(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: `ADDRESS(row:int, column:int) expected 2 arguments, but got 0 in (ADDRESS), at <: input:0:0>`,
+			Error: `ADDRESS(row:int, column:int):string expects 2 arguments, got 0 in ADDRESS(), at <: input:0:0>`,
 		},
 		{
 			Name: "single int",
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 42},
 			},
-			Error: `ADDRESS(row:int, column:int) expected 2 arguments, but got 1 in (ADDRESS <int 42>), at <: input:0:0>`,
+			Error: `ADDRESS(row:int, column:int):string expects 2 arguments, got 1 in ADDRESS(42), at <: input:0:0>`,
+			// ADDRESS(row:int, column:int):string expects 2 arguments, got 1 in ADDRESS(42), at <: input:0:0>
 		},
 		{
 			Name: "multiple ints",
@@ -27,7 +28,7 @@ func TestADDRESS(t *testing.T) {
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 3},
 			},
-			Error: `ADDRESS(row:int, column:int) expected 2 arguments, but got 3 in (ADDRESS <int 1> <int 2> <int 3>), at <: input:0:0>`,
+			Error: `ADDRESS(row:int, column:int):string expects 2 arguments, got 3 in ADDRESS(1, 2, 3), at <: input:0:0>`,
 		},
 		{
 			Name: "with string column",
@@ -35,7 +36,7 @@ func TestADDRESS(t *testing.T) {
 				ast.IntExpression{Value: 42},
 				ast.StringExpression{Value: "A"},
 			},
-			Error: `ADDRESS(row:int, column:int) got a wrong argument <str "A"> in (ADDRESS <int 42> <str "A">), at <: input:0:0>`,
+			Error: `ADDRESS(row:int, column:int):string received an invalid argument "A" in ADDRESS(42, "A"), at <: input:0:0>`,
 		},
 		{
 			Name: "happy path",
@@ -55,7 +56,7 @@ func TestROW(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: `ROW(cell:string) expected 1 argument, but got 0 in (ROW), at <: input:0:0>`,
+			Error: `ROW(cell:string):int expects 1 argument, got 0 in ROW(), at <: input:0:0>`,
 		},
 		{
 			Name: "multiple strings",
@@ -63,28 +64,28 @@ func TestROW(t *testing.T) {
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 			},
-			Error: `ROW(cell:string) expected 1 argument, but got 2 in (ROW <str "hello"> <str "world">), at <: input:0:0>`,
+			Error: `ROW(cell:string):int expects 1 argument, got 2 in ROW("hello", "world"), at <: input:0:0>`,
 		},
 		{
 			Name: "with an int column",
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 42},
 			},
-			Error: `ROW(cell:string) got a wrong argument <int 42> in (ROW <int 42>), at <: input:0:0>`,
+			Error: `ROW(cell:string):int received an invalid argument 42 in ROW(42), at <: input:0:0>`,
 		},
 		{
 			Name: "with an Identifier",
 			Input: []ast.Expression{
 				ast.IdentifierExpression{Value: "B4"},
 			},
-			Expected: `<int 4>`,
+			Expected: `4`,
 		},
 		{
 			Name: "with a Range",
 			Input: []ast.Expression{
 				ast.RangeExpression{Value: []string{"B4", "C5"}},
 			},
-			Expected: `<int 4>`,
+			Expected: `4`,
 		},
 	}
 
@@ -96,7 +97,7 @@ func TestCOLUMN(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Expression{},
-			Error: `COLUMN(cell:string) expected 1 argument, but got 0 in (COLUMN), at <: input:0:0>`,
+			Error: `COLUMN(cell:string):int expects 1 argument, got 0 in COLUMN(), at <: input:0:0>`,
 		},
 		{
 			Name: "multiple strings",
@@ -104,28 +105,28 @@ func TestCOLUMN(t *testing.T) {
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 			},
-			Error: `COLUMN(cell:string) expected 1 argument, but got 2 in (COLUMN <str "hello"> <str "world">), at <: input:0:0>`,
+			Error: `COLUMN(cell:string):int expects 1 argument, got 2 in COLUMN("hello", "world"), at <: input:0:0>`,
 		},
 		{
 			Name: "with an int column",
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 42},
 			},
-			Error: `COLUMN(cell:string) got a wrong argument <int 42> in (COLUMN <int 42>), at <: input:0:0>`,
+			Error: `COLUMN(cell:string):int received an invalid argument 42 in COLUMN(42), at <: input:0:0>`,
 		},
 		{
 			Name: "with an Identifier",
 			Input: []ast.Expression{
 				ast.IdentifierExpression{Value: "B4"},
 			},
-			Expected: `<int 2>`,
+			Expected: `2`,
 		},
 		{
 			Name: "with a Range",
 			Input: []ast.Expression{
 				ast.RangeExpression{Value: []string{"B4", "C5"}},
 			},
-			Expected: `<int 2>`,
+			Expected: `2`,
 		},
 	}
 

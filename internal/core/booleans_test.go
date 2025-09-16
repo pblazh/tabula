@@ -40,21 +40,21 @@ func TestNOT(t *testing.T) {
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "true"},
 			},
-			Error: `NOT(value:boolean):boolean received invalid argument "true" in NOT("true"), at <: input:0:0>`,
+			Error: `NOT(value:boolean):boolean received an invalid argument "true" in NOT("true"), at <: input:0:0>`,
 		},
 		{
 			Name: "integer input",
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 1},
 			},
-			Error: `NOT(value:boolean):boolean received invalid argument 1 in NOT(1), at <: input:0:0>`,
+			Error: `NOT(value:boolean):boolean received an invalid argument 1 in NOT(1), at <: input:0:0>`,
 		},
 		{
 			Name: "float input",
 			Input: []ast.Expression{
 				ast.FloatExpression{Value: 1.0},
 			},
-			Error: `NOT(value:boolean):boolean received invalid argument 1.00 in NOT(1.00), at <: input:0:0>`,
+			Error: `NOT(value:boolean):boolean received an invalid argument 1.00 in NOT(1.00), at <: input:0:0>`,
 		},
 	}
 
@@ -114,7 +114,7 @@ func TestAND(t *testing.T) {
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "false"},
 			},
-			Error: `AND(a:boolean, b:boolean):boolean received invalid argument "false" in AND(true, "false"), at <: input:0:0>`,
+			Error: `AND(a:boolean, b:boolean):boolean received an invalid argument "false" in AND(true, "false"), at <: input:0:0>`,
 		},
 	}
 
@@ -174,7 +174,7 @@ func TestOR(t *testing.T) {
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "false"},
 			},
-			Error: `OR(a:boolean, b:boolean):boolean received invalid argument "false" in OR(true, "false"), at <: input:0:0>`,
+			Error: `OR(a:boolean, b:boolean):boolean received an invalid argument "false" in OR(true, "false"), at <: input:0:0>`,
 		},
 	}
 
@@ -247,7 +247,7 @@ func TestIF(t *testing.T) {
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
 			},
-			Error: `IF(predicate:boolean, positive:any, negative:any):any received invalid argument "true" in IF("true", "yes", "no"), at <: input:0:0>`,
+			Error: `IF(predicate:boolean, positive:any, negative:any):any received an invalid argument "true" in IF("true", "yes", "no"), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",

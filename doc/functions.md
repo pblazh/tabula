@@ -830,6 +830,26 @@ let A1 = ISBLANK("text");                       # Result: false
 let A1 = ISBLANK(B1);                           # Test if B1 is blank
 ```
 
+## Lookup Functions
+
+### ADDRESS
+
+```tabula
+let x = ADDRESS(3, 2);                          # Result: "B3"
+```
+
+### COL
+
+```tabula
+let x = COL("B3");                          # Result: 2
+```
+
+### ROW
+
+```tabula
+let x = COL("B3");                          # Result: 3
+```
+
 ## Special Functions
 
 ### REL (Relative Reference)

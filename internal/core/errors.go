@@ -15,7 +15,7 @@ func ErrUnsupportedArity(format string, function ast.CallExpression, expected, g
 }
 
 func ErrUnsupportedArgument(format string, function ast.CallExpression, argument ast.Expression) error {
-	return fmt.Errorf("%s received invalid argument %s in %s, at %v", format, argument, function, function.Token)
+	return fmt.Errorf("%s received an invalid argument %s in %s, at %v", format, argument, function, function.Token)
 }
 
 func ErrUnsupportedFunction(function ast.CallExpression) error {
