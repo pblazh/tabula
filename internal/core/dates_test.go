@@ -21,9 +21,9 @@ func TestTODATE(t *testing.T) {
 				ast.StringExpression{Value: "2025-08-07"},
 			},
 			Expected: `<2025-08-07 00:00:00>`,
- 		},
- 		{
- 			Name:  "empty input",
+		},
+		{
+			Name:  "empty input",
 			Input: []ast.Expression{},
 			Error: `TODATE(layout:string, value:string):date expects 2 arguments, got 0 in TODATE(), at <: input:0:0>`,
 		},
@@ -133,7 +133,7 @@ func TestFROMDATE(t *testing.T) {
 				ast.IntExpression{Value: 2006},
 				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
 			},
-			Error: `FROMDATE(layout:string, source:date):string received invalid argument 2006 in FROMDATE(2006, <2025-08-07 13:41:55>), at <: input:0:0>`,
+			Error: `FROMDATE(layout:string, source:date):string received an invalid argument 2006 in FROMDATE(2006, <2025-08-07 13:41:55>), at <: input:0:0>`,
 		},
 		{
 			Name: "wrong second argument type",
@@ -141,7 +141,7 @@ func TestFROMDATE(t *testing.T) {
 				ast.StringExpression{Value: "2006-01-02"},
 				ast.StringExpression{Value: "2025-08-07"},
 			},
-			Error: `FROMDATE(layout:string, source:date):string received invalid argument "2025-08-07" in FROMDATE("2006-01-02", "2025-08-07"), at <: input:0:0>`,
+			Error: `FROMDATE(layout:string, source:date):string received an invalid argument "2025-08-07" in FROMDATE("2006-01-02", "2025-08-07"), at <: input:0:0>`,
 		},
 	}
 
@@ -189,7 +189,7 @@ func TestDAY(t *testing.T) {
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "2025-08-17"},
 			},
-			Error: `DAY(value:date):number received invalid argument "2025-08-17" in DAY("2025-08-17"), at <: input:0:0>`,
+			Error: `DAY(value:date):number received an invalid argument "2025-08-17" in DAY("2025-08-17"), at <: input:0:0>`,
 		},
 	}
 
@@ -237,7 +237,7 @@ func TestMONTH(t *testing.T) {
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 8},
 			},
-			Error: `MONTH(value:date):number received invalid argument 8 in MONTH(8), at <: input:0:0>`,
+			Error: `MONTH(value:date):number received an invalid argument 8 in MONTH(8), at <: input:0:0>`,
 		},
 	}
 
@@ -285,7 +285,7 @@ func TestYEAR(t *testing.T) {
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "2025"},
 			},
-			Error: `YEAR(value:date):number received invalid argument "2025" in YEAR("2025"), at <: input:0:0>`,
+			Error: `YEAR(value:date):number received an invalid argument "2025" in YEAR("2025"), at <: input:0:0>`,
 		},
 	}
 
@@ -333,7 +333,7 @@ func TestHOUR(t *testing.T) {
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 13},
 			},
-			Error: `HOUR(value:date):number received invalid argument 13 in HOUR(13), at <: input:0:0>`,
+			Error: `HOUR(value:date):number received an invalid argument 13 in HOUR(13), at <: input:0:0>`,
 		},
 	}
 
@@ -381,7 +381,7 @@ func TestMINUTE(t *testing.T) {
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 41},
 			},
-			Error: `MINUTE(value:date):number received invalid argument 41 in MINUTE(41), at <: input:0:0>`,
+			Error: `MINUTE(value:date):number received an invalid argument 41 in MINUTE(41), at <: input:0:0>`,
 		},
 	}
 
@@ -429,7 +429,7 @@ func TestSECOND(t *testing.T) {
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 55},
 			},
-			Error: `SECOND(value:date):number received invalid argument 55 in SECOND(55), at <: input:0:0>`,
+			Error: `SECOND(value:date):number received an invalid argument 55 in SECOND(55), at <: input:0:0>`,
 		},
 	}
 
@@ -477,7 +477,7 @@ func TestWEEKDAY(t *testing.T) {
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 1},
 			},
-			Error: `WEEKDAY(value:date):number received invalid argument 1 in WEEKDAY(1), at <: input:0:0>`,
+			Error: `WEEKDAY(value:date):number received an invalid argument 1 in WEEKDAY(1), at <: input:0:0>`,
 		},
 	}
 
@@ -593,7 +593,7 @@ func TestDATE(t *testing.T) {
 				ast.IntExpression{Value: 8},
 				ast.IntExpression{Value: 17},
 			},
-			Error: `DATE(year:number, month:number, day:number):date received invalid argument "2025" in DATE("2025", 8, 17), at <: input:0:0>`,
+			Error: `DATE(year:number, month:number, day:number):date received an invalid argument "2025" in DATE("2025", 8, 17), at <: input:0:0>`,
 		},
 		{
 			Name: "invalid date",
@@ -658,17 +658,17 @@ func TestDATEDIF(t *testing.T) {
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-20 13:41:55")},
 				ast.StringExpression{Value: "X"},
-            },
-            Error: `DATEDIF(start:date, end:date, unit:string):number received invalid argument "X" in DATEDIF(<2025-08-17 13:41:55>, <2025-08-20 13:41:55>, "X"), at <: input:0:0>`,
-        },
-        {
-            Name: "wrong argument type",
+			},
+			Error: `DATEDIF(start:date, end:date, unit:string):number received an invalid argument "X" in DATEDIF(<2025-08-17 13:41:55>, <2025-08-20 13:41:55>, "X"), at <: input:0:0>`,
+		},
+		{
+			Name: "wrong argument type",
 			Input: []ast.Expression{
 				ast.StringExpression{Value: "2025-08-17"},
 				ast.DateExpression{Value: parseDate("2025-08-20 13:41:55")},
 				ast.StringExpression{Value: "D"},
 			},
-			Error: `DATEDIF(start:date, end:date, unit:string):number received invalid argument "2025-08-17" in DATEDIF("2025-08-17", <2025-08-20 13:41:55>, "D"), at <: input:0:0>`,
+			Error: `DATEDIF(start:date, end:date, unit:string):number received an invalid argument "2025-08-17" in DATEDIF("2025-08-17", <2025-08-20 13:41:55>, "D"), at <: input:0:0>`,
 		},
 	}
 
@@ -727,7 +727,7 @@ func TestDAYS(t *testing.T) {
 				ast.StringExpression{Value: "2025-08-17"},
 				ast.DateExpression{Value: parseDate("2025-08-20 13:41:55")},
 			},
-			Error: `DAYS(start:date, end:date):number received invalid argument "2025-08-17" in DAYS("2025-08-17", <2025-08-20 13:41:55>), at <: input:0:0>`,
+			Error: `DAYS(start:date, end:date):number received an invalid argument "2025-08-17" in DAYS("2025-08-17", <2025-08-20 13:41:55>), at <: input:0:0>`,
 		},
 	}
 
@@ -767,7 +767,7 @@ func TestDATEVALUE(t *testing.T) {
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 20250817},
 			},
-			Error: `DATEVALUE(value:string):date received invalid argument 20250817 in DATEVALUE(20250817), at <: input:0:0>`,
+			Error: `DATEVALUE(value:string):date received an invalid argument 20250817 in DATEVALUE(20250817), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",

@@ -187,7 +187,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 			values: []ast.Expression{
 				ast.StringExpression{Value: "hello"},
 			},
-			expectsError: `TEST() received invalid argument "hello" in TEST("hello"), at <: input:0:0>`,
+			expectsError: `TEST() received an invalid argument "hello" in TEST("hello"), at <: input:0:0>`,
 		},
 		{
 			name:       "one numeric guard with boolean",
@@ -195,7 +195,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 			values: []ast.Expression{
 				ast.BooleanExpression{Value: true},
 			},
-			expectsError: `TEST() received invalid argument true in TEST(true), at <: input:0:0>`,
+			expectsError: `TEST() received an invalid argument true in TEST(true), at <: input:0:0>`,
 		},
 		{
 			name:       "two numeric guards with correct types",
@@ -213,7 +213,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 				ast.IntExpression{Value: 1},
 				ast.StringExpression{Value: "hello"},
 			},
-			expectsError: `TEST() received invalid argument "hello" in TEST(1, "hello"), at <: input:0:0>`,
+			expectsError: `TEST() received an invalid argument "hello" in TEST(1, "hello"), at <: input:0:0>`,
 		},
 		{
 			name:       "mixed type guards with correct types",
@@ -231,7 +231,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 1},
 			},
-			expectsError: `TEST() received invalid argument "hello" in TEST("hello", 1), at <: input:0:0>`,
+			expectsError: `TEST() received an invalid argument "hello" in TEST("hello", 1), at <: input:0:0>`,
 		},
 		{
 			name:       "wrong arity - too few arguments",
@@ -264,7 +264,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 			values: []ast.Expression{
 				ast.IntExpression{Value: 1},
 			},
-			expectsError: `TEST() received invalid argument 1 in TEST(1), at <: input:0:0>`,
+			expectsError: `TEST() received an invalid argument 1 in TEST(1), at <: input:0:0>`,
 		},
 	}
 

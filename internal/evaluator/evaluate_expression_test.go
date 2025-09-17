@@ -539,22 +539,22 @@ func TestOperationErrors(t *testing.T) {
 		{
 			name:         "SUM with unsupported boolean first argument",
 			input:        `SUM(true)`,
-			expectsError: `SUM(values:number...):number received invalid argument true in SUM(true), at <IDENT:SUM test:1:1>`,
+			expectsError: `SUM(values:number...):number received an invalid argument true in SUM(true), at <IDENT:SUM test:1:1>`,
 		},
 		{
 			name:         "SUM with mixed incompatible types in integer sum",
 			input:        `SUM(5, "hello")`,
-			expectsError: `SUM(values:number...):number received invalid argument "hello" in SUM(5, "hello"), at <IDENT:SUM test:1:1>`,
+			expectsError: `SUM(values:number...):number received an invalid argument "hello" in SUM(5, "hello"), at <IDENT:SUM test:1:1>`,
 		},
 		{
 			name:         "SUM with mixed incompatible types in float sum",
 			input:        `SUM(5.5, true)`,
-			expectsError: `SUM(values:number...):number received invalid argument true in SUM(5.50, true), at <IDENT:SUM test:1:1>`,
+			expectsError: `SUM(values:number...):number received an invalid argument true in SUM(5.50, true), at <IDENT:SUM test:1:1>`,
 		},
 		{
 			name:         "SUM with mixed incompatible types in string sum",
 			input:        `SUM("hello", 42)`,
-			expectsError: `SUM(values:number...):number received invalid argument "hello" in SUM("hello", 42), at <IDENT:SUM test:1:1>`,
+			expectsError: `SUM(values:number...):number received an invalid argument "hello" in SUM("hello", 42), at <IDENT:SUM test:1:1>`,
 		},
 	}
 

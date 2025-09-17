@@ -213,22 +213,22 @@
   - [ ] #32.10: Implement XOR function
   - [ ] #32.11: Implement SWITCH function
 - [ ] #33: Lookup and Reference Functions
-  - [ ] #33.1: Implement CHOOSE function
-  - [ ] #33.2: Implement COLUMN function
-  - [ ] #33.3: Implement COLUMNS function
+  - [x] #33.1: Implement ADDRESS function
+  - [x] #33.2: Implement COLUMN function
+  - [x] #33.3: Implement COLUMNS function
   - [ ] #33.4: Implement HLOOKUP function
   - [ ] #33.5: **Important** Implement INDEX function
   - [ ] #33.6: Implement INDIRECT function
   - [ ] #33.7: Implement LOOKUP function
   - [ ] #33.8: **Important** Implement MATCH function
   - [ ] #33.9: Implement OFFSET function
-  - [ ] #33.10: Implement ROW function
+  - [x] #33.10: Implement ROW function
   - [ ] #33.11: Implement ROWS function
   - [ ] #33.12: **Important** Implement VLOOKUP function
   - [ ] #33.13: Implement XLOOKUP function
   - [ ] #33.14: Implement GETPIVOTDATA function
   - [ ] #33.15: Implement HYPERLINK function
-  - [ ] #33.16: Implement ADDRESS function
+  - [ ] #33.16: Implement CHOOSE function
   - [ ] #33.17: Implement AREAS function
   - [ ] #33.18: Implement CELL function
 - [ ] #34: Statistical Functions

@@ -240,4 +240,18 @@ var DispatchMap dispatchMap = dispatchMap{
 		format := "ISBLANK(value:any):boolean"
 		return IsBlank(format, call, values...)
 	},
+
+	// Lookup functions
+	"ADDRESS": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "ADDRESS(row:int, column:int):string"
+		return Address(format, call, values...)
+	},
+	"ROW": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "ROW(cell:string):int"
+		return Row(format, call, values...)
+	},
+	"COLUMN": func(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+		format := "COLUMN(cell:string):int"
+		return Column(format, call, values...)
+	},
 }

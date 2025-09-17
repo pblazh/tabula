@@ -63,7 +63,7 @@ Line2	Line3"`,
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 42},
 			},
-			Error: `CONCATENATE(values:string...):string received invalid argument 42 in CONCATENATE("hello", 42), at <: input:0:0>`,
+			Error: `CONCATENATE(values:string...):string received an invalid argument 42 in CONCATENATE("hello", 42), at <: input:0:0>`,
 		},
 	}
 
@@ -111,7 +111,7 @@ func TestLEN(t *testing.T) {
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 123},
 			},
-			Error: `LEN(value:string):number received invalid argument 123 in LEN(123), at <: input:0:0>`,
+			Error: `LEN(value:string):number received an invalid argument 123 in LEN(123), at <: input:0:0>`,
 		},
 	}
 
@@ -434,7 +434,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "not_int"},
 			},
-			Error: `FIND(what:string, where:string, [start:int]):number received invalid argument "not_int" in FIND("hello", "world", "not_int"), at <: input:0:0>`,
+			Error: `FIND(what:string, where:string, [start:int]):number received an invalid argument "not_int" in FIND("hello", "world", "not_int"), at <: input:0:0>`,
 		},
 	}
 
@@ -793,7 +793,7 @@ func TestSUBSTITUTE(t *testing.T) {
 				ast.StringExpression{Value: "universe"},
 				ast.IntExpression{Value: -1},
 			},
-			Error: `SUBSTITUTE(text:string, old:string, new:string, [instances:int]):string received invalid argument -1 in SUBSTITUTE("hello world world", "world", "universe", -1), at <: input:0:0>`,
+			Error: `SUBSTITUTE(text:string, old:string, new:string, [instances:int]):string received an invalid argument -1 in SUBSTITUTE("hello world world", "world", "universe", -1), at <: input:0:0>`,
 		},
 		{
 			Name: "too few arguments",
@@ -877,7 +877,7 @@ func TestVALUE(t *testing.T) {
 			Input: []ast.Expression{
 				ast.IntExpression{Value: 42},
 			},
-			Error: `VALUE(value:string):number received invalid argument 42 in VALUE(42), at <: input:0:0>`,
+			Error: `VALUE(value:string):number received an invalid argument 42 in VALUE(42), at <: input:0:0>`,
 		},
 	}
 
