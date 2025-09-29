@@ -58,7 +58,7 @@ func TestNOT(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "NOT", testcases)
+	RunFunctionTest(t, "NOT", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestAND(t *testing.T) {
@@ -118,7 +118,7 @@ func TestAND(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "AND", testcases)
+	RunFunctionTest(t, "AND", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestOR(t *testing.T) {
@@ -178,7 +178,7 @@ func TestOR(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "OR", testcases)
+	RunFunctionTest(t, "OR", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestIF(t *testing.T) {
@@ -261,7 +261,7 @@ func TestIF(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "IF", testcases)
+	RunFunctionTest(t, "IF", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestTRUE(t *testing.T) {
@@ -280,7 +280,7 @@ func TestTRUE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "TRUE", testcases)
+	RunFunctionTest(t, "TRUE", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestFALSE(t *testing.T) {
@@ -299,5 +299,5 @@ func TestFALSE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "FALSE", testcases)
+	RunFunctionTest(t, "FALSE", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }

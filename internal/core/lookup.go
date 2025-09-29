@@ -71,3 +71,34 @@ func Column(format string,
 
 	return ast.IntExpression{Value: column + 1, Token: call.Token}, nil
 }
+
+func Ref(
+	context map[string]string, input [][]string, formats map[string]string,
+	format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	argsGuard := MakeExactTypesGuard(format, ast.IsString)
+	identifierErr := argsGuard(call, values...)
+	if identifierErr != nil {
+		return nil, identifierErr
+	}
+
+	identifier := values[0].(ast.StringExpression)
+	valueFormat := formats[identifier.Value]
+
+	if ast.IsCellIdentifier(identifier.Value) {
+		col, row := ast.ParseCell(identifier.Value)
+		if col >= len(input) || col >= len(input[row]) {
+			return ast.StringExpression{Value: "", Token: call.Token}, nil
+		}
+
+		return ReadValue(input[row][col], valueFormat)
+	}
+
+	value, ok := context[identifier.Value]
+	if !ok {
+		return nil, ErrUnsupportedArgument(format, call, identifier)
+	}
+
+	return ReadValue(value, valueFormat)
+}

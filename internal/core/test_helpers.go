@@ -16,11 +16,13 @@ type InfoTestCase struct {
 }
 
 // RunFunctionTest executes test cases for info functions (ISNUMBER, ISTEXT, ISLOGICAL, ISBLANK)
-func RunFunctionTest(t *testing.T, functionName string, testcases []InfoTestCase) {
+func RunFunctionTest(t *testing.T, functionName string, testcases []InfoTestCase,
+	context map[string]string, input [][]string, formats map[string]string,
+) {
 	t.Helper()
 	for _, tc := range testcases {
 		t.Run(tc.Name, func(t *testing.T) {
-			result, err := DispatchMap[functionName](ast.CallExpression{
+			result, err := DispatchMap[functionName](context, input, formats, ast.CallExpression{
 				Identifier: ast.IdentifierExpression{
 					Value: functionName,
 					Token: lexer.Token{Literal: functionName},

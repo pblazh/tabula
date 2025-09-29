@@ -481,7 +481,7 @@ func TestFunctionExamples(t *testing.T) {
 		t.Run(functionName, func(t *testing.T) {
 			for _, tc := range tests {
 				t.Run(tc.Name, func(t *testing.T) {
-					result, err := DispatchMap[functionName](ast.CallExpression{
+					result, err := DispatchMap[functionName](map[string]string{}, [][]string{}, map[string]string{}, ast.CallExpression{
 						Identifier: ast.IdentifierExpression{
 							Value: functionName,
 							Token: lexer.Token{Literal: functionName},
@@ -568,12 +568,14 @@ func TestComplexExamples(t *testing.T) {
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			result, err := DispatchMap[tc.functionName](ast.CallExpression{
-				Identifier: ast.IdentifierExpression{
-					Value: tc.functionName,
-					Token: lexer.Token{Literal: tc.functionName},
-				}, Arguments: tc.input,
-			}, tc.input...)
+			result, err := DispatchMap[tc.functionName](
+				map[string]string{}, [][]string{}, map[string]string{},
+				ast.CallExpression{
+					Identifier: ast.IdentifierExpression{
+						Value: tc.functionName,
+						Token: lexer.Token{Literal: tc.functionName},
+					}, Arguments: tc.input,
+				}, tc.input...)
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return
@@ -585,4 +587,3 @@ func TestComplexExamples(t *testing.T) {
 		})
 	}
 }
-

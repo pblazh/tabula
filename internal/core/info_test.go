@@ -66,7 +66,7 @@ func TestISNUMBER(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "ISNUMBER", testcases)
+	RunFunctionTest(t, "ISNUMBER", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestISTEXT(t *testing.T) {
@@ -128,7 +128,7 @@ func TestISTEXT(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "ISTEXT", testcases)
+	RunFunctionTest(t, "ISTEXT", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestISLOGICAL(t *testing.T) {
@@ -190,7 +190,7 @@ func TestISLOGICAL(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "ISLOGICAL", testcases)
+	RunFunctionTest(t, "ISLOGICAL", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestISBLANK(t *testing.T) {
@@ -252,5 +252,5 @@ func TestISBLANK(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "ISBLANK", testcases)
+	RunFunctionTest(t, "ISBLANK", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }

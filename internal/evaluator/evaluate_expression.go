@@ -96,7 +96,7 @@ func evaluateCallExpression(expr ast.CallExpression, context map[string]string, 
 	if !ok {
 		return nil, ErrUnsupportedFunctions(identifier)
 	}
-	return internalFunction(expr, args...)
+	return internalFunction(context, input, formats, expr, args...)
 }
 
 func evaluateRel(expr ast.CallExpression, target string, args []ast.Expression, input [][]string, formats map[string]string) (ast.Expression, error) {
@@ -123,12 +123,10 @@ func evaluateRel(expr ast.CallExpression, target string, args []ast.Expression, 
 		return nil, ErrRelOutOfBounds(expr)
 	}
 
-	newCellExpr := ast.IdentifierExpression{
+	return ast.StringExpression{
 		Token: expr.Token,
 		Value: ast.ToCell(col, row),
-	}
-
-	return evaluateCellExpression(newCellExpr, input, formats)
+	}, nil
 }
 
 func evaluateVariableExpression(expr ast.IdentifierExpression, context map[string]string, formats map[string]string) (ast.Expression, error) {
