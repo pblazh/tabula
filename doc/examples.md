@@ -6,6 +6,7 @@
 - [functions](../examples/functions/README.md)
 - [function-combinations](../examples/function-combinations/README.md)
 - [range-operations](../examples/range-operations/README.md)
+- [range-sum](../examples/range-sum/README.md)
 - [advanced-calculations](../examples/advanced-calculations/README.md)
 - [rel-function](../examples/rel-function/README.md)
 - [grade-assignment](../examples/grade-assignment/README.md)

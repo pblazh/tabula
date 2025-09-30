@@ -12,8 +12,7 @@ you can refer to Google Sheets documentation.
 Adds up numbers or ranges of cells.
 
 ```tabula
-SUM(number1, number2, ...)
-SUM(range)
+SUM(values:number...):number
 ```
 
 Examples:
@@ -29,7 +28,7 @@ let A1 = SUM(B1, C2:D2, E3);    # Mix individual cells and ranges
 Adds exactly two numbers.
 
 ```tabula
-ADD(number1, number2)
+ADD(a:number, b:number):number
 ```
 
 Example:
@@ -43,7 +42,7 @@ let A1 = ADD(5, 3);             # Result: 8
 Multiplies numbers together.
 
 ```tabula
-PRODUCT(number1, number2, ...)
+PRODUCT(values:number...):number
 ```
 
 Example:
@@ -58,8 +57,7 @@ let A1 = PRODUCT(B1:D1);        # Multiply range B1 to D1
 Calculates the arithmetic mean of numbers.
 
 ```tabula
-AVERAGE(number1, number2, ...)
-AVERAGE(range)
+AVERAGE(values:number...):number
 ```
 
 Examples:
@@ -74,7 +72,7 @@ let A1 = AVERAGE(B1:D1);        # Average of range B1 to D1
 Returns the absolute value of a number.
 
 ```tabula
-ABS(number)
+ABS(value:number):number
 ```
 
 Example:
@@ -89,7 +87,7 @@ let A1 = ABS(B1);               # Absolute value of B1
 Raises a number to a specified power.
 
 ```tabula
-POWER(base, exponent)
+POWER(base:number, exponent:number):number
 ```
 
 Example:
@@ -104,7 +102,7 @@ let A1 = POWER(B1, 2);          # Square B1
 Rounds a number up to the nearest integer or specified factor.
 
 ```tabula
-CEILING(number, factor)
+CEILING(value:number, significance:[number]):number
 ```
 
 Example:
@@ -119,7 +117,7 @@ let A1 = CEILING(15, 10);       # Result: 20
 Rounds a number down to the nearest integer or specified factor.
 
 ```tabula
-FLOOR(number, factor)
+FLOOR(value:number, significance:[number]):number
 ```
 
 Example:
@@ -134,7 +132,7 @@ let A1 = FLOOR(15, 10);         # Result: 10
 Converts a number to an integer by truncating decimal places.
 
 ```tabula
-INT(number)
+INT(value:number):number
 ```
 
 Example:
@@ -149,8 +147,7 @@ let A1 = INT(-3.2);             # Result: -3
 Returns the largest value among the arguments.
 
 ```tabula
-MAX(number1, number2, ...)
-MAX(range)
+MAX(values:number...):number
 ```
 
 Example:
@@ -165,7 +162,7 @@ let A1 = MAX(B1:D1);            # Maximum value in range B1 to D1
 Returns the largest value among the arguments, treating text as 0.
 
 ```tabula
-MAXA(value1, value2, ...)
+MAXA(values:number|string...):number
 ```
 
 Example:
@@ -180,8 +177,7 @@ let A1 = MAXA(B1:D1);           # Maximum value in range, text treated as 0
 Returns the smallest value among the arguments.
 
 ```tabula
-MIN(number1, number2, ...)
-MIN(range)
+MIN(values:number...):number
 ```
 
 Example:
@@ -196,7 +192,7 @@ let A1 = MIN(B1:D1);            # Minimum value in range B1 to D1
 Returns the smallest value among the arguments, treating text as 0.
 
 ```tabula
-MINA(value1, value2, ...)
+MINA(values:number|string...):number
 ```
 
 Example:
@@ -211,8 +207,10 @@ let A1 = MINA(B1:D1);           # Minimum value in range, text treated as 0
 Rounds a number to the nearest multiple of a specified significance.
 
 ```tabula
-ROUND(number, significance)
+ROUND(value:number, significance:[number]):number
 ```
+
+The `significance` argument is optional and defaults to 1 (rounding to the nearest integer).
 
 Example:
 
@@ -227,7 +225,7 @@ let A1 = ROUND(15, 10);         # Result: 20 (nearest 10)
 Returns the remainder after division.
 
 ```tabula
-MOD(dividend, divisor)
+MOD(dividend:number, divisor:number):number
 ```
 
 Example:
@@ -242,7 +240,7 @@ let A1 = MOD(15, 4);            # Result: 3
 Returns the square root of a number.
 
 ```tabula
-SQRT(number)
+SQRT(value:number):number
 ```
 
 Example:
@@ -259,7 +257,7 @@ let A1 = SQRT(2);               # Result: 1.414...
 Joins multiple strings together.
 
 ```tabula
-CONCATENATE(text1, text2, ...)
+CONCATENATE(values:string...):string
 ```
 
 Example:
@@ -274,7 +272,7 @@ let A1 = CONCATENATE(B1, " - ", C1);          # Join B1 and C1 with " - "
 Returns the length of a string.
 
 ```tabula
-LEN(text)
+LEN(value:string):number
 ```
 
 Example:
@@ -289,7 +287,7 @@ let A1 = LEN(B1);               # Length of text in B1
 Converts text to uppercase.
 
 ```tabula
-UPPER(text)
+UPPER(value:string):string
 ```
 
 Example:
@@ -304,7 +302,7 @@ let A1 = UPPER(B1);             # Convert B1 to uppercase
 Converts text to lowercase.
 
 ```tabula
-LOWER(text)
+LOWER(value:string):string
 ```
 
 Example:
@@ -319,7 +317,7 @@ let A1 = LOWER(B1);             # Convert B1 to lowercase
 Removes leading and trailing spaces from text.
 
 ```tabula
-TRIM(text)
+TRIM(value:string):string
 ```
 
 Example:
@@ -334,7 +332,7 @@ let A1 = TRIM(B1);              # Remove spaces from B1
 Tests whether two strings are exactly the same.
 
 ```tabula
-EXACT(text1, text2)
+EXACT(a:string, b:string):boolean
 ```
 
 Example:
@@ -350,7 +348,7 @@ let A1 = EXACT(B1, C1);             # Compare B1 and C1
 Returns the position of one string within another string.
 
 ```tabula
-FIND(within_text, find_text, start_num)
+FIND(where:string, what:string, [start:int]):number
 ```
 
 Example:
@@ -365,7 +363,7 @@ let A1 = FIND("Hello World", "World"); # Result: 6
 Returns the leftmost characters from a string.
 
 ```tabula
-LEFT(text, num_chars)
+LEFT(value:string, [amount:int]):string
 ```
 
 Example:
@@ -380,7 +378,7 @@ let A1 = LEFT(B1, 3);               # First 3 characters of B1
 Returns the rightmost characters from a string.
 
 ```tabula
-RIGHT(text, num_chars)
+RIGHT(value:string, [amount:int]):string
 ```
 
 Example:
@@ -395,7 +393,7 @@ let A1 = RIGHT(B1, 3);              # Last 3 characters of B1
 Returns characters from the middle of a string.
 
 ```tabula
-MID(text, start_num, num_chars)
+MID(value:string, start:int, amount:int):string
 ```
 
 Example:
@@ -410,7 +408,7 @@ let A1 = MID(B1, 2, 3);             # 3 chars starting from position 2
 Replaces occurrences of old text with new text in a string.
 
 ```tabula
-SUBSTITUTE(text, old_text, new_text, instance_num)
+SUBSTITUTE(text:string, old:string, new:string, [instances:int]):string
 ```
 
 Example:
@@ -425,7 +423,7 @@ let A1 = SUBSTITUTE("Hello World", "o", "0", 1); # Result: "Hell0 World"
 Converts text that represents a number to a number.
 
 ```tabula
-VALUE(text)
+VALUE(value:string):number
 ```
 
 Example:
@@ -442,7 +440,7 @@ let A1 = VALUE("45.67");            # Result: 45.67
 Returns one value if a condition is true, another if false.
 
 ```tabula
-IF(condition, value_if_true, value_if_false)
+IF(predicate:boolean, positive:any, negative:any):any
 ```
 
 Examples:
@@ -458,7 +456,7 @@ let A1 = IF(C1 > 90, "A", IF(C1 > 80, "B", "C")); # Nested conditions
 Returns true if all conditions are true.
 
 ```tabula
-AND(condition1, condition2)
+AND(a:boolean, b:boolean):boolean
 ```
 
 Example:
@@ -473,7 +471,7 @@ let A1 = AND(B1 == "Yes", C1 > 10); # Multiple condition types
 Returns true if any condition is true.
 
 ```tabula
-OR(condition1, condition2)
+OR(a:boolean, b:boolean):boolean
 ```
 
 Example:
@@ -488,7 +486,7 @@ let A1 = OR(B1 == "", C1 == "");   # True if either is empty
 Returns the opposite of a logical value.
 
 ```tabula
-NOT(condition)
+NOT(value:boolean):boolean
 ```
 
 Example:
@@ -503,7 +501,7 @@ let A1 = NOT(B1 == "");             # True if B1 is NOT empty
 Returns the logical value TRUE.
 
 ```tabula
-TRUE()
+TRUE():boolean
 ```
 
 Example:
@@ -517,7 +515,7 @@ let A1 = TRUE();                    # Result: true
 Returns the logical value FALSE.
 
 ```tabula
-FALSE()
+FALSE():boolean
 ```
 
 Example:
@@ -533,7 +531,7 @@ let A1 = FALSE();                   # Result: false
 Converts a string to a date using a specified format.
 
 ```tabula
-TODATE(layout, value)
+TODATE(layout:string, value:string):date
 ```
 
 Example:
@@ -548,7 +546,7 @@ let A1 = TODATE("01/02/2006", "12/25/2023");     # Different format
 Converts a date to a string using a specified format.
 
 ```tabula
-FROMDATE(layout, date)
+FROMDATE(layout:string, source:date):string
 ```
 
 Example:
@@ -563,7 +561,7 @@ let A1 = FROMDATE("January 2, 2006", B1);        # Custom format
 Returns the day of the month from a date.
 
 ```tabula
-DAY(date)
+DAY(value:date):number
 ```
 
 Example:
@@ -577,7 +575,7 @@ let A1 = DAY(TODATE("2006-01-02", "2023-12-25")); # Result: 25
 Returns the hour from a date/time.
 
 ```tabula
-HOUR(date)
+HOUR(value:date):number
 ```
 
 Example:
@@ -591,7 +589,7 @@ let A1 = HOUR(NOW());                            # Current hour
 Returns the minute from a date/time.
 
 ```tabula
-MINUTE(date)
+MINUTE(value:date):number
 ```
 
 Example:
@@ -605,7 +603,7 @@ let A1 = MINUTE(NOW());                          # Current minute
 Returns the month from a date.
 
 ```tabula
-MONTH(date)
+MONTH(value:date):number
 ```
 
 Example:
@@ -619,7 +617,7 @@ let A1 = MONTH(TODATE("2006-01-02", "2023-12-25")); # Result: 12
 Returns the second from a date/time.
 
 ```tabula
-SECOND(date)
+SECOND(value:date):number
 ```
 
 Example:
@@ -633,7 +631,7 @@ let A1 = SECOND(NOW());                          # Current second
 Returns the year from a date.
 
 ```tabula
-YEAR(date)
+YEAR(value:date):number
 ```
 
 Example:
@@ -647,7 +645,7 @@ let A1 = YEAR(TODATE("2006-01-02", "2023-12-25")); # Result: 2023
 Returns the day of the week from a date (1=Sunday, 7=Saturday).
 
 ```tabula
-WEEKDAY(date)
+WEEKDAY(value:date):number
 ```
 
 Example:
@@ -661,7 +659,7 @@ let A1 = WEEKDAY(TODATE("2006-01-02", "2023-12-25")); # Day of week
 Returns the current date and time.
 
 ```tabula
-NOW()
+NOW():date
 ```
 
 Example:
@@ -675,7 +673,7 @@ let A1 = NOW();                                  # Current date/time
 Creates a date from year, month, and day values.
 
 ```tabula
-DATE(year, month, day)
+DATE(year:number, month:number, day:number):date
 ```
 
 Example:
@@ -690,7 +688,7 @@ let A1 = DATE(B1, C1, D1);                      # Use cell values
 Calculates the difference between two dates in specified units.
 
 ```tabula
-DATEDIF(start_date, end_date, unit)
+DATEDIF(start:date, end:date, unit:string):number
 ```
 
 Example:
@@ -705,7 +703,7 @@ let A1 = DATEDIF(B1, C1, "M");                  # Months difference
 Returns the number of days between two dates.
 
 ```tabula
-DAYS(start_date, end_date)
+DAYS(start:date, end:date):number
 ```
 
 Example:
@@ -720,7 +718,7 @@ let A1 = DAYS(B1, C1);                          # Days between B1 and C1
 Converts a date string to a date value.
 
 ```tabula
-DATEVALUE(date_text)
+DATEVALUE(value:string):date
 ```
 
 Example:
@@ -737,8 +735,7 @@ let A1 = DATEVALUE(B1);                         # Convert B1 string to date
 Counts the number of numeric values in a range.
 
 ```tabula
-COUNT(value1, value2, ...)
-COUNT(range)
+COUNT(values:any...):number
 ```
 
 Example:
@@ -753,8 +750,7 @@ let A1 = COUNT(B1:D1);                          # Count numbers in range
 Counts the number of non-empty values in a range.
 
 ```tabula
-COUNTA(value1, value2, ...)
-COUNTA(range)
+COUNTA(values:any...):number
 ```
 
 Example:
@@ -771,7 +767,7 @@ let A1 = COUNTA(B1:D1);                         # Count non-empty cells
 Tests whether a value is a number.
 
 ```tabula
-ISNUMBER(value)
+ISNUMBER(value:any):boolean
 ```
 
 Example:
@@ -787,7 +783,7 @@ let A1 = ISNUMBER(B1);                          # Test B1
 Tests whether a value is text.
 
 ```tabula
-ISTEXT(value)
+ISTEXT(value:any):boolean
 ```
 
 Example:
@@ -803,7 +799,7 @@ let A1 = ISTEXT(B1);                            # Test B1
 Tests whether a value is a logical value (true/false).
 
 ```tabula
-ISLOGICAL(value)
+ISLOGICAL(value:any):boolean
 ```
 
 Example:
@@ -819,7 +815,7 @@ let A1 = ISLOGICAL(B1);                         # Test B1
 Tests whether a value is empty or blank.
 
 ```tabula
-ISBLANK(value)
+ISBLANK(value:any):boolean
 ```
 
 Example:
@@ -834,20 +830,44 @@ let A1 = ISBLANK(B1);                           # Test if B1 is blank
 
 ### ADDRESS
 
+Returns a cell reference as a string.
+
+```tabula
+ADDRESS(row:int, column:int):string
+```
+
+Example:
+
 ```tabula
 let x = ADDRESS(3, 2);                          # Result: "B3"
 ```
 
-### COL
+### COLUMN
+
+Returns the column number of a specified cell.
 
 ```tabula
-let x = COL("B3");                          # Result: 2
+COLUMN(cell:string):int
+```
+
+Example:
+
+```tabula
+let x = COLUMN("B3");                          # Result: 2
 ```
 
 ### ROW
 
+Returns the row number of a specified cell.
+
 ```tabula
-let x = COL("B3");                          # Result: 3
+ROW(cell:string):int
+```
+
+Example:
+
+```tabula
+let x = ROW("B3");                          # Result: 3
 ```
 
 ### RANGE
@@ -855,17 +875,52 @@ let x = COL("B3");                          # Result: 3
 Takes two cell references and returns a range
 
 ```tabula
+RANGE(a:string, b:string):range
+```
+
+Example:
+
+```tabula
 let x = RANGE(B4, C5);                          # Result: [B4, C4, B5, C5]
 ```
 
 ## Special Functions
+
+### REF (Cell Reference)
+
+The `REF` function takes a cell reference as a string and returns the value of that cell. This is especially useful for dynamically accessing cell values, often in combination with the `REL` function.
+
+```tabula
+REF(cell:string):any
+```
+
+The `cell_reference` is a string representing a cell, like `"A1"`, `"B2"`, etc. The function returns the value of the specified cell, which can be of any type (number, string, boolean).
+
+Examples:
+
+```tabula
+let A1 = REF("B1");              # A1 gets the value of B1
+let C1 = REF("D2") + 10;         # C1 gets the value of D2 plus 10
+```
+
+The real power of `REF` is unleashed when used with `REL` to create dynamic, relative references. `REL` calculates a new cell address as a string, and `REF` retrieves the value from that address.
+
+```tabula
+# In cell B2, REL(-1, 0) resolves to \"A2\". REF then gets the value of A2.
+let B2 = REF(REL(-1, 0));
+
+# Sum the values of the cell to the left and the cell above.
+let C3 = REF(REL(-1, 0)) + REF(REL(0, -1));
+```
+
+This allows you to define formulas that are position-independent and can be applied across a range of cells to perform calculations based on their neighbors.
 
 ### REL (Relative Reference)
 
 REL creates relative cell references based on the target cell being assigned to.
 
 ```tabula
-REL(column_offset, row_offset)
+REL(column_offset:int, row_offset:int): string
 ```
 
 The REL function calculates a cell reference relative to the target cell.
@@ -875,24 +930,24 @@ and rows (positive = down, negative = up) to move from the target cell.
 Examples:
 
 ```tabula
-let A1 = REL(1, 0);              # References B1 (1 column right, same row)
-let B2 = REL(-1, 0);             # References A2 (1 column left, same row)
-let C3 = REL(0, -1);             # References C2 (same column, 1 row up)
-let D4 = REL(2, 1);              # References F5 (2 columns right, 1 row down)
+let A1 = REL(1, 0);              # "B1" (1 column right, same row)
+let B2 = REL(-1, 0);             # "A2" (1 column left, same row)
+let C3 = REL(0, -1);             # "C2" (same column, 1 row up)
+let D4 = REL(2, 1);              # "F5" (2 columns right, 1 row down)
 ```
 
-REL can be used in arithmetic expressions and nested function calls:
+REL can be used in arithmetic expressions and nested function calls when combined with REF:
 
 ```tabula
-let A1 = REL(1, 0) + REL(0, 1);           # Sum of B1 and A2
-let B1 = SUM(REL(-1, 0), REL(1, 0));      # Sum of A1 and C1
-let C1 = IF(REL(0, 1) > 10, REL(-1, 0), 0); # Conditional with relative refs
+let A1 = REF(REL(1, 0)) + REF(REL(0, 1);           # Sum of B1 and A2
+let B1 = SUM(REL(-1, 0)), REF(REL(1, 0)));      # Sum of A1 and C1
+let C1 = IF(REF(REL(0, 1)) > 10, REF(REL(-1, 0)), 0); # Conditional with relative refs
 ```
 
 REL with arithmetic expressions:
 
 ```tabula
-let A1 = REL(SUM(1 , 1), 2 - 2);      # Same as REL(2, 0) - references C1
+let A1 = REL(SUM(1 , 1), 2 - 2); # Same as REL(2, 0) - references C1
 let B1 = REL(3 / 3, 4 / 2);      # Same as REL(1, 2) - references C3
 ```
 
@@ -906,7 +961,7 @@ Example of calculating running sum using REL:
 # 4,4,0
 
 # Program:
-let B1:B4 = REL(-1, 0) + REL(-2, 0);
+let B1:B4 = REF(REL(-1, 0)) + REF(REL(-2, 0));
 
 # Result:
 # 1,1,2
@@ -926,7 +981,7 @@ Important notes:
 EXEC executes external programs and returns their stdout output as a string.
 
 ```tabula
-EXEC(command, argument1, argument2, ...)
+EXEC(command:string, args:string...):string
 ```
 
 The first argument is the command name, and subsequent arguments are passed
