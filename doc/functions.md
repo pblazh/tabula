@@ -850,6 +850,14 @@ let x = COL("B3");                          # Result: 2
 let x = COL("B3");                          # Result: 3
 ```
 
+### RANGE
+
+Takes two cell references and returns a range
+
+```tabula
+let x = RANGE(B4, C5);                          # Result: [B4, C4, B5, C5]
+```
+
 ## Special Functions
 
 ### REL (Relative Reference)

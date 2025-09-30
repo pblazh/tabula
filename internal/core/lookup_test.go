@@ -198,3 +198,46 @@ func TestREF(t *testing.T) {
 
 	RunFunctionTest(t, "REF", testcases, context, input, formats)
 }
+
+func TestRANGE(t *testing.T) {
+	testcases := []InfoTestCase{
+		{
+			Name:  "empty input",
+			Input: []ast.Expression{},
+			Error: `RANGE(a:string, b:string):range expects 2 arguments, got 0 in RANGE(), at <: input:0:0>`,
+		},
+		{
+			Name: "multiple strings",
+			Input: []ast.Expression{
+				ast.StringExpression{Value: "hello"},
+			},
+			Error: `RANGE(a:string, b:string):range expects 2 arguments, got 1 in RANGE("hello"), at <: input:0:0>`,
+		},
+		{
+			Name: "with an int column",
+			Input: []ast.Expression{
+				ast.IntExpression{Value: 42},
+				ast.IntExpression{Value: 24},
+			},
+			Error: `RANGE(a:string, b:string):range received an invalid argument 42 in RANGE(42, 24), at <: input:0:0>`,
+		},
+		{
+			Name: "with a variable",
+			Input: []ast.Expression{
+				ast.StringExpression{Value: "x"},
+				ast.StringExpression{Value: "C5"},
+			},
+			Error: `RANGE(a:string, b:string):range received an invalid argument "x" in RANGE("x", "C5"), at <: input:0:0>`,
+		},
+		{
+			Name: "with a Range",
+			Input: []ast.Expression{
+				ast.StringExpression{Value: "B4"},
+				ast.StringExpression{Value: "C5"},
+			},
+			Expected: `[B4, C4, B5, C5]`,
+		},
+	}
+
+	RunFunctionTest(t, "RANGE", testcases, map[string]string{}, [][]string{}, map[string]string{})
+}

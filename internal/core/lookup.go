@@ -102,3 +102,33 @@ func Ref(
 
 	return ReadValue(value, valueFormat)
 }
+
+func Range(
+	context map[string]string, input [][]string, formats map[string]string,
+	format string,
+	call ast.CallExpression, values ...ast.Expression,
+) (ast.Expression, error) {
+	guard := MakeExactTypesGuard(format, ast.IsString, ast.IsString)
+
+	err := guard(call, values...)
+	if err != nil {
+		return nil, err
+	}
+
+	a := values[0].(ast.StringExpression)
+	b := values[1].(ast.StringExpression)
+
+	if !ast.IsCellIdentifier(a.Value) {
+		return nil, ErrUnsupportedArgument(format, call, a)
+	}
+	if !ast.IsCellIdentifier(b.Value) {
+		return nil, ErrUnsupportedArgument(format, call, b)
+	}
+
+	cells, err := ast.ExpandRange(a.Value, b.Value)
+	if err != nil {
+		return nil, err
+	}
+
+	return ast.RangeExpression{Value: cells, Token: call.Token}, nil
+}

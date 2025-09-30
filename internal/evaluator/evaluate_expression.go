@@ -13,7 +13,7 @@ func EvaluateExpression(expr ast.Expression, context map[string]string, input []
 		return node, nil
 	case ast.IdentifierExpression:
 		if ast.IsCellIdentifier(node.Value) {
-			return evaluateCellExpression(node, input, formats)
+			return evaluateCellExpression(node.Value, input, formats)
 		}
 		return evaluateVariableExpression(node, context, formats)
 	case ast.PrefixExpression:
@@ -84,7 +84,21 @@ func evaluateCallExpression(expr ast.CallExpression, context map[string]string, 
 		if err != nil {
 			return nil, err
 		}
-		args = append(args, evaluated)
+
+		if ast.IsRange(evaluated) {
+			r := evaluated.(ast.RangeExpression)
+			var expanded []ast.Expression
+			for _, cell := range r.Value {
+				val, err := evaluateCellExpression(cell, input, formats)
+				if err != nil {
+					return nil, err
+				}
+				expanded = append(expanded, val)
+			}
+			args = append(args, expanded...)
+		} else {
+			args = append(args, evaluated)
+		}
 	}
 
 	identifier := expr.Identifier.String()
@@ -141,8 +155,8 @@ func evaluateVariableExpression(expr ast.IdentifierExpression, context map[strin
 }
 
 // evaluateCellExpression evaluates a cell reference (like A1, B2) and returns the value from the CSV input
-func evaluateCellExpression(expr ast.IdentifierExpression, input [][]string, formats map[string]string) (ast.Expression, error) {
-	cellRef := expr.Value
+func evaluateCellExpression(cellRef string, input [][]string, formats map[string]string) (ast.Expression, error) {
+	// cellRef := expr.Value
 	col, row := ast.ParseCell(cellRef)
 
 	// Check bounds
@@ -168,7 +182,7 @@ func EvaluateRangeExpression(expr ast.RangeExpression, input [][]string, formats
 	result := make([]ast.Expression, len(expr.Value))
 
 	for i, cell := range cells {
-		res, err := evaluateCellExpression(cell, input, formats)
+		res, err := evaluateCellExpression(cell.Value, input, formats)
 		if err != nil {
 			return nil, err
 		}

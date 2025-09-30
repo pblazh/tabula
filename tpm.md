@@ -232,6 +232,7 @@
   - [ ] #33.17: Implement AREAS function
   - [ ] #33.18: Implement CELL function
   - [x] #33.19: Implement REF function
+  - [x] #33.19: Implement RANGE function
 - [ ] #34: Statistical Functions
   - [ ] #34.1: Implement AVEDEV function
   - [ ] #34.2: Implement CORREL function
