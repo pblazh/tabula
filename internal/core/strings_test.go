@@ -67,7 +67,7 @@ Line2	Line3"`,
 		},
 	}
 
-	RunFunctionTest(t, "CONCATENATE", testcases)
+	RunFunctionTest(t, "CONCATENATE", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestLEN(t *testing.T) {
@@ -115,7 +115,7 @@ func TestLEN(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "LEN", testcases)
+	RunFunctionTest(t, "LEN", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestLOWER(t *testing.T) {
@@ -163,7 +163,7 @@ func TestLOWER(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "LOWER", testcases)
+	RunFunctionTest(t, "LOWER", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestUPPER(t *testing.T) {
@@ -211,7 +211,7 @@ func TestUPPER(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "UPPER", testcases)
+	RunFunctionTest(t, "UPPER", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestTRIM(t *testing.T) {
@@ -266,7 +266,7 @@ func TestTRIM(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "TRIM", testcases)
+	RunFunctionTest(t, "TRIM", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestEXACT(t *testing.T) {
@@ -334,7 +334,7 @@ func TestEXACT(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "EXACT", testcases)
+	RunFunctionTest(t, "EXACT", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestFIND(t *testing.T) {
@@ -438,7 +438,7 @@ func TestFIND(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "FIND", testcases)
+	RunFunctionTest(t, "FIND", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestLEFT(t *testing.T) {
@@ -513,7 +513,7 @@ func TestLEFT(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "LEFT", testcases)
+	RunFunctionTest(t, "LEFT", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestRIGHT(t *testing.T) {
@@ -588,7 +588,7 @@ func TestRIGHT(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "RIGHT", testcases)
+	RunFunctionTest(t, "RIGHT", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestMID(t *testing.T) {
@@ -690,7 +690,7 @@ func TestMID(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "MID", testcases)
+	RunFunctionTest(t, "MID", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestSUBSTITUTE(t *testing.T) {
@@ -805,7 +805,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "SUBSTITUTE", testcases)
+	RunFunctionTest(t, "SUBSTITUTE", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestVALUE(t *testing.T) {
@@ -881,5 +881,5 @@ func TestVALUE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "VALUE", testcases)
+	RunFunctionTest(t, "VALUE", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }

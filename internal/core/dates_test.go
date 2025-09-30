@@ -77,7 +77,7 @@ func TestTODATE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "TODATE", testcases)
+	RunFunctionTest(t, "TODATE", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestFROMDATE(t *testing.T) {
@@ -145,7 +145,7 @@ func TestFROMDATE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "FROMDATE", testcases)
+	RunFunctionTest(t, "FROMDATE", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestDAY(t *testing.T) {
@@ -193,7 +193,7 @@ func TestDAY(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "DAY", testcases)
+	RunFunctionTest(t, "DAY", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestMONTH(t *testing.T) {
@@ -241,7 +241,7 @@ func TestMONTH(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "MONTH", testcases)
+	RunFunctionTest(t, "MONTH", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestYEAR(t *testing.T) {
@@ -289,7 +289,7 @@ func TestYEAR(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "YEAR", testcases)
+	RunFunctionTest(t, "YEAR", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestHOUR(t *testing.T) {
@@ -337,7 +337,7 @@ func TestHOUR(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "HOUR", testcases)
+	RunFunctionTest(t, "HOUR", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestMINUTE(t *testing.T) {
@@ -385,7 +385,7 @@ func TestMINUTE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "MINUTE", testcases)
+	RunFunctionTest(t, "MINUTE", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestSECOND(t *testing.T) {
@@ -433,7 +433,7 @@ func TestSECOND(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "SECOND", testcases)
+	RunFunctionTest(t, "SECOND", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestWEEKDAY(t *testing.T) {
@@ -481,7 +481,7 @@ func TestWEEKDAY(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "WEEKDAY", testcases)
+	RunFunctionTest(t, "WEEKDAY", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestNOW(t *testing.T) {
@@ -504,7 +504,7 @@ func TestNOW(t *testing.T) {
 	for _, tc := range testcases {
 		t.Run(tc.Name, func(t *testing.T) {
 			if tc.Error != "" {
-				RunFunctionTest(t, "NOW", []InfoTestCase{tc})
+				RunFunctionTest(t, "NOW", []InfoTestCase{tc}, map[string]string{}, [][]string{}, map[string]string{})
 				return
 			}
 
@@ -512,7 +512,7 @@ func TestNOW(t *testing.T) {
 			call := ast.CallExpression{
 				Identifier: ast.IdentifierExpression{Value: "NOW"},
 			}
-			result, err := DispatchMap["NOW"](call, tc.Input...)
+			result, err := DispatchMap["NOW"](map[string]string{}, [][]string{}, map[string]string{}, call, tc.Input...)
 			if err != nil {
 				t.Errorf("Unexpects error: %v", err)
 				return
@@ -606,7 +606,7 @@ func TestDATE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "DATE", testcases)
+	RunFunctionTest(t, "DATE", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestDATEDIF(t *testing.T) {
@@ -672,7 +672,7 @@ func TestDATEDIF(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "DATEDIF", testcases)
+	RunFunctionTest(t, "DATEDIF", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestDAYS(t *testing.T) {
@@ -731,7 +731,7 @@ func TestDAYS(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "DAYS", testcases)
+	RunFunctionTest(t, "DAYS", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
 
 func TestDATEVALUE(t *testing.T) {
@@ -779,5 +779,5 @@ func TestDATEVALUE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "DATEVALUE", testcases)
+	RunFunctionTest(t, "DATEVALUE", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }

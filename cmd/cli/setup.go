@@ -132,7 +132,7 @@ func setupScriptReader(config *Config, embeded string) (io.Reader, error) {
 // readComments extracts comments and embedded script references and embedded script from CSV content
 func readComments(base string, f io.Reader) (string, map[int]string, error) {
 	const (
-		commentPrefix    = "#"
+		commentPrefix     = "#"
 		tabulaFilePrefix  = "#tabulafile:"
 		tabulaEmbedPrefix = "#tabula:"
 	)

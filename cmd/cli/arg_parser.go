@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -51,6 +52,14 @@ type Config struct {
 	Output  string
 	Align   bool
 	Sort    bool
+}
+
+func (c *Config) String() string {
+	out, err := json.Marshal(c)
+	if err != nil {
+		return err.Error()
+	}
+	return string(out)
 }
 
 func parseArgs() (*Config, error) {

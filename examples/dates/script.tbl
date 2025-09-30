@@ -1,9 +1,9 @@
 // With a default format
-let B2:B5 = REL(-1, 0);
+let B2:B5 = REF(REL(-1, 0));
 
 // With a custom format
 fmt C2:C4 = "01/02/2006 03:04PM";
-let C2:C4 = REL(-1, 0);
+let C2:C4 = REF(REL(-1, 0));
 
 // Manual formating
 let C5 = FROMDATE("01/02/2006 03:04PM", TODATE("02/01 06 AD", A5));

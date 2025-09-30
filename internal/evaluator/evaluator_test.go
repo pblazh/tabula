@@ -82,7 +82,7 @@ func TestEvaluate(t *testing.T) {
 		{
 			name: "REL function",
 			program: `
-			let C1:C2 = SUM(REL(-1,0), REL(-2,0));
+			let C1:C2 = SUM(REF(REL(-1,0)), REF(REL(-2,0)));
 			`,
 			input: [][]string{
 				{"1", "2", "0"},

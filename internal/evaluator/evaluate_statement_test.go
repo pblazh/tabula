@@ -176,7 +176,7 @@ func TestEvaluateREL(t *testing.T) {
 		// Success cases
 		{
 			name:      "REL function basic usage",
-			statement: "let A1 = REL(1, 0);",
+			statement: "let A1 = REF(REL(1, 0));",
 			input: [][]string{
 				{"10", "20", "30"},
 				{"40", "50", "60"},
@@ -188,7 +188,7 @@ func TestEvaluateREL(t *testing.T) {
 		},
 		{
 			name:      "REL function with negative offsets",
-			statement: "let C2 = REL(-1, -1);",
+			statement: "let C2 = REF(REL(-1, -1));",
 			input: [][]string{
 				{"10", "20", "30"},
 				{"40", "50", "60"},
@@ -200,7 +200,7 @@ func TestEvaluateREL(t *testing.T) {
 		},
 		{
 			name:      "REL function in arithmetic expression",
-			statement: "let A3 = REL(0, -1) + REL(1, 0);",
+			statement: "let A3 = REF(REL(0, -1)) + REF(REL(1, 0));",
 			input: [][]string{
 				{"0", "0"},
 				{"1", "0"},
@@ -214,7 +214,7 @@ func TestEvaluateREL(t *testing.T) {
 		},
 		{
 			name:      "REL function with same cell reference",
-			statement: "let A1 = REL(0, 0);",
+			statement: "let A1 = REF(REL(0, 0));",
 			input: [][]string{
 				{"1", "0"},
 				{"0", "0"},
@@ -226,7 +226,7 @@ func TestEvaluateREL(t *testing.T) {
 		},
 		{
 			name:      "REL function with evaluated cell reference",
-			statement: "let A1 = REL(3-2, 9-8);",
+			statement: "let A1 = REF(REL(3-2, 9-8));",
 			input: [][]string{
 				{"1", "0"},
 				{"0", "2"},
@@ -238,7 +238,7 @@ func TestEvaluateREL(t *testing.T) {
 		},
 		{
 			name:      "REL function with nested evaluated cell reference",
-			statement: "let A1 = REL(ADD(1,1), ADD(1,1));",
+			statement: "let A1 = REF(REL(ADD(1,1), ADD(1,1)));",
 			input: [][]string{
 				{"1", "0", "0"},
 				{"0", "0", "0"},
@@ -252,7 +252,7 @@ func TestEvaluateREL(t *testing.T) {
 		},
 		{
 			name:      "deeply nested REL functions",
-			statement: "let B2 = IF(REL(-1, 0) > 10, SUM(REL(0, -1), REL(1, 1)), ABS(REL(-1, -1)));",
+			statement: "let B2 = IF(REF(REL(-1, 0)) > 10, SUM(REF(REL(0, -1)), REF(REL(1, 1))), ABS(REF(REL(-1, -1))));",
 			input: [][]string{
 				{"5", "8", "12"},
 				{"20", "0", "30"},

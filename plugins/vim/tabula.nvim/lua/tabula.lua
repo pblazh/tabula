@@ -9,7 +9,6 @@ M.setup = function()
 			local csvview = require("csvview")
 
 			vim.cmd("set foldmethod=marker")
-			vim.cmd("set foldlevel=0")
 
 			if not csvview.is_enabled(0) then
 				csvview.enable(0)
@@ -63,7 +62,6 @@ M.setup = function()
 			})
 		end,
 	})
-	--
 end
 
 -- Map a command to the function

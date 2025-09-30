@@ -1311,12 +1311,14 @@ func TestMathFunctions(t *testing.T) {
 	for _, tc := range testcases {
 		for _, c := range tc.cases {
 			t.Run(tc.name+":"+c.f, func(t *testing.T) {
-				result, err := DispatchMap[c.f](ast.CallExpression{
-					Identifier: ast.IdentifierExpression{
-						Value: c.f,
-						Token: lexer.Token{Literal: c.f},
-					}, Arguments: tc.input,
-				}, tc.input...)
+				result, err := DispatchMap[c.f](
+					map[string]string{}, [][]string{}, map[string]string{},
+					ast.CallExpression{
+						Identifier: ast.IdentifierExpression{
+							Value: c.f,
+							Token: lexer.Token{Literal: c.f},
+						}, Arguments: tc.input,
+					}, tc.input...)
 
 				if c.error != "" {
 					if err == nil {
