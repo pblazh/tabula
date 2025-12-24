@@ -25,27 +25,27 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.Uri.joinPath(context.extensionUri, "media"),
             vscode.Uri.joinPath(context.extensionUri, "src", "js"),
           ],
-        },
+        }
       );
 
       const csvPath = vscode.Uri.joinPath(
         context.extensionUri,
         "media",
-        "input.csv",
+        "input.csv"
       );
 
       const scriptPath = vscode.Uri.joinPath(
         context.extensionUri,
         "src",
         "js",
-        "script.js",
+        "script.js"
       );
       const scriptUri = panel.webview.asWebviewUri(scriptPath);
       const cspSource = panel.webview.cspSource;
 
       const template = tableTemplate.createTablePage(
         scriptUri.toString(),
-        cspSource,
+        cspSource
       );
 
       try {
@@ -64,19 +64,19 @@ export function activate(context: vscode.ExtensionContext) {
                   .then(() => runScript(csvPath))
                   .then(() => readFileContent(csvPath))
                   .then((csvContentUpdated) =>
-                    buildWebview(panel, template, csvContentUpdated),
+                    buildWebview(panel, template, csvContentUpdated)
                   )
                   .catch(showSavingError);
                 return;
             }
           },
           undefined,
-          context.subscriptions,
+          context.subscriptions
         );
       } catch (error) {
         //TODO: Disaplay an error a user
       }
-    },
+    }
   );
 
   context.subscriptions.push(webViewCommand);
@@ -101,7 +101,7 @@ function parseTable(table: string[][]): {
       }
       return updatedAcc;
     },
-    { body: [], foot: [] },
+    { body: [], foot: [] }
   );
 
   return { head, body, foot };
@@ -110,7 +110,7 @@ function parseTable(table: string[][]): {
 function buildWebview(
   panel: vscode.WebviewPanel,
   template: (head: string, table: string, footer: string) => string,
-  csvContent: string[][],
+  csvContent: string[][]
 ) {
   const { head, body, foot } = parseTable(csvContent);
 
@@ -145,7 +145,7 @@ async function readFileContent(fileUri: vscode.Uri) {
 
 async function saveFileContent(
   fileUri: vscode.Uri,
-  data: string[][],
+  data: string[][]
 ): Promise<void> {
   const csvString = await new Promise<string>((resolve, reject) => {
     const chunks: Buffer[] = [];
@@ -182,7 +182,7 @@ function showSavingError(error: unknown): void {
   vscode.window.showErrorMessage(
     `Saving file failure: ${
       error instanceof Error ? error.message : String(error)
-    }`,
+    }`
   );
 }
 
@@ -194,7 +194,7 @@ const runScript = (path: vscode.Uri): Promise<void> => {
   return new Promise((resolve, reject) => {
     const pathParts = path.path.split("/");
     const fileName = pathParts[pathParts.length - 1];
-    const command = `csvss -a -u "${path.path}"`;
+    const command = `tabula -a -u "${path.path}"`;
 
     exec(command, (error, stdout, stderr) => {
       if (error) {
