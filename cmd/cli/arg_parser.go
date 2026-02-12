@@ -7,6 +7,8 @@ import (
 	"fmt"
 )
 
+const VERSION = "0.1.0"
+
 var (
 	usageMessage = `Usage: tabula [OPTIONS]
 
@@ -19,6 +21,7 @@ Options:
   -a           Align output
   -t           Sort statements topologically
   -h           Show this help
+  -v           Show version
 
 Examples:
 	# CSV from file, script from stdin → stdout
@@ -70,6 +73,7 @@ func parseArgs() (*Config, error) {
 	var align bool
 	var sort bool
 	var help bool
+	var showVersion bool
 
 	flag.StringVar(&input, "i", "", "read CSV file")
 	flag.StringVar(&script, "s", "", "path to a script file")
@@ -79,10 +83,16 @@ func parseArgs() (*Config, error) {
 	flag.BoolVar(&align, "a", false, "Align CSV output")
 	flag.BoolVar(&sort, "t", false, "Sort statements topologically")
 	flag.BoolVar(&help, "h", false, "usage")
+	flag.BoolVar(&showVersion, "v", false, "show version")
 	flag.Parse()
 
 	if help {
 		fmt.Println(usageMessage)
+		return nil, nil
+	}
+
+	if showVersion {
+		fmt.Print(VERSION)
 		return nil, nil
 	}
 
