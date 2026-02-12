@@ -23,6 +23,74 @@ Single and multyline comments are supported:
    that spans multiple lines */
 ```
 
+### Include Directives
+
+Use `#include` to include other script files in your Tabula scripts. This allows you to organize your code across multiple files and reuse common definitions.
+
+```
+#include "utilities.tbl";
+#include "lib/functions.tbl";
+```
+
+The semicolon after `#include` is optional:
+
+```
+#include "utilities.tbl"
+```
+
+#### File Path Resolution
+
+Include paths are resolved relative to the file containing the `#include` directive:
+
+- If you include from `main.tbl`, paths are relative to `main.tbl`'s directory
+- If you include from a CSV file using `#tabula:#include`, paths are relative to the CSV file's directory
+- Subdirectories are supported: `#include "lib/utils.tbl"`
+- Parent directories are supported: `#include "../shared/common.tbl"`
+
+#### Include Features
+
+**Duplicate Prevention**: Files are only included once, even if referenced multiple times:
+
+```
+#include "common.tbl";
+#include "common.tbl";  // Ignored - already included
+```
+
+**Nested Includes**: Included files can include other files:
+
+```
+// main.tbl
+#include "a.tbl";
+
+// a.tbl
+#include "b.tbl";
+
+// b.tbl
+let A1 = 42;
+```
+
+**Circular Dependency Detection**: Tabula detects and reports circular includes:
+
+```
+// a.tbl
+#include "b.tbl";  // Error: circular include detected
+
+// b.tbl
+#include "a.tbl";
+```
+
+#### CSV-Embedded Includes
+
+You can use `#include` in CSV files by prefixing with `#tabula:`:
+
+```csv
+#tabula:#include "script.tbl"
+A,B,C
+1,2,3
+```
+
+This allows you to reference external script files from within CSV data files.
+
 ## Cell References
 
 Use spreadsheet-style cell references to access CSV data:
