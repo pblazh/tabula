@@ -19,7 +19,7 @@ jobs:
       - name: Set up Go (if using Go)
         uses: actions/setup-go@v5
         with:
-          go-version: "1.21"
+          go-version: "1.24.2"
 
       - name: Run Tests
         run: make test
@@ -32,11 +32,37 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Go (if using Go)
         uses: actions/setup-go@v5
         with:
-          go-version: "1.21"
+          go-version: "1.24.2"
+
+      - name: Check if version changed and create tag
+        run: |
+          # Extract current version from version.go
+          CURRENT_VERSION=$(grep -oP 'const VERSION = "\K[^"]+' cmd/cli/version.go)
+          echo "Current version: $CURRENT_VERSION"
+
+          # Check if version.go was modified in this commit
+          if git diff HEAD~1 HEAD --name-only | grep -q "cmd/cli/version.go"; then
+            echo "version.go was modified"
+
+            # Check if tag already exists
+            if git rev-parse "v$CURRENT_VERSION" >/dev/null 2>&1; then
+              echo "Tag v$CURRENT_VERSION already exists"
+            else
+              echo "Creating tag v$CURRENT_VERSION"
+              git config user.name "github-actions[bot]"
+              git config user.email "github-actions[bot]@users.noreply.github.com"
+              git tag -a "v$CURRENT_VERSION" -m "Release version $CURRENT_VERSION"
+              git push origin "v$CURRENT_VERSION"
+            fi
+          else
+            echo "version.go was not modified, skipping tag creation"
+          fi
 
       - name: Build Executable
         run: make build
