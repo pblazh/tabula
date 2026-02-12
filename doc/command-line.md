@@ -116,13 +116,13 @@ cat data.csv | tabula -s script.tbl
 
 ### Embedded Scripts
 
-CSV files can contain embedded script references in comments. The script path is resolved relative to the CSV file's location, not the current working directory.
+CSV files can contain embedded script with #include references in comments. The script path is resolved relative to the CSV file's location, not the current working directory.
 
 ```csv
 Name,Age,Score
 Alice,25,85
 Bob,30,92
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"
 ```
 
 Then run without specifying a script file:

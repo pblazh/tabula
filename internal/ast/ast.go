@@ -47,6 +47,16 @@ func (stmt ExpressionStatement) String() string {
 	return stmt.Value.String() + ";"
 }
 
+type IncludeStatement struct {
+	Statement
+	Token    lexer.Token
+	FilePath string
+}
+
+func (stmt IncludeStatement) String() string {
+	return fmt.Sprintf("#include \"%s\";", stmt.FilePath)
+}
+
 type Expression interface {
 	Node
 }

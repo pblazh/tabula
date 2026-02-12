@@ -1,6 +1,8 @@
 package evaluator
 
 import (
+	"fmt"
+
 	"github.com/pblazh/tabula/internal/ast"
 	functions "github.com/pblazh/tabula/internal/core"
 )
@@ -44,6 +46,9 @@ func EvaluateStatement(statement ast.Statement, context map[string]string, input
 			return ErrFmtExpectedString(s.Identifier.Token, val.String())
 		}
 
+	case ast.IncludeStatement:
+		// Includes should already be resolved during parsing
+		return fmt.Errorf("internal error: IncludeStatement should not reach evaluator")
 	}
 	return nil
 }

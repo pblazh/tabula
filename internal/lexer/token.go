@@ -45,6 +45,7 @@ const (
 	COMMA            = "COMMA"
 	LET              = "LET"
 	FMT              = "FMT"
+	INCLUDE          = "INCLUDE"
 	SEMI             = "SEMI"
 	EQUAL            = "EQUAL"
 	NOT_EQUAL        = "NOT_EQUAL"

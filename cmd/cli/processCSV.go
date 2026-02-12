@@ -21,7 +21,7 @@ func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csv
 	}
 
 	program, identifiers, err := evaluator.ParseProgram(scriptReader, config.Name)
-	records = ensureProgramDimmensions(identifiers, records)
+	records = ensureProgramDimensions(identifiers, records)
 
 	if err != nil {
 		return ErrParseScript(err)

@@ -20,7 +20,7 @@ Product B,800,900,950,1000,,
 Product C,1500,1400,1600,1550,,
 ,,,,,,
 ,,,,,,
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"
 ```
 
 ### Script
@@ -50,20 +50,20 @@ let F6 = AVERAGE(F2:F4);
 
 // Calculate best performing quarter for each product
 let G1 = "Best Quarter";
-let G2 = IF(B2 > C2, 
-             IF(B2 > D2, IF(B2 > E2, "Q1", "Q4"), 
-                         IF(D2 > E2, "Q3", "Q4")), 
-             IF(C2 > D2, IF(C2 > E2, "Q2", "Q4"), 
+let G2 = IF(B2 > C2,
+             IF(B2 > D2, IF(B2 > E2, "Q1", "Q4"),
+                         IF(D2 > E2, "Q3", "Q4")),
+             IF(C2 > D2, IF(C2 > E2, "Q2", "Q4"),
                          IF(D2 > E2, "Q3", "Q4")));
-let G3 = IF(B3 > C3, 
-             IF(B3 > D3, IF(B3 > E3, "Q1", "Q4"), 
-                         IF(D3 > E3, "Q3", "Q4")), 
-             IF(C3 > D3, IF(C3 > E3, "Q2", "Q4"), 
+let G3 = IF(B3 > C3,
+             IF(B3 > D3, IF(B3 > E3, "Q1", "Q4"),
+                         IF(D3 > E3, "Q3", "Q4")),
+             IF(C3 > D3, IF(C3 > E3, "Q2", "Q4"),
                          IF(D3 > E3, "Q3", "Q4")));
-let G4 = IF(B4 > C4, 
-             IF(B4 > D4, IF(B4 > E4, "Q1", "Q4"), 
-                         IF(D4 > E4, "Q3", "Q4")), 
-             IF(C4 > D4, IF(C4 > E4, "Q2", "Q4"), 
+let G4 = IF(B4 > C4,
+             IF(B4 > D4, IF(B4 > E4, "Q1", "Q4"),
+                         IF(D4 > E4, "Q3", "Q4")),
+             IF(C4 > D4, IF(C4 > E4, "Q2", "Q4"),
                          IF(D4 > E4, "Q3", "Q4")));
 ```
 
@@ -76,5 +76,5 @@ Product B       , 800  , 900  , 950  , 1000 , 3650  , Q4
 Product C       , 1500 , 1400 , 1600 , 1550 , 6050  , Q3
 Quarter Total   , 3300 , 3500 , 3650 , 3850 , 14300 ,
 Quarter Average , 1100 , 1166 , 1216 , 1283 , 4766  ,
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"
 ```

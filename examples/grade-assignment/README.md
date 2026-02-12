@@ -21,7 +21,7 @@ Student,Math,Science,English,,,,
 Alice,85,92,78,,,,
 Bob,76,84,91,,,,
 Carol,95,88,89,,,,
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"
 ```
 
 ### Script
@@ -46,20 +46,20 @@ let E4 = IF(B4 > 89, "A", IF(B4 > 79, "B", IF(B4 > 69, "C", "F")));
 let F4 = IF(C4 > 89, "A", IF(C4 > 79, "B", IF(C4 > 69, "C", "F")));
 let G4 = IF(D4 > 89, "A", IF(D4 > 79, "B", IF(D4 > 69, "C", "F")));
 
-// Calculate overall average and grade  
+// Calculate overall average and grade
 let avg_H2 = AVERAGE(B2:D2);
-let H2 = IF(avg_H2 > 89, "A", 
-         IF(avg_H2 > 79, "B", 
+let H2 = IF(avg_H2 > 89, "A",
+         IF(avg_H2 > 79, "B",
          IF(avg_H2 > 69, "C", "F")));
 
 let avg_H3 = AVERAGE(B3:D3);
-let H3 = IF(avg_H3 > 89, "A", 
-         IF(avg_H3 > 79, "B", 
+let H3 = IF(avg_H3 > 89, "A",
+         IF(avg_H3 > 79, "B",
          IF(avg_H3 > 69, "C", "F")));
 
 let avg_H4 = AVERAGE(B4:D4);
-let H4 = IF(avg_H4 > 89, "A", 
-         IF(avg_H4 > 79, "B", 
+let H4 = IF(avg_H4 > 89, "A",
+         IF(avg_H4 > 79, "B",
          IF(avg_H4 > 69, "C", "F")));
 ```
 
@@ -70,5 +70,5 @@ Student , Math , Science , English , Math Grade , Science Grade , English Grade 
 Alice   , 85   , 92      , 78      , B          , A             , C             , B
 Bob     , 76   , 84      , 91      , C          , B             , A             , B
 Carol   , 95   , 88      , 89      , A          , B             , B             , A
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"
 ```

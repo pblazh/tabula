@@ -25,7 +25,7 @@ date             , iso , us
 2005-07-24       ,     ,
 8:30PM           ,     ,
 24/07 25 AD      ,     ,
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"
 ```
 
 ### Script
@@ -51,7 +51,7 @@ date             , iso                 , us
 2005-07-24       , 2005-07-24 00:00:00 , 07/24/2005 12:00AM
 8:30PM           , 0000-01-01 20:30:00 , 01/01/0000 08:30PM
 24/07 25 AD      , 2025-07-24 00:00:00 , 07/24/2025 12:00AM
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"
 ```
 
 ## Key Points
@@ -60,4 +60,3 @@ date             , iso                 , us
 - The `us` column formats the same dates in US format with AM/PM
 - Time-only values are combined with a default date (0000-01-01)
 - Custom date formats can be parsed using the `TODATE` function with format specifications
-

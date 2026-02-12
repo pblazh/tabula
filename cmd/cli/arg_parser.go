@@ -5,7 +5,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"path"
 )
 
 var (
@@ -118,7 +117,7 @@ func parseArgs() (*Config, error) {
 	}
 
 	if script != "" {
-		config.Name = path.Base(script)
+		config.Name = script
 	}
 
 	if execute != "" {

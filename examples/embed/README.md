@@ -6,7 +6,7 @@ This example demonstrates utility bill calculations with embedded Tabula scripts
 
 - **Embedded Scripts**: Scripts are written directly in the CSV file using `#tabula:` comments
 - **Self-contained**: No separate script files needed - everything is in one CSV file
-- **Mixed Script Types**: You can combine `#tabula:` embedded scripts with `#tabulafile:` file references in the same CSV file
+- **Mixed Script Types**: You can use `#include` in embedded script with `#tabula:#include` file references in the same CSV file
 - **Flexible Organization**: Scripts are processed in the order they appear, allowing fine-grained control over execution sequence
 
 ## Example Files
@@ -44,4 +44,3 @@ apartment      ,          ,          ,        , $8000.00
 #tabula: let E2:E4 = (REL(-2,0) - REL(-3,0)) * REL(-1,0)
 #tabula: let E9 = SUM(E2:E8)
 ```
-

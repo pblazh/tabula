@@ -16,14 +16,14 @@ func main() {
 	}
 
 	// Setup CSV input reader
-	csvReader, embeded, comments, err := setupCSVReader(config)
+	csvReader, embedded, comments, err := setupCSVReader(config)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
 
 	// Setup script reader
-	scriptReader, err := setupScriptReader(config, embeded)
+	scriptReader, err := setupScriptReader(config, embedded)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
