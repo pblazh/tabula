@@ -8,5 +8,5 @@ maintenance    ,          ,          ,        , $409.49
 apartment      ,          ,          ,        , $8000.00
                ,          ,          , total  , $9865.83
 #tabula: fmt D2:D4,E2:E9 = "$%.2f"
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"
 #tabula: let E9 = SUM(E2:E8)

@@ -3,6 +3,10 @@
 package parser
 
 import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -23,6 +27,11 @@ type Parser struct {
 	prefixParsers map[lexer.TokenType]prefixParse
 	infixParsers  map[lexer.TokenType]infixParse
 	identifiers   []string
+
+	// Include context
+	currentFile   string          // Current file being parsed
+	includedFiles map[string]bool // Set of already included files (absolute paths)
+	includeStack  []string        // Stack for circular dependency detection
 }
 
 func New(lex *lexer.Lexer) *Parser {
@@ -31,6 +40,9 @@ func New(lex *lexer.Lexer) *Parser {
 		prefixParsers: make(map[lexer.TokenType]prefixParse),
 		infixParsers:  make(map[lexer.TokenType]infixParse),
 		identifiers:   make([]string, 0),
+		currentFile:   "",
+		includedFiles: make(map[string]bool),
+		includeStack:  make([]string, 0),
 	}
 
 	parser.registerPrefix(lexer.IDENT, parser.parseIdentifier)
@@ -82,14 +94,35 @@ func (p *Parser) Parse() (ast.Program, []string, error) {
 		return nil, nil, err
 	}
 
+	// Set current file from first token if not already set
+	if p.currentFile == "" && p.cur.Filename != "" {
+		p.currentFile = p.cur.Filename
+	}
+
+	// Add root file to include stack for circular dependency detection
+	// This prevents the root file from being included recursively
+	if p.currentFile != "" && len(p.includeStack) == 0 {
+		absPath, _ := filepath.Abs(p.currentFile)
+		if absPath != "" {
+			p.includeStack = append(p.includeStack, absPath)
+			p.includedFiles[absPath] = true
+		}
+	}
+
 	for p.cur.Type != lexer.EOF {
 		switch p.cur.Type {
-		case lexer.LET:
-			stms, err := p.parseLetStatement()
+		case lexer.INCLUDE:
+			statements, err := p.parseIncludeStatement()
 			if err != nil {
 				return nil, nil, err
 			}
-			program = append(program, stms...)
+			program = append(program, statements...)
+		case lexer.LET:
+			statements, err := p.parseLetStatement()
+			if err != nil {
+				return nil, nil, err
+			}
+			program = append(program, statements...)
 		case lexer.FMT:
 			stms, err := p.parseFmtStatement()
 			if err != nil {
@@ -108,12 +141,12 @@ func (p *Parser) Parse() (ast.Program, []string, error) {
 	return program, uniqueIdentifiers(p.identifiers), nil
 }
 
-func uniqueIdentifiers(ideentifiers []string) []string {
-	unique := make([]string, 0, len(ideentifiers))
-	founcd := make(map[string]bool)
-	for _, id := range ideentifiers {
-		if !founcd[id] {
-			founcd[id] = true
+func uniqueIdentifiers(identifiers []string) []string {
+	unique := make([]string, 0, len(identifiers))
+	found := make(map[string]bool)
+	for _, id := range identifiers {
+		if !found[id] {
+			found[id] = true
 			unique = append(unique, id)
 		}
 	}
@@ -622,4 +655,128 @@ func (p *Parser) parseCallArguments() ([]ast.Expression, error) {
 		return nil, err
 	}
 	return arguments, nil
+}
+
+// resolveIncludePath resolves a relative include path against the current file
+func (p *Parser) resolveIncludePath(includePath string) (string, error) {
+	// If current file is empty or "<inline>", includes are relative to CWD
+	if p.currentFile == "" || p.currentFile == "<inline>" {
+		absPath, err := filepath.Abs(includePath)
+		if err != nil {
+			return "", err
+		}
+		return absPath, nil
+	}
+
+	// Resolve relative to directory of current file
+	currentDir := filepath.Dir(p.currentFile)
+	resolvedPath := filepath.Join(currentDir, includePath)
+
+	// Convert to absolute path for deduplication
+	absPath, err := filepath.Abs(resolvedPath)
+	if err != nil {
+		return "", err
+	}
+
+	return absPath, nil
+}
+
+func (p *Parser) parseIncludeStatement() ([]ast.Statement, error) {
+	includeToken := p.cur
+
+	// Advance past #include
+	err := p.advance(1)
+	if err != nil {
+		return nil, err
+	}
+
+	// Expect a string literal with the file path
+	if !p.expectCurrentToken(lexer.STRING) {
+		return nil, ErrExpectedToken("string (file path)", p.cur)
+	}
+
+	filePath := strings.Trim(p.cur.Literal, "\"")
+
+	absPath, err := p.resolveIncludePath(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve include path %s: %w", filePath, err)
+	}
+
+	// Check for circular dependency FIRST (before checking if already included)
+	if slices.Contains(p.includeStack, absPath) {
+		chain := append(p.includeStack, absPath)
+		return nil, ast.ErrCircularInclude(chain)
+	}
+	// Skip already processed for duplicate includes
+	if p.includedFiles[absPath] {
+		err = p.advance(1)
+		if err != nil {
+			return nil, err
+		}
+		if p.expectCurrentToken(lexer.SEMI) {
+			err = p.advance(1)
+			if err != nil {
+				return nil, err
+			}
+		}
+		return []ast.Statement{}, nil
+	}
+
+	// Mark as being processed (for circular detection)
+	p.includeStack = append(p.includeStack, absPath)
+
+	// Mark as included (for deduplication)
+	p.includedFiles[absPath] = true
+
+	// Advance past string
+	err = p.advance(1)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check for optional semicolon
+	if p.expectCurrentToken(lexer.SEMI) {
+		err = p.advance(1)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// Open and parse the included file
+	statements, err := p.parseIncludedFile(absPath, includeToken)
+	if err != nil {
+		return nil, err
+	}
+
+	// Pop from include stack
+	p.includeStack = p.includeStack[:len(p.includeStack)-1]
+
+	return statements, nil
+}
+
+func (p *Parser) parseIncludedFile(filePath string, includeToken lexer.Token) ([]ast.Statement, error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, ast.ErrIncludeFileNotFound(filePath, includeToken.Position)
+	}
+	defer func() { _ = file.Close() }()
+
+	includeLex := lexer.New(file, filePath)
+	includeParser := New(includeLex)
+
+	// Share include context from parent parser
+	includeParser.identifiers = p.identifiers     // Share identifier tracking
+	includeParser.currentFile = filePath          // Set current file for nested includes
+	includeParser.includedFiles = p.includedFiles // Share included files tracking
+	includeParser.includeStack = p.includeStack   // Share circular dependency detection
+
+	program, identifiers, err := includeParser.Parse()
+	if err != nil {
+		return nil, fmt.Errorf("error parsing included file %s: %w", filePath, err)
+	}
+
+	// Propagate identifiers back to parent parser
+	p.identifiers = append(p.identifiers, identifiers...)
+
+	return program, nil
 }

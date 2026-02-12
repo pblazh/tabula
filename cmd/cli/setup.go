@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path"
 	"strings"
 )
 
@@ -65,7 +64,7 @@ func setupCSVReader(config *Config) (io.Reader, string, map[int]string, error) {
 		defer dclose(file)
 
 		// Extract comments and embedded script references
-		embedded, comments, err := readComments(config.Input, file)
+		embedded, comments, err := readComments(file)
 		if err != nil {
 			return nil, "", nil, err
 		}
@@ -93,7 +92,7 @@ func setupCSVReader(config *Config) (io.Reader, string, map[int]string, error) {
 	}
 
 	// Parse comments from stdin content
-	embedded, comments, err := readComments(config.Input, bytes.NewReader(stdinContent))
+	embedded, comments, err := readComments(bytes.NewReader(stdinContent))
 	if err != nil {
 		return nil, "", nil, err
 	}
@@ -105,15 +104,19 @@ func setupCSVReader(config *Config) (io.Reader, string, map[int]string, error) {
 }
 
 // setupScriptReader configures script input source
-func setupScriptReader(config *Config, embeded string) (io.Reader, error) {
+func setupScriptReader(config *Config, embedded string) (io.Reader, error) {
 	// Execute inline code
 	if config.Execute != "" {
 		return strings.NewReader(config.Execute), nil
 	}
 
 	// Use embedded script if available (from CSV comments)
-	if embeded != "" {
-		return strings.NewReader(embeded), nil
+	if embedded != "" {
+		// Set config.Name to CSV file path so parser can resolve relative includes
+		if config.Input != "" {
+			config.Name = config.Input
+		}
+		return strings.NewReader(embedded), nil
 	}
 
 	if config.Script != "" {
@@ -130,10 +133,9 @@ func setupScriptReader(config *Config, embeded string) (io.Reader, error) {
 }
 
 // readComments extracts comments and embedded script references and embedded script from CSV content
-func readComments(base string, f io.Reader) (string, map[int]string, error) {
+func readComments(f io.Reader) (string, map[int]string, error) {
 	const (
 		commentPrefix     = "#"
-		tabulaFilePrefix  = "#tabulafile:"
 		tabulaEmbedPrefix = "#tabula:"
 	)
 
@@ -146,19 +148,8 @@ func readComments(base string, f io.Reader) (string, map[int]string, error) {
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 
-		// Check for embedded script
 		if strings.HasPrefix(line, tabulaEmbedPrefix) {
 			script.WriteString(line[len(tabulaEmbedPrefix):] + "\n")
-		}
-
-		// Check for embedded script reference
-		if strings.HasPrefix(line, tabulaFilePrefix) {
-			// config.Script = path.Join(path.Dir(config.Input), scriptComment)
-			content, err := os.ReadFile(path.Join(path.Dir(base), line[len(tabulaFilePrefix):]))
-			if err != nil {
-				return "", nil, err
-			}
-			script.WriteString(string(content) + "\n")
 		}
 
 		// Store all comment lines

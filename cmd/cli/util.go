@@ -8,7 +8,7 @@ import (
 	"github.com/pblazh/tabula/internal/ast"
 )
 
-func ensureProgramDimmensions(identifiers []string, records [][]string) [][]string {
+func ensureProgramDimensions(identifiers []string, records [][]string) [][]string {
 	for i, row := range records {
 		for j, cel := range row {
 			records[i][j] = strings.TrimSpace(cel)

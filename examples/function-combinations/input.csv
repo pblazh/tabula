@@ -2,4 +2,4 @@ Name,Value1,Value2,Value3,,,,
   John  ,10,20,30,,,,
 " Mary ",15,-5,25,,,,
 Charlie,,35,40,,,,
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"

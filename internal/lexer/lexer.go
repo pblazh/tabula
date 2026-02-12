@@ -82,6 +82,30 @@ func (lexer *Lexer) Next() (Token, error) {
 		return token, nil
 	}
 
+	// Check for #include directive
+	if literal == "#" {
+		hashPos := lexer.scanner.Position
+
+		// Scan next token to see if it's "include"
+		lexer.scanner.Scan()
+		nextLit := lexer.scanner.TokenText()
+
+		if nextLit == "include" {
+			return Token{
+				Type:     INCLUDE,
+				Literal:  "#include",
+				Position: hashPos,
+			}, nil
+		}
+
+		// If not "include", this is an illegal token
+		return Token{
+			Type:     ILLEGAL,
+			Literal:  literal,
+			Position: hashPos,
+		}, ErrLexerError("unexpected '#' - only #include directives are supported", hashPos)
+	}
+
 	if literal == "let" {
 		return Token{
 			Type:     LET,

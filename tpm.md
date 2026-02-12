@@ -75,6 +75,7 @@
 - [ ] #22: Feature Extensions
   - [ ] #22.1: Add support for multiple output formats (markdown, rst, etc)
   - [ ] #22.2: Add more data types beyond basic five
+  - [x] #22.3: Add include directive
 - [ ] #23: Performance Optimizations
   - [ ] #23.1: Optimize CSV parsing for large files
   - [ ] #23.2: Add memory usage optimization

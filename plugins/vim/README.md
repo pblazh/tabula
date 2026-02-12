@@ -33,7 +33,7 @@ let b:tabula_is_loaded = 1
 
 " Auto-close comments like:
 " #tabula ---{{{
-" #tabulafile: ./script.tbl
+" #tabula:#include "script.tbl"
 " #tabula ---}}}
 set foldmethod=marker
 set foldlevel=0 "Close folds

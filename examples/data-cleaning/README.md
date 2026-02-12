@@ -27,7 +27,7 @@ name,  age,  salary ,
   Alice  ,25,"  50000  ",
 " Bob ",thirty,75000,
 Charlie,35,,
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"
 ```
 
 ### Script
@@ -60,5 +60,5 @@ Name    , Age , Salary , Valid
 Alice   , 25  , 50000  , Yes
 Bob     , 30  , 75000  , Yes
 Charlie , 35  , 0      , No
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"
 ```

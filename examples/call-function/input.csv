@@ -2,4 +2,4 @@ Command, Arg, Out
 echo,hello,
 ls,examples/call-function/,
 date,Jun 20 1975,
-#tabulafile:./script.tbl
+#tabula:#include "script.tbl"
