@@ -28,3 +28,4 @@ go.work.sum
 # built files
 bin
 */**/.obsidian
+coverage.html
