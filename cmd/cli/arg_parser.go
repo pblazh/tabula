@@ -7,8 +7,6 @@ import (
 	"fmt"
 )
 
-const VERSION = "0.1.0"
-
 var (
 	usageMessage = `Usage: tabula [OPTIONS]
 
