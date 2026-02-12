@@ -1,4 +1,4 @@
-.PHONY: build test clean install lint
+.PHONY: build test clean install lint coverage
 
 build: build-darwin-arm64 build-darwin-amd64 build-linux-arm64 build-linux-amd64 build-linux-386 build-windows-arm64 build-windows-amd64 build-windows-386
 
@@ -36,8 +36,17 @@ build-wasm:
 test:
 	go test -v -cover ./...
 
+coverage:
+	@echo "Generating coverage report..."
+	@go test -coverprofile=coverage.out ./...
+	@go tool cover -html=coverage.out -o coverage.html
+	@echo "Coverage report generated: coverage.html"
+	@echo "Opening coverage report in browser..."
+	@open coverage.html || xdg-open coverage.html || start coverage.html
+
 clean:
 	rm -rf bin/
+	rm -f coverage.out coverage.html
 
 install:
 	go install ./cmd/cli
