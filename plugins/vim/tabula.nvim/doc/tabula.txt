@@ -1,0 +1,215 @@
+*tabula.txt*    Vim plugin for Tabula - spreadsheet-inspired CSV transformation
+
+                    TABULA VIM PLUGIN MANUAL
+
+==============================================================================
+CONTENTS                                                     *tabula-contents*
+
+    1. Introduction ............................ |tabula-introduction|
+    2. Requirements ............................ |tabula-requirements|
+    3. Installation ............................ |tabula-installation|
+    4. Features ................................ |tabula-features|
+    5. Commands ................................ |tabula-commands|
+    6. Mappings ................................ |tabula-mappings|
+    7. Configuration ........................... |tabula-configuration|
+    8. Usage ................................... |tabula-usage|
+    9. Troubleshooting ......................... |tabula-troubleshooting|
+   10. License ................................. |tabula-license|
+
+==============================================================================
+1. INTRODUCTION                                          *tabula-introduction*
+
+Tabula.nvim is a Vim/Neovim plugin that provides syntax highlighting and
+auto-execution for Tabula scripts. Tabula is a command-line tool that
+transforms CSV files using a spreadsheet-inspired scripting language.
+
+Features:
+  - Syntax highlighting for .tbl script files
+  - Auto-execution of Tabula scripts on CSV files
+  - Fold support for #tabula markers
+  - Integration with csvview.nvim (optional)
+
+==============================================================================
+2. REQUIREMENTS                                          *tabula-requirements*
+
+Required:
+  - Vim 8.0+ or Neovim 0.5+
+  - Tabula CLI tool installed and in $PATH
+    https://github.com/pblazh/tabula
+
+Optional:
+  - csvview.nvim for enhanced CSV viewing (Neovim only)
+    https://github.com/hat0uma/csvview.nvim
+
+==============================================================================
+3. INSTALLATION                                          *tabula-installation*
+
+Using Lazy.nvim (Neovim): >
+    return {
+      "pblazh/tabula",
+      branch = "vim-plugin",
+      dependencies = { "hat0uma/csvview.nvim" },
+      ft = { "csv", "tabula" },
+    }
+<
+
+Using vim-plug: >
+    Plug 'pblazh/tabula', {'branch': 'vim-plugin'}
+<
+Manual installation:
+  1. Download from https://pblazh.github.io/tabula
+
+  2. Extract to your runtime path:
+     Neovim: ~/.config/nvim/pack/plugins/start/
+     Vim:    ~/.vim/pack/plugins/start/
+
+  3. Generate help tags: >
+     :helptags ~/.config/nvim/pack/plugins/start/tabula.nvim/doc
+<
+
+==============================================================================
+4. FEATURES                                                  *tabula-features*
+
+4.1 Syntax Highlighting                              *tabula-syntax-highlight*
+
+Automatic syntax highlighting for .tbl files including:
+  - Keywords: let, fmt
+  - Preprocessor directives: #include, #tabula:
+  - Cell references: A1, B2, AA1, etc.
+  - Cell ranges: A1:C3
+  - Comments: // and /* */
+  - Functions: SUM, AVERAGE, IF, DATE, etc.
+  - Operators, strings, numbers, booleans
+
+4.2 Auto-execution                                      *tabula-auto-execution*
+
+For CSV files with embedded Tabula scripts:
+  - Automatically runs Tabula on BufWritePost
+  - Automatically runs Tabula on InsertLeave
+  - Displays errors in the command line
+  - Reloads buffer to show changes
+
+4.3 Fold Support                                            *tabula-fold-support*
+
+Sets foldmethod=marker for CSV files to support: >
+    #tabula ---{{{
+    #tabula:#include "script.tbl"
+    #tabula ---}}}
+<
+
+==============================================================================
+5. COMMANDS                                                  *tabula-commands*
+
+                                                                     *:Tabula*
+:Tabula                 Manually execute Tabula on the current CSV file.
+                        Useful for debugging or forcing execution.
+
+                                                               *:TabulaToggle*
+:TabulaToggle           Toggle auto-execution on/off for the current buffer.
+                        Useful when you want to edit CSV without running
+                        Tabula on every save.
+
+==============================================================================
+6. MAPPINGS                                                  *tabula-mappings*
+
+No default mappings are provided. You can create your own: >
+    " Example mappings
+    nnoremap <leader>te :Tabula<CR>
+    nnoremap <leader>tt :TabulaToggle<CR>
+<
+
+==============================================================================
+7. CONFIGURATION                                      *tabula-configuration*
+
+Currently, the plugin works out of the box with no configuration needed.
+
+Future configuration options (not yet implemented):
+  *g:tabula_auto_execute*    Enable/disable auto-execution (default: 1)
+  *g:tabula_command*         Custom path to tabula executable
+  *g:tabula_options*         Additional tabula CLI options
+
+==============================================================================
+8. USAGE                                                        *tabula-usage*
+
+8.1 Working with .tbl Files                                 *tabula-tbl-files*
+
+Simply create and edit .tbl files to get syntax highlighting: >
+    vim script.tbl
+<
+
+Example script: >
+    // Calculate totals
+    let D1 = "Total";
+    let D2 = A2 + B2 + C2;
+    fmt D2 = "%.2f";
+<
+
+8.2 Working with CSV Files                                 *tabula-csv-files*
+
+Add a Tabula script directive at the top of your CSV file: >
+    #tabula:#include "process.tbl"
+    Name,Age,Score
+    John,25,85
+    Jane,30,92
+<
+
+When you save the file, Tabula runs automatically and updates the CSV.
+
+8.3 Using Folds                                               *tabula-folds*
+
+Organize Tabula directives with fold markers: >
+    #tabula ---{{{
+    #tabula:#include "script.tbl"
+    #tabula ---}}}
+<
+
+Fold commands:
+  zo  - Open fold
+  zc  - Close fold
+  za  - Toggle fold
+  zR  - Open all folds
+  zM  - Close all folds
+
+==============================================================================
+9. TROUBLESHOOTING                                  *tabula-troubleshooting*
+
+Problem: Tabula command not found ~
+Solution: Ensure Tabula is installed and in your $PATH: >
+    which tabula
+    tabula -v
+<
+
+Problem: Syntax highlighting not working ~
+Solution: Check filetype detection: >
+    :set filetype?
+<
+Should show "filetype=tabula" for .tbl files.
+Force reload with: >
+    :e
+<
+
+Problem: Auto-execution not working ~
+Solution: Check if plugin is loaded: >
+    :scriptnames
+<
+Look for "tabula.vim" in the output.
+
+Problem: CSV not reloading after execution ~
+Solution: Manually reload or ensure autoread is set: >
+    :e
+    :set autoread
+<
+
+Problem: Errors not showing ~
+Solution: Check Tabula manually: >
+    :!tabula -a -u %
+<
+
+==============================================================================
+10. LICENSE                                                  *tabula-license*
+
+                    GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:

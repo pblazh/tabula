@@ -69,7 +69,26 @@ jobs:
 
       - name: Prepare GitHub Pages content
         run: |
+          # Copy binaries
           cp -Rv ./bin gh-pages/bin
+
+          # Package and copy vim plugin
+          VERSION=$(date +%Y.%m.%d)
+          mkdir -p gh-pages/releases
+
+          # Create plugin archive
+          cd plugins/vim/tabula.nvim
+          tar -czf ../../../gh-pages/releases/tabula.nvim-${VERSION}.tar.gz \
+            --transform 's,^,tabula.nvim/,' \
+            doc ftdetect plugin syntax README.md
+          cd ../../../
+
+          # Create a 'latest' symlink for convenience
+          cd gh-pages/releases
+          ln -sf tabula.nvim-${VERSION}.tar.gz tabula.nvim-latest.tar.gz
+          cd ../..
+
+          echo "Created vim plugin archive: tabula.nvim-${VERSION}.tar.gz"
 
       - name: Deploy to GitHub Pages branch
         uses: peaceiris/actions-gh-pages@v4
