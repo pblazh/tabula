@@ -1,0 +1,9 @@
+// Add header for total column
+let D1 = "Total";
+
+// Calculate total for each row
+let D2:D4 = REF(REL(-2,0)) * REF(REL(-1,0));
+
+// Add a grand total row
+let A5 = "TOTAL";
+let D5 = SUM(D2:D4);

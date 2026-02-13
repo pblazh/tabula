@@ -1,42 +1,103 @@
 {
   "name": "tabula",
-  "displayName": "tabula",
-  "description": "VSCode tabula plugin",
-  "version": "0.0.1",
+  "displayName": "Tabula",
+  "description": "Tabula - CSV transformation with spreadsheet-inspired scripting language",
+  "version": "0.1.0",
+  "publisher": "tabula",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pblazh/tabula"
+  },
   "engines": {
     "vscode": "^1.103.0"
   },
   "categories": [
+    "Data Science",
+    "Formatters",
     "Other"
   ],
-  "activationEvents": [],
+  "keywords": [
+    "csv",
+    "tabula",
+    "spreadsheet",
+    "data"
+  ],
+  "activationEvents": [
+    "onLanguage:csv"
+  ],
   "main": "./out/index.js",
   "contributes": {
+    "languages": [
+      {
+        "id": "tabula",
+        "aliases": [
+          "Tabula",
+          "tabula"
+        ],
+        "extensions": [
+          ".tbl"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "tabula",
+        "scopeName": "source.tabula",
+        "path": "./syntaxes/tabula.tmLanguage.json"
+      }
+    ],
     "commands": [
       {
-        "command": "tabula.start",
-        "title": "Start editing file",
-        "category": "Edit"
+        "command": "tabula.toggleAutoExecute",
+        "title": "Toggle Auto-Execute on Save",
+        "category": "Tabula"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Tabula",
+      "properties": {
+        "tabula.autoExecute": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically execute Tabula scripts when saving CSV files"
+        },
+        "tabula.executablePath": {
+          "type": "string",
+          "default": "tabula",
+          "description": "Path to the tabula executable. Use 'tabula' to use the version in your PATH, or specify an absolute path (e.g., '/usr/local/bin/tabula' or '/Users/username/bin/tabula')"
+        },
+        "tabula.autoFormat": {
+          "type": "boolean",
+          "default": true,
+          "description": "Auto format output (adds -a flag to tabula command). When enabled, tabula will automatically format the output CSV."
+        }
+      }
+    }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "prepackage": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "test:unit": "npm run compile && node out/test/standalone.test.js",
+    "test:all": "npm run test:unit && npm test",
+    "package": "mkdir dist ; vsce package -o ./dist/",
+    "publish": "vsce publish",
+    "publish:patch": "vsce publish patch",
+    "publish:minor": "vsce publish minor",
+    "publish:major": "vsce publish major"
   },
-  "dependencies": {
-    "fast-csv": "5.0.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/vscode": "^1.102.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.31.1",
+    "@vscode/vsce": "^3.2.1",
     "eslint": "^9.25.1",
     "typescript": "^5.8.3",
     "@vscode/test-cli": "^0.0.11",
