@@ -80,7 +80,7 @@ jobs:
           cd plugins/vim/tabula.nvim
           tar -czf ../../../gh-pages/releases/tabula.nvim-${VERSION}.tar.gz \
             --transform 's,^,tabula.nvim/,' \
-            doc ftdetect plugin syntax README.md
+            doc ftdetect plugin syntax
           cd ../../../
 
           # Create a 'latest' symlink for convenience
