@@ -76,12 +76,15 @@ jobs:
           VERSION=$(date +%Y.%m.%d)
           mkdir -p gh-pages/releases
 
+          # Copy README from doc directory to plugin directory
+          cp doc/vim-plugin.md plugins/tabula.nvim/README.md
+
           # Create plugin archive
-          cd plugins/vim/tabula.nvim
-          tar -czf ../../../gh-pages/releases/tabula.nvim-${VERSION}.tar.gz \
+          cd plugins/tabula.nvim
+          tar -czf ../../gh-pages/releases/tabula.nvim-${VERSION}.tar.gz \
             --transform 's,^,tabula.nvim/,' \
             doc ftdetect plugin syntax README.md
-          cd ../../../
+          cd ../../
 
           # Create a 'latest' symlink for convenience
           cd gh-pages/releases

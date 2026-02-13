@@ -75,7 +75,7 @@ Get syntax highlighting and auto-execution for Tabula scripts in your editor!
 - Built-in commands (`:Tabula`, `:TabulaToggle`)
 - Fold support for organizing scripts
 
-**See:** [plugins/vim/tabula.nvim/README.md](plugins/vim/tabula.nvim/README.md) for full installation and usage guide.
+**See:** [doc/vim-plugin.md](doc/vim-plugin.md) for full installation and usage guide.
 
 ## Further Reading
 
@@ -83,3 +83,4 @@ Get syntax highlighting and auto-execution for Tabula scripts in your editor!
 - [Syntax Guide](doc/syntax.md)
 - [Functions](doc/functions.md)
 - [Examples](doc/examples.md)
+- [Vim/Neovim Plugin](doc/vim-plugin.md)
