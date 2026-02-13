@@ -1,0 +1,74 @@
+name: Publish Vim Plugin
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "plugins/vim/tabula.nvim/**"
+      - ".github/workflows/vim-plugin.yml"
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Check if vim-plugin branch exists
+        id: check_branch
+        run: |
+          if git ls-remote --heads origin vim-plugin | grep -q vim-plugin; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create or update vim-plugin branch
+        run: |
+          if [ "${{ steps.check_branch.outputs.exists }}" = "true" ]; then
+            echo "Updating existing vim-plugin branch..."
+            git fetch origin vim-plugin:vim-plugin
+            git checkout vim-plugin
+            # Remove all files except .git
+            git rm -rf . || true
+          else
+            echo "Creating new vim-plugin branch..."
+            git checkout --orphan vim-plugin
+            git rm -rf . || true
+          fi
+
+      - name: Copy plugin files to root
+        run: |
+          git checkout main -- plugins/vim/tabula.nvim
+          shopt -s dotglob
+          mv plugins/vim/tabula.nvim/* .
+          rm -rf plugins
+          ls -la
+
+      - name: Commit and push changes
+        run: |
+          git add .
+
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            echo "changed=false" >> $GITHUB_ENV
+          else
+            COMMIT_MSG="Sync with main branch - $(date +%Y-%m-%d)"
+            git commit -m "$COMMIT_MSG"
+            git push -f origin vim-plugin
+            echo "changed=true" >> $GITHUB_ENV
+            echo "Successfully published vim plugin to vim-plugin branch"
+          fi

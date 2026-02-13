@@ -116,25 +116,43 @@
     <div class="download-section">
       <h2>Download Latest Builds</h2>
 
-      <h3>macOS</h3>
+      <h3>Tabula CLI</h3>
+
+      <h4>macOS</h4>
       <div class="download-links">
         <a href="./bin/darwin/arm64/tabula" download>Apple Silicon (M1/M2)</a>
         <a href="./bin/darwin/amd64/tabula" download>Intel</a>
       </div>
 
-      <h3>Linux</h3>
+      <h4>Linux</h4>
       <div class="download-links">
         <a href="./bin/linux/arm64/tabula" download>ARM64</a>
         <a href="./bin/linux/amd64/tabula" download>x86_64</a>
         <a href="./bin/linux/368/tabula" download>i386</a>
       </div>
 
-      <h3>Windows</h3>
+      <h4>Windows</h4>
       <div class="download-links">
         <a href="./bin/windows/arm64/tabula.exe" download>ARM64</a>
         <a href="./bin/windows/amd64/tabula.exe" download>x86_64</a>
         <a href="./bin/windows/368/tabula.exe" download>i386</a>
       </div>
+
+      <h3 style="margin-top: 2rem">Vim/Neovim Plugin</h3>
+      <p style="margin-bottom: 1rem">
+        Syntax highlighting and auto-execution for Tabula scripts in Vim/Neovim.
+      </p>
+      <div class="download-links">
+        <a href="./releases/tabula.nvim-latest.tar.gz" download
+          >Download Latest Plugin</a
+        >
+      </div>
+      <p style="margin-top: 1rem; font-size: 0.9rem; color: #666">
+        Or install with plugin manager:
+        <code style="display: block; margin-top: 0.5rem">
+          { "pblazh/tabula", branch = "vim-plugin" }
+        </code>
+      </p>
     </div>
 
     <h2>Quick Start</h2>
@@ -186,6 +204,64 @@ Bob,30,92,A</code></pre>
     </ul>
     <p>The tool processes your script and outputs the transformed CSV data.</p>
 
+    <h2>Vim/Neovim Plugin</h2>
+    <p>
+      Get syntax highlighting and auto-execution for Tabula scripts in your
+      editor!
+    </p>
+    <h3>Features</h3>
+    <ul class="feature-list">
+      <li><strong>Syntax highlighting</strong> for .tbl script files</li>
+      <li>
+        <strong>Auto-execution</strong> when saving CSV files with embedded
+        scripts
+      </li>
+      <li><strong>Fold support</strong> for organizing Tabula directives</li>
+      <li><strong>Built-in commands</strong> - :Tabula and :TabulaToggle</li>
+    </ul>
+
+    <h3>Installation</h3>
+    <p><strong>Option 1: Plugin Manager (Recommended)</strong></p>
+    <p>Using Lazy.nvim:</p>
+    <pre><code>return {
+  "pblazh/tabula",
+  branch = "vim-plugin",
+  dependencies = { "hat0uma/csvview.nvim" },
+  ft = { "csv", "tabula" },
+}</code></pre>
+
+    <p>Using vim-plug:</p>
+    <pre><code>Plug 'pblazh/tabula', {'branch': 'vim-plugin'}</code></pre>
+
+    <p><strong>Option 2: Manual Installation</strong></p>
+    <ol>
+      <li>
+        <a href="./releases/tabula.nvim-latest.tar.gz" download
+          >Download the plugin archive</a
+        >
+      </li>
+      <li>
+        Extract to your plugin directory:
+        <pre><code># Neovim
+mkdir -p ~/.config/nvim/pack/plugins/start
+tar -xzf tabula.nvim-latest.tar.gz -C ~/.config/nvim/pack/plugins/start/
+
+# Vim
+mkdir -p ~/.vim/pack/plugins/start
+tar -xzf tabula.nvim-latest.tar.gz -C ~/.vim/pack/plugins/start/</code></pre>
+      </li>
+      <li>Restart your editor and run <code>:helptags ALL</code></li>
+    </ol>
+
+    <p>
+      <strong>Documentation:</strong>
+      <a
+        href="https://github.com/pblazh/tabula/tree/main/plugins/vim/tabula.nvim"
+      >
+        Full plugin documentation
+      </a>
+    </p>
+
     <h2>Further Reading</h2>
     <ul>
       <li>
@@ -212,4 +288,3 @@ Bob,30,92,A</code></pre>
     </ul>
   </body>
 </html>
-
