@@ -52,12 +52,17 @@ jobs:
 
       - name: Copy plugin files to root
         run: |
+          # Checkout plugin files
           git checkout main -- plugins/tabula.nvim
-          git checkout main -- doc/vim-plugin.md
+
+          # Move plugin files to root
           shopt -s dotglob
           mv plugins/tabula.nvim/* .
-          mv doc/vim-plugin.md README.md
-          rm -rf plugins doc
+          rm -rf plugins
+
+          # Get README from doc/vim-plugin.md
+          git show main:doc/vim-plugin.md > README.md
+
           ls -la
 
       - name: Commit and push changes
