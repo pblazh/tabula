@@ -62,9 +62,25 @@ Tabula reads your CSV file and applies the transformations defined in your scrip
 
 The tool processes your script and outputs the transformed CSV data.
 
+## Editor Integration
+
+### Vim/Neovim Plugin
+
+Get syntax highlighting and auto-execution for Tabula scripts in your editor!
+
+**Features:**
+
+- Syntax highlighting for `.tbl` files
+- Auto-execution when saving CSV files
+- Built-in commands (`:Tabula`, `:TabulaToggle`)
+- Fold support for organizing scripts
+
+**See:** [doc/vim-plugin.md](doc/vim-plugin.md) for full installation and usage guide.
+
 ## Further Reading
 
 - [Command Line Options](doc/command-line.md)
 - [Syntax Guide](doc/syntax.md)
 - [Functions](doc/functions.md)
 - [Examples](doc/examples.md)
+- [Vim/Neovim Plugin](doc/vim-plugin.md)
