@@ -4,18 +4,18 @@ Vim/Neovim plugin for [Tabula](https://github.com/pblazh/tabula) - a spreadsheet
 
 ## Features
 
-- 🎨 **Syntax highlighting** for `.tbl` script files
-- 🔄 **Auto-execution** of Tabula scripts on CSV files
-- 📁 **Fold support** for `#tabula` markers in CSV files
-- 💾 **Auto-save and execute** on buffer write or leaving insert mode
-- 🎯 **CSV integration** with [csvview.nvim](https://github.com/hat0uma/csvview.nvim) (optional)
+- **Syntax highlighting** for `.tbl` script files
+- **Auto-execution** of Tabula scripts on CSV files
+- **Fold support** for `#tabula` markers in CSV files
+- **Auto-save and execute** on buffer write or leaving insert mode
+- **CSV integration** with [csvview.nvim](https://github.com/hat0uma/csvview.nvim) (optional)
 
 ### Syntax Highlighting
 
 Automatic highlighting for `.tbl` files including:
 
 - Keywords: `let`, `fmt`
-- Preprocessor directives: `#include`, `#tabula:`
+- Preprocessor directive: `#include`
 - Cell references: `A1`, `B2`, `AA1`, etc.
 - Cell ranges: `A1:C3`
 - Comments: `//` single-line and `/* */` multi-line
@@ -36,7 +36,12 @@ For CSV files with embedded Tabula scripts (marked with `#tabula:`):
 - **Tabula** CLI tool must be installed and in your `$PATH`
 
   ```bash
-  # Install Tabula (example)
+  # Download from GitHub Pages
+  curl -LO https://pblazh.github.io/tabula/bin/darwin/arm64/tabula  # macOS M1/M2
+  chmod +x tabula
+  sudo mv tabula /usr/local/bin/
+
+  # Or build from source
   go install github.com/pblazh/tabula/cmd/cli@latest
   ```
 
@@ -96,8 +101,6 @@ Plug 'hat0uma/csvview.nvim'  " Optional
 ```
 
 Then run `:PlugInstall`
-
-````
 
 ### Plain Vim - Manual Installation
 
@@ -208,8 +211,6 @@ Simply create and edit `.tbl` files to get automatic syntax highlighting:
 vim script.tbl
 ```
 
-See the [examples](./examples/) directory for sample scripts.
-
 ## Configuration
 
 The plugin works out of the box with no configuration needed. However, you can customize behavior:
@@ -241,7 +242,7 @@ Make sure Tabula is installed and in your PATH:
 
 ```bash
 which tabula
-tabula --version
+tabula -v
 ```
 
 ### CSV not reloading after execution
@@ -272,14 +273,6 @@ Check if the plugin loaded:
 
 Look for `tabula.vim` in the output.
 
-## Examples
-
-See the [examples](./examples/) directory for:
-
-- Sample `.tbl` scripts
-- Example CSV files with embedded Tabula scripts
-- Common use cases and patterns
-
 ## Documentation
 
 For detailed help, see:
@@ -294,11 +287,11 @@ Issues and pull requests welcome at [https://github.com/pblazh/tabula](https://g
 
 ## License
 
-Same license as Tabula project.
+GNU General Public License v3.0
 
 ## See Also
 
 - [Tabula](https://github.com/pblazh/tabula) - The main Tabula CLI tool
+- [Tabula Website](https://pblazh.github.io/tabula) - Download binaries and plugin
 - [csvview.nvim](https://github.com/hat0uma/csvview.nvim) - Enhanced CSV viewing for Neovim
-- [Tabula Documentation](https://github.com/pblazh/tabula/tree/main/doc)
-````
+- [Tabula Documentation](https://github.com/pblazh/tabula/tree/main/doc) - Full language reference
