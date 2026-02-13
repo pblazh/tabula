@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tabula - CSV Spreadsheet Language</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+          "Ubuntu", "Cantarell", sans-serif;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        color: #333;
+      }
+      h1 {
+        color: #2c3e50;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 0.5rem;
+      }
+      h2 {
+        color: #34495e;
+        margin-top: 2rem;
+      }
+      code {
+        background-color: #f8f9fa;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+      }
+      pre {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+        border: 1px solid #e9ecef;
+      }
+      pre code {
+        background-color: transparent;
+        padding: 0;
+      }
+      ul {
+        padding-left: 1.5rem;
+      }
+      li {
+        margin-bottom: 0.5rem;
+      }
+      .download-section {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 2rem 0;
+        border: 2px solid #e9ecef;
+      }
+      .download-section h2 {
+        margin-top: 0;
+        color: #2c3e50;
+      }
+      .download-links {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .download-links a {
+        background-color: #3498db;
+        color: white;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+      .download-links a:hover {
+        background-color: #2980b9;
+      }
+      .feature-list li {
+        margin-bottom: 0.8rem;
+      }
+      .feature-list strong {
+        color: #2c3e50;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tabula - CSV Spreadsheet Language</h1>
+
+    <h2>What is Tabula?</h2>
+    <p>
+      Tabula is a command-line tool that lets you transform and manipulate CSV
+      files using a simple scripting language. Think of it as a way to apply
+      Excel-like formulas and calculations to your CSV data from the command
+      line.
+    </p>
+
+    <h2>Why Use Tabula?</h2>
+    <ul class="feature-list">
+      <li>
+        <strong>Automate CSV processing</strong> - Perfect for data pipelines
+        and batch operations
+      </li>
+      <li>
+        <strong>Familiar syntax</strong> - Uses spreadsheet-style cell
+        references (A1, B2, etc.)
+      </li>
+      <li>
+        <strong>Powerful functions</strong> - Built-in mathematical, text, and
+        logical functions
+      </li>
+      <li>
+        <strong>Flexible</strong> - Works with files or standard input/output
+      </li>
+      <li><strong>Lightweight</strong> - Single binary, no dependencies</li>
+    </ul>
+
+    <div class="download-section">
+      <h2>Download Latest Builds</h2>
+
+      <h3>Tabula CLI</h3>
+
+      <h4>macOS</h4>
+      <div class="download-links">
+        <a href="./bin/darwin/arm64/tabula" download>Apple Silicon (M1/M2)</a>
+        <a href="./bin/darwin/amd64/tabula" download>Intel</a>
+      </div>
+
+      <h4>Linux</h4>
+      <div class="download-links">
+        <a href="./bin/linux/arm64/tabula" download>ARM64</a>
+        <a href="./bin/linux/amd64/tabula" download>x86_64</a>
+        <a href="./bin/linux/368/tabula" download>i386</a>
+      </div>
+
+      <h4>Windows</h4>
+      <div class="download-links">
+        <a href="./bin/windows/arm64/tabula.exe" download>ARM64</a>
+        <a href="./bin/windows/amd64/tabula.exe" download>x86_64</a>
+        <a href="./bin/windows/368/tabula.exe" download>i386</a>
+      </div>
+
+      <h3 style="margin-top: 2rem">Vim/Neovim Plugin</h3>
+      <p style="margin-bottom: 1rem">
+        Syntax highlighting and auto-execution for Tabula scripts in Vim/Neovim.
+      </p>
+      <div class="download-links">
+        <a href="./releases/tabula.nvim-latest.tar.gz" download
+          >Download Latest Plugin</a
+        >
+      </div>
+      <p style="margin-top: 1rem; font-size: 0.9rem; color: #666">
+        Or install with plugin manager:
+        <code style="display: block; margin-top: 0.5rem">
+          { "pblazh/tabula", branch = "vim-plugin" }
+        </code>
+      </p>
+    </div>
+
+    <h2>Quick Start</h2>
+    <ol>
+      <li><strong>Download</strong> the binary for your system from above</li>
+      <li>
+        <strong>Create a CSV file</strong> (data.csv):
+        <pre><code>Name,Age,Score
+Alice,25,85
+Bob,30,92</code></pre>
+      </li>
+      <li>
+        <strong>Create a script</strong> (transform.tbl):
+        <pre><code>let D1 = "Grade";
+let D2 = IF(C2 > 90, "A", "B");
+let D3 = IF(C3 > 90, "A", "B");</code></pre>
+      </li>
+      <li>
+        <strong>Run the command</strong>:
+        <pre><code>tabula -s transform.tbl data.csv</code></pre>
+      </li>
+      <li>
+        <strong>See the result</strong>:
+        <pre><code>Name,Age,Score,Grade
+Alice,25,85,B
+Bob,30,92,A</code></pre>
+      </li>
+    </ol>
+
+    <h2>How It Works</h2>
+    <p>
+      Tabula reads your CSV file and applies the transformations defined in your
+      script. You can:
+    </p>
+    <ul>
+      <li>
+        <strong>Reference cells</strong> using spreadsheet notation (A1, B2, C3,
+        etc.)
+      </li>
+      <li>
+        <strong>Assign values</strong> to cells or variables using
+        <code>let</code> statements
+      </li>
+      <li>
+        <strong>Use functions</strong> like SUM, IF, CONCATENATE for
+        calculations
+      </li>
+      <li><strong>Format output</strong> with <code>fmt</code> statements</li>
+    </ul>
+    <p>The tool processes your script and outputs the transformed CSV data.</p>
+
+    <h2>Vim/Neovim Plugin</h2>
+    <p>
+      Get syntax highlighting and auto-execution for Tabula scripts in your
+      editor!
+    </p>
+    <h3>Features</h3>
+    <ul class="feature-list">
+      <li><strong>Syntax highlighting</strong> for .tbl script files</li>
+      <li>
+        <strong>Auto-execution</strong> when saving CSV files with embedded
+        scripts
+      </li>
+      <li><strong>Fold support</strong> for organizing Tabula directives</li>
+      <li><strong>Built-in commands</strong> - :Tabula and :TabulaToggle</li>
+    </ul>
+
+    <h3>Installation</h3>
+    <p><strong>Option 1: Plugin Manager (Recommended)</strong></p>
+    <p>Using Lazy.nvim:</p>
+    <pre><code>return {
+  "pblazh/tabula",
+  branch = "vim-plugin",
+  dependencies = { "hat0uma/csvview.nvim" },
+  ft = { "csv", "tabula" },
+}</code></pre>
+
+    <p>Using vim-plug:</p>
+    <pre><code>Plug 'pblazh/tabula', {'branch': 'vim-plugin'}</code></pre>
+
+    <p><strong>Option 2: Manual Installation</strong></p>
+    <ol>
+      <li>
+        <a href="./releases/tabula.nvim-latest.tar.gz" download
+          >Download the plugin archive</a
+        >
+      </li>
+      <li>
+        Extract to your plugin directory:
+        <pre><code># Neovim
+mkdir -p ~/.config/nvim/pack/plugins/start
+tar -xzf tabula.nvim-latest.tar.gz -C ~/.config/nvim/pack/plugins/start/
+
+# Vim
+mkdir -p ~/.vim/pack/plugins/start
+tar -xzf tabula.nvim-latest.tar.gz -C ~/.vim/pack/plugins/start/</code></pre>
+      </li>
+      <li>Restart your editor and run <code>:helptags ALL</code></li>
+    </ol>
+
+    <p>
+      <strong>Documentation:</strong>
+      <a
+        href="https://github.com/pblazh/tabula/tree/main/plugins/vim/tabula.nvim"
+      >
+        Full plugin documentation
+      </a>
+    </p>
+
+    <h2>Further Reading</h2>
+    <ul>
+      <li>
+        <a href="https://github.com/pblazh/tabula/blob/main/doc/command-line.md"
+          >Command Line Options</a
+        >
+      </li>
+      <li>
+        <a href="https://github.com/pblazh/tabula/blob/main/doc/syntax.md"
+          >Syntax Guide</a
+        >
+      </li>
+      <li>
+        <a href="https://github.com/pblazh/tabula/blob/main/doc/functions.md"
+          >Functions</a
+        >
+      </li>
+      <li>
+        <a href="https://github.com/pblazh/tabula/blob/main/doc/examples.md"
+          >Examples</a
+        >
+      </li>
+      <li><a href="https://github.com/pblazh/tabula">GitHub Repository</a></li>
+    </ul>
+  </body>
+</html>
