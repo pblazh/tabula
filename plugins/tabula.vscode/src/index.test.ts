@@ -92,7 +92,7 @@ suite("Tabula Extension Tests", () => {
       "autoExecute should default to true",
     );
 
-    const executablePathInspect = config.inspect<string>("executablePath");
+    const executablePathInspect = config.inspect("executablePath");
     assert.ok(
       executablePathInspect,
       "executablePath configuration should exist",
@@ -103,7 +103,7 @@ suite("Tabula Extension Tests", () => {
       "executablePath should default to 'tabula'",
     );
 
-    const autoFormatInspect = config.inspect<boolean>("autoFormat");
+    const autoFormatInspect = config.inspect("autoFormat");
     assert.ok(autoFormatInspect, "autoFormat configuration should exist");
     assert.strictEqual(
       autoFormatInspect.defaultValue,
@@ -228,7 +228,7 @@ suite("Tabula Extension Tests", () => {
     );
   });
 
-  test.skip("When CSV file is saved with autoExecute enabled, tabula.execute command is called", async () => {
+  test("When CSV file is saved with autoExecute enabled, tabula.execute command is called", async () => {
     // Ensure autoExecute is enabled
     const config = vscode.workspace.getConfiguration("tabula");
     await config.update("autoExecute", true, vscode.ConfigurationTarget.Global);
@@ -310,6 +310,20 @@ suite("Tabula Extension Tests", () => {
         commandCallCount > 0,
         `tabula.execute should be called at least once (called ${commandCallCount} times)`,
       );
+
+      // Restore the file by removing the inserted space
+      const restoreSuccess = await editor.edit((editBuilder) => {
+        editBuilder.delete(
+          new vscode.Range(
+            new vscode.Position(0, 0),
+            new vscode.Position(0, 1),
+          ),
+        );
+      });
+      assert.ok(restoreSuccess, "Restore edit should succeed");
+
+      // Save the restored document
+      await document.save();
     } finally {
       // Restore original executeCommand
       (vscode.commands as any).executeCommand = originalExecute;
