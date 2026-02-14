@@ -13,35 +13,15 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      // Check if it's a CSV file
-      if (document.languageId === "csv" || document.fileName.endsWith(".csv")) {
-        try {
-          // Save cursor position
-          const editor = vscode.window.activeTextEditor;
-          const cursorPosition = editor?.selection.active;
-
-          await runScript(document.uri);
-
-          // Reload the document from disk to show changes
-          await reloadDocument(document.uri);
-
-          // Restore cursor position
-          if (editor && cursorPosition) {
-            const newPosition = new vscode.Position(
-              Math.min(cursorPosition.line, editor.document.lineCount - 1),
-              cursorPosition.character,
-            );
-            editor.selection = new vscode.Selection(newPosition, newPosition);
-            editor.revealRange(
-              new vscode.Range(newPosition, newPosition),
-              vscode.TextEditorRevealType.InCenterIfOutsideViewport,
-            );
-          }
-        } catch (error) {
-          vscode.window.showErrorMessage(
-            `Tabula execution failed: ${error instanceof Error ? error.message : String(error)}`,
-          );
-        }
+      // Check if it's a CSV file and if it's the active document
+      const editor = vscode.window.activeTextEditor;
+      if (
+        editor &&
+        editor.document.uri.toString() === document.uri.toString() &&
+        document.languageId === "csv"
+      ) {
+        // Execute the tabula.execute command
+        await vscode.commands.executeCommand("tabula.execute");
       }
     },
   );
@@ -53,26 +33,80 @@ export function activate(context: vscode.ExtensionContext) {
     "tabula.toggleAutoExecute",
     () => {
       const config = vscode.workspace.getConfiguration("tabula");
-      const currentValue = config.get<boolean>("autoExecute", true);
+      const autoExecute = !config.get<boolean>("autoExecute", true);
       config.update(
         "autoExecute",
-        !currentValue,
+        autoExecute,
         vscode.ConfigurationTarget.Global,
       );
       vscode.window.showInformationMessage(
-        `Tabula auto-execute ${!currentValue ? "enabled" : "disabled"}`,
+        `Tabula auto-execute ${autoExecute ? "enabled" : "disabled"}`,
       );
     },
   );
 
   context.subscriptions.push(toggleCommand);
+
+  const executeCommand = vscode.commands.registerCommand(
+    "tabula.execute",
+    async () => {
+      const editor = vscode.window.activeTextEditor;
+      if (!editor) {
+        vscode.window.showErrorMessage("No active editor found");
+        return;
+      }
+
+      const document = editor.document;
+
+      // Check if it's a CSV file
+      // if (document.languageId !== "csv" && !isCsvFile(document.fileName)) {
+      if (document.languageId !== "csv") {
+        vscode.window.showErrorMessage(
+          "Current file is not a CSV file. Tabula can only be executed on CSV files.",
+        );
+        return;
+      }
+
+      // Save the document if it has unsaved changes
+      if (document.isDirty) {
+        await document.save();
+      }
+
+      try {
+        // Save cursor position
+        const cursorPosition = editor.selection.active;
+
+        await runScript(document.uri);
+
+        // Reload the document from disk to show changes
+        await reloadDocument(document.uri);
+
+        // Restore cursor position
+        const newPosition = new vscode.Position(
+          Math.min(cursorPosition.line, editor.document.lineCount - 1),
+          cursorPosition.character,
+        );
+        editor.selection = new vscode.Selection(newPosition, newPosition);
+        editor.revealRange(
+          new vscode.Range(newPosition, newPosition),
+          vscode.TextEditorRevealType.InCenterIfOutsideViewport,
+        );
+      } catch (error) {
+        vscode.window.showErrorMessage(
+          `Tabula execution failed: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    },
+  );
+
+  context.subscriptions.push(executeCommand);
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
 
-const runScript = (path: vscode.Uri): Promise<void> => {
-  return new Promise((resolve, reject) => {
+const runScript = (path: vscode.Uri): Promise<void> =>
+  new Promise((resolve, reject) => {
     const pathParts = path.path.split("/");
     const fileName = pathParts[pathParts.length - 1];
 
@@ -82,8 +116,8 @@ const runScript = (path: vscode.Uri): Promise<void> => {
     const autoFormat = config.get<boolean>("autoFormat", true);
 
     // Build command with optional -a flag
-    const autoFormatFlag = autoFormat ? "-a " : "";
-    const command = `"${tabulaPath}" ${autoFormatFlag}-u "${path.path}"`;
+    const autoFormatFlag = autoFormat ? "-a" : "";
+    const command = `"${tabulaPath}" ${autoFormatFlag} -u "${path.path}"`;
 
     exec(command, (error, _stdout, stderr) => {
       if (error) {
@@ -96,11 +130,10 @@ const runScript = (path: vscode.Uri): Promise<void> => {
       if (stderr) {
         console.error(`stderr: ${stderr}`);
       }
-      vscode.window.showInformationMessage(`Script for ${fileName} done.`);
+      vscode.window.showInformationMessage(`Tabula updated ${fileName}.`);
       resolve();
     });
   });
-};
 
 const reloadDocument = async (uri: vscode.Uri): Promise<void> => {
   // Find all text editors showing this document

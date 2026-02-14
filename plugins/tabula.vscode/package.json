@@ -38,6 +38,19 @@
           ".tbl"
         ],
         "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "csv",
+        "aliases": [
+          "CSV",
+          "csv"
+        ],
+        "extensions": [
+          ".csv"
+        ],
+        "mimetypes": [
+          "text/csv"
+        ]
       }
     ],
     "grammars": [
@@ -51,6 +64,11 @@
       {
         "command": "tabula.toggleAutoExecute",
         "title": "Toggle Auto-Execute on Save",
+        "category": "Tabula"
+      },
+      {
+        "command": "tabula.execute",
+        "title": "Execute tabula on an opened file",
         "category": "Tabula"
       }
     ],
@@ -77,13 +95,11 @@
   },
   "scripts": {
     "prepackage": "npm run compile",
+    "pretest": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
     "test": "vscode-test",
-    "test:unit": "npm run compile && node out/test/standalone.test.js",
-    "test:all": "npm run test:unit && npm test",
     "package": "mkdir dist ; vsce package -o ./dist/",
     "publish": "vsce publish",
     "publish:patch": "vsce publish patch",
