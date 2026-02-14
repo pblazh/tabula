@@ -59,7 +59,7 @@ These extensions work great together! View your CSV in table mode, make changes,
 ### Auto-Execution on Save
 
 1. Open a CSV file in VS Code
-2. Add Tabula script directive at the top:
+2. Add Tabula script directive:
 
    ```csv
    #tabula:#include "process.tbl"

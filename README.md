@@ -1,86 +1,151 @@
-# Tabula - CSV Spreadsheet Language
+# Tabula - Spreadsheet-Inspired CSV Transformation
 
-## What is Tabula?
+**Transform CSV files using familiar spreadsheet formulas from the command line.**
 
-Tabula is a command-line tool that lets you transform and manipulate CSV files using a simple scripting language. Think of it as a way to apply Excel-like formulas and calculations to your CSV data from the command line.
+## 🎯 What is Tabula?
 
-## Why Use Tabula?
+Tabula is a command-line tool that brings the power of spreadsheet calculations to CSV file processing.
 
-- **Automate CSV processing** - Perfect for data pipelines and batch operations
-- **Familiar syntax** - Uses spreadsheet-style cell references (A1, B2, etc.)
-- **Powerful functions** - Built-in mathematical, text, and logical functions
-- **Flexible** - Works with files or standard input/output
-- **Lightweight** - Single binary, no dependencies
+## 💡 Why Tabula?
 
-## Installation
+### **Own Your Data**
 
-Download a binary for your system and add it to your PATH
+Your data should be **yours** - not locked in proprietary formats or cloud services:
+
+- 📁 **Store anywhere** - Local files, git repos, network drives, your choice
+- 🔐 **Share when you want** - No forced cloud sync or account requirements
+- 📝 **Plain text** - CSV files are readable, editable, and future-proof
+- 🔍 **Use any tool** - Works with grep, sed, awk, and all text utilities
+- 📊 **Universal format** - Open in Excel, Google Sheets, databases, or any CSV-compatible tool
+
+### **No Bloated Software**
+
+Why install a multi-gigabyte office suite when you only need basic calculations?
+
+- 🪶 **Tiny footprint** - Single ~10MB binary, no installers, no dependencies
+- 🚀 **Fast** - Processes large files efficiently from the command line
+- 🌍 **Cross-platform** - macOS, Linux, Windows - works everywhere
+- 💻 **Scriptable** - Integrates with shell scripts, CI/CD, and automation tools
+
+### **Version Control Everything**
+
+Both your data AND transformations are text files:
+
+- ✅ **Git-friendly** - Track changes to CSV data and `.tbl` scripts
+- ✅ **Diff & merge** - See exactly what changed in your data
+- ✅ **Collaborate** - Share scripts and data through version control
+- ✅ **Reproducible** - Exact same results every time you run a script
+- ✅ **Documented** - Scripts serve as documentation for your transformations
+
+### **Familiar & Powerful**
+
+- 📊 **Spreadsheet syntax** - Cell references (A1, B2), functions SUM, IF, etc
+- 🔢 **Rich function library** - 50+ built-in functions for numbers, text, dates, logic
+- 🎯 **Purpose-built** - Designed specifically for CSV transformation, not generic programming
+
+## 🚀 Quick Start
+
+### Installation
+
+Download the binary for your system:
 
 <https://pblazh.github.io/tabula/>
 
-## Quick Start
+Or build from source
 
-1. **Download** the binary for your system
-2. **Create a CSV file** (data.csv):
+### Hello World
 
-   ```csv
-   Name,Age,Score
-   Alice,25,85
-   Bob,30,92
-   ```
+**Input CSV** (`sales.csv`):
 
-3. **Create a script** (transform.tbl):
+```csv
+Product,Price,Quantity
+Apple,1.20,10
+Cherry,2.50,8
+Banana,0.80,15
+```
 
-   ```
-   let D1 = "Grade";
-   let D2 = IF(C2 > 90, "A", "B");
-   let D3 = IF(C3 > 90, "A", "B");
-   ```
+**Script** (`script.tbl`):
 
-4. **Run the command**:
+```tabula
+// Add header for total column
+let D1 = "Total";
 
-   ```bash
-   tabula -s transform.tbl data.csv
-   ```
+// Calculate total for each row
+let D2:D4 = REF(REL(-2,0)) * REF(REL(-1,0));
 
-5. **See the result**:
+// Add a grand total row
+let A5 = "TOTAL";
+let D5 = SUM(D2:D4);
+```
 
-   ```csv
-   Name,Age,Score,Grade
-   Alice,25,85,B
-   Bob,30,92,A
-   ```
+**Run**:
 
-## How It Works
+```bash
+tabula -a -s script.tbl -i sales.csv
+```
 
-Tabula reads your CSV file and applies the transformations defined in your script. You can:
+**Output**:
 
-- **Reference cells** using spreadsheet notation (A1, B2, C3, etc.)
-- **Assign values** to cells or variables using `let` statements
-- **Use functions** like SUM, IF, CONCATENATE for calculations
-- **Format output** with `fmt` statements
+```csv
+Product , Price , Quantity , Total
+Apple   , 1.20  , 10       , 12
+Cherry  , 2.50  , 8        , 20
+Banana  , 0.80  , 15       , 12
+TOTAL   ,       ,          , 44
+```
 
-The tool processes your script and outputs the transformed CSV data.
+## 🛠️ Real-World Benefits
 
-## Editor Integration
+### **Work with Standard Tools**
 
-### Vim/Neovim Plugin
+```bash
+# Use grep to find rows
+grep "Alice" data.csv | tabula -s transform.tbl
 
-Get syntax highlighting and auto-execution for Tabula scripts in your editor!
+# Pipe through standard Unix tools
+# calculate sales and output sorted by total
+head -n1 sales.csv ; tabula -s script.tbl -i sales.csv | tail -n +2 | sort -t, -k3 -nr
 
-**Features:**
+# Combine with git
+git diff data.csv  # See exactly what changed
+git log transform.tbl  # Track transformation history
+# etc
+```
 
-- Syntax highlighting for `.tbl` files
-- Auto-execution when saving CSV files
-- Built-in commands (`:Tabula`, `:TabulaToggle`)
-- Fold support for organizing scripts
+### **Share & Publish Freely**
 
-**See:** [doc/vim-plugin.md](doc/vim-plugin.md) for full installation and usage guide.
+Your CSV output works everywhere:
 
-## Further Reading
+- 📊 **Import** into Excel, Google Sheets, Numbers, etc
+- 🗄️ **Load** into databases (PostgreSQL, MySQL, SQLite, etc)
+- 📈 **Visualize** with Tableau, Power BI, R, Python, etc
+- 🌐 **Publish** to GitHub, static sites, or data portals
+- 📧 **Email** as attachments without format issues
 
-- [Command Line Options](doc/command-line.md)
-- [Syntax Guide](doc/syntax.md)
-- [Functions](doc/functions.md)
-- [Examples](doc/examples.md)
-- [Vim/Neovim Plugin](doc/vim-plugin.md)
+### **No Lock-in**
+
+- ✅ Data is yours - readable in any text editor
+- ✅ Scripts are portable - run anywhere
+- ✅ No subscriptions, no accounts, no cloud requirements
+- ✅ Works offline - no internet needed
+- ✅ Free & open source - use without restrictions
+
+## 📚 Documentation
+
+For complete documentation, see **[doc/README.md](doc/README.md)**
+
+## 🔌 Editor Plugins
+
+- **[Vim/Neovim](doc/vim-plugin.md)** - Auto-execution on save, syntax highlighting for .tbl files
+- **[VS Code](plugins/tabula.vscode/readme.md)** - Auto-execution on save, syntax highlighting for .tbl files
+
+## 🎓 Learn More
+
+- [Full Documentation](doc/README.md)
+- [GitHub Repository](https://github.com/pblazh/tabula)
+- [Report Issues](https://github.com/pblazh/tabula/issues)
+- [Website](https://pblazh.github.io/tabula)
+
+## 📝 License
+
+GNU General Public License v3.0 - See [LICENSE](LICENSE) for details
