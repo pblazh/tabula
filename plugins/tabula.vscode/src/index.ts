@@ -1,212 +1,160 @@
 import * as vscode from "vscode";
 import { exec } from "child_process";
-import { parseString, format } from "fast-csv";
-
-import * as tableTemplate from "./templates/table";
-
-type receivedMessage = {
-  command: string;
-  rowIndex: number;
-  columnIndex: number;
-  value: string;
-};
 
 export function activate(context: vscode.ExtensionContext) {
-  const webViewCommand = vscode.commands.registerCommand(
-    "tabula.start",
+  // Auto-execute Tabula on CSV file save
+  const autoExecuteDisposable = vscode.workspace.onDidSaveTextDocument(
+    async (document: vscode.TextDocument) => {
+      // Check configuration
+      const config = vscode.workspace.getConfiguration("tabula");
+      const autoExecute = config.get<boolean>("autoExecute", true);
+
+      if (!autoExecute) {
+        return;
+      }
+
+      // Check if it's a CSV file and if it's the active document
+      const editor = vscode.window.activeTextEditor;
+      if (
+        editor &&
+        editor.document.uri.toString() === document.uri.toString() &&
+        document.languageId === "csv"
+      ) {
+        // Execute the tabula.execute command
+        await vscode.commands.executeCommand("tabula.execute");
+      }
+    },
+  );
+
+  context.subscriptions.push(autoExecuteDisposable);
+
+  // Manual command to toggle auto-execution
+  const toggleCommand = vscode.commands.registerCommand(
+    "tabula.toggleAutoExecute",
+    () => {
+      const config = vscode.workspace.getConfiguration("tabula");
+      const autoExecute = !config.get<boolean>("autoExecute", true);
+      config.update(
+        "autoExecute",
+        autoExecute,
+        vscode.ConfigurationTarget.Global,
+      );
+      vscode.window.showInformationMessage(
+        `Tabula auto-execute ${autoExecute ? "enabled" : "disabled"}`,
+      );
+    },
+  );
+
+  context.subscriptions.push(toggleCommand);
+
+  const executeCommand = vscode.commands.registerCommand(
+    "tabula.execute",
     async () => {
-      const panel = vscode.window.createWebviewPanel(
-        "csvEditing",
-        "File Content to Edit",
-        vscode.ViewColumn.One,
-        {
-          enableScripts: true,
-          localResourceRoots: [
-            vscode.Uri.joinPath(context.extensionUri, "media"),
-            vscode.Uri.joinPath(context.extensionUri, "src", "js"),
-          ],
-        }
-      );
+      const editor = vscode.window.activeTextEditor;
+      if (!editor) {
+        vscode.window.showErrorMessage("No active editor found");
+        return;
+      }
 
-      const csvPath = vscode.Uri.joinPath(
-        context.extensionUri,
-        "media",
-        "input.csv"
-      );
+      const document = editor.document;
 
-      const scriptPath = vscode.Uri.joinPath(
-        context.extensionUri,
-        "src",
-        "js",
-        "script.js"
-      );
-      const scriptUri = panel.webview.asWebviewUri(scriptPath);
-      const cspSource = panel.webview.cspSource;
+      // Check if it's a CSV file
+      // if (document.languageId !== "csv" && !isCsvFile(document.fileName)) {
+      if (document.languageId !== "csv") {
+        vscode.window.showErrorMessage(
+          "Current file is not a CSV file. Tabula can only be executed on CSV files.",
+        );
+        return;
+      }
 
-      const template = tableTemplate.createTablePage(
-        scriptUri.toString(),
-        cspSource
-      );
+      // Save the document if it has unsaved changes
+      if (document.isDirty) {
+        await document.save();
+      }
 
       try {
-        const csvContent = await readFileContent(csvPath);
+        // Save cursor position
+        const cursorPosition = editor.selection.active;
 
-        buildWebview(panel, template, csvContent);
+        await runScript(document.uri);
 
-        panel.webview.onDidReceiveMessage(
-          (message: receivedMessage) => {
-            switch (message.command) {
-              case "updateCell":
-                csvContent[message.rowIndex][message.columnIndex] =
-                  message.value;
-                saveFileContent(csvPath, csvContent)
-                  .then(showSavingResult(csvPath))
-                  .then(() => runScript(csvPath))
-                  .then(() => readFileContent(csvPath))
-                  .then((csvContentUpdated) =>
-                    buildWebview(panel, template, csvContentUpdated)
-                  )
-                  .catch(showSavingError);
-                return;
-            }
-          },
-          undefined,
-          context.subscriptions
+        // Reload the document from disk to show changes
+        await reloadDocument(document.uri);
+
+        // Restore cursor position
+        const newPosition = new vscode.Position(
+          Math.min(cursorPosition.line, editor.document.lineCount - 1),
+          cursorPosition.character,
+        );
+        editor.selection = new vscode.Selection(newPosition, newPosition);
+        editor.revealRange(
+          new vscode.Range(newPosition, newPosition),
+          vscode.TextEditorRevealType.InCenterIfOutsideViewport,
         );
       } catch (error) {
-        //TODO: Disaplay an error a user
+        vscode.window.showErrorMessage(
+          `Tabula execution failed: ${error instanceof Error ? error.message : String(error)}`,
+        );
       }
-    }
-  );
-
-  context.subscriptions.push(webViewCommand);
-}
-
-function parseTable(table: string[][]): {
-  head: string[];
-  body: string[][];
-  foot: string[][];
-} {
-  const head = Object.keys(table[0]);
-  const { body, foot } = table.reduce<{
-    body: typeof table;
-    foot: typeof table;
-  }>(
-    (acc, row) => {
-      const updatedAcc = { body: acc.body, foot: acc.foot };
-      if (Object.values(row)[0].includes("#")) {
-        updatedAcc.foot.push(row);
-      } else {
-        updatedAcc.body.push(row);
-      }
-      return updatedAcc;
     },
-    { body: [], foot: [] }
   );
 
-  return { head, body, foot };
-}
-
-function buildWebview(
-  panel: vscode.WebviewPanel,
-  template: (head: string, table: string, footer: string) => string,
-  csvContent: string[][]
-) {
-  const { head, body, foot } = parseTable(csvContent);
-
-  const thead = tableTemplate.createTableHead(head);
-
-  const tbody = tableTemplate.createTableBody(body);
-
-  const tfoot = tableTemplate.createTableFooter(foot);
-
-  panel.webview.html = template(thead, tbody, tfoot);
-}
-
-async function readFileContent(fileUri: vscode.Uri) {
-  const readData: Uint8Array = await vscode.workspace.fs.readFile(fileUri);
-  const fileContent: string = new TextDecoder("utf-8").decode(readData);
-
-  return new Promise<string[][]>((resolve, reject) => {
-    const results: string[][] = [];
-
-    parseString(fileContent)
-      .on("error", (error) => {
-        reject(error);
-      })
-      .on("data", (row) => {
-        results.push(row);
-      })
-      .on("end", () => {
-        resolve(results);
-      });
-  });
-}
-
-async function saveFileContent(
-  fileUri: vscode.Uri,
-  data: string[][]
-): Promise<void> {
-  const csvString = await new Promise<string>((resolve, reject) => {
-    const chunks: Buffer[] = [];
-
-    const stringifyStream = format({ headers: false });
-
-    stringifyStream.on("data", (chunk: Buffer) => {
-      chunks.push(chunk);
-    });
-
-    stringifyStream.on("error", (err) => {
-      reject(err);
-    });
-
-    stringifyStream.on("end", () => {
-      resolve(Buffer.concat(chunks).toString("utf-8"));
-    });
-
-    data.forEach((row) => stringifyStream.write(row));
-
-    stringifyStream.end();
-  });
-
-  const writeData: Uint8Array = new TextEncoder().encode(csvString);
-
-  return vscode.workspace.fs.writeFile(fileUri, writeData);
+  context.subscriptions.push(executeCommand);
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
 
-//TODO try to check is it dev mode now
-function showSavingError(error: unknown): void {
-  vscode.window.showErrorMessage(
-    `Saving file failure: ${
-      error instanceof Error ? error.message : String(error)
-    }`
-  );
-}
-
-const showSavingResult = (path: vscode.Uri) => () => {
-  vscode.window.showInformationMessage(`File was saved: ${path}`);
-};
-
-const runScript = (path: vscode.Uri): Promise<void> => {
-  return new Promise((resolve, reject) => {
+const runScript = (path: vscode.Uri): Promise<void> =>
+  new Promise((resolve, reject) => {
     const pathParts = path.path.split("/");
     const fileName = pathParts[pathParts.length - 1];
-    const command = `tabula -a -u "${path.path}"`;
 
-    exec(command, (error, stdout, stderr) => {
+    // Get configuration settings
+    const config = vscode.workspace.getConfiguration("tabula");
+    const tabulaPath = config.get<string>("executablePath", "tabula");
+    const autoFormat = config.get<boolean>("autoFormat", true);
+
+    // Build command with optional -a flag
+    const autoFormatFlag = autoFormat ? "-a" : "";
+    const command = `"${tabulaPath}" ${autoFormatFlag} -u "${path.path}"`;
+
+    exec(command, (error, _stdout, stderr) => {
       if (error) {
-        vscode.window.showErrorMessage(`Run script error: ${error.message}`);
+        vscode.window.showErrorMessage(
+          `Run script error: ${error.message}. Check that tabula is installed and the path is correct in settings.`,
+        );
         console.error(`exec error: ${error}`);
         return reject(error);
       }
       if (stderr) {
         console.error(`stderr: ${stderr}`);
       }
-      vscode.window.showInformationMessage(`Script for ${fileName} done.`);
+      vscode.window.showInformationMessage(`Tabula updated ${fileName}.`);
       resolve();
     });
+  });
+
+const reloadDocument = async (uri: vscode.Uri): Promise<void> => {
+  // Find all text editors showing this document
+  const editors = vscode.window.visibleTextEditors.filter(
+    (editor) => editor.document.uri.toString() === uri.toString(),
+  );
+
+  if (editors.length === 0) {
+    return;
+  }
+
+  // Close the document
+  await vscode.commands.executeCommand("workbench.action.closeActiveEditor");
+
+  // Small delay to ensure file system changes are visible
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
+  // Reopen the document
+  const document = await vscode.workspace.openTextDocument(uri);
+  await vscode.window.showTextDocument(document, {
+    preview: false,
+    preserveFocus: false,
   });
 };

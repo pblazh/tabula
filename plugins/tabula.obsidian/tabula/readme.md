@@ -1,1 +1,0 @@
-# Tabula plugin for Obsidian

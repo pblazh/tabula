@@ -1,8 +1,0 @@
-// Setting up a monetary format
-fmt D2:D4,E2:E9 = "$%.2f"
-
-// Calculating utility costs for metered services
-let E2:E4 = (REL(-2,0) - REL(-3,0)) * REL(-1,0)
-
-// Calculating the total cost
-let E9 = SUM(E2:E8)
