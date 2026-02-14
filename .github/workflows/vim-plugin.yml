@@ -60,9 +60,6 @@ jobs:
           mv plugins/tabula.nvim/* .
           rm -rf plugins
 
-          # Get README from doc/vim-plugin.md
-          git show main:doc/vim-plugin.md > README.md
-
           ls -la
 
       - name: Commit and push changes

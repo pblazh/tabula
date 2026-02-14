@@ -105,6 +105,7 @@ Then run `:PlugInstall`
 ### Plain Vim - Manual Installation
 
 1. Download the plugin from the official website:
+
    ```bash
    # Visit https://pblazh.github.io/tabula to download
    # Or download directly:
@@ -112,6 +113,7 @@ Then run `:PlugInstall`
    ```
 
 2. Extract and install:
+
    ```bash
    mkdir -p ~/.vim/pack/plugins/start
    tar -xzf tabula.nvim.tar.gz -C ~/.vim/pack/plugins/start/
@@ -125,6 +127,7 @@ Then run `:PlugInstall`
 ### Neovim - Manual Installation
 
 1. Download the plugin from the official website:
+
    ```bash
    # Visit https://pblazh.github.io/tabula to download
    # Or download directly:
@@ -132,6 +135,7 @@ Then run `:PlugInstall`
    ```
 
 2. Extract and install:
+
    ```bash
    mkdir -p ~/.config/nvim/pack/plugins/start
    tar -xzf tabula.nvim.tar.gz -C ~/.config/nvim/pack/plugins/start/
