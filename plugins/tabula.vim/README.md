@@ -49,6 +49,14 @@ For CSV files with embedded Tabula scripts (marked with `#tabula:`):
 
 ## Installation
 
+**Configuration Options:**
+
+| Option                        | Default    | Description                                               |
+| ----------------------------- | ---------- | --------------------------------------------------------- |
+| `vim.g.tabula_enable_csvview` | `1`        | Enable csvview.nvim integration. Set to `0` to disable.   |
+| `vim.g.tabula_auto_format`    | `1`        | Use `-a` flag for auto-formatting. Set to `0` to disable. |
+| `vim.g.tabula_command`        | `'tabula'` | Path to tabula executable. Customize if not in PATH.      |
+
 ### Neovim with Lazy.nvim (Recommended)
 
 Add to your `~/.config/nvim/lua/plugins/tabula.lua`:
@@ -61,6 +69,11 @@ return {
     "hat0uma/csvview.nvim", -- Optional but recommended
   },
   ft = { "csv", "tabula" }, -- Lazy load on filetype
+  init = function()
+    vim.g.tabula_enable_csvview = 0         -- Enable csvview integration (default: 1)
+    vim.g.tabula_auto_format = 0            -- Enable -a flag for auto-formatting (default: 1)
+    vim.g.tabula_command = '~/.bin/tabula'  -- Path to tabula executable (default: 'tabula')
+  end,
 }
 ```
 
@@ -74,6 +87,11 @@ require("lazy").setup({
     branch = "vim-plugin",
     dependencies = { "hat0uma/csvview.nvim" },
     ft = { "csv", "tabula" },
+    init = function()
+      vim.g.tabula_enable_csvview = 1
+      vim.g.tabula_auto_format = 1
+      vim.g.tabula_command = 'tabula'
+    end,
   },
 })
 ```
@@ -219,6 +237,28 @@ vim script.tbl
 
 The plugin works out of the box with no configuration needed. However, you can customize behavior:
 
+### Disable csvview Integration
+
+By default, the plugin enables [csvview.nvim](https://github.com/hat0uma/csvview.nvim) if it's installed. To disable this integration:
+
+```vim
+" In your vimrc/init.vim
+let g:tabula_enable_csvview = 0
+```
+
+This is useful if you prefer to manage csvview manually or use a different CSV viewing solution.
+
+### Disable Auto-formatting
+
+By default, Tabula is called with the `-a` flag for automatic formatting (`tabula -a -u <file>`). To disable auto-formatting:
+
+```vim
+" In your vimrc/init.vim
+let g:tabula_auto_format = 0
+```
+
+When disabled, Tabula is called as `tabula -u <file>`, giving you more control over formatting.
+
 ### Disable Auto-execution
 
 To disable automatic execution, use `:TabulaToggle` or add to your config:
@@ -228,15 +268,21 @@ To disable automatic execution, use `:TabulaToggle` or add to your config:
 let g:tabula_auto_execute = 0
 ```
 
+When disabled, you can still manually run Tabula using the `:Tabula` command.
+
 ### Custom Tabula Command
 
-If `tabula` is not in your PATH, specify the full path:
+If `tabula` is not in your PATH or you want to use a specific version, specify the full path:
 
 ```vim
+" In your vimrc/init.vim
 let g:tabula_command = '/usr/local/bin/tabula'
 ```
 
-(Note: This requires modifying the plugin source currently - feature request for customization)
+This is useful when:
+
+- Tabula is installed in a non-standard location
+- You're using a custom build or wrapper script
 
 ## Troubleshooting
 
