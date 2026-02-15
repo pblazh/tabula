@@ -138,8 +138,8 @@ For complete documentation, see **[doc/README.md](doc/README.md)**
 
 ## 🔌 Editor Plugins
 
-- **[Vim/Neovim](doc/vim-plugin.md)** - Auto-execution on save, syntax highlighting for .tbl files
-- **[VS Code](plugins/tabula.vscode/readme.md)** - Auto-execution on save, syntax highlighting for .tbl files
+- **[Vim/Neovim](plugins/tabula.vim/README.md)** - Auto-execution on save, syntax highlighting for .tbl files
+- **[VS Code](plugins/tabula.vscode/README.md)** - Auto-execution on save, syntax highlighting for .tbl files
 
 ## 🎓 Learn More
 
