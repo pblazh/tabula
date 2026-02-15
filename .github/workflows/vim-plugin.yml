@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "plugins/tabula.nvim/**"
+      - "plugins/tabula.vim/**"
       - ".github/workflows/vim-plugin.yml"
   workflow_dispatch: # Allow manual trigger
 
@@ -53,11 +53,11 @@ jobs:
       - name: Copy plugin files to root
         run: |
           # Checkout plugin files
-          git checkout main -- plugins/tabula.nvim
+          git checkout main -- plugins/tabula.vim
 
           # Move plugin files to root
           shopt -s dotglob
-          mv plugins/tabula.nvim/* .
+          mv plugins/tabula.vim/* .
           rm -rf plugins
 
           ls -la

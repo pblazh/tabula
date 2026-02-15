@@ -8,6 +8,21 @@ if exists('g:loaded_tabula')
 endif
 let g:loaded_tabula = 1
 
+" Configuration: enable csvview integration (default: enabled)
+if !exists('g:tabula_enable_csvview')
+  let g:tabula_enable_csvview = 1
+endif
+
+" Configuration: enable auto-format with -a flag (default: enabled)
+if !exists('g:tabula_auto_format')
+  let g:tabula_auto_format = 1
+endif
+
+" Configuration: path to tabula executable (default: 'tabula')
+if !exists('g:tabula_command')
+  let g:tabula_command = 'tabula'
+endif
+
 " Save compatibility options
 let s:save_cpo = &cpo
 set cpo&vim
@@ -20,9 +35,13 @@ function! s:ExecuteTabula() abort
   " Get the current file path
   let l:filepath = expand('%:p')
 
-  " Run tabula command
-  let l:cmd = 'tabula -a -u ' . shellescape(l:filepath)
-  let l:output = system(l:cmd)
+  " Build tabula command with optional -a flag
+  if g:tabula_auto_format
+    let l:flg = ' -a -u '
+  else
+    let l:flg = ' -u '
+  endif
+  let l:output = system(g:tabula_command . l:flg . shellescape(l:filepath))
 
   " Check for errors
   if v:shell_error != 0
@@ -74,8 +93,10 @@ function! s:SetupTabulaCsv() abort
   " Enable auto-read for external changes
   setlocal autoread
 
-  " Try to enable CSV view
-  call s:EnableCsvView()
+  " Enable csvview if configured
+  if g:tabula_enable_csvview
+    call s:EnableCsvView()
+  endif
 
   " Setup autocommands for this buffer
   augroup tabula_save
