@@ -25,7 +25,7 @@ Download the binary for your system:
 
 ## Editor Integration
 
-- **[Vim Plugin](../plugins/tabula.nvim/README.md)** - Vim/Neovim integration and setup
+- **[Vim Plugin](../plugins/tabula.vim/README.md)** - Vim/Neovim integration and setup
 - **[Visual Studio Code Plugin](../plugins/tabula.vscode/README.md)** - Visual Studio Code plugin integration and setup
 
 ## 🚀 Quick Links
