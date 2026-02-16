@@ -1,0 +1,59 @@
+import { App, PluginSettingTab, Setting } from "obsidian";
+import type TabulaPlugin from "./main";
+
+export class TabulaSettingTab extends PluginSettingTab {
+  plugin: TabulaPlugin;
+
+  constructor(app: App, plugin: TabulaPlugin) {
+    super(app, plugin);
+    this.plugin = plugin;
+  }
+
+  display(): void {
+    const { containerEl } = this;
+
+    containerEl.empty();
+    containerEl.createEl("h2", { text: "Tabula Settings" });
+
+    new Setting(containerEl)
+      .setName("Auto-execute on save")
+      .setDesc(
+        "Automatically execute Tabula scripts when saving markdown files",
+      )
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.autoExecute)
+          .onChange(async (value) => {
+            this.plugin.settings.autoExecute = value;
+            await this.plugin.saveSettings();
+          }),
+      );
+
+    new Setting(containerEl)
+      .setName("Tabula executable path")
+      .setDesc(
+        "Path to the tabula executable. Use 'tabula' to use the version in your PATH, or specify an absolute path.",
+      )
+      .addText((text) =>
+        text
+          .setPlaceholder("tabula")
+          .setValue(this.plugin.settings.executablePath)
+          .onChange(async (value) => {
+            this.plugin.settings.executablePath = value;
+            await this.plugin.saveSettings();
+          }),
+      );
+
+    new Setting(containerEl)
+      .setName("Auto format output")
+      .setDesc("Auto format output (adds -a flag to tabula command).")
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.autoFormat)
+          .onChange(async (value) => {
+            this.plugin.settings.autoFormat = value;
+            await this.plugin.saveSettings();
+          }),
+      );
+  }
+}
