@@ -77,31 +77,13 @@ X,Y
     });
   });
 
-  describe("Single-line comments", () => {
-    test("should extract single-line comment", () => {
+  describe("Code chunks", () => {
+    test("should extract code chunks", () => {
       const content = `
-<!-- #tabula: let D1 = "Total" -->
-
-\`\`\`csv
-A,B,C
-1,2,3
-\`\`\`
-`;
-      const chunks = extractChunks(content);
-
-      const commentChunks = chunks.filter((c) => c.type === "line-comment");
-      expect(commentChunks).toHaveLength(1);
-      expect(commentChunks[0].content).toBe('let D1 = "Total"');
-    });
-  });
-
-  describe("Multi-line comments", () => {
-    test("should extract multi-line comment", () => {
-      const content = `
-<!-- #tabula:
+\`\`\`tabula
 let D1 = "Total";
 let D2 = A2 + B2;
--->
+\`\`\`
 
 \`\`\`csv
 A,B,C
@@ -110,37 +92,21 @@ A,B,C
 `;
       const chunks = extractChunks(content);
 
-      const commentChunks = chunks.filter((c) => c.type === "multi-comment");
-      expect(commentChunks).toHaveLength(1);
-      expect(commentChunks[0].content).toContain("let D1");
-      expect(commentChunks[0].content).toContain("let D2");
-    });
-
-    test("should distinguish single-line from multi-line comments", () => {
-      const content = `
-<!-- #tabula: let D1 = "Total" -->
-
-<!-- #tabula:
-let D2 = "Sum";
-let D3 = "Avg";
--->
-`;
-      const chunks = extractChunks(content);
-
-      const lineComments = chunks.filter((c) => c.type === "line-comment");
-      const multiComments = chunks.filter((c) => c.type === "multi-comment");
-
-      expect(lineComments).toHaveLength(1);
-      expect(multiComments).toHaveLength(1);
+      const codeChunks = chunks.filter((c) => c.type === "code");
+      expect(codeChunks).toHaveLength(1);
+      expect(codeChunks[0].content).toContain("let D1");
+      expect(codeChunks[0].content).toContain("let D2");
     });
   });
 
   describe("Mixed content", () => {
-    test("should handle mixed text, comments, and CSV", () => {
+    test("should handle mixed text, code and CSV", () => {
       const content = `
 # Document
 
-<!-- #tabula: let D1 = "Total" -->
+\`\`\`tabula
+let D1 = "Total"
+\`\`\`
 \`\`\`csv
 A,B,C
 1,2,3
@@ -148,10 +114,10 @@ A,B,C
 
 More text
 
-<!-- #tabula:
+\`\`\`tabula
 let E1 = "Sum";
 fmt E1 = "%.2f";
--->
+\`\`\`
 \`\`\`csv
 X,Y,Z
 4,5,6
@@ -161,15 +127,16 @@ X,Y,Z
 
       expect(chunks.filter((c) => c.type === "text").length).toBeGreaterThan(0);
       expect(chunks.filter((c) => c.type === "csv").length).toBe(2);
-      expect(chunks.filter((c) => c.type === "line-comment").length).toBe(1);
-      expect(chunks.filter((c) => c.type === "multi-comment").length).toBe(1);
+      expect(chunks.filter((c) => c.type === "code").length).toBe(2);
     });
   });
 
   describe("Error comments", () => {
     test("should handle document with error and regular comments", () => {
       const content = `
-<!-- #tabula: let A1 = "test" -->
+\`\`\`tabula
+let A1 = "test"
+\`\`\`
 <!-- error: Something went wrong -->
 \`\`\`csv
 A,B
@@ -178,10 +145,10 @@ A,B
       const chunks = extractChunks(content);
 
       const errorChunks = chunks.filter((c) => c.type === "error");
-      const commentChunks = chunks.filter((c) => c.type === "line-comment");
+      const codeChunks = chunks.filter((c) => c.type === "code");
 
       expect(errorChunks).toHaveLength(0);
-      expect(commentChunks).toHaveLength(1);
+      expect(codeChunks).toHaveLength(1);
     });
   });
 
@@ -233,33 +200,15 @@ A,B
       expect(processed).toEqual(chunks);
     });
 
-    test("should keep line-comment chunks untouched", async () => {
-      const chunks = extractChunks(`<!-- #tabula: let A1 = "test" -->`);
-      const processed = await processChunks(mockExecuter, chunks);
-
-      expect(processed).toEqual(chunks);
-    });
-
-    test("should keep multi-comment chunks untouched", async () => {
-      const chunks = extractChunks(`
-<!-- #tabula:
-let A1 = "test";
-let B1 = "test2";
--->
-`);
-
-      const processed = await processChunks(mockExecuter, chunks);
-
-      expect(processed).toEqual(chunks);
-    });
-
-    test("should replace CSV content with 'processed' when immediately followed by line comment", async () => {
+    test("should replace CSV content with 'processed' when immediately followed by code", async () => {
       const content = `
 \`\`\`csv
 A,B,C
 1,2,3
 \`\`\`
-<!-- #tabula: let D1 = "Total" -->
+\`\`\`tabula
+let D1 = "Total"
+\`\`\`
 `;
 
       const chunks = extractChunks(content);
@@ -269,25 +218,7 @@ A,B,C
       expect(csvChunk?.content).toBe("processed");
     });
 
-    test("should replace CSV content with 'processed' when immediately followed by multi-line comment", async () => {
-      const content = `
-\`\`\`csv
-A,B,C
-1,2,3
-\`\`\`
-<!-- #tabula:
-let D1 = "Total";
-fmt D1 = "%.2f";
--->
-`;
-      const chunks = extractChunks(content);
-      const processed = await processChunks(mockExecuter, chunks);
-
-      const csvChunk = processed.find((c) => c.type === "csv");
-      expect(csvChunk?.content).toBe("processed");
-    });
-
-    test("should keep CSV content unchanged when not followed by comment", async () => {
+    test("should keep CSV content unchanged when not followed by code", async () => {
       const content = `
 \`\`\`csv
 A,B,C
@@ -323,7 +254,9 @@ A,B,C
 A,B
 1,2
 \`\`\`
-<!-- #tabula: let C1 = "X" -->
+\`\`\`tabula
+let C1 = "X"
+\`\`\`
 
 \`\`\`csv
 X,Y
@@ -337,7 +270,7 @@ More text
       const processed = await processChunks(mockExecuter, chunks);
 
       const csvChunks = processed.filter((c) => c.type === "csv");
-      expect(csvChunks[0].content).toBe("processed"); // immediately followed by comment
+      expect(csvChunks[0].content).toBe("processed"); // immediately followed by code
       expect(csvChunks[1].content).toBe("X,Y\n3,4"); // followed by text
     });
 
@@ -377,12 +310,14 @@ Some regular text here
       expect(csvChunk?.content).toBe("A,B\n1,2");
     });
 
-    test("should handle empty CSV block immediately followed by comment", async () => {
+    test("should handle empty CSV block immediately followed by code", async () => {
       const content = `
 \`\`\`csv
 
 \`\`\`
-<!-- #tabula: let A1 = "test" -->
+\`\`\`tabula
+let A1 = "test"
+\`\`\`
 `;
 
       const chunks = extractChunks(content);
@@ -392,9 +327,11 @@ Some regular text here
       expect(csvChunk?.content).toBe("processed");
     });
 
-    test("should handle comment followed by CSV (order matters)", async () => {
+    test("should handle code followed by CSV (order matters)", async () => {
       const content = `
-<!-- #tabula: let D1 = "Total" -->
+\`\`\`tabula
+let D1 = "Total"
+\`\`\`
 \`\`\`csv
 A,B,C
 1,2,3
@@ -404,10 +341,10 @@ A,B,C
       const processed = await processChunks(mockExecuter, chunks);
 
       const csvChunk = processed.find((c) => c.type === "csv");
-      expect(csvChunk?.content).toBe("A,B,C\n1,2,3"); // not followed by comment
+      expect(csvChunk?.content).toBe("A,B,C\n1,2,3"); // not followed by code
     });
 
-    test("should handle complex document with mixed CSV/comment patterns", async () => {
+    test("should handle complex document with mixed CSV/code patterns", async () => {
       const content = `
 # Header
 
@@ -415,7 +352,9 @@ A,B,C
 A,B
 1,2
 \`\`\`
-<!-- #tabula: let C1 = SUM(A:B) -->
+\`\`\`tabula
+let C1 = SUM(A:B)
+\`\`\`
 
 Middle text
 
@@ -426,9 +365,9 @@ X,Y
 
 More text
 
-<!-- #tabula:
+\`\`\`tabula
 let Z1 = "Total";
--->
+\`\`\`
 \`\`\`csv
 M,N
 5,6
@@ -438,9 +377,9 @@ M,N
       const processed = await processChunks(mockExecuter, chunks);
 
       const csvChunks = processed.filter((c) => c.type === "csv");
-      expect(csvChunks[0].content).toBe("processed"); // CSV immediately followed by comment
+      expect(csvChunks[0].content).toBe("processed"); // CSV immediately followed by code
       expect(csvChunks[1].content).toBe("X,Y\n3,4"); // CSV followed by text
-      expect(csvChunks[2].content).toBe("M,N\n5,6"); // CSV at end, not followed by comment
+      expect(csvChunks[2].content).toBe("M,N\n5,6"); // CSV at end, not followed by code
     });
 
     test("should preserve chunk count (not add or remove chunks)", async () => {
@@ -448,7 +387,9 @@ M,N
 \`\`\`csv
 A,B
 \`\`\`
-<!-- #tabula: x -->
+\`\`\`tabula
+let x = 1;
+\`\`\`
 Text
 \`\`\`csv
 C,D
@@ -466,7 +407,9 @@ C,D
 A,B,C
 1,2,3
 \`\`\`
-<!-- #tabula: let D1 = "X" -->
+\`\`\`tabula
+let D1 = "X";
+\`\`\`
 `;
       const chunks = extractChunks(content);
       const processed = await processChunks(mockExecuter, chunks);
@@ -526,9 +469,11 @@ X,Y
       expect(output).toBe(input);
     });
 
-    test("should preserve single-line comment", () => {
+    test("should preserve single-line code", () => {
       const input = `
-<!-- #tabula: let D1 = "Total" -->
+\`\`\`tabula
+let D1 = "Total";
+\`\`\`
 
 \`\`\`csv
 A,B,C
@@ -541,12 +486,12 @@ A,B,C
       expect(output).toBe(input);
     });
 
-    test("should preserve multi-line comment", () => {
+    test("should preserve multi-line code", () => {
       const input = `
-<!-- #tabula:
+\`\`\`tabula
 let D1 = "Total";
 let D2 = A2 + B2;
--->
+\`\`\`
 
 \`\`\`csv
 A,B,C
@@ -586,7 +531,9 @@ A,B,C
       const input = `
 # Document
 
-<!-- #tabula: let D1 = "Total" -->
+\`\`\`tabula
+let D1 = "Total";
+\`\`\`
 \`\`\`csv
 A,B,C
 1,2,3
@@ -594,10 +541,10 @@ A,B,C
 
 More text
 
-<!-- #tabula:
+\`\`\`tabula
 let E1 = "Sum";
 fmt E1 = "%.2f";
--->
+\`\`\`
 \`\`\`csv
 X,Y,Z
 4,5,6
@@ -613,7 +560,8 @@ X,Y,Z
       const input = `\`\`\`csv
 A,B
 \`\`\`
-Text`;
+Text
+`;
       const chunks = extractChunks(input);
       const output = outputChunks(chunks);
 
@@ -621,7 +569,8 @@ Text`;
     });
 
     test("should preserve CSV block at end", () => {
-      const input = `Text
+      const input = `
+Text
 \`\`\`csv
 A,B
 \`\`\``;
@@ -643,7 +592,9 @@ A,B
       const input = `\`\`\`csv
 A
 \`\`\`
-<!-- #tabula: x -->
+\`\`\`tabula
+let x = 9;
+\`\`\`
 \`\`\`csv
 B
 \`\`\``;

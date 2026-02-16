@@ -5,7 +5,7 @@ export type TabulaSettings = {
 };
 
 export type Chunk = {
-  type: "text" | "csv" | "line-comment" | "multi-comment" | "error";
+  type: "text" | "csv" | "code" | "error";
   content: string;
 };
 
