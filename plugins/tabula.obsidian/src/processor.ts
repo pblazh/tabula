@@ -20,13 +20,12 @@ export function extractChunks(content: string): Chunk[] {
   }
 
   // Find Tabula comments
-  const commentRegex = /<!--\s*#tabula:(?<content>[\s\S\n]*?)-->\n/g;
+  const commentRegex = /```tabula\n*(?<content>[\s\S]*?)\n```\n/g;
   while ((match = commentRegex.exec(content)) !== null) {
     const commentContent = match.groups?.content?.trim() ?? "";
-    const isMultiline = commentContent.includes("\n");
 
     matches.push({
-      type: isMultiline ? "multi-comment" : "line-comment",
+      type: "code",
       start: match.index,
       end: match.index + match[0].length,
       content: commentContent,
@@ -83,12 +82,10 @@ const formatChunk = (chunk: Chunk): string => {
   switch (chunk.type) {
     case "csv":
       return ["```csv", chunk.content, "```", ""].join("\n");
-    case "multi-comment":
-      return ["<!-- #tabula:", chunk.content, "-->", ""].join("\n");
-    case "line-comment":
-      return `<!-- #tabula: ${chunk.content} -->\n`;
+    case "code":
+      return ["```tabula", chunk.content, "```", ""].join("\n");
     case "error":
-      return `<!-- error:\n${chunk.content}\n-->\n`;
+      return `<!-- error:\n${chunk.content}-->\n`;
     default:
       return chunk.content;
   }
@@ -124,11 +121,7 @@ export async function processChunks(
     }
 
     // If tabula code is immediately after the csv
-    if (
-      chunk.type === "csv" &&
-      (nextChunk?.type === "line-comment" ||
-        nextChunk?.type === "multi-comment")
-    ) {
+    if (chunk.type === "csv" && nextChunk?.type === "code") {
       processed.push(executeChunk(chunk, nextChunk));
       continue;
     }
@@ -151,7 +144,7 @@ const createProcessor =
     } catch (err) {
       if (err) {
         out.push(csv);
-        out.push({ type: "error", content: err });
+        out.push({ type: "error", content: String(err) });
       }
     }
 
