@@ -1,0 +1,39 @@
+{
+  "name": "tabula-obsidian",
+  "version": "0.1.0",
+  "description": "Tabula plugin for Obsidian - CSV transformation with spreadsheet-inspired scripting language",
+  "main": "out/main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "version": "node version-bump.mjs && git add src/manifest.json versions.json"
+  },
+  "keywords": [
+    "obsidian",
+    "tabula",
+    "csv",
+    "spreadsheet",
+    "data"
+  ],
+  "author": "Tabula",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pblazh/tabula"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.20.0",
+    "jest": "^30.2.0",
+    "obsidian": "latest",
+    "ts-jest": "^29.4.6",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
+  }
+}

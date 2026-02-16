@@ -79,7 +79,7 @@
   - [x] #22.4: Add semver
   - [x] #22.5: Vim plugin
   - [x] #22.6: Visual Studio Code plugin
-  - [ ] #22.7: Obsidian plugin
+  - [-] #22.7: Obsidian plugin
 - [ ] #23: Performance Optimizations
   - [ ] #23.1: Optimize CSV parsing for large files
   - [ ] #23.2: Add memory usage optimization
