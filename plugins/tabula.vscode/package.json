@@ -94,11 +94,12 @@
     }
   },
   "scripts": {
-    "prepackage": "npm run compile",
-    "pretest": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "prepackage": "npm run build",
+    "pretest": "npm run build",
+    "build": "tsc -p ./",
+    "dev": "tsc -watch -p ./",
     "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
     "test": "vscode-test",
     "package": "mkdir dist ; vsce package -o ./dist/",
     "publish": "vsce publish",
@@ -106,17 +107,24 @@
     "publish:minor": "vsce publish minor",
     "publish:major": "vsce publish major"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@types/vscode": "^1.102.0",
     "@types/mocha": "^10.0.10",
-    "@types/node": "20.x",
-    "@typescript-eslint/eslint-plugin": "^8.31.1",
-    "@typescript-eslint/parser": "^8.31.1",
-    "@vscode/vsce": "^3.2.1",
-    "eslint": "^9.25.1",
-    "typescript": "^5.8.3",
+    "@types/vscode": "^1.102.0",
     "@vscode/test-cli": "^0.0.11",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.2.1",
+    "@eslint/js": "^10.0.1",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.11.0",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.20.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "jest": "^30.2.0",
+    "obsidian": "latest",
+    "ts-jest": "^29.4.6",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.56.0"
   }
 }

@@ -31,9 +31,9 @@ jobs:
         working-directory: plugins/tabula.vscode
         run: npm run lint
 
-      - name: Compile extension
+      - name: Build extension
         working-directory: plugins/tabula.vscode
-        run: npm run compile
+        run: npm run build
 
       - name: Run tests
         working-directory: plugins/tabula.vscode
