@@ -208,25 +208,44 @@ jobs:
       id-token: write
       contents: read
     steps:
+      # 1️⃣ Checkout gh-pages branch
       - name: Checkout gh-pages branch
         uses: actions/checkout@v4
         with:
           ref: gh-pages
+          fetch-depth: 0
 
-      - name: Download artifacts
+      # 2️⃣ Clone main branch to temp directory (depth 0)
+      - name: Clone main branch to temp
+        run: |
+          git clone --depth 1 --no-checkout https://github.com/${{ github.repository }} temp-main
+          cd temp-main
+
+      # 3️⃣ Copy gh-pages folder content to branch root
+      - name: Copy gh-pages folder to root
+        run: |
+          cp -r temp-main/gh-pages/* .
+          rm -rf temp-main
+
+      # 4️⃣ Download release artifacts
+      - name: Download release artifacts
         uses: actions/download-artifact@v4
         with:
           path: dist
 
-      - name: Update releases
+      # 5️⃣ Copy release artifacts to /releases
+      - name: Copy release artifacts
         run: |
           mkdir -p releases
-          find dist -type f -exec cp {} releases/ \;
+          cp -r dist/* releases/
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
+      # 6️⃣ Commit & push
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Update gh-pages site with new release" || echo "No changes to commit"
+          git push origin gh-pages
 
+      # 7️⃣ Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
