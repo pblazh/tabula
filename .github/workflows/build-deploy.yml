@@ -164,6 +164,13 @@ jobs:
             tar -czf release-assets/tabula-go-$VERSION.tar.gz -C dist/tabula_go_bin .
           fi
 
+      - name: Generate minimal CHANGELOG.md
+        if: steps.check_tag.outputs.release_created == 'true'
+        run: |
+          echo "# Changelog for v$VERSION" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "- Release v$VERSION" >> CHANGELOG.md
+
       - name: Create GitHub Tag
         if: steps.check_tag.outputs.release_created == 'true'
         run: |
