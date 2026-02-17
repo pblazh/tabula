@@ -1,12 +1,18 @@
-name: Test Obsidian plugin
+name: Test Obsidian Plugin
 
 on:
   push:
-    branches:
-      - "*"
+    branches-ignore:
+      - main
+    paths:
+      - "plugins/tabula.obsidian/**"
+      - ".github/workflows/obsidian-plugin.yml"
   pull_request:
-    branches:
-      - "*"
+    branches-ignore:
+      - main
+    paths:
+      - "plugins/tabula.obsidian/**"
+      - ".github/workflows/obsidian-plugin.yml"
 
 jobs:
   test:
@@ -19,9 +25,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "20.x"
           cache: "npm"
           cache-dependency-path: plugins/tabula.obsidian/package-lock.json
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: plugins/tabula.obsidian/node_modules
+          key: obsidian-node-modules-${{ runner.os }}-${{ hashFiles('plugins/tabula.obsidian/package-lock.json') }}
+          restore-keys: |
+            obsidian-node-modules-${{ runner.os }}-
 
       - name: Install dependencies
         working-directory: plugins/tabula.obsidian
@@ -38,3 +52,11 @@ jobs:
       - name: Run tests
         working-directory: plugins/tabula.obsidian
         run: npm run test
+
+      - name: Upload test logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: obsidian-test-logs
+          path: plugins/tabula.obsidian/.vscode-test/user-data/logs/
+          retention-days: 7
