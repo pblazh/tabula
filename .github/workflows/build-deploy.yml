@@ -15,6 +15,9 @@ env:
   NODE_VERSION: 20.x
   GO_VERSION: "1.24.2"
 
+# -------------------------------
+# Test Jobs (parallel, produce artifacts)
+# -------------------------------
 jobs:
   # --------------------
   # Run all tests in parallel
@@ -115,18 +118,18 @@ jobs:
   # --------------------
   build:
     runs-on: ubuntu-latest
-    needs: test
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ env.GO_VERSION }}
+          path: plugins/tabula.obsidian/node_modules
+          key: obsidian-node-modules-${{ runner.os }}-${{ hashFiles('plugins/tabula.obsidian/package-lock.json') }}
+          restore-keys: |
+            obsidian-node-modules-${{ runner.os }}-
 
       - name: Get current version
         id: get_version
