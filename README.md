@@ -138,16 +138,25 @@ For complete documentation, see **[doc/README.md](doc/README.md)**
 
 ## 🔌 Editor Plugins
 
-- **[Vim/Neovim](plugins/tabula.vim/README.md)** - Auto-execution on save, syntax highlighting for .tbl files
-- **[VS Code](plugins/tabula.vscode/README.md)** - Auto-execution on save, syntax highlighting for .tbl files
+- **[Vim/Neovim](plugins/tabula.vim/README.md)** - Auto-execution on save of CSV files, syntax highlighting for .tbl files
+- **[Visual Studio Code](plugins/tabula.vscode/README.md)** - Auto-execution on save of CSV files, syntax highlighting for .tbl files
+- **[Obsidian](plugins/tabula.Obsidian/README.md)** - Auto-execution on save of markdown files. Code-block support for CSV and Tabula scripts
 
-## 🎓 Learn More
+## Links
 
-- [Full Documentation](doc/README.md)
+- [Tabula Website](https://pblazh.github.io/tabula)
+- [Tabula Documentation](https://github.com/pblazh/tabula/tree/main/doc)
 - [GitHub Repository](https://github.com/pblazh/tabula)
 - [Report Issues](https://github.com/pblazh/tabula/issues)
-- [Website](https://pblazh.github.io/tabula)
 
-## 📝 License
+## License
 
-GNU General Public License v3.0 - See [LICENSE](LICENSE) for details
+[GNU General Public License v3.0](./LICENSE.txt)
+
+## Support
+
+If you find this project useful, consider:
+
+- ⭐ Starring the [GitHub repository](https://github.com/pblazh/tabula)
+- 🐛 Reporting issues or suggesting features
+- 📖 Contributing to the documentation
