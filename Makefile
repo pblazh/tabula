@@ -34,7 +34,7 @@ build-wasm:
 
 
 test:
-	go test -v -cover ./...
+	go test -cover ./...
 
 coverage:
 	@echo "Generating coverage report..."
