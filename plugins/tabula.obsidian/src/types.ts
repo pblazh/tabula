@@ -1,5 +1,5 @@
 export type TabulaSettings = {
-  autoExecute: boolean
+  autoExecution: boolean
   executablePath: string
   autoFormat: boolean
   tableIndex: boolean
@@ -16,7 +16,7 @@ export type Match = Chunk & {
 }
 
 export const DEFAULT_SETTINGS: TabulaSettings = {
-  autoExecute: true,
+  autoExecution: true,
   executablePath: 'tabula',
   autoFormat: true,
   tableIndex: true,

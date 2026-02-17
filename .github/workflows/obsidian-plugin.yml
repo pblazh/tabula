@@ -1,4 +1,4 @@
-name: Test VSCode Extension
+name: Test Obsidian plugin
 
 on:
   push:

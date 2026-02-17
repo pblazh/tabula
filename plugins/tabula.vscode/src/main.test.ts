@@ -59,9 +59,9 @@ suite('Tabula Extension Tests', () => {
     assert.ok(
       commands.find(
         (cmd: { command: string }) =>
-          cmd.command === 'tabula.toggleAutoExecute',
+          cmd.command === 'tabula.toggleAutoExecution',
       ),
-      'toggleAutoExecute command should be in package.json',
+      'toggleAutoExecution command should be in package.json',
     )
 
     assert.ok(
@@ -73,7 +73,7 @@ suite('Tabula Extension Tests', () => {
 
     // Check configuration is defined
     const properties = packageJSON.contributes.configuration.properties
-    assert.ok(properties['tabula.autoExecute'])
+    assert.ok(properties['tabula.autoExecution'])
     assert.ok(properties['tabula.executablePath'])
     assert.ok(properties['tabula.autoFormat'])
   })
@@ -88,11 +88,11 @@ suite('Tabula Extension Tests', () => {
   test('Should have correct configuration defaults', () => {
     const config = vscode.workspace.getConfiguration('tabula')
 
-    const autoExecuteInspect = config.inspect('autoExecute')
-    assert.ok(autoExecuteInspect, 'autoExecute configuration should exist')
+    const autoExecutionInspect = config.inspect('autoExecution')
+    assert.ok(autoExecutionInspect, 'autoExecution configuration should exist')
     assert.ok(
-      autoExecuteInspect.defaultValue,
-      'autoExecute should default to true',
+      autoExecutionInspect.defaultValue,
+      'autoExecution should default to true',
     )
 
     const executablePathInspect = config.inspect('executablePath')
@@ -115,38 +115,38 @@ suite('Tabula Extension Tests', () => {
     )
   })
 
-  test('Should toggle autoExecute setting', async () => {
+  test('Should toggle autoExecution setting', async () => {
     let config = vscode.workspace.getConfiguration('tabula')
-    const initialValue = config.get<boolean>('autoExecute', true)
+    const initialValue = config.get<boolean>('autoExecution', true)
 
     // Execute toggle command
-    await vscode.commands.executeCommand('tabula.toggleAutoExecute')
+    await vscode.commands.executeCommand('tabula.toggleAutoExecution')
 
     // Wait for config to actually change
-    await waitForConfigChange('autoExecute', !initialValue)
+    await waitForConfigChange('autoExecution', !initialValue)
 
     // Verify the change
     config = vscode.workspace.getConfiguration('tabula')
-    const newValue = config.get<boolean>('autoExecute', true)
+    const newValue = config.get<boolean>('autoExecution', true)
     assert.strictEqual(
       newValue,
       !initialValue,
-      `autoExecute should be ${!initialValue} after toggle`,
+      `autoExecution should be ${!initialValue} after toggle`,
     )
 
     // Toggle back
-    await vscode.commands.executeCommand('tabula.toggleAutoExecute')
+    await vscode.commands.executeCommand('tabula.toggleAutoExecution')
 
     // Wait for config to change back
-    await waitForConfigChange('autoExecute', initialValue)
+    await waitForConfigChange('autoExecution', initialValue)
 
     // Verify it's restored
     config = vscode.workspace.getConfiguration('tabula')
-    const restoredValue = config.get<boolean>('autoExecute', true)
+    const restoredValue = config.get<boolean>('autoExecution', true)
     assert.strictEqual(
       restoredValue,
       initialValue,
-      `autoExecute should toggle back to ${initialValue}`,
+      `autoExecution should toggle back to ${initialValue}`,
     )
   })
 
@@ -186,11 +186,11 @@ suite('Tabula Extension Tests', () => {
     )
   })
 
-  test('Should register tabula.toggleAutoExecute command', async () => {
+  test('Should register tabula.toggleAutoExecution command', async () => {
     const commands = await vscode.commands.getCommands(true)
     assert.ok(
-      commands.includes('tabula.toggleAutoExecute'),
-      'tabula.toggleAutoExecute command should be registered',
+      commands.includes('tabula.toggleAutoExecution'),
+      'tabula.toggleAutoExecution command should be registered',
     )
   })
 
@@ -231,17 +231,21 @@ suite('Tabula Extension Tests', () => {
     )
   })
 
-  test('When CSV file is saved with autoExecute enabled, tabula.execute command is called', async () => {
-    // Ensure autoExecute is enabled
+  test('When CSV file is saved with autoExecution enabled, tabula.execute command is called', async () => {
+    // Ensure autoExecution is enabled
     const config = vscode.workspace.getConfiguration('tabula')
-    await config.update('autoExecute', true, vscode.ConfigurationTarget.Global)
-
-    // Verify autoExecute is enabled
-    const autoExecute = config.get<boolean>('autoExecute')
-    assert.strictEqual(
-      autoExecute,
+    await config.update(
+      'autoExecution',
       true,
-      'autoExecute should be enabled for this test',
+      vscode.ConfigurationTarget.Global,
+    )
+
+    // Verify autoExecution is enabled
+    const autoExecution = config.get<boolean>('autoExecution')
+    assert.strictEqual(
+      autoExecution,
+      true,
+      'autoExecution should be enabled for this test',
     )
 
     // Verify that tabula.execute command is registered
