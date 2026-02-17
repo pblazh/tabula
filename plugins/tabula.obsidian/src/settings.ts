@@ -22,9 +22,9 @@ export class TabulaSettingTab extends PluginSettingTab {
       )
       .addToggle((toggle) =>
         toggle
-          .setValue(this.plugin.settings.autoExecute)
+          .setValue(this.plugin.settings.autoExecution)
           .onChange(async (value) => {
-            this.plugin.settings.autoExecute = value
+            this.plugin.settings.autoExecution = value
             await this.plugin.saveSettings()
           }),
       )

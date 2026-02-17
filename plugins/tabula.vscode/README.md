@@ -21,9 +21,9 @@ VS Code extension for [Tabula](https://github.com/pblazh/tabula) - a spreadsheet
   chmod +x tabula
   sudo mv tabula /usr/local/bin/
 
-  # Or build from source
-  go install github.com/pblazh/tabula/cmd/cli@latest
   ```
+
+  Or build from source
 
 ## Recommended Extensions
 
@@ -84,7 +84,8 @@ These extensions work great together! View your CSV in table mode, make changes,
 
 Access commands via Command Palette (Ctrl+Shift+P / Cmd+Shift+P):
 
-- **Tabula: Toggle Auto-Execute on Save** - Enable/disable automatic execution
+- **Tabula: execute** - Manually run Tabula on the active markdown file
+- **Tablua: toggle auto-execution: Toggle auto-execution on Save** - Enable/disable automatic execution
 
 ### Configuration
 
@@ -92,7 +93,7 @@ You can configure the extension behavior in VS Code settings:
 
 ```json
 {
-  "tabula.autoExecute": true, // Enable/disable auto-execution on save
+  "tabula.autoExecution": true, // Enable/disable auto-execution on save
   "tabula.executablePath": "tabula", // Path to tabula executable
   "tabula.autoFormat": true // Enable/disable auto-format output (-a flag)
 }
@@ -137,85 +138,12 @@ The extension provides rich syntax highlighting for Tabula script files (`.tbl`)
 - **Strings**: `"text"`, `'text'`
 - **Comments**: `// line comment`, `/* block comment */`
 
-### **Language Features:**
-
-- ✅ Auto-closing brackets, quotes, and parentheses
-- ✅ Comment toggling (Ctrl+/ or Cmd+/)
-- ✅ Block comment support (Shift+Alt+A)
-- ✅ Code folding with regions
-- ✅ Bracket matching
-
-### **Example:**
-
-```tabula
-// Calculate totals with formatting
-let D1 = "Total";
-let D2 = B2 * C2;
-let D3 = SUM(D2:D10);
-
-// Format as currency
-fmt D2:D3 = "$%.2f";
-
-// Conditional logic
-let E2 = IF(D2 > 100, "High", "Low");
-```
-
 ## How It Works
 
 1. **File Save Detection** - Extension listens for CSV file saves
 2. **Execute Tabula** - Runs `tabula [-a] -u <file>` on the saved file (with optional `-a` flag based on settings)
 3. **Reload File** - Updates the editor with transformed content
 4. **Show Errors** - Displays any errors in VS Code notifications
-
-## Examples
-
-### Example 1: Calculate Grades
-
-**data.csv:**
-
-```csv
-#tabula:#include "grades.tbl"
-Name,Score
-Alice,85
-Bob,92
-```
-
-**grades.tbl:**
-
-```tabula
-let C1 = "Grade";
-let C2 = IF(B2 >= 90, "A", IF(B2 >= 80, "B", "C"));
-let C3 = IF(B3 >= 90, "A", IF(B3 >= 80, "B", "C"));
-```
-
-**Result after save:**
-
-```csv
-#tabula:#include "grades.tbl"
-Name,Score,Grade
-Alice,85,B
-Bob,92,A
-```
-
-### Example 2: Calculate Totals
-
-**sales.csv:**
-
-```csv
-#tabula:let D1 = "Total"
-Product,Price,Quantity
-Apple,1.50,10
-Banana,0.80,20
-```
-
-**With inline script:**
-
-```tabula
-let D1 = "Total";
-let D2 = B2 * C2;
-let D3 = B3 * C3;
-fmt D2:D3 = "%.2f";
-```
 
 ## Troubleshooting
 
@@ -248,7 +176,7 @@ tabula -v
 2. Check VS Code settings:
    ```json
    {
-     "tabula.autoExecute": true
+     "tabula.autoExecution": true
    }
    ```
 
@@ -278,4 +206,12 @@ npm run compile
 
 ## License
 
-GNU General Public License v3.0
+[GNU General Public License v3.0](./LICENSE.txt)
+
+## Support
+
+If you find this plugin useful, consider:
+
+- ⭐ Starring the [GitHub repository](https://github.com/pblazh/tabula)
+- 🐛 Reporting issues or suggesting features
+- 📖 Contributing to the documentation

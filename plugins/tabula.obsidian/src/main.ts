@@ -17,6 +17,26 @@ export default class TabulaPlugin extends Plugin {
   async onload() {
     await this.loadSettings()
 
+    this.addCommand({
+      id: 'tabula-execute',
+      name: 'execute',
+      callback: () => {
+        const file = this.app.workspace.getActiveFile()
+        if (file instanceof TFile && file.extension === 'md') {
+          this.executeOnFile(file)
+        }
+      },
+    })
+
+    this.addCommand({
+      id: 'tabula-toggle-auto-execution',
+      name: 'toggle auto execution',
+      callback: () => {
+        this.settings.autoExecution = !this.settings.autoExecution
+        console.log('Tabula toggle auto execution', this.settings.autoExecution)
+      },
+    })
+
     this.registerMarkdownCodeBlockProcessor('csv', (source, el, _ctx) => {
       renderTable(this.settings, source, el)
     })
@@ -28,37 +48,47 @@ export default class TabulaPlugin extends Plugin {
     // Listen for markdown file modifications
     this.registerEvent(
       this.app.vault.on('modify', async (file) => {
-        if (!this.settings.autoExecute) {
+        if (!this.settings.autoExecution) {
           return
         }
 
-        if (this.updatingFiles.has(file.path)) return
-
         // Only process markdown files
         if (file instanceof TFile && file.extension === 'md') {
-          const content = await this.app.vault.read(file)
-          const chunks = extractChunks(content)
-
-          const executer = new Executer(
-            this.settings,
-            this.app.vault.adapter,
-            file.parent?.path || '',
-          )
-          const processed = await processChunks(executer, chunks)
-          const output = outputChunks(processed)
-
-          this.updatingFiles.add(file.path)
-          try {
-            await file.vault.modify(file, output)
-          } finally {
-            this.updatingFiles.delete(file.path)
-          }
+          this.executeOnFile(file)
         }
       }),
     )
 
     // Add settings tab
     this.addSettingTab(new TabulaSettingTab(this.app, this))
+  }
+
+  private async executeOnFile(file: TFile) {
+    if (file.extension !== 'md') {
+      console.error('not supported')
+    }
+    if (this.updatingFiles.has(file.path)) return
+
+    // Only process markdown files
+    if (file.extension === 'md') {
+      const content = await this.app.vault.read(file)
+      const chunks = extractChunks(content)
+
+      const executer = new Executer(
+        this.settings,
+        this.app.vault.adapter,
+        file.parent?.path || '',
+      )
+      const processed = await processChunks(executer, chunks)
+      const output = outputChunks(processed)
+
+      this.updatingFiles.add(file.path)
+      try {
+        await file.vault.modify(file, output)
+      } finally {
+        this.updatingFiles.delete(file.path)
+      }
+    }
   }
 
   async loadSettings() {

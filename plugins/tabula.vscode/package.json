@@ -25,7 +25,7 @@
   "activationEvents": [
     "onLanguage:csv"
   ],
-  "main": "./out/index.js",
+  "main": "./out/main.js",
   "contributes": {
     "languages": [
       {
@@ -62,7 +62,7 @@
     ],
     "commands": [
       {
-        "command": "tabula.toggleAutoExecute",
+        "command": "tabula.toggleAutoExecution",
         "title": "Toggle Auto-Execute on Save",
         "category": "Tabula"
       },
@@ -75,7 +75,7 @@
     "configuration": {
       "title": "Tabula",
       "properties": {
-        "tabula.autoExecute": {
+        "tabula.autoExecution": {
           "type": "boolean",
           "default": true,
           "description": "Automatically execute Tabula scripts when saving CSV files"
@@ -96,7 +96,7 @@
   "scripts": {
     "prepackage": "npm run build",
     "pretest": "npm run build",
-    "build": "tsc -p ./",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
     "dev": "tsc -watch -p ./",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",

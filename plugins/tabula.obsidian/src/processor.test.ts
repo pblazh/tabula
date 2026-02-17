@@ -7,7 +7,7 @@ class MockExecuter extends Executer {
   constructor() {
     super(
       {
-        autoExecute: false,
+        autoExecution: false,
         executablePath: '',
         autoFormat: false,
         tableIndex: false,
