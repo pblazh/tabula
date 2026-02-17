@@ -1,10 +1,11 @@
-name: CI Build + Semantic Release + GitHub Pages + Releases
+name: CI + Build + Release
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: ["*"]
+    branches:
+      - main
+      - "release/v*.*.*" # any release branch from Makefile
+  workflow_dispatch: {} # allow manual trigger
 
 permissions:
   contents: write
@@ -15,18 +16,26 @@ env:
   GO_VERSION: "1.24.2"
 
 jobs:
+  # --------------------
+  # Run all tests in parallel
+  # --------------------
   test:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        service: [tabula_go, tabula_obsidian, tabula_vscode]
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Go
+      # Go tests
+      - name: Setup Go
+        if: matrix.service == 'tabula_go'
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
 
       - name: Cache Go modules
+        if: matrix.service == 'tabula_go'
         uses: actions/cache@v3
         with:
           path: |
@@ -37,248 +46,142 @@ jobs:
             go-mod-cache-${{ runner.os }}-
 
       - name: Run Go tests
+        if: matrix.service == 'tabula_go'
         run: |
           set -euo pipefail
           go mod download
           make test
 
-      - name: Test Obsidian plugin
+      # Obsidian plugin tests
+      - name: Setup Node.js
+        if: matrix.service == 'tabula_obsidian'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: plugins/tabula.obsidian/package-lock.json
+
+      - name: Cache Obsidian node_modules
+        if: matrix.service == 'tabula_obsidian'
+        uses: actions/cache@v3
+        with:
+          path: plugins/tabula.obsidian/node_modules
+          key: obsidian-node-modules-${{ runner.os }}-${{ hashFiles('plugins/tabula.obsidian/package-lock.json') }}
+          restore-keys: |
+            obsidian-node-modules-${{ runner.os }}-
+
+      - name: Run Obsidian plugin tests
+        if: matrix.service == 'tabula_obsidian'
         run: |
           set -euo pipefail
           cd plugins/tabula.obsidian
           npm ci
+          npm run lint
+          npm run build
           npm run test
+        working-directory: plugins/tabula.obsidian
 
-      - name: Test VSCode plugin
+      # VSCode plugin tests
+      - name: Setup Node.js for VSCode
+        if: matrix.service == 'tabula_vscode'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: plugins/tabula.vscode/package-lock.json
+
+      - name: Cache VSCode node_modules
+        if: matrix.service == 'tabula_vscode'
+        uses: actions/cache@v3
+        with:
+          path: plugins/tabula.vscode/node_modules
+          key: vscode-node-modules-${{ runner.os }}-${{ hashFiles('plugins/tabula.vscode/package-lock.json') }}
+          restore-keys: |
+            vscode-node-modules-${{ runner.os }}-
+
+      - name: Run VSCode plugin tests
+        if: matrix.service == 'tabula_vscode'
         run: |
           set -euo pipefail
           cd plugins/tabula.vscode
           npm ci
-          npm run test
+          npm run lint
+          xvfb-run -a --server-args="-screen 0 1920x1080x24" npm test
+          npm run build
+        working-directory: plugins/tabula.vscode
 
-  release:
+  # --------------------
+  # Build binaries and plugins
+  # --------------------
+  build:
     runs-on: ubuntu-latest
     needs: test
     outputs:
       version: ${{ steps.get_version.outputs.version }}
-
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-
-      - uses: actions/setup-go@v5
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
 
-      - name: Install semantic-release globally
+      - name: Get current version
+        id: get_version
         run: |
           set -euo pipefail
+          VERSION=$(cat VERSION.txt)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Build Go binaries
+        run: make build -j
+
+      - name: Package plugins
+        run: |
+          VERSION=${{ steps.get_version.outputs.version }}
+          mkdir -p dist
+          # Obsidian
+          tar -czf dist/tabula.obsidian-$VERSION.tar.gz -C plugins/tabula.obsidian out
+          # VSCode
+          tar -czf dist/tabula.vscode-$VERSION.tar.gz -C plugins/tabula.vscode out
+          # Vim
+          tar -czf dist/tabula.vim-$VERSION.tar.gz -C plugins/tabula.vim doc ftdetect plugin syntax README.md
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: all-artifacts
+          path: dist/
+
+  # --------------------
+  # Release: semantic versioning + CHANGELOG + GitHub Release
+  # --------------------
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install semantic-release globally
+        run: |
           npm install -g semantic-release \
             @semantic-release/changelog \
             @semantic-release/git \
             @semantic-release/github
 
-      - name: Determine next version & generate changelog
-        id: get_version
+      - name: Run semantic-release
         run: |
           set -euo pipefail
-          VERSION=$(semantic-release --branches main --dry-run | grep "Next release version" | awk '{print $NF}')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-
-          # Generate CHANGELOG.md (dry-run)
-          semantic-release --branches main --dry-run --ci false --plugins @semantic-release/changelog
-          git add CHANGELOG.md
-
-      - name: Commit CHANGELOG and tag
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -m "chore(release): $VERSION [skip ci]" || echo "No changes to commit"
-          git tag "v$VERSION"
-          git push origin main --tags
-
-  build:
-    runs-on: ubuntu-latest
-    needs: release
-    outputs:
-      version: ${{ needs.release.outputs.version }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Cache Go modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/go/pkg/mod
-            ~/.cache/go-build
-          key: go-mod-cache-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            go-mod-cache-${{ runner.os }}-
-
-      - name: Build Go binary
-        run: |
-          set -euo pipefail
-          go mod download
-          make build
-          mkdir -p gh-pages/bin
-          if [ -d "./bin" ]; then
-            cp -Rv ./bin gh-pages/bin
-          fi
-
-  plugins:
-    runs-on: ubuntu-latest
-    needs: build
-    strategy:
-      matrix:
-        include:
-          - name: tabula.obsidian
-            path: plugins/tabula.obsidian
-            type: node
-            output: out
-          - name: tabula.vscode
-            path: plugins/tabula.vscode
-            type: node
-            output: out
-          - name: tabula.vim
-            path: plugins/tabula.vim
-            type: vim
-            files: "doc ftdetect plugin syntax README.md"
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node (only if needed)
-        if: matrix.type == 'node'
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-          cache-dependency-path: ${{ matrix.path }}/package-lock.json
-
-      - name: Cache Node Modules
-        if: matrix.type == 'node'
-        uses: actions/cache@v3
-        with:
-          path: ${{ matrix.path }}/node_modules
-          key: node-modules-${{ matrix.name }}-${{ hashFiles(matrix.path + '/package-lock.json') }}
-          restore-keys: |
-            node-modules-${{ matrix.name }}-
-
-      - name: Build plugin (Node)
-        if: matrix.type == 'node'
-        run: |
-          set -euo pipefail
-          cd ${{ matrix.path }}
-          npm ci
-          npm run build
-
-      - name: Pack plugin
-        run: |
-          set -euo pipefail
-          VERSION=${{ needs.release.outputs.version }}
-          mkdir -p dist
-
-          if [ "${{ matrix.type }}" = "node" ]; then
-            tar -czf dist/${{ matrix.name }}-$VERSION.tar.gz \
-              --transform "s,^,${{ matrix.name }}/," \
-              -C ${{ matrix.path }} ${{ matrix.output }}
-          else
-            tar -czf dist/${{ matrix.name }}-$VERSION.tar.gz \
-              --transform "s,^,${{ matrix.name }}/," \
-              -C ${{ matrix.path }} ${{ matrix.files }}
-          fi
-
-      - name: Upload plugin artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.name }}
-          path: dist/
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [build, plugins]
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-
-      - name: Prepare gh-pages content
-        run: |
-          set -euo pipefail
-          VERSION=${{ needs.release.outputs.version }}
-
-          mkdir -p gh-pages/bin
-          mkdir -p gh-pages/releases
-
-          [ -d "go-bin" ] && cp -r go-bin/* gh-pages/bin/
-          [ -d "tabula.obsidian" ] && cp -r tabula.obsidian/* gh-pages/releases/
-          [ -d "tabula.vscode" ] && cp -r tabula.vscode/* gh-pages/releases/
-          [ -d "tabula.vim" ] && cp -r tabula.vim/* gh-pages/releases/
-
-          cd gh-pages/releases
-          ln -sf tabula.obsidian-$VERSION.tar.gz tabula.obsidian-latest.tar.gz
-          ln -sf tabula.vscode-$VERSION.tar.gz tabula.vscode-latest.tar.gz
-          ln -sf tabula.vim-$VERSION.tar.gz tabula.vim-latest.tar.gz
-          cd ../..
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./gh-pages
-          publish_branch: gh-pages
-          force_orphan: true
-
-      - name: Create GitHub Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ needs.release.outputs.version }}
-          name: Release v${{ needs.release.outputs.version }}
-          body_path: CHANGELOG.md
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: gh-pages/releases/tabula.obsidian-${{ needs.release.outputs.version }}.tar.gz
-          asset_name: tabula.obsidian-${{ needs.release.outputs.version }}.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload VSCode Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: gh-pages/releases/tabula.vscode-${{ needs.release.outputs.version }}.tar.gz
-          asset_name: tabula.vscode-${{ needs.release.outputs.version }}.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload Vim Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: gh-pages/releases/tabula.vim-${{ needs.release.outputs.version }}.tar.gz
-          asset_name: tabula.vim-${{ needs.release.outputs.version }}.tar.gz
-          asset_content_type: application/gzip
+          semantic-release --branches main
