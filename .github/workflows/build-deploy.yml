@@ -219,7 +219,6 @@ jobs:
       - name: Clone main branch to temp
         run: |
           git clone --depth 1 --no-checkout https://github.com/${{ github.repository }} temp-main
-          cd temp-main
 
       # 3️⃣ Copy gh-pages folder content to branch root
       - name: Copy gh-pages folder to root
