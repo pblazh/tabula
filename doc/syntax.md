@@ -281,3 +281,22 @@ let A1 = 10;        # This will be executed first
 ```
 
 This means you can write statements in any order, and Tabula will figure out the correct execution sequence.
+
+## Links
+
+- [Tabula Website](https://pblazh.github.io/tabula)
+- [Tabula Documentation](https://github.com/pblazh/tabula/tree/main/doc)
+- [GitHub Repository](https://github.com/pblazh/tabula)
+- [Report Issues](https://github.com/pblazh/tabula/issues)
+
+## License
+
+[GNU General Public License v3.0](./LICENSE.txt)
+
+## Support
+
+If you find this project useful, consider:
+
+- ⭐ Starring the [GitHub repository](https://github.com/pblazh/tabula)
+- 🐛 Reporting issues or suggesting features
+- 📖 Contributing to the documentation

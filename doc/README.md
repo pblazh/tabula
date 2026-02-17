@@ -30,8 +30,20 @@ Download the binary for your system:
 - **[Vim Plugin](../plugins/tabula.vim/README.md)** - Vim/Neovim integration and setup
 - **[Visual Studio Code Plugin](../plugins/tabula.vscode/README.md)** - Visual Studio Code plugin integration and setup
 
-## 🚀 Quick Links
+## Links
 
-- [Main README](../README.md) - Project overview and installation
+- [Tabula Website](https://pblazh.github.io/tabula)
 - [GitHub Repository](https://github.com/pblazh/tabula)
 - [Report Issues](https://github.com/pblazh/tabula/issues)
+
+## License
+
+[GNU General Public License v3.0](./LICENSE.txt)
+
+## Support
+
+If you find this project useful, consider:
+
+- ⭐ Starring the [GitHub repository](https://github.com/pblazh/tabula)
+- 🐛 Reporting issues or suggesting features
+- 📖 Contributing to the documentation
