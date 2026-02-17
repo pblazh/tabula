@@ -216,9 +216,16 @@ jobs:
           fetch-depth: 0
 
       # 2️⃣ Clone main branch to temp directory (depth 0)
-      - name: Clone main branch to temp
+      - name: Clone main branch gh-pages folder to temp
         run: |
           git clone --depth 1 --no-checkout https://github.com/${{ github.repository }} temp-main
+          cd temp-main
+          # Enable sparse checkout
+          git sparse-checkout init --cone
+          git sparse-checkout set gh-pages
+          # Checkout main branch
+          git checkout main
+          cd ..
 
       # 3️⃣ Copy gh-pages folder content to branch root
       - name: Copy gh-pages folder to root
