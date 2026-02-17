@@ -1,5 +1,12 @@
-.PHONY: build test clean install lint coverage
+.PHONY: build test clean install lint coverage fmt benchmark vet major minor patch
 
+BIN_DIR := bin
+GO_CMD := go
+SRC_DIR := ./cmd/cli
+VERSION_FILE := VERSION.txt
+VERSION_GO_FILE := cmd/cli/version.go
+
+# --- Build targets ---
 build: build-darwin-arm64 build-darwin-amd64 build-linux-arm64 build-linux-amd64 build-linux-386 build-windows-arm64 build-windows-amd64 build-windows-386
 
 build-darwin-arm64:
@@ -8,7 +15,6 @@ build-darwin-arm64:
 build-darwin-amd64:
 	env GOOS=darwin GOARCH=amd64 go build -o bin/darwin/amd64/tabula ./cmd/cli
 
-
 build-linux-arm64:
 	env GOOS=linux GOARCH=arm64 go build -o bin/linux/arm64/tabula ./cmd/cli
 
@@ -16,8 +22,7 @@ build-linux-amd64:
 	env GOOS=linux GOARCH=amd64 go build -o bin/linux/amd64/tabula ./cmd/cli
 
 build-linux-386:
-	env GOOS=linux GOARCH=386 go build -o bin/linux/amd64/tabula ./cmd/cli
-
+	env GOOS=linux GOARCH=386 go build -o bin/linux/386/tabula ./cmd/cli
 
 build-windows-arm64:
 	env GOOS=windows GOARCH=arm64 go build -o bin/windows/arm64/tabula.exe ./cmd/cli
@@ -28,10 +33,10 @@ build-windows-amd64:
 build-windows-386:
 	env GOOS=windows GOARCH=386 go build -o bin/windows/386/tabula.exe ./cmd/cli
 
-
 build-wasm:
 	env GOOS=js GOARCH=wasm go build -o bin/wasm/tabula ./cmd/cli
 
+# --- Test & coverage ---
 test:
 	go test -cover ./...
 
@@ -43,24 +48,66 @@ coverage:
 	@echo "Opening coverage report in browser..."
 	@open coverage.html || xdg-open coverage.html || start coverage.html
 
+# --- Clean ---
 clean:
 	rm -rf bin/
 	rm -f coverage.out coverage.html
 
+# --- Install ---
 install:
 	go install ./cmd/cli
 
+# --- Vet & Lint ---
 vet:
 	go vet ./...
 
 lint:
 	golangci-lint run
 
+# --- Format ---
 fmt:
 	@echo "TODO: Implement format target"
 	go fmt ./...
 
-# TODO: Add benchmark target
+# --- Benchmark ---
 benchmark:
 	@echo "TODO: Implement benchmark tests"
 	# go test -bench=. ./...
+
+# --- Semantic version bumping ---
+define bump_version
+	@set -e; \
+	CUR_VERSION=$$(cat $(VERSION_FILE)); \
+	MAJOR=$$(echo $$CUR_VERSION | cut -d. -f1); \
+	MINOR=$$(echo $$CUR_VERSION | cut -d. -f2); \
+	PATCH=$$(echo $$CUR_VERSION | cut -d. -f3); \
+	if [ "$(1)" = "major" ]; then \
+	  NEW_VERSION="$$(($$MAJOR + 1)).0.0"; \
+	elif [ "$(1)" = "minor" ]; then \
+	  NEW_VERSION="$$MAJOR.$$(($$MINOR + 1)).0"; \
+	elif [ "$(1)" = "patch" ]; then \
+	  NEW_VERSION="$$MAJOR.$$MINOR.$$(($$PATCH + 1))"; \
+	else \
+	  echo "Unknown bump type: $(1)"; exit 1; \
+	fi; \
+	echo "Old version: $$CUR_VERSION, new version: $$NEW_VERSION"; \
+	echo $$NEW_VERSION > $(VERSION_FILE); \
+	echo "package main" > $(VERSION_GO_FILE); \
+	echo "" >> $(VERSION_GO_FILE); \
+	echo "const VERSION = \"$$NEW_VERSION\"" >> $(VERSION_GO_FILE); \
+	BRANCH_NAME="release/v$$NEW_VERSION"; \
+	git checkout -b $$BRANCH_NAME; \
+	git add $(VERSION_FILE) $(VERSION_GO_FILE); \
+	git commit -m "chore(release): bump $(1) version to $$NEW_VERSION [skip ci]"; \
+	echo "Branch $$BRANCH_NAME created with updated version"
+endef
+
+major:
+	$(call bump_version,major)
+
+minor:
+	$(call bump_version,minor)
+
+patch:
+	$(call bump_version,patch)
+
