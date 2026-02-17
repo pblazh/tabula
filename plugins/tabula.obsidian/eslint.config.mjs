@@ -10,6 +10,7 @@ export default [
 
   {
     files: ['src/**/*.ts'],
+    ignores: ['node_modules', 'out', 'dist', '*.mjs'],
 
     plugins: {
       prettier: prettierPlugin,
