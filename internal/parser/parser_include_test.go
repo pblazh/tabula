@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -340,6 +341,53 @@ func TestIncludeRelativePath(t *testing.T) {
 #include "lib/utils.tbl";
 let A1 = B1;
 `
+	err = os.WriteFile(mainFile, []byte(mainContent), 0o644)
+	if err != nil {
+		t.Fatalf("Failed to create test file: %v", err)
+	}
+
+	file, err := os.Open(mainFile)
+	if err != nil {
+		t.Fatalf("Failed to open test file: %v", err)
+	}
+	defer func() { _ = file.Close() }()
+
+	lex := lexer.New(file, mainFile)
+	parser := New(lex)
+	program, _, err := parser.Parse()
+	if err != nil {
+		t.Fatalf("Parse error: %v", err)
+	}
+
+	if len(program) != 2 {
+		t.Errorf("Expected 2 statements, got %d", len(program))
+	}
+}
+
+func TestIncludeAbsolutePath(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	// Create subdirectory
+	subDir := filepath.Join(tmpDir, "lib")
+	err := os.Mkdir(subDir, 0o755)
+	if err != nil {
+		t.Fatalf("Failed to create subdirectory: %v", err)
+	}
+
+	// Create included file in subdirectory
+	includedFile := filepath.Join(subDir, "utils.tbl")
+	err = os.WriteFile(includedFile, []byte("let B1 = 42;\n"), 0o644)
+	if err != nil {
+		t.Fatalf("Failed to create test file: %v", err)
+	}
+
+	// Create main file
+	mainFile := filepath.Join(tmpDir, "main.tbl")
+	mainContent := `
+#include "%s/lib/utils.tbl";
+let A1 = B1;
+`
+	mainContent = fmt.Sprintf(mainContent, tmpDir)
 	err = os.WriteFile(mainFile, []byte(mainContent), 0o644)
 	if err != nil {
 		t.Fatalf("Failed to create test file: %v", err)

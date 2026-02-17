@@ -629,7 +629,7 @@ func (p *Parser) parseCallArguments() ([]ast.Expression, error) {
 // resolveIncludePath resolves a relative include path against the current file
 func (p *Parser) resolveIncludePath(includePath string) (string, error) {
 	// If current file is empty or "<inline>", includes are relative to CWD
-	if p.currentFile == "" || p.currentFile == "<inline>" {
+	if p.currentFile == "" || p.currentFile == "<inline>" || strings.HasPrefix(includePath, "/") {
 		absPath, err := filepath.Abs(includePath)
 		if err != nil {
 			return "", err
