@@ -208,46 +208,42 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          fetch-depth: 0
-
-      - name: Clone main branch gh-pages folder to temp
+      - name: Copy to gh-pages
         run: |
-          git clone --depth 1 --no-checkout https://github.com/${{ github.repository }} temp-main
-          cd temp-main
-          # Enable sparse checkout
-          git sparse-checkout init --cone
-          git sparse-checkout set gh-pages
-          # Checkout main branch
-          git checkout main
-          cd ..
+          mkdir -p gh-pages/releases
 
-      - name: Copy gh-pages folder to root
-        run: |
-          cp -r temp-main/gh-pages/* .
-          rm -rf temp-main
-
-      - name: Download release artifacts
+      - name: Download tabula_go_bin
+        if: needs.release.outputs.release_created == 'true'
         uses: actions/download-artifact@v4
         with:
-          path: dist
+          name: tabula_go_bin
+          path: gh-pages/releases
 
-      - name: Copy release artifacts
-        run: |
-          mkdir -p releases
-          cp -r dist/* releases/
+      - name: Download tabula_obsidian
+        if: needs.release.outputs.release_created == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: tabula_obsidian
+          path: gh-pages/releases
 
-      - name: Commit & push
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Update gh-pages site with new release" || echo "No changes to commit"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages
+      - name: Download tabula_vscode
+        if: needs.release.outputs.release_created == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: tabula_vscode
+          path: gh-pages/releases
 
-      # 7️⃣ Deploy to GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+      - name: Download tabula_vim
+        if: needs.release.outputs.release_created == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: tabula_vim
+          path: gh-pages/releases
+
+      - name: Deploy to GitHub Pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages
+          publish_branch: gh-pages
+          force_orphan: true
