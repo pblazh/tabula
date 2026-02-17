@@ -32,7 +32,6 @@ build-windows-386:
 build-wasm:
 	env GOOS=js GOARCH=wasm go build -o bin/wasm/tabula ./cmd/cli
 
-
 test:
 	go test -cover ./...
 
@@ -50,6 +49,9 @@ clean:
 
 install:
 	go install ./cmd/cli
+
+vet:
+	go vet ./...
 
 lint:
 	golangci-lint run

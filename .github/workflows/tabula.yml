@@ -1,12 +1,34 @@
-name: Test, Build, and Publish to GitHub Pages
+name: Test Tabula
 
 on:
   push:
-    branches:
-      - "*"
+    branches-ignore:
+      - main
   pull_request:
-    branches:
-      - "*"
+    branches-ignore:
+      - main
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - "cmd/**"
+      - "internal/**"
+      - "Makefile"
+      - "go.mod"
+      - "go.sum"
+      - ".github/workflows/tabula.yml"
+  pull_request:
+    branches-ignore:
+      - main
+    paths:
+      - "cmd/**"
+      - "internal/**"
+      - "Makefile"
+      - "go.mod"
+      - "go.sum"
+      - ".github/workflows/tabula.yml"
 
 jobs:
   test:
@@ -16,87 +38,29 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Go (if using Go)
+      - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "1.24.2"
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: go-mod-cache-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            go-mod-cache-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Run vet
+        run: make vet
 
       - name: Run Tests
         run: make test
 
-  build-deploy:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    needs: test
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up Go (if using Go)
-        uses: actions/setup-go@v5
-        with:
-          go-version: "1.24.2"
-
-      - name: Check if version changed and create tag
-        run: |
-          # Extract current version from version.go
-          CURRENT_VERSION=$(grep -oP 'const VERSION = "\K[^"]+' cmd/cli/version.go)
-          echo "Current version: $CURRENT_VERSION"
-
-          # Check if version.go was modified in this commit
-          if git diff HEAD~1 HEAD --name-only | grep -q "cmd/cli/version.go"; then
-            echo "version.go was modified"
-
-            # Check if tag already exists
-            if git rev-parse "v$CURRENT_VERSION" >/dev/null 2>&1; then
-              echo "Tag v$CURRENT_VERSION already exists"
-            else
-              echo "Creating tag v$CURRENT_VERSION"
-              git config user.name "github-actions[bot]"
-              git config user.email "github-actions[bot]@users.noreply.github.com"
-              git tag -a "v$CURRENT_VERSION" -m "Release version $CURRENT_VERSION"
-              git push origin "v$CURRENT_VERSION"
-            fi
-          else
-            echo "version.go was not modified, skipping tag creation"
-          fi
-
       - name: Build Executable
         run: make build
-
-      - name: Prepare GitHub Pages content
-        run: |
-          # Copy binaries
-          cp -Rv ./bin gh-pages/bin
-
-          # Package and copy vim plugin
-          VERSION=$(date +%Y.%m.%d)
-          mkdir -p gh-pages/releases
-
-          # Copy README from doc directory to plugin directory
-          cp doc/vim-plugin.md plugins/tabula.nvim/README.md
-
-          # Create plugin archive
-          cd plugins/tabula.nvim
-          tar -czf ../../gh-pages/releases/tabula.nvim-${VERSION}.tar.gz \
-            --transform 's,^,tabula.nvim/,' \
-            doc ftdetect plugin syntax README.md
-          cd ../../
-
-          # Create a 'latest' symlink for convenience
-          cd gh-pages/releases
-          ln -sf tabula.nvim-${VERSION}.tar.gz tabula.nvim-latest.tar.gz
-          cd ../..
-
-          echo "Created vim plugin archive: tabula.nvim-${VERSION}.tar.gz"
-
-      - name: Deploy to GitHub Pages branch
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./gh-pages
-          publish_branch: gh-pages
-          force_orphan: true
