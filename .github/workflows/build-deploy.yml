@@ -1,12 +1,14 @@
-name: CI + Build + Release
+name: Build + Release
 
 on:
-  push: {}
-  workflow_dispatch: {}
+  push:
+    branches:
+      - "main"
+  workflow_dispatch:
 
 env:
   NODE_VERSION: 20.x
-  GO_VERSION: "1.24.2"
+  GO_VERSION: "1.22.x"
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -14,7 +16,7 @@ concurrency:
 
 jobs:
   # --------------------
-  # Go Tests
+  # Tabula Go
   # --------------------
   tabula_go:
     runs-on: ubuntu-latest
@@ -24,6 +26,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
+          cache: true
       - name: Cache Go modules
         uses: actions/cache@v3
         with:
@@ -33,6 +36,14 @@ jobs:
           key: go-mod-cache-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             go-mod-cache-${{ runner.os }}-
+      - name: Inject version into Go source
+        run: |
+          VERSION=$(cat VERSION.txt)
+          cat <<EOF > cmd/cli/version.go
+          package main
+
+          const VERSION = "$VERSION"
+          EOF
       - name: Install dependencies
         run: go mod download
       - name: Run vet
@@ -48,7 +59,7 @@ jobs:
           path: bin/
 
   # --------------------
-  # Obsidian Plugin
+  # Tabula Obsidian Plugin
   # --------------------
   tabula_obsidian:
     runs-on: ubuntu-latest
@@ -64,6 +75,7 @@ jobs:
         working-directory: plugins/tabula.obsidian
         run: |
           npm ci
+          npm audit --omit=dev
           npm run lint
           npm test
           npm run build
@@ -74,7 +86,7 @@ jobs:
           path: plugins/tabula.obsidian/out/
 
   # --------------------
-  # VSCode Plugin
+  # Tabula VSCode Plugin
   # --------------------
   tabula_vscode:
     runs-on: ubuntu-latest
@@ -90,6 +102,7 @@ jobs:
         working-directory: plugins/tabula.vscode
         run: |
           npm ci
+          npm audit --omit=dev
           npm run lint
           xvfb-run -a --server-args="-screen 0 1920x1080x24" npm test
           npm run build
@@ -118,124 +131,154 @@ jobs:
           name: tabula_vim
           path: dist/
 
+  # # --------------------
+  # # Release
+  # # --------------------
+  # release:
+  #   runs-on: ubuntu-latest
+  #   needs: [tabula_go, tabula_obsidian, tabula_vscode, tabula_vim]
+  #   if: startsWith(github.ref, 'refs/heads/main')
+  #   permissions:
+  #     contents: write
+  #     id-token: write
+  #   outputs:
+  #     release_created: ${{ steps.check_tag.outputs.release_created }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Read version
+  #       run: |
+  #         echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
+  #         [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
+  #     - name: Fetch tags
+  #       run: git fetch --tags
+
+  #     - name: Check if version/tag exists
+  #       id: check_tag
+  #       run: |
+  #         if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+  #           echo "Tag exists, skipping release"
+  #           echo "release_created=false" >> $GITHUB_OUTPUT
+  #         else
+  #           echo "release_created=true" >> $GITHUB_OUTPUT
+  #         fi
+
+  #     - name: Download artifacts
+  #       if: steps.check_tag.outputs.release_created == 'true'
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         path: dist
+
+  #     - name: Flatten and prepare release assets
+  #       if: steps.check_tag.outputs.release_created == 'true'
+  #       run: |
+  #         mkdir -p release-assets
+  #         find dist -type f -exec cp {} release-assets/ \;
+  #         if [ -d "dist/tabula_go_bin" ]; then
+  #           tar -czf release-assets/tabula-go-$VERSION.tar.gz -C dist/tabula_go_bin .
+  #         fi
+
+  #     - name: Generate minimal CHANGELOG.md
+  #       if: steps.check_tag.outputs.release_created == 'true'
+  #       run: |
+  #         echo "# Changelog for v$VERSION" > CHANGELOG.md
+  #         echo "" >> CHANGELOG.md
+  #         echo "- Release v$VERSION" >> CHANGELOG.md
+
+  #     - name: Create GitHub Release + Upload Assets
+  #       uses: softprops/action-gh-release@v1
+  #       with:
+  #         tag_name: v${{ env.VERSION }}
+  #         name: Release v${{ env.VERSION }}
+  #         body_path: CHANGELOG.md
+  #         files: release-assets/*
+
   # --------------------
-  # Release
+  # Check if version is not deployed yet
   # --------------------
-  release:
+  version_check:
     runs-on: ubuntu-latest
     needs: [tabula_go, tabula_obsidian, tabula_vscode, tabula_vim]
-    if: startsWith(github.ref, 'refs/heads/main')
-    permissions:
-      contents: write
-      id-token: write
     outputs:
-      release_created: ${{ steps.check_tag.outputs.release_created }}
+      skip_deploy: ${{ steps.check.outputs.skip_deploy }}
+      version: ${{ steps.check.outputs.version }}
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Read version
-        run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
-
-      - name: Check if version/tag exists
-        id: check_tag
+      - name: Read version and check tag
+        id: check
         run: |
+          VERSION=$(tr -d '\n' < VERSION.txt)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          git fetch --tags
+
           if git rev-parse "v$VERSION" >/dev/null 2>&1; then
-            echo "Tag exists, skipping release"
-            echo "release_created=false" >> $GITHUB_OUTPUT
+            echo "Tag exists, skipping deployment"
+            echo "skip_deploy=true" >> $GITHUB_OUTPUT
           else
-            echo "release_created=true" >> $GITHUB_OUTPUT
+            echo "Tag does not exist, will deploy"
+            echo "skip_deploy=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Download artifacts
-        if: steps.check_tag.outputs.release_created == 'true'
-        uses: actions/download-artifact@v4
-        with:
-          path: dist
-
-      - name: Flatten and prepare release assets
-        if: steps.check_tag.outputs.release_created == 'true'
+      - name: Create git tag
+        if: steps.check.outputs.skip_deploy == 'false'
         run: |
-          mkdir -p release-assets
-          find dist -type f -exec cp {} release-assets/ \;
-          if [ -d "dist/tabula_go_bin" ]; then
-            tar -czf release-assets/tabula-go-$VERSION.tar.gz -C dist/tabula_go_bin .
-          fi
-
-      - name: Generate minimal CHANGELOG.md
-        if: steps.check_tag.outputs.release_created == 'true'
-        run: |
-          echo "# Changelog for v$VERSION" > CHANGELOG.md
-          echo "" >> CHANGELOG.md
-          echo "- Release v$VERSION" >> CHANGELOG.md
-
-      - name: Create GitHub Release
-        if: steps.check_tag.outputs.release_created == 'true'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ env.VERSION }}
-          name: Release v${{ env.VERSION }}
-          body_path: CHANGELOG.md
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Assets
-        if: steps.check_tag.outputs.release_created == 'true'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ env.VERSION }}
-          files: release-assets/*
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag "v${{ steps.check.outputs.version }}"
+          git push origin "v${{ steps.check.outputs.version }}"
 
   # --------------------
-  # Deploy to GitHub Pages
+  # Deploy Tabula GitHub pages
   # --------------------
   deploy_pages:
-    needs: release
-    if: needs.release.outputs.release_created == 'true'
-    runs-on: ubuntu-latest
-    environment: github-pages
-    permissions:
-      pages: write
-      id-token: write
-      contents: read
-    steps:
-      - name: Copy to gh-pages
-        run: |
-          mkdir -p gh-pages/releases
+  needs: [version_check, tabula_go, tabula_obsidian, tabula_vscode, tabula_vim]
+  runs-on: ubuntu-latest
+  environment: github-pages
+  permissions:
+    pages: write
+    id-token: write
+    contents: read
 
-      - name: Download tabula_go_bin
-        if: needs.release.outputs.release_created == 'true'
-        uses: actions/download-artifact@v4
-        with:
-          name: tabula_go_bin
-          path: gh-pages/releases
+  steps:
+    - name: Prepare gh-pages directory
+      run: |
+        mkdir -p gh-pages/releases
 
-      - name: Download tabula_obsidian
-        if: needs.release.outputs.release_created == 'true'
-        uses: actions/download-artifact@v4
-        with:
-          name: tabula_obsidian
-          path: gh-pages/releases
+    - name: Download tabula_go_bin
+      uses: actions/download-artifact@v4
+      with:
+        name: tabula_go_bin
+        path: gh-pages/releases
 
-      - name: Download tabula_vscode
-        if: needs.release.outputs.release_created == 'true'
-        uses: actions/download-artifact@v4
-        with:
-          name: tabula_vscode
-          path: gh-pages/releases
+    - name: Download tabula_obsidian
+      uses: actions/download-artifact@v4
+      with:
+        name: tabula_obsidian
+        path: gh-pages/releases
 
-      - name: Download tabula_vim
-        if: needs.release.outputs.release_created == 'true'
-        uses: actions/download-artifact@v4
-        with:
-          name: tabula_vim
-          path: gh-pages/releases
+    - name: Download tabula_vscode
+      uses: actions/download-artifact@v4
+      with:
+        name: tabula_vscode
+        path: gh-pages/releases
 
-      - name: Deploy to GitHub Pages branch
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./gh-pages
-          publish_branch: gh-pages
-          force_orphan: true
+    - name: Download tabula_vim
+      uses: actions/download-artifact@v4
+      with:
+        name: tabula_vim
+        path: gh-pages/releases
+
+    - name: Deploy to GitHub Pages branch
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./gh-pages
+        publish_branch: gh-pages
+        force_orphan: true
