@@ -14,6 +14,9 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+include:
+  - component: $CI_SERVER_FQDN/components/code-quality-oss/codequality-os-scanners-integration/golangci@1.0.1
+
 jobs:
   # --------------------
   # Tabula Go
@@ -36,15 +39,15 @@ jobs:
           key: go-mod-cache-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             go-mod-cache-${{ runner.os }}-
-      - name: Install dependencies
-        run: go mod download
       - uses: extractions/setup-just@v3
-      - name: Run vet
-        run: just vet
+      - name: Install dependencies
+        run: just setup-go
+      - name: Run lint
+        run: just lint-go
       - name: Run tests
-        run: just test
+        run: just test-go
       - name: Build Go binary
-        run: just build
+        run: just build-go
       - name: Upload Go binaries
         uses: actions/upload-artifact@v4
         with:
@@ -66,23 +69,20 @@ jobs:
           cache: npm
           cache-dependency-path: plugins/tabula.obsidian/package-lock.json
 
+      - uses: extractions/setup-just@v3
+      - name: Install dependencies
+        run: just setup-obsidian
+      - name: Lint
+        run: just lint-obsidian
+      - name: Test
+        run: just test-obsidian
+      - name: Build
+        run: just build-obsidian
+      - name: Pack
+        run: just pack-obsidian
+
       - name: Read version
         run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
-
-      - name: Build and test Obsidian plugin
-        working-directory: plugins/tabula.obsidian
-        run: |
-          npm ci
-          npm audit --omit=dev
-          npm run lint
-          npm test
-          npm run build
-
-      - name: Package Obsidian plugin
-        run: |
-          mkdir -p dist
-          tar -czf dist/tabula.obsidian.${VERSION}.tar.gz -C out .
-        working-directory: plugins/tabula.obsidian
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -103,24 +103,22 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
           cache-dependency-path: plugins/tabula.vscode/package-lock.json
-      - name: Build and test VSCode plugin
+      - uses: extractions/setup-just@v3
+      - name: Install dependencies
+        run: just setup-vscode
+      - name: Lint
+        run: just lint-vscode
+      - name: Run tests with xvfb
         working-directory: plugins/tabula.vscode
         run: |
-          npm ci
-          npm audit --omit=dev
-          npm run lint
           xvfb-run -a --server-args="-screen 0 1920x1080x24" npm test
-          npm run build
+      - name: Build
+        run: just build-vscode
+      - name: Pack
+        run: just pack-vscode
 
       - name: Read version
         run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
-
-      - name: Package VSCode plugin
-        working-directory: plugins/tabula.vscode
-        run: |
-          VERSION=$(cat ../../VERSION.txt)
-          mkdir -p dist
-          tar -czf dist/tabula.vscode.${VERSION}.tar.gz -C out .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -135,6 +133,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: extractions/setup-just@v3
+      - name: Pack
+        run: just pack-vim
 
       - name: Read version
         run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV

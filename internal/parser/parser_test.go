@@ -114,8 +114,8 @@ func TestParser(t *testing.T) {
 			output: "5 / 6 + 2;",
 		},
 		{
-			name:   "multiple statements",
-			input:  `let A1 = 5.6;
+			name: "multiple statements",
+			input: `let A1 = 5.6;
 let A2 = x;
 `,
 			output: "let A1 = 5.60;let A2 = x;",
@@ -161,8 +161,8 @@ let A2 = x;
 			output: "let a = \"hello\";",
 		},
 		{
-			name:   "multiple statements",
-			input:  `let A1 = 5.6;
+			name: "multiple statements",
+			input: `let A1 = 5.6;
 let A2 = x;
 let A3 = sum(A1:A2);`,
 			output: "let A1 = 5.60;let A2 = x;let A3 = sum(A1, A2);",

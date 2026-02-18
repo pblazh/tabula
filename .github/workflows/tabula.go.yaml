@@ -13,6 +13,9 @@ on:
 env:
   GO_VERSION: "1.22.x"
 
+include:
+  - component: $CI_SERVER_FQDN/components/code-quality-oss/codequality-os-scanners-integration/golangci@1.0.1
+
 jobs:
   tabula_go:
     runs-on: ubuntu-latest
@@ -32,12 +35,12 @@ jobs:
           key: go-mod-cache-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             go-mod-cache-${{ runner.os }}-
-      - name: Install dependencies
-        run: go mod download
       - uses: extractions/setup-just@v3
-      - name: Run vet
-        run: just vet
+      - name: Install dependencies
+        run: just setup-go
+      - name: Run lint
+        run: just lint-go
       - name: Run tests
-        run: just test
+        run: just test-go
       - name: Build Go binary
         run: just build-linux-amd64

@@ -1,10 +1,16 @@
-BIN_DIR := "bin"
 GO_CMD := "go"
-SRC_DIR := "./cmd/cli"
-VERSION_FILE := "VERSION.txt"
 
 # --- Build targets ---
-build: build-darwin-arm64 build-darwin-amd64 build-linux-arm64 build-linux-amd64 build-linux-386 build-windows-arm64 build-windows-amd64 build-windows-386
+setup: setup-go setup-vscode setup-obsidian
+build-go: build-darwin-arm64 build-darwin-amd64 build-linux-arm64 build-linux-amd64 build-linux-386 build-windows-arm64 build-windows-amd64 build-windows-386
+build: build-go build-vscode build-obsidian
+test: test-go test-vscode test-obsidian
+lint: lint-go lint-vscode lint-obsidian
+clean:
+	rm -rf bin
+	rm -f coverage.out coverage.html
+	rm -f plugins/tabula.vscode/node_modules
+	rm -f plugins/tabula.obsidian/node_modules
 
 build-darwin-arm64:
 	env GOOS=darwin GOARCH=arm64 {{GO_CMD}} build -o bin/darwin/arm64/tabula ./cmd/cli
@@ -30,7 +36,7 @@ build-windows-amd64:
 build-windows-386:
 	env GOOS=windows GOARCH=386 {{GO_CMD}} build -o bin/windows/386/tabula.exe ./cmd/cli
 
-test:
+test-go:
 	{{GO_CMD}} test ./...
 
 coverage:
@@ -41,31 +47,83 @@ coverage:
 	@echo "Opening coverage report in browser..."
 	@open coverage.html || xdg-open coverage.html || start coverage.html
 
-# --- Clean ---
-clean:
-	rm -rf $(BIN_DIR)
-	rm -f coverage.out coverage.html
+
+setup-go:
+  {{GO_CMD}} mod download
 
 # --- Install ---
 install:
 	{{GO_CMD}} install ./cmd/cli
 
 # --- Vet & Lint ---
-vet:
+lint-go:
+	{{GO_CMD}} fmt ./...
 	{{GO_CMD}} vet ./...
-
-lint:
 	golangci-lint run
 
-# --- Format ---
-fmt:
-	{{GO_CMD}} fmt ./...
+# --------------------------------------------------
+# plugins
+# --------------------------------------------------
 
-# --- Benchmark ---
-benchmark:
-	@echo "TODO: Implement benchmark tests"
-	# go test -bench=. ./...
+# VSCode
+setup-vscode:
+  cd plugins/tabula.vscode && npm ci && npm audit --omit=dev
 
+build-vscode:
+  cd plugins/tabula.vscode && npm run build
+
+test-vscode:
+  cd plugins/tabula.vscode && xvfb-run  npm run test
+
+lint-vscode:
+  cd plugins/tabula.vscode && npm run lint:fix
+
+pack-vscode:
+  #!/bin/sh
+  set -euo pipefail
+
+  VERSION=$(cat VERSION.txt)
+  echo pack tabula.vscode.${VERSION}.tar.gz
+
+  cd plugins/tabula.vscode
+  mkdir -p dist
+  tar -czf dist/tabula.vscode.${VERSION}.tar.gz -C out .
+
+# Obsidian
+setup-obsidian:
+  cd plugins/tabula.obsidian && npm ci && npm audit --omit=dev
+
+build-obsidian:
+  cd plugins/tabula.obsidian && npm run build
+
+test-obsidian:
+  cd plugins/tabula.obsidian && npm run test
+
+lint-obsidian:
+  cd plugins/tabula.obsidian && npm run lint:fix
+
+pack-obsidian:
+  #!/bin/sh
+  set -euo pipefail
+
+  VERSION=$(cat VERSION.txt)
+  echo pack tabula.obsidian.${VERSION}.tar.gz
+
+  cd plugins/tabula.obsidian
+  mkdir -p dist
+  tar -czf dist/tabula.obsidian.${VERSION}.tar.gz -C out .
+
+# Vim
+pack-vim:
+  #!/bin/sh
+  set -euo pipefail
+
+  VERSION=$(cat VERSION.txt)
+  echo pack tabula.vim.${VERSION}.tar.gz
+
+  cd plugins/tabula.vim
+  mkdir -p dist
+  tar -czf dist/tabula.vim.${VERSION}.tar.gz doc ftdetect plugin syntax README.md
 # --------------------------------------------------
 # Version bump targets (no git here)
 # --------------------------------------------------

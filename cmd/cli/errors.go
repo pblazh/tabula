@@ -51,4 +51,3 @@ func ErrEvaluateScript(scriptName string, err error) error {
 func ErrWriteCSVOutput(err error) error {
 	return fmt.Errorf("error writing CSV output: %v", err)
 }
-

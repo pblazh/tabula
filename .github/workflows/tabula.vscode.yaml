@@ -23,14 +23,17 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
           cache-dependency-path: plugins/tabula.vscode/package-lock.json
-      - name: Build and test VSCode plugin
+      - uses: extractions/setup-just@v3
+      - name: Install dependencies
+        run: just setup-vscode
+      - name: Lint
+        run: just lint-vscode
+      - name: Run tests with xvfb
         working-directory: plugins/tabula.vscode
         run: |
-          npm ci
-          npm audit --omit=dev
-          npm run lint
           xvfb-run -a --server-args="-screen 0 1920x1080x24" npm test
-          npm run build
+      - name: Build
+        run: just build-vscode
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
