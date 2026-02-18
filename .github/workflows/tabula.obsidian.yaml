@@ -1,4 +1,4 @@
-name: Build Tabula.vscode
+name: Build Tabula.obsidian
 
 on:
   push:
