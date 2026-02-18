@@ -34,12 +34,10 @@ jobs:
             go-mod-cache-${{ runner.os }}-
       - name: Install dependencies
         run: go mod download
+      - uses: extractions/setup-just@v3
       - name: Run vet
-        uses: extractions/setup-just@v3
         run: just vet
       - name: Run tests
-        uses: extractions/setup-just@v3
         run: just test
       - name: Build Go binary
-        uses: extractions/setup-just@v3
         run: just build-linux-amd64
