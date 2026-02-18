@@ -4,6 +4,9 @@ on:
   push:
     branches-ignore:
       - main
+    paths:
+      - ".github/workflows/tabula.vscode.yaml"
+      - "plugins/tabula.vscode/**"
   workflow_dispatch:
 
 env:

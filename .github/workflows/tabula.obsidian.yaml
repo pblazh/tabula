@@ -4,6 +4,9 @@ on:
   push:
     branches-ignore:
       - main
+    paths:
+      - ".github/workflows/tabula.obsidian.yaml"
+      - "plugins/tabula.obsidian/**"
   workflow_dispatch:
 
 env:

@@ -4,6 +4,10 @@ on:
   push:
     branches-ignore:
       - main
+    paths:
+      - ".github/workflows/tabula.go.yaml"
+      - "cmd/**"
+      - "internal/**"
   workflow_dispatch:
 
 env:
