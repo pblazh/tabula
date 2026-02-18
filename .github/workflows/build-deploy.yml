@@ -21,7 +21,9 @@ jobs:
   tabula_go:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses:
+          - actions/checkout@v4
+          - extractions/setup-just@v3
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
@@ -36,22 +38,14 @@ jobs:
           key: go-mod-cache-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             go-mod-cache-${{ runner.os }}-
-      - name: Inject version into Go source
-        run: |
-          VERSION=$(cat VERSION.txt)
-          cat <<EOF > cmd/cli/version.go
-          package main
-
-          const VERSION = "$VERSION"
-          EOF
       - name: Install dependencies
         run: go mod download
       - name: Run vet
-        run: make vet
+        run: just vet
       - name: Run tests
-        run: make test
+        run: just test
       - name: Build Go binary
-        run: make build
+        run: just build
       - name: Upload Go binaries
         uses: actions/upload-artifact@v4
         with:
@@ -157,70 +151,6 @@ jobs:
         with:
           name: tabula_vim
           path: plugins/tabula.vim/dist/tabula.vim.${{ env.VERSION }}.tar.gz
-
-  # # --------------------
-  # # Release
-  # # --------------------
-  # release:
-  #   runs-on: ubuntu-latest
-  #   needs: [tabula_go, tabula_obsidian, tabula_vscode, tabula_vim]
-  #   if: startsWith(github.ref, 'refs/heads/main')
-  #   permissions:
-  #     contents: write
-  #     id-token: write
-  #   outputs:
-  #     release_created: ${{ steps.check_tag.outputs.release_created }}
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-
-  #     - name: Read version
-  #       run: |
-  #         echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
-  #         [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
-  #     - name: Fetch tags
-  #       run: git fetch --tags
-
-  #     - name: Check if version/tag exists
-  #       id: check_tag
-  #       run: |
-  #         if git rev-parse "v$VERSION" >/dev/null 2>&1; then
-  #           echo "Tag exists, skipping release"
-  #           echo "release_created=false" >> $GITHUB_OUTPUT
-  #         else
-  #           echo "release_created=true" >> $GITHUB_OUTPUT
-  #         fi
-
-  #     - name: Download artifacts
-  #       if: steps.check_tag.outputs.release_created == 'true'
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         path: dist
-
-  #     - name: Flatten and prepare release assets
-  #       if: steps.check_tag.outputs.release_created == 'true'
-  #       run: |
-  #         mkdir -p release-assets
-  #         find dist -type f -exec cp {} release-assets/ \;
-  #         if [ -d "dist/tabula_go_bin" ]; then
-  #           tar -czf release-assets/tabula-go-$VERSION.tar.gz -C dist/tabula_go_bin .
-  #         fi
-
-  #     - name: Generate minimal CHANGELOG.md
-  #       if: steps.check_tag.outputs.release_created == 'true'
-  #       run: |
-  #         echo "# Changelog for v$VERSION" > CHANGELOG.md
-  #         echo "" >> CHANGELOG.md
-  #         echo "- Release v$VERSION" >> CHANGELOG.md
-
-  #     - name: Create GitHub Release + Upload Assets
-  #       uses: softprops/action-gh-release@v1
-  #       with:
-  #         tag_name: v${{ env.VERSION }}
-  #         name: Release v${{ env.VERSION }}
-  #         body_path: CHANGELOG.md
-  #         files: release-assets/*
 
   # --------------------
   # Check if version is not deployed yet
