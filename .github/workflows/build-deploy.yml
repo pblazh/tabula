@@ -267,13 +267,10 @@ jobs:
       id-token: write
 
     steps:
-      - name: Prepare gh-pages directory from main branch
-        run: |
-          git fetch origin main
-          # Copy gh-pages folder from main branch
-          mkdir -p gh-pages
-          git checkout origin/main -- gh-pages || echo "No existing gh-pages folder in main"
-        shell: bash
+      - name: Checkout full repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Prepare gh-pages directory
         run: |
