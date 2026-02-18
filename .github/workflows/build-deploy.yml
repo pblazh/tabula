@@ -6,9 +6,6 @@ on:
       - "main"
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 env:
   NODE_VERSION: 20.x
   GO_VERSION: "1.22.x"
@@ -248,8 +245,8 @@ jobs:
     environment: github-pages
     permissions:
       pages: write
+      contents: write
       id-token: write
-      contents: read
 
     steps:
       - name: Prepare gh-pages directory
