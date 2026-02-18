@@ -1,0 +1,50 @@
+name: Build tabula.go
+
+on:
+  push:
+    branches-ignore:
+      - main
+  workflow_dispatch:
+
+env:
+  GO_VERSION: "1.22.x"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tabula_go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: go-mod-cache-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            go-mod-cache-${{ runner.os }}-
+      - name: Inject version into Go source
+        run: |
+          VERSION=$(cat VERSION.txt)
+          cat <<EOF > cmd/cli/version.go
+          package main
+
+          const VERSION = "$VERSION"
+          EOF
+      - name: Install dependencies
+        run: go mod download
+      - name: Run vet
+        run: make vet
+      - name: Run tests
+        run: make test
+      - name: Build Go binary
+        run: make build-linux-amd64
