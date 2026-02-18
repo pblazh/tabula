@@ -9,10 +9,6 @@ on:
 env:
   NODE_VERSION: 20.x
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   tabula_vscode:
     runs-on: ubuntu-latest

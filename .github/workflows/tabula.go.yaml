@@ -9,10 +9,6 @@ on:
 env:
   GO_VERSION: "1.22.x"
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   tabula_go:
     runs-on: ubuntu-latest

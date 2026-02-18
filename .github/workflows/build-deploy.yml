@@ -238,47 +238,48 @@ jobs:
   # Deploy Tabula GitHub pages
   # --------------------
   deploy_pages:
-  needs: [version_check, tabula_go, tabula_obsidian, tabula_vscode, tabula_vim]
-  runs-on: ubuntu-latest
-  environment: github-pages
-  permissions:
-    pages: write
-    id-token: write
-    contents: read
+    needs:
+      [version_check, tabula_go, tabula_obsidian, tabula_vscode, tabula_vim]
+    runs-on: ubuntu-latest
+    environment: github-pages
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
 
-  steps:
-    - name: Prepare gh-pages directory
-      run: |
-        mkdir -p gh-pages/releases
+    steps:
+      - name: Prepare gh-pages directory
+        run: |
+          mkdir -p gh-pages/releases
 
-    - name: Download tabula_go_bin
-      uses: actions/download-artifact@v4
-      with:
-        name: tabula_go_bin
-        path: gh-pages/releases
+      - name: Download tabula_go_bin
+        uses: actions/download-artifact@v4
+        with:
+          name: tabula_go_bin
+          path: gh-pages/releases
 
-    - name: Download tabula_obsidian
-      uses: actions/download-artifact@v4
-      with:
-        name: tabula_obsidian
-        path: gh-pages/releases
+      - name: Download tabula_obsidian
+        uses: actions/download-artifact@v4
+        with:
+          name: tabula_obsidian
+          path: gh-pages/releases
 
-    - name: Download tabula_vscode
-      uses: actions/download-artifact@v4
-      with:
-        name: tabula_vscode
-        path: gh-pages/releases
+      - name: Download tabula_vscode
+        uses: actions/download-artifact@v4
+        with:
+          name: tabula_vscode
+          path: gh-pages/releases
 
-    - name: Download tabula_vim
-      uses: actions/download-artifact@v4
-      with:
-        name: tabula_vim
-        path: gh-pages/releases
+      - name: Download tabula_vim
+        uses: actions/download-artifact@v4
+        with:
+          name: tabula_vim
+          path: gh-pages/releases
 
-    - name: Deploy to GitHub Pages branch
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./gh-pages
-        publish_branch: gh-pages
-        force_orphan: true
+      - name: Deploy to GitHub Pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages
+          publish_branch: gh-pages
+          force_orphan: true
