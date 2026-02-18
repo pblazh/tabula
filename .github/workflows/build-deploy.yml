@@ -280,9 +280,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Read version
+        run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
+
       - name: Prepare gh-pages directory
         run: |
           mkdir -p gh-pages/releases
+          sed -i "s/\[VERSION\]/${VERSION}/g" gh-pages/index.html
 
       - name: Download tabula_go_bin
         uses: actions/download-artifact@v4
