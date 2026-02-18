@@ -73,6 +73,9 @@ jobs:
           cache: npm
           cache-dependency-path: plugins/tabula.obsidian/package-lock.json
 
+      - name: Read version
+        run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
+
       - name: Build and test Obsidian plugin
         working-directory: plugins/tabula.obsidian
         run: |
@@ -84,16 +87,15 @@ jobs:
 
       - name: Package Obsidian plugin
         run: |
-          VERSION=$(cat ../../VERSION.txt)
           mkdir -p dist
-          tar -czf dist/tabula.obsidian.$VERSION.tar.gz -C out .
+          tar -czf dist/tabula.obsidian.${VERSION}.tar.gz -C out .
         working-directory: plugins/tabula.obsidian
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: tabula_obsidian
-          path: plugins/tabula.obsidian/dist/tabula.obsidian.$(cat VERSION.txt).tar.gz
+          path: plugins/tabula.obsidian/dist/tabula.obsidian.${{ env.VERSION }}.tar.gz
 
   # --------------------
   # Tabula VSCode Plugin
@@ -117,18 +119,21 @@ jobs:
           xvfb-run -a --server-args="-screen 0 1920x1080x24" npm test
           npm run build
 
+      - name: Read version
+        run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
+
       - name: Package VSCode plugin
         run: |
           VERSION=$(cat ../../VERSION.txt)
           mkdir -p dist
-          tar -czf dist/tabula.vscode.$VERSION.tar.gz -C out .
+          tar -czf dist/tabula.vscode.${VERSION}.tar.gz -C out .
         working-directory: plugins/tabula.vscode
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: tabula_vscode
-          path: plugins/tabula.vscode/dist/tabula.vscode.$(cat VERSION.txt).tar.gz
+          path: plugins/tabula.vscode/dist/tabula.vscode.${{ env.VERSION }}.tar.gz
 
   # --------------------
   # Vim Plugin
@@ -143,11 +148,15 @@ jobs:
         run: |
           mkdir -p dist
           tar -czf dist/tabula.vim-$VERSION.tar.gz -C plugins/tabula.vim doc ftdetect plugin syntax README.md
+
+      - name: Read version
+        run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: tabula_vim
-          path: plugins/tabula.vim/dist/tabula.vim.$(cat VERSION.txt).tar.gz
+          path: plugins/tabula.vim/dist/tabula.vim.${{ env.VERSION }}.tar.gz
 
   # # --------------------
   # # Release
@@ -229,15 +238,15 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      - name: Read version
+        run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
+
       - name: Read version and check tag
         id: check
         run: |
-          VERSION=$(tr -d '\n' < VERSION.txt)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
           git fetch --tags
 
-          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+          if git rev-parse "v${VERSION}" >/dev/null 2>&1; then
             echo "Tag exists, skipping deployment"
             echo "skip_deploy=true" >> $GITHUB_OUTPUT
           else
