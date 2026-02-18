@@ -142,15 +142,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Read version
-        run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
-      - name: Package Vim plugin
-        run: |
-          mkdir -p dist
-          tar -czf dist/tabula.vim-$VERSION.tar.gz -C plugins/tabula.vim doc ftdetect plugin syntax README.md
 
       - name: Read version
         run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
+
+      - name: Package Vim plugin
+        run: |
+          mkdir -p dist
+          tar -czf dist/tabula.vim.${VERSION}.tar.gz -C plugins/tabula.vim doc ftdetect plugin syntax README.md
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
