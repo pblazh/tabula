@@ -7,8 +7,8 @@ import (
 func IsNumber(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeArityGuard(format, 1)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -20,8 +20,8 @@ func IsNumber(
 func IsText(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeArityGuard(format, 1)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -33,8 +33,8 @@ func IsText(
 func IsBoolean(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeArityGuard(format, 1)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -46,8 +46,8 @@ func IsBoolean(
 func IsBlank(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeArityGuard(format, 1)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err

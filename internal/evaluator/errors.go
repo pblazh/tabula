@@ -11,7 +11,7 @@ func ErrDivisionByZero(token lexer.Token) error {
 	return fmt.Errorf("division by zero at %s", token)
 }
 
-func ErrUnsupportedCall(expr ast.Expression, target string) error {
+func ErrUnsupportedCall(expr ast.Node, target string) error {
 	return fmt.Errorf("invalid argument %s for %s", target, expr)
 }
 
@@ -19,19 +19,19 @@ func ErrCellOutOfBounds(cellRef, dimension string, index int) error {
 	return fmt.Errorf("%s %d out of bounds for cell %s", dimension, index, cellRef)
 }
 
-func ErrRelOutOfBounds(expr ast.Expression) error {
+func ErrRelOutOfBounds(expr ast.Node) error {
 	return fmt.Errorf("%s is outof bounds", expr)
 }
 
-func ErrVariableNotFound(expr ast.Expression) error {
+func ErrVariableNotFound(expr ast.Node) error {
 	return fmt.Errorf("%s not found in context", expr)
 }
 
-func ErrUnknownExpressionType(expr ast.Expression) error {
+func ErrUnknownExpressionType(expr ast.Node) error {
 	return fmt.Errorf("unknown expression type %T", expr)
 }
 
-func ErrUnsupportedOperation(operator lexer.Token, expr ast.Expression) error {
+func ErrUnsupportedOperation(operator lexer.Token, expr ast.Node) error {
 	return fmt.Errorf(
 		"operator %s is not supported for type %s at %v",
 		operator.Literal,
@@ -40,11 +40,11 @@ func ErrUnsupportedOperation(operator lexer.Token, expr ast.Expression) error {
 	)
 }
 
-func ErrUnsupportedType(receiver ast.Expression, expr ast.Expression) error {
+func ErrUnsupportedType(receiver ast.Node, expr ast.Node) error {
 	return fmt.Errorf("%s is not supported by %s", ast.TypeName(expr), receiver)
 }
 
-func ErrUnsupportedBinaryOperation(operator lexer.Token, left, right ast.Expression) error {
+func ErrUnsupportedBinaryOperation(operator lexer.Token, left, right ast.Node) error {
 	return fmt.Errorf(
 		"operator %s is not supported for type %s and %s at %v",
 		operator.Literal,
@@ -74,7 +74,7 @@ func ErrUnsupportedFunctions(identifier string) error {
 	return fmt.Errorf("unsupported function: %s", identifier)
 }
 
-func ErrEvaluation(statement ast.Statement, err error) error {
+func ErrEvaluation(statement ast.Node, err error) error {
 	return fmt.Errorf("failed to evaluate %s, %s", statement, err)
 }
 

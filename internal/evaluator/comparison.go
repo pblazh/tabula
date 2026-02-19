@@ -7,12 +7,12 @@ import (
 
 func evaluateComparison(
 	operator lexer.Token,
-	left, right ast.Expression,
-	intOp func(int, int) (ast.Expression, error),
-	floatOp func(float64, float64) (ast.Expression, error),
-	stringOp func(string, string) (ast.Expression, error),
-	boolOp func(bool, bool) (ast.Expression, error),
-) (ast.Expression, error) {
+	left, right ast.Node,
+	intOp func(int, int) (ast.Node, error),
+	floatOp func(float64, float64) (ast.Node, error),
+	stringOp func(string, string) (ast.Node, error),
+	boolOp func(bool, bool) (ast.Node, error),
+) (ast.Node, error) {
 	if ast.IsNumeric(left) && ast.IsNumeric(right) {
 		return evaluateNumericOperation(left, right, operator, intOp, floatOp)
 	}
@@ -32,50 +32,50 @@ func evaluateComparison(
 	return nil, ErrUnsupportedBinaryOperation(operator, left, right)
 }
 
-func evaluateEquality(operator lexer.Token, left, right ast.Expression) (ast.Expression, error) {
+func evaluateEquality(operator lexer.Token, left, right ast.Node) (ast.Node, error) {
 	return evaluateComparison(operator, left, right,
-		func(a, b int) (ast.Expression, error) {
+		func(a, b int) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a == b, Token: operator}, nil
 		},
-		func(a, b float64) (ast.Expression, error) {
+		func(a, b float64) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a == b, Token: operator}, nil
 		},
-		func(a, b string) (ast.Expression, error) {
+		func(a, b string) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a == b, Token: operator}, nil
 		},
-		func(a, b bool) (ast.Expression, error) {
+		func(a, b bool) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a == b, Token: operator}, nil
 		})
 }
 
-func evaluateInequality(operator lexer.Token, left, right ast.Expression) (ast.Expression, error) {
+func evaluateInequality(operator lexer.Token, left, right ast.Node) (ast.Node, error) {
 	return evaluateComparison(operator, left, right,
-		func(a, b int) (ast.Expression, error) {
+		func(a, b int) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a != b, Token: operator}, nil
 		},
-		func(a, b float64) (ast.Expression, error) {
+		func(a, b float64) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a != b, Token: operator}, nil
 		},
-		func(a, b string) (ast.Expression, error) {
+		func(a, b string) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a != b, Token: operator}, nil
 		},
-		func(a, b bool) (ast.Expression, error) {
+		func(a, b bool) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a != b, Token: operator}, nil
 		})
 }
 
-func evaluateLessThan(operator lexer.Token, left, right ast.Expression) (ast.Expression, error) {
+func evaluateLessThan(operator lexer.Token, left, right ast.Node) (ast.Node, error) {
 	return evaluateComparison(operator, left, right,
-		func(a, b int) (ast.Expression, error) {
+		func(a, b int) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a < b, Token: operator}, nil
 		},
-		func(a, b float64) (ast.Expression, error) {
+		func(a, b float64) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a < b, Token: operator}, nil
 		},
-		func(a, b string) (ast.Expression, error) {
+		func(a, b string) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a < b, Token: operator}, nil
 		},
-		func(a, b bool) (ast.Expression, error) {
+		func(a, b bool) (ast.Node, error) {
 			return nil, ErrUnsupportedBinaryOperation(
 				operator,
 				ast.BooleanExpression{},
@@ -84,18 +84,18 @@ func evaluateLessThan(operator lexer.Token, left, right ast.Expression) (ast.Exp
 		})
 }
 
-func evaluateGreaterThan(operator lexer.Token, left, right ast.Expression) (ast.Expression, error) {
+func evaluateGreaterThan(operator lexer.Token, left, right ast.Node) (ast.Node, error) {
 	return evaluateComparison(operator, left, right,
-		func(a, b int) (ast.Expression, error) {
+		func(a, b int) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a > b, Token: operator}, nil
 		},
-		func(a, b float64) (ast.Expression, error) {
+		func(a, b float64) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a > b, Token: operator}, nil
 		},
-		func(a, b string) (ast.Expression, error) {
+		func(a, b string) (ast.Node, error) {
 			return ast.BooleanExpression{Value: a > b, Token: operator}, nil
 		},
-		func(a, b bool) (ast.Expression, error) {
+		func(a, b bool) (ast.Node, error) {
 			return nil, ErrUnsupportedBinaryOperation(
 				operator,
 				ast.BooleanExpression{},

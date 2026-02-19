@@ -16,13 +16,13 @@ type inputCase struct {
 func TestMathFunctions(t *testing.T) {
 	testcases := []struct {
 		name  string
-		input []ast.Expression
+		input []ast.Node
 		cases []inputCase
 	}{
 		// Empty input
 		{
 			name:  "empty input",
-			input: []ast.Expression{},
+			input: []ast.Node{},
 			cases: []inputCase{
 				{
 					f:       "PRODUCT",
@@ -81,7 +81,7 @@ func TestMathFunctions(t *testing.T) {
 		// Integer operations
 		{
 			name: "single integer",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: -5},
 			},
 			cases: []inputCase{
@@ -145,7 +145,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "multiple integers",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 3},
 				ast.IntExpression{Value: 4},
@@ -223,7 +223,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "integers with zero",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 10},
 				ast.IntExpression{Value: 0},
 				ast.IntExpression{Value: 5},
@@ -261,7 +261,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "integers with negative values",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 10},
 				ast.IntExpression{Value: -3},
 				ast.IntExpression{Value: 2},
@@ -300,7 +300,7 @@ func TestMathFunctions(t *testing.T) {
 		// Float operations
 		{
 			name: "single float",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 5.5},
 			},
 			cases: []inputCase{
@@ -368,7 +368,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "negative float",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: -3.7},
 			},
 			cases: []inputCase{
@@ -436,7 +436,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "multiple floats",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 2.0},
 				ast.FloatExpression{Value: 1.5},
 				ast.FloatExpression{Value: 3.0},
@@ -474,7 +474,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "floats with zero",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 5.5},
 				ast.FloatExpression{Value: 0.0},
 				ast.FloatExpression{Value: 2.5},
@@ -513,7 +513,7 @@ func TestMathFunctions(t *testing.T) {
 		// Mixed int and float operations (result type is float if any argument is float)
 		{
 			name: "int and float",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 5},
 				ast.FloatExpression{Value: 2.5},
 			},
@@ -550,7 +550,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "float and int",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 2.5},
 				ast.IntExpression{Value: 4},
 			},
@@ -591,7 +591,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "two ints",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 21},
 				ast.IntExpression{Value: 2},
 			},
@@ -620,7 +620,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "float, then 1",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 2.5},
 				ast.IntExpression{Value: 1},
 			},
@@ -649,7 +649,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "float and smaller int",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 126.55},
 				ast.IntExpression{Value: 3},
 			},
@@ -678,7 +678,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "boolean",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
 			cases: []inputCase{
@@ -746,7 +746,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "int and string",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 5},
 				ast.StringExpression{Value: "hello"},
 			},
@@ -783,7 +783,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "unsupported argument in float product",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 5.5},
 				ast.BooleanExpression{Value: true},
 			},
@@ -820,7 +820,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "string",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			cases: []inputCase{
@@ -889,7 +889,7 @@ func TestMathFunctions(t *testing.T) {
 		// MAXA/MINA-specific tests for string parsing
 		{
 			name: "with string numbers",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.StringExpression{Value: "5"},
 				ast.StringExpression{Value: "3.7"},
 				ast.IntExpression{Value: 2},
@@ -907,7 +907,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "with integer strings",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.StringExpression{Value: "10"},
 				ast.StringExpression{Value: "20"},
 				ast.IntExpression{Value: 15},
@@ -925,7 +925,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "with mixed valid strings",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.StringExpression{Value: "  42  "},
 				ast.StringExpression{Value: "-15"},
 				ast.FloatExpression{Value: 3.14},
@@ -943,7 +943,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "with invalid string",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.StringExpression{Value: "not_a_number"},
 				ast.IntExpression{Value: 5},
 			},
@@ -961,7 +961,7 @@ func TestMathFunctions(t *testing.T) {
 		// MOD function specific tests
 		{
 			name: "MOD: positive integers",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 17},
 				ast.IntExpression{Value: 5},
 			},
@@ -974,7 +974,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "MOD: negative dividend",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: -17},
 				ast.IntExpression{Value: 5},
 			},
@@ -987,7 +987,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "MOD: negative divisor",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 17},
 				ast.IntExpression{Value: -5},
 			},
@@ -1000,7 +1000,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "MOD: both negative",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: -17},
 				ast.IntExpression{Value: -5},
 			},
@@ -1013,7 +1013,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "MOD: exact division",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 15},
 				ast.IntExpression{Value: 5},
 			},
@@ -1026,7 +1026,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "MOD: with floats",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 7.5},
 				ast.FloatExpression{Value: 2.5},
 			},
@@ -1039,7 +1039,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "MOD: mixed int and float",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 10.7},
 				ast.IntExpression{Value: 3},
 			},
@@ -1052,7 +1052,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "MOD: division by one",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 5.7},
 				ast.IntExpression{Value: 1},
 			},
@@ -1065,7 +1065,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "MOD: small dividend, large divisor",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 3},
 				ast.IntExpression{Value: 10},
 			},
@@ -1079,7 +1079,7 @@ func TestMathFunctions(t *testing.T) {
 		// SQRT function specific tests
 		{
 			name: "SQRT: perfect squares",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 25},
 			},
 			cases: []inputCase{
@@ -1091,7 +1091,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "SQRT: perfect square floats",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 16.0},
 			},
 			cases: []inputCase{
@@ -1103,7 +1103,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "SQRT: non-perfect squares",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 10},
 			},
 			cases: []inputCase{
@@ -1115,7 +1115,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "SQRT: decimal values",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 6.25},
 			},
 			cases: []inputCase{
@@ -1127,7 +1127,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "SQRT: zero",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 0},
 			},
 			cases: []inputCase{
@@ -1139,7 +1139,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "SQRT: one",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
 			cases: []inputCase{
@@ -1151,7 +1151,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "SQRT: large perfect square",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 144},
 			},
 			cases: []inputCase{
@@ -1163,7 +1163,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "SQRT: small decimal",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.FloatExpression{Value: 0.25},
 			},
 			cases: []inputCase{
@@ -1176,7 +1176,7 @@ func TestMathFunctions(t *testing.T) {
 		// COUNT and COUNTA specific tests
 		{
 			name: "COUNT: mixed numeric and non-numeric types",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 5},
 				ast.StringExpression{Value: "hello"},
 				ast.FloatExpression{Value: 3.14},
@@ -1195,7 +1195,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "COUNT: only strings",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "123"},
@@ -1213,7 +1213,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "COUNT: only booleans",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 			},
@@ -1230,7 +1230,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "COUNTA: with empty strings",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: "world"},
@@ -1250,7 +1250,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "COUNT and COUNTA: all empty strings",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: ""},
@@ -1268,7 +1268,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "COUNT: zeros should be counted",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 0},
 				ast.FloatExpression{Value: 0.0},
 				ast.IntExpression{Value: 1},
@@ -1286,7 +1286,7 @@ func TestMathFunctions(t *testing.T) {
 		},
 		{
 			name: "COUNT: complex mixed scenario",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: -5},
 				ast.FloatExpression{Value: 2.5},
 				ast.StringExpression{Value: ""},

@@ -9,8 +9,8 @@ import (
 func Power(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsNumeric, ast.IsNumeric)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -25,8 +25,8 @@ func Power(
 func Sqrt(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	guard := MakeExactTypesGuard(format, ast.IsNumeric)
 	if err := guard(call, values...); err != nil {
 		return nil, err

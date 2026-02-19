@@ -7,8 +7,8 @@ import (
 )
 
 func Concat(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	guard := MakeSameTypeGuard(format, ast.IsString)
 	if err := guard(call, values...); err != nil {
 		return nil, err
@@ -23,8 +23,8 @@ func Concat(format string,
 }
 
 func Len(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	guard := MakeExactTypesGuard(format, ast.IsString)
 	if err := guard(call, values...); err != nil {
 		return nil, err
@@ -35,8 +35,8 @@ func Len(format string,
 }
 
 func Lower(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	guard := MakeExactTypesGuard(format, ast.IsString)
 	if err := guard(call, values...); err != nil {
 		return nil, err
@@ -47,8 +47,8 @@ func Lower(format string,
 }
 
 func Upper(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	guard := MakeExactTypesGuard(format, ast.IsString)
 	if err := guard(call, values...); err != nil {
 		return nil, err
@@ -59,8 +59,8 @@ func Upper(format string,
 }
 
 func Trim(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	guard := MakeExactTypesGuard(format, ast.IsString)
 	if err := guard(call, values...); err != nil {
 		return nil, err
@@ -71,8 +71,8 @@ func Trim(format string,
 }
 
 func Exact(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	guard := MakeExactTypesGuard(format, ast.IsString, ast.IsString)
 	if err := guard(call, values...); err != nil {
 		return nil, err
@@ -87,8 +87,8 @@ func Exact(format string,
 }
 
 func Find(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	var guard CallGuard
 	var start int
 	if len(values) == 2 {
@@ -122,8 +122,8 @@ func Find(format string,
 }
 
 func Left(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	var guard CallGuard
 	var n int
 	if len(values) == 1 {
@@ -152,8 +152,8 @@ func Left(format string,
 }
 
 func Right(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	var guard CallGuard
 	var n int
 	if len(values) == 1 {
@@ -186,8 +186,8 @@ func Right(format string,
 }
 
 func Mid(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	guard := MakeExactTypesGuard(format, ast.IsString, ast.IsInt, ast.IsInt)
 	if err := guard(call, values...); err != nil {
 		return nil, err
@@ -204,8 +204,8 @@ func Mid(format string,
 }
 
 func Substitute(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	var guard CallGuard
 	if len(values) == 3 {
 		guard = MakeExactTypesGuard(format, ast.IsString, ast.IsString, ast.IsString)
@@ -265,8 +265,8 @@ func Substitute(format string,
 }
 
 func Value(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	guard := MakeExactTypesGuard(format, ast.IsString)
 	if err := guard(call, values...); err != nil {
 		return nil, err

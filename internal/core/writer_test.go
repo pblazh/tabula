@@ -11,7 +11,7 @@ func TestWriteValue(t *testing.T) {
 	testcases := []struct {
 		name     string
 		format   string
-		input    ast.Expression
+		input    ast.Node
 		expected string
 		error    string
 	}{

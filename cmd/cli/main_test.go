@@ -335,6 +335,7 @@ func TestExamples(t *testing.T) {
 }
 
 func testExample(t *testing.T, exampleName, inputFile, outputFile string) {
+	t.Helper()
 	// Read expected output
 	expectedOutput, err := os.ReadFile(outputFile)
 	if err != nil {

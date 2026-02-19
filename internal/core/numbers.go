@@ -90,9 +90,9 @@ func roundDownPrecise(value, precision float64) float64 {
 
 func parseStringExpressions(
 	_ ast.CallExpression,
-	values []ast.Expression,
-) ([]ast.Expression, ast.Expression) {
-	var converted []ast.Expression
+	values []ast.Node,
+) ([]ast.Node, ast.Node) {
+	var converted []ast.Node
 	for _, v := range values {
 		switch expr := v.(type) {
 		case ast.IntExpression:
@@ -112,7 +112,7 @@ func parseStringExpressions(
 	return converted, nil
 }
 
-func count(call ast.CallExpression, values ...ast.Expression) ast.IntExpression {
+func count(call ast.CallExpression, values ...ast.Node) ast.IntExpression {
 	var result int
 	for _, value := range values {
 		if ast.IsNumeric(value) || ast.IsDate(value) {
@@ -122,7 +122,7 @@ func count(call ast.CallExpression, values ...ast.Expression) ast.IntExpression 
 	return ast.IntExpression{Value: result, Token: call.Token}
 }
 
-func counta(call ast.CallExpression, values ...ast.Expression) ast.IntExpression {
+func counta(call ast.CallExpression, values ...ast.Node) ast.IntExpression {
 	var result int
 	for _, value := range values {
 		switch v := value.(type) {

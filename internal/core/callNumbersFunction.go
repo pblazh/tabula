@@ -16,8 +16,8 @@ func callNumbersFunction(
 	intFunction MathFunction[int],
 	floatFunction MathFunction[float64],
 	callGuard CallGuard,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
 	}

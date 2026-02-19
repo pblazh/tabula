@@ -8,7 +8,7 @@ import (
 )
 
 // WriteValue writes an AST expression to context with optional format specification
-func WriteValue(value ast.Expression, format string) (string, error) {
+func WriteValue(value ast.Node, format string) (string, error) {
 	if format == "" {
 		formatted, err := formatWithoutSpec(value)
 		if err != nil {
@@ -26,7 +26,7 @@ func WriteValue(value ast.Expression, format string) (string, error) {
 }
 
 // formatWithSpec formats an AST expression using the specified format
-func formatWithSpec(value ast.Expression, format string) (string, error) {
+func formatWithSpec(value ast.Node, format string) (string, error) {
 	switch expr := value.(type) {
 	case ast.IntExpression:
 		return fmt.Sprintf(format, expr.Value), nil
@@ -49,7 +49,7 @@ func formatWithSpec(value ast.Expression, format string) (string, error) {
 }
 
 // formatWithoutSpec formats an AST expression without format specification
-func formatWithoutSpec(value ast.Expression) (string, error) {
+func formatWithoutSpec(value ast.Node) (string, error) {
 	switch expr := value.(type) {
 	case ast.IntExpression:
 		return fmt.Sprintf("%d", expr.Value), nil

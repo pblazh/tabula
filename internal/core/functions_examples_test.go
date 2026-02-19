@@ -13,7 +13,7 @@ func TestFunctionExamples(t *testing.T) {
 		// Numeric Functions Examples
 		{
 			Name: "SUM with numbers",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 3},
@@ -22,7 +22,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "ADD two numbers",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 5},
 				ast.IntExpression{Value: 3},
 			},
@@ -30,7 +30,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "PRODUCT multiply numbers",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 3},
 				ast.IntExpression{Value: 4},
@@ -39,7 +39,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "AVERAGE of numbers",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 10},
 				ast.IntExpression{Value: 20},
 				ast.IntExpression{Value: 30},
@@ -48,14 +48,14 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "ABS negative number",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: -5},
 			},
 			Expected: "5",
 		},
 		{
 			Name: "POWER base and exponent",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 3},
 			},
@@ -63,7 +63,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "CEILING round up with factor",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.FloatExpression{Value: 4.3},
 				ast.IntExpression{Value: 1},
 			},
@@ -71,7 +71,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "CEILING round up to nearest 10",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 15},
 				ast.IntExpression{Value: 10},
 			},
@@ -79,7 +79,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "FLOOR round down with factor",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.FloatExpression{Value: 4.7},
 				ast.IntExpression{Value: 1},
 			},
@@ -87,7 +87,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "FLOOR round down to nearest 10",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 15},
 				ast.IntExpression{Value: 10},
 			},
@@ -95,21 +95,21 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "INT truncate decimal positive",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.FloatExpression{Value: 4.9},
 			},
 			Expected: "4",
 		},
 		{
 			Name: "INT truncate decimal negative",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.FloatExpression{Value: -3.2},
 			},
 			Expected: "-3",
 		},
 		{
 			Name: "MAX find largest",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 10},
 				ast.IntExpression{Value: 25},
 				ast.IntExpression{Value: 5},
@@ -118,7 +118,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "MIN find smallest",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 10},
 				ast.IntExpression{Value: 25},
 				ast.IntExpression{Value: 5},
@@ -127,7 +127,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "ROUND with 2 decimal places",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.FloatExpression{Value: 4.567},
 				ast.FloatExpression{Value: 0.01},
 			},
@@ -135,7 +135,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "ROUND to integer",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.FloatExpression{Value: 4.567},
 				ast.IntExpression{Value: 1},
 			},
@@ -143,7 +143,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "MOD remainder operation",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 10},
 				ast.IntExpression{Value: 3},
 			},
@@ -151,7 +151,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "SQRT square root",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 16},
 			},
 			Expected: "4",
@@ -160,7 +160,7 @@ func TestFunctionExamples(t *testing.T) {
 		// String Functions Examples
 		{
 			Name: "CONCATENATE multiple strings",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello"},
 				ast.StringExpression{Value: " "},
 				ast.StringExpression{Value: "World"},
@@ -169,35 +169,35 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "LEN string length",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello"},
 			},
 			Expected: "5",
 		},
 		{
 			Name: "UPPER convert to uppercase",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `"HELLO"`,
 		},
 		{
 			Name: "LOWER convert to lowercase",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "HELLO"},
 			},
 			Expected: `"hello"`,
 		},
 		{
 			Name: "TRIM remove spaces",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "  hello  "},
 			},
 			Expected: `"hello"`,
 		},
 		{
 			Name: "EXACT compare strings case sensitive",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "hello"},
 			},
@@ -205,7 +205,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "EXACT compare strings different case",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello"},
 				ast.StringExpression{Value: "hello"},
 			},
@@ -213,7 +213,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "FIND substring position",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "lo"},
 			},
@@ -221,7 +221,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "LEFT get leftmost characters",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello World"},
 				ast.IntExpression{Value: 5},
 			},
@@ -229,7 +229,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "RIGHT get rightmost characters",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello World"},
 				ast.IntExpression{Value: 5},
 			},
@@ -237,7 +237,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "MID get middle substring",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello World"},
 				ast.IntExpression{Value: 7},
 				ast.IntExpression{Value: 5},
@@ -246,7 +246,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "SUBSTITUTE replace text",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello World"},
 				ast.StringExpression{Value: "o"},
 				ast.StringExpression{Value: "0"},
@@ -255,7 +255,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "SUBSTITUTE replace first occurrence",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello World"},
 				ast.StringExpression{Value: "o"},
 				ast.StringExpression{Value: "0"},
@@ -265,14 +265,14 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "VALUE convert string number",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "123"},
 			},
 			Expected: "123",
 		},
 		{
 			Name: "VALUE convert string float",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "45.67"},
 			},
 			Expected: "45.67",
@@ -281,7 +281,7 @@ func TestFunctionExamples(t *testing.T) {
 		// Logical Functions Examples
 		{
 			Name: "IF condition true",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "High"},
 				ast.StringExpression{Value: "Low"},
@@ -290,7 +290,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "IF condition false",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: false},
 				ast.StringExpression{Value: "High"},
 				ast.StringExpression{Value: "Low"},
@@ -299,7 +299,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "AND both true",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: true},
 			},
@@ -307,7 +307,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "AND one false",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 			},
@@ -315,7 +315,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "OR one true",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 			},
@@ -323,7 +323,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "OR both false",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: false},
 				ast.BooleanExpression{Value: false},
 			},
@@ -331,33 +331,33 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "NOT true",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
 			Expected: "false",
 		},
 		{
 			Name: "NOT false",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: false},
 			},
 			Expected: "true",
 		},
 		{
 			Name:     "TRUE function",
-			Input:    []ast.Expression{},
+			Input:    []ast.Node{},
 			Expected: "true",
 		},
 		{
 			Name:     "FALSE function",
-			Input:    []ast.Expression{},
+			Input:    []ast.Node{},
 			Expected: "false",
 		},
 
 		// Count Functions Examples
 		{
 			Name: "COUNT numbers only",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 2},
 				ast.StringExpression{Value: "text"},
@@ -367,7 +367,7 @@ func TestFunctionExamples(t *testing.T) {
 		},
 		{
 			Name: "COUNTA non-empty values",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: "text"},
@@ -379,56 +379,56 @@ func TestFunctionExamples(t *testing.T) {
 		// Information Functions Examples
 		{
 			Name: "ISNUMBER with number",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 123},
 			},
 			Expected: "true",
 		},
 		{
 			Name: "ISNUMBER with text",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "text"},
 			},
 			Expected: "false",
 		},
 		{
 			Name: "ISTEXT with text",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: "true",
 		},
 		{
 			Name: "ISTEXT with number",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 123},
 			},
 			Expected: "false",
 		},
 		{
 			Name: "ISLOGICAL with boolean",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
 			Expected: "true",
 		},
 		{
 			Name: "ISLOGICAL with text",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "text"},
 			},
 			Expected: "false",
 		},
 		{
 			Name: "ISBLANK with empty string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: ""},
 			},
 			Expected: "true",
 		},
 		{
 			Name: "ISBLANK with text",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "text"},
 			},
 			Expected: "false",
@@ -549,13 +549,13 @@ func TestComplexExamples(t *testing.T) {
 	testcases := []struct {
 		name         string
 		functionName string
-		input        []ast.Expression
+		input        []ast.Node
 		expected     string
 	}{
 		{
 			name:         "UPPER TRIM combination simulation",
 			functionName: "UPPER",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.StringExpression{Value: "hello"}, // Simulating already trimmed input
 			},
 			expected: `"HELLO"`,
@@ -563,7 +563,7 @@ func TestComplexExamples(t *testing.T) {
 		{
 			name:         "SUM ABS combination simulation",
 			functionName: "SUM",
-			input: []ast.Expression{
+			input: []ast.Node{
 				ast.IntExpression{Value: 5}, // Simulating ABS(-5)
 				ast.IntExpression{Value: 3}, // Simulating ABS(3)
 			},

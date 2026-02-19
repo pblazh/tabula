@@ -10,8 +10,8 @@ import (
 func Exec(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeSameTypeGuard(format, ast.IsString)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err

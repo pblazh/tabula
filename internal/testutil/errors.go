@@ -10,7 +10,7 @@ func ErrNoStatementsParsed() error {
 	return fmt.Errorf("no statements parsed")
 }
 
-func ErrExpectedExpressionStatement(actual ast.Statement) error {
+func ErrExpectedExpressionStatement(actual ast.Node) error {
 	return fmt.Errorf("expected ExpressionStatement, got %T", actual)
 }
 

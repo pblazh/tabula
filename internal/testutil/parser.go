@@ -12,7 +12,7 @@ import (
 )
 
 // ParseExpression parses an input string as an expression and returns the AST.
-func ParseExpression(t *testing.T, input string) ast.Expression {
+func ParseExpression(t *testing.T, input string) ast.Node {
 	t.Helper()
 	expr, err := parseExpression(input)
 	if err != nil {
@@ -21,7 +21,7 @@ func ParseExpression(t *testing.T, input string) ast.Expression {
 	return expr
 }
 
-func parseExpression(input string) (ast.Expression, error) {
+func parseExpression(input string) (ast.Node, error) {
 	lex := lexer.New(strings.NewReader(input+";"), "test")
 	p := parser.New(lex)
 	program, _, err := p.Parse()

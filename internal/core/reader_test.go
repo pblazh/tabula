@@ -19,7 +19,7 @@ func TestReadValue(t *testing.T) {
 		name     string
 		format   string
 		input    string
-		expected ast.Expression
+		expected ast.Node
 		error    string
 	}{
 		// Format specification cases
