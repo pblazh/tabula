@@ -28,20 +28,15 @@ jobs:
       - uses: extractions/setup-just@v3
 
       - name: Install dependencies
-        run: just setup-vscode
+        run: just vscode-setup
 
       - name: Lint
-        run: just lint-vscode
+        run: just vscode-lint
 
       - name: Run tests with xvfb
         working-directory: plugins/tabula.vscode
         run: |
           xvfb-run -a --server-args="-screen 0 1920x1080x24" npm test
-      - name: Build
-        run: just build-vscode
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: tabula_vscode
-          path: plugins/tabula.vscode/out/
+      - name: Build
+        run: just vscode-build

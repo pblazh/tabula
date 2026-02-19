@@ -1,11 +1,17 @@
 GO_CMD := "go"
 
 # --- Build targets ---
-setup: setup-go setup-vscode setup-obsidian
-build-go: build-darwin-arm64 build-darwin-amd64 build-linux-arm64 build-linux-amd64 build-linux-386 build-windows-arm64 build-windows-amd64 build-windows-386
-build: build-go build-vscode build-obsidian
-test: test-go test-vscode test-obsidian
-lint: lint-go lint-vscode lint-obsidian
+setup: go-setup vscode-setup obsidian-setup
+go-build: build-darwin-arm64 build-darwin-amd64 build-linux-arm64 build-linux-amd64 build-linux-386 build-windows-arm64 build-windows-amd64 build-windows-386
+build: go-build vscode-build obsidian-build
+test: go-test vscode-test obsidian-test
+lint: go-lint vscode-lint obsidian-lint
+
+go: go-setup go-lint go-test go-build
+obsidian: obsidian-setup obsidian-lint obsidian-test obsidian-build obsidian-pack
+vscode: vscode-setup vscode-lint vscode-test vscode-build vscode-pack
+vim: vim-pack
+
 clean:
 	rm -rf bin
 	rm -f coverage.out coverage.html
@@ -36,10 +42,13 @@ build-windows-amd64:
 build-windows-386:
 	env GOOS=windows GOARCH=386 {{GO_CMD}} build -o bin/windows/386/tabula.exe ./cmd/cli
 
-test-go:
+go-setup:
+  {{GO_CMD}} mod download
+
+go-test:
 	{{GO_CMD}} test ./...
 
-coverage:
+go-coverage:
 	@echo "Generating coverage report..."
 	@go test -coverprofile=coverage.out ./...
 	@go tool cover -html=coverage.out -o coverage.html
@@ -48,15 +57,12 @@ coverage:
 	@open coverage.html || xdg-open coverage.html || start coverage.html
 
 
-setup-go:
-  {{GO_CMD}} mod download
-
 # --- Install ---
-install:
+go-install:
 	{{GO_CMD}} install ./cmd/cli
 
 # --- Vet & Lint ---
-lint-go:
+go-lint:
 	golangci-lint run
 
 # --------------------------------------------------
@@ -64,21 +70,21 @@ lint-go:
 # --------------------------------------------------
 
 # VSCode
-setup-vscode:
+vscode-setup:
   cd plugins/tabula.vscode && npm ci && npm audit --omit=dev
 
-build-vscode:
+vscode-build:
   cd plugins/tabula.vscode && npm run build
 
-test-vscode:
-  cd plugins/tabula.vscode && xvfb-run  npm run test
+vscode-test:
+  cd plugins/tabula.vscode && npm run test
 
-lint-vscode:
+vscode-lint:
   cd plugins/tabula.vscode && npm run lint:fix
 
-pack-vscode:
+vscode-pack:
   #!/bin/sh
-  set -euo pipefail
+  set -eu
 
   VERSION=$(cat VERSION.txt)
   echo pack tabula.vscode.${VERSION}.tar.gz
@@ -88,21 +94,21 @@ pack-vscode:
   tar -czf dist/tabula.vscode.${VERSION}.tar.gz -C out .
 
 # Obsidian
-setup-obsidian:
+obsidian-setup:
   cd plugins/tabula.obsidian && npm ci && npm audit --omit=dev
 
-build-obsidian:
+obsidian-build:
   cd plugins/tabula.obsidian && npm run build
 
-test-obsidian:
+obsidian-test:
   cd plugins/tabula.obsidian && npm run test
 
-lint-obsidian:
+obsidian-lint:
   cd plugins/tabula.obsidian && npm run lint:fix
 
-pack-obsidian:
+obsidian-pack:
   #!/bin/sh
-  set -euo pipefail
+  set -eu
 
   VERSION=$(cat VERSION.txt)
   echo pack tabula.obsidian.${VERSION}.tar.gz
@@ -112,9 +118,9 @@ pack-obsidian:
   tar -czf dist/tabula.obsidian.${VERSION}.tar.gz -C out .
 
 # Vim
-pack-vim:
+vim-pack:
   #!/bin/sh
-  set -euo pipefail
+  set -eu
 
   VERSION=$(cat VERSION.txt)
   echo pack tabula.vim.${VERSION}.tar.gz
@@ -123,7 +129,7 @@ pack-vim:
   mkdir -p dist
   tar -czf dist/tabula.vim.${VERSION}.tar.gz doc ftdetect plugin syntax README.md
 
-lint-github:
+github-lint:
   wrkflw validate
 
 # --------------------------------------------------
@@ -153,7 +159,7 @@ _commit_version version:
 
 major:
   #!/usr/bin/env bash
-  set -euo pipefail
+  set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
 
@@ -170,7 +176,7 @@ major:
 
 minor:
   #!/usr/bin/env bash
-  set -euo pipefail
+  set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
   MAJOR=`echo $CUR_VERSION | cut -d. -f1`
@@ -187,7 +193,7 @@ minor:
 
 patch:
   #!/usr/bin/env bash
-  set -euo pipefail
+  set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
 

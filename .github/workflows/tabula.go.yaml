@@ -34,20 +34,22 @@ jobs:
           key: go-mod-cache-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             go-mod-cache-${{ runner.os }}-
+
       - uses: extractions/setup-just@v3
-      - name: Install dependencies
-        run: just setup-go
 
       - name: use golangci-lint
         uses: golangci/golangci-lint-action@v7
         with:
           version: v2.8.0
 
+      - name: Install dependencies
+        run: just go-setup
+
       - name: lint
-        run: just lint-go
+        run: just go-lint
 
       - name: Run tests
-        run: just test-go
+        run: just go-test
 
       - name: Build Go binary
         run: just build-linux-amd64

@@ -26,20 +26,5 @@ jobs:
           cache-dependency-path: plugins/tabula.obsidian/package-lock.json
       - uses: extractions/setup-just@v3
 
-      - name: Install dependencies
-        run: just setup-obsidian
-
-      - name: Lint
-        run: just lint-obsidian
-
-      - name: Test
-        run: just test-obsidian
-
-      - name: Build
-        run: just build-obsidian
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: tabula_obsidian
-          path: plugins/tabula.obsidian/out/
+      - name: Build obsidian
+        run: just obsidian
