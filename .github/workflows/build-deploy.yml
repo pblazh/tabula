@@ -3,7 +3,7 @@ name: Build + Release
 on:
   push:
     branches:
-      - "main"
+      - main
   workflow_dispatch:
 
 env:
@@ -14,9 +14,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-include:
-  - component: $CI_SERVER_FQDN/components/code-quality-oss/codequality-os-scanners-integration/golangci@1.0.1
-
 jobs:
   # --------------------
   # Tabula Go
@@ -25,11 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
+
       - name: Cache Go modules
         uses: actions/cache@v3
         with:
@@ -39,15 +38,25 @@ jobs:
           key: go-mod-cache-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             go-mod-cache-${{ runner.os }}-
+
       - uses: extractions/setup-just@v3
+
       - name: Install dependencies
         run: just setup-go
-      - name: Run lint
+
+      - name: lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          args: --timeout=5m
         run: just lint-go
+
       - name: Run tests
         run: just test-go
+
       - name: Build Go binary
         run: just build-go
+
       - name: Upload Go binaries
         uses: actions/upload-artifact@v4
         with:
@@ -70,14 +79,19 @@ jobs:
           cache-dependency-path: plugins/tabula.obsidian/package-lock.json
 
       - uses: extractions/setup-just@v3
+
       - name: Install dependencies
         run: just setup-obsidian
+
       - name: Lint
         run: just lint-obsidian
+
       - name: Test
         run: just test-obsidian
+
       - name: Build
         run: just build-obsidian
+
       - name: Pack
         run: just pack-obsidian
 
@@ -97,23 +111,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
           cache-dependency-path: plugins/tabula.vscode/package-lock.json
+
       - uses: extractions/setup-just@v3
+
       - name: Install dependencies
         run: just setup-vscode
+
       - name: Lint
         run: just lint-vscode
+
       - name: Run tests with xvfb
         working-directory: plugins/tabula.vscode
-        run: |
-          xvfb-run -a --server-args="-screen 0 1920x1080x24" npm test
+        run: xvfb-run -a --server-args="-screen 0 1920x1080x24" npm test
+
       - name: Build
         run: just build-vscode
+
       - name: Pack
         run: just pack-vscode
 
@@ -133,7 +153,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: extractions/setup-just@v3
+
       - name: Pack
         run: just pack-vim
 
@@ -166,7 +188,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: true
 
       - name: Read version
         run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
@@ -175,6 +196,8 @@ jobs:
         id: check
         run: |
           git fetch --tags
+
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
           if git rev-parse "v${VERSION}" >/dev/null 2>&1; then
             echo "Tag exists, skipping deployment"
@@ -189,8 +212,8 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git tag "v${{ steps.check.outputs.version }}"
-          git push origin "v${{ steps.check.outputs.version }}"
+          git tag "v${VERSION}"
+          git push origin "v${VERSION}"
 
   # --------------------
   # Deploy Tabula GitHub pages
@@ -198,6 +221,7 @@ jobs:
   deploy_pages:
     needs:
       [version_check, tabula_go, tabula_obsidian, tabula_vscode, tabula_vim]
+    if: needs.version_check.outputs.skip_deploy == 'false'
     runs-on: ubuntu-latest
     environment: github-pages
     permissions:

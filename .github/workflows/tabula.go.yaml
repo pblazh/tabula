@@ -13,19 +13,18 @@ on:
 env:
   GO_VERSION: "1.22.x"
 
-include:
-  - component: $CI_SERVER_FQDN/components/code-quality-oss/codequality-os-scanners-integration/golangci@1.0.1
-
 jobs:
   tabula_go:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
+
       - name: Cache Go modules
         uses: actions/cache@v3
         with:
@@ -38,9 +37,16 @@ jobs:
       - uses: extractions/setup-just@v3
       - name: Install dependencies
         run: just setup-go
-      - name: Run lint
+
+      - name: lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          args: --timeout=5m
         run: just lint-go
+
       - name: Run tests
         run: just test-go
+
       - name: Build Go binary
         run: just build-linux-amd64
