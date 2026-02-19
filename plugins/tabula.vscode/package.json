@@ -2,7 +2,7 @@
   "name": "tabula",
   "displayName": "Tabula",
   "description": "Tabula - CSV transformation with spreadsheet-inspired scripting language",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "publisher": "tabula",
   "repository": {
     "type": "git",
