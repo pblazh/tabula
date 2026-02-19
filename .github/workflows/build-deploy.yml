@@ -41,22 +41,13 @@ jobs:
 
       - uses: extractions/setup-just@v3
 
-      - name: Install dependencies
-        run: just setup-go
-
       - name: use golangci-lint
         uses: golangci/golangci-lint-action@v7
         with:
           version: v2.8.0
 
-      - name: lint
-        run: just lint-go
-
-      - name: Run tests
-        run: just test-go
-
-      - name: Build Go binary
-        run: just build-go
+      - name: Build tabula go
+        run: just go
 
       - name: Upload Go binaries
         uses: actions/upload-artifact@v4
@@ -81,20 +72,8 @@ jobs:
 
       - uses: extractions/setup-just@v3
 
-      - name: Install dependencies
-        run: just setup-obsidian
-
-      - name: Lint
-        run: just lint-obsidian
-
-      - name: Test
-        run: just test-obsidian
-
-      - name: Build
-        run: just build-obsidian
-
-      - name: Pack
-        run: just pack-obsidian
+      - name: Build tabula obsidian
+        run: just obsidian
 
       - name: Read version
         run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
@@ -123,20 +102,20 @@ jobs:
       - uses: extractions/setup-just@v3
 
       - name: Install dependencies
-        run: just setup-vscode
+        run: just vscode-setup
 
       - name: Lint
-        run: just lint-vscode
+        run: just vscode-lint
 
       - name: Run tests with xvfb
         working-directory: plugins/tabula.vscode
         run: xvfb-run -a --server-args="-screen 0 1920x1080x24" npm test
 
       - name: Build
-        run: just build-vscode
+        run: just vscode-build
 
       - name: Pack
-        run: just pack-vscode
+        run: just vscode-pack
 
       - name: Read version
         run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
@@ -158,16 +137,10 @@ jobs:
       - uses: extractions/setup-just@v3
 
       - name: Pack
-        run: just pack-vim
+        run: just vim
 
       - name: Read version
         run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
-
-      - name: Package Vim plugin
-        working-directory: plugins/tabula.vim
-        run: |
-          mkdir -p dist
-          tar -czf dist/tabula.vim.${VERSION}.tar.gz doc ftdetect plugin syntax README.md
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
