@@ -16,7 +16,7 @@ func TestTODATE(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "valid input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2006-01-02"},
 				ast.StringExpression{Value: "2025-08-07"},
 			},
@@ -24,19 +24,19 @@ func TestTODATE(t *testing.T) {
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `TODATE(layout:string, value:string):date expects 2 arguments, got 0 in TODATE(), at <: input:0:0>`,
 		},
 		{
 			Name: "too few arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2006-01-02"},
 			},
 			Error: `TODATE(layout:string, value:string):date expects 2 arguments, got 1 in TODATE("2006-01-02"), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2006-01-01"},
 				ast.StringExpression{Value: "2006-01-02"},
 				ast.StringExpression{Value: "2006-01-03"},
@@ -45,7 +45,7 @@ func TestTODATE(t *testing.T) {
 		},
 		{
 			Name: "invalid layout",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "not a layout"},
 				ast.StringExpression{Value: "2025-08-07"},
 			},
@@ -53,7 +53,7 @@ func TestTODATE(t *testing.T) {
 		},
 		{
 			Name: "invalid input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2006-01-02"},
 				ast.StringExpression{Value: "not a date"},
 			},
@@ -61,7 +61,7 @@ func TestTODATE(t *testing.T) {
 		},
 		{
 			Name: "with time format",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2006-01-02 15:04:05"},
 				ast.StringExpression{Value: "2025-08-07 13:41:55"},
 			},
@@ -69,7 +69,7 @@ func TestTODATE(t *testing.T) {
 		},
 		{
 			Name: "different date format",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "01/02/2006"},
 				ast.StringExpression{Value: "08/07/2025"},
 			},
@@ -84,7 +84,7 @@ func TestFROMDATE(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "valid input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2006.01.02"},
 				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
 			},
@@ -92,19 +92,19 @@ func TestFROMDATE(t *testing.T) {
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `FROMDATE(layout:string, source:date):string expects 2 arguments, got 0 in FROMDATE(), at <: input:0:0>`,
 		},
 		{
 			Name: "too few arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2006-01-02"},
 			},
 			Error: `FROMDATE(layout:string, source:date):string expects 2 arguments, got 1 in FROMDATE("2006-01-02"), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2006-01-01"},
 				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
 				ast.StringExpression{Value: "extra"},
@@ -113,7 +113,7 @@ func TestFROMDATE(t *testing.T) {
 		},
 		{
 			Name: "with time format",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2006-01-02 15:04:05"},
 				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
 			},
@@ -121,7 +121,7 @@ func TestFROMDATE(t *testing.T) {
 		},
 		{
 			Name: "different output format",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "01/02/2006"},
 				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
 			},
@@ -129,7 +129,7 @@ func TestFROMDATE(t *testing.T) {
 		},
 		{
 			Name: "wrong first argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 2006},
 				ast.DateExpression{Value: parseDate("2025-08-07 13:41:55")},
 			},
@@ -137,7 +137,7 @@ func TestFROMDATE(t *testing.T) {
 		},
 		{
 			Name: "wrong second argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2006-01-02"},
 				ast.StringExpression{Value: "2025-08-07"},
 			},
@@ -159,33 +159,33 @@ func TestDAY(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "valid date",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 			},
 			Expected: `17`,
 		},
 		{
 			Name: "first day of month",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-01 00:00:00")},
 			},
 			Expected: `1`,
 		},
 		{
 			Name: "last day of month",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-31 23:59:59")},
 			},
 			Expected: `31`,
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `DAY(value:date):number expects 1 argument, got 0 in DAY(), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-18 13:41:55")},
 			},
@@ -193,7 +193,7 @@ func TestDAY(t *testing.T) {
 		},
 		{
 			Name: "wrong argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2025-08-17"},
 			},
 			Error: `DAY(value:date):number received an invalid argument "2025-08-17" in DAY("2025-08-17"), at <: input:0:0>`,
@@ -207,33 +207,33 @@ func TestMONTH(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "valid date",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 			},
 			Expected: `8`,
 		},
 		{
 			Name: "january",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-01-15 00:00:00")},
 			},
 			Expected: `1`,
 		},
 		{
 			Name: "december",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-12-25 23:59:59")},
 			},
 			Expected: `12`,
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `MONTH(value:date):number expects 1 argument, got 0 in MONTH(), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-18 13:41:55")},
 			},
@@ -241,7 +241,7 @@ func TestMONTH(t *testing.T) {
 		},
 		{
 			Name: "wrong argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 8},
 			},
 			Error: `MONTH(value:date):number received an invalid argument 8 in MONTH(8), at <: input:0:0>`,
@@ -255,33 +255,33 @@ func TestYEAR(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "valid date",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 			},
 			Expected: `2025`,
 		},
 		{
 			Name: "different year",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("1999-12-31 23:59:59")},
 			},
 			Expected: `1999`,
 		},
 		{
 			Name: "leap year",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2024-02-29 12:00:00")},
 			},
 			Expected: `2024`,
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `YEAR(value:date):number expects 1 argument, got 0 in YEAR(), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2024-08-17 13:41:55")},
 			},
@@ -289,7 +289,7 @@ func TestYEAR(t *testing.T) {
 		},
 		{
 			Name: "wrong argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2025"},
 			},
 			Error: `YEAR(value:date):number received an invalid argument "2025" in YEAR("2025"), at <: input:0:0>`,
@@ -303,33 +303,33 @@ func TestHOUR(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "valid date with hour",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 			},
 			Expected: `13`,
 		},
 		{
 			Name: "midnight",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 00:00:00")},
 			},
 			Expected: `0`,
 		},
 		{
 			Name: "late evening",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 23:59:59")},
 			},
 			Expected: `23`,
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `HOUR(value:date):number expects 1 argument, got 0 in HOUR(), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-17 14:41:55")},
 			},
@@ -337,7 +337,7 @@ func TestHOUR(t *testing.T) {
 		},
 		{
 			Name: "wrong argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 13},
 			},
 			Error: `HOUR(value:date):number received an invalid argument 13 in HOUR(13), at <: input:0:0>`,
@@ -351,33 +351,33 @@ func TestMINUTE(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "valid date with minute",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 			},
 			Expected: `41`,
 		},
 		{
 			Name: "zero minutes",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:00:55")},
 			},
 			Expected: `0`,
 		},
 		{
 			Name: "max minutes",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:59:55")},
 			},
 			Expected: `59`,
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `MINUTE(value:date):number expects 1 argument, got 0 in MINUTE(), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-17 13:42:55")},
 			},
@@ -385,7 +385,7 @@ func TestMINUTE(t *testing.T) {
 		},
 		{
 			Name: "wrong argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 41},
 			},
 			Error: `MINUTE(value:date):number received an invalid argument 41 in MINUTE(41), at <: input:0:0>`,
@@ -399,33 +399,33 @@ func TestSECOND(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "valid date with second",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 			},
 			Expected: `55`,
 		},
 		{
 			Name: "zero seconds",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:00")},
 			},
 			Expected: `0`,
 		},
 		{
 			Name: "max seconds",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:59")},
 			},
 			Expected: `59`,
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `SECOND(value:date):number expects 1 argument, got 0 in SECOND(), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:56")},
 			},
@@ -433,7 +433,7 @@ func TestSECOND(t *testing.T) {
 		},
 		{
 			Name: "wrong argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 55},
 			},
 			Error: `SECOND(value:date):number received an invalid argument 55 in SECOND(55), at <: input:0:0>`,
@@ -447,33 +447,33 @@ func TestWEEKDAY(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "sunday",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")}, // Sunday
 			},
 			Expected: `0`,
 		},
 		{
 			Name: "monday",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-18 13:41:55")}, // Monday
 			},
 			Expected: `1`,
 		},
 		{
 			Name: "saturday",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-16 13:41:55")}, // Saturday
 			},
 			Expected: `6`,
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `WEEKDAY(value:date):number expects 1 argument, got 0 in WEEKDAY(), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-18 13:41:55")},
 			},
@@ -481,7 +481,7 @@ func TestWEEKDAY(t *testing.T) {
 		},
 		{
 			Name: "wrong argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
 			Error: `WEEKDAY(value:date):number received an invalid argument 1 in WEEKDAY(1), at <: input:0:0>`,
@@ -495,12 +495,12 @@ func TestNOW(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:     "no arguments",
-			Input:    []ast.Expression{},
+			Input:    []ast.Node{},
 			Expected: ``,
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "extra"},
 			},
 			Error: `NOW():date expects 0 arguments, got 1 in NOW("extra"), at <: input:0:0>`,
@@ -548,7 +548,7 @@ func TestDATE(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "valid date",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 2025},
 				ast.IntExpression{Value: 8},
 				ast.IntExpression{Value: 17},
@@ -557,7 +557,7 @@ func TestDATE(t *testing.T) {
 		},
 		{
 			Name: "leap year february",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 2024},
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 29},
@@ -566,7 +566,7 @@ func TestDATE(t *testing.T) {
 		},
 		{
 			Name: "first day of year",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 2025},
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 1},
@@ -575,7 +575,7 @@ func TestDATE(t *testing.T) {
 		},
 		{
 			Name: "last day of year",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 2025},
 				ast.IntExpression{Value: 12},
 				ast.IntExpression{Value: 31},
@@ -584,12 +584,12 @@ func TestDATE(t *testing.T) {
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `DATE(year:number, month:number, day:number):date expects 3 arguments, got 0 in DATE(), at <: input:0:0>`,
 		},
 		{
 			Name: "too few arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 2025},
 				ast.IntExpression{Value: 8},
 			},
@@ -597,7 +597,7 @@ func TestDATE(t *testing.T) {
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 2025},
 				ast.IntExpression{Value: 8},
 				ast.IntExpression{Value: 17},
@@ -607,7 +607,7 @@ func TestDATE(t *testing.T) {
 		},
 		{
 			Name: "wrong argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2025"},
 				ast.IntExpression{Value: 8},
 				ast.IntExpression{Value: 17},
@@ -616,7 +616,7 @@ func TestDATE(t *testing.T) {
 		},
 		{
 			Name: "invalid date",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 2025},
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 30}, // February 30th doesn't exist
@@ -632,7 +632,7 @@ func TestDATEDIF(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "days difference",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-20 13:41:55")},
 				ast.StringExpression{Value: "D"},
@@ -641,7 +641,7 @@ func TestDATEDIF(t *testing.T) {
 		},
 		{
 			Name: "months difference",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-11-17 13:41:55")},
 				ast.StringExpression{Value: "M"},
@@ -650,7 +650,7 @@ func TestDATEDIF(t *testing.T) {
 		},
 		{
 			Name: "years difference",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2027-08-17 13:41:55")},
 				ast.StringExpression{Value: "Y"},
@@ -659,7 +659,7 @@ func TestDATEDIF(t *testing.T) {
 		},
 		{
 			Name: "negative difference",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-20 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.StringExpression{Value: "D"},
@@ -668,12 +668,12 @@ func TestDATEDIF(t *testing.T) {
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `DATEDIF(start:date, end:date, unit:string):number expects 3 arguments, got 0 in DATEDIF(), at <: input:0:0>`,
 		},
 		{
 			Name: "invalid unit",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-20 13:41:55")},
 				ast.StringExpression{Value: "X"},
@@ -682,7 +682,7 @@ func TestDATEDIF(t *testing.T) {
 		},
 		{
 			Name: "wrong argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2025-08-17"},
 				ast.DateExpression{Value: parseDate("2025-08-20 13:41:55")},
 				ast.StringExpression{Value: "D"},
@@ -698,7 +698,7 @@ func TestDAYS(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "positive difference",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-20 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 			},
@@ -706,7 +706,7 @@ func TestDAYS(t *testing.T) {
 		},
 		{
 			Name: "negative difference",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-20 13:41:55")},
 			},
@@ -714,7 +714,7 @@ func TestDAYS(t *testing.T) {
 		},
 		{
 			Name: "same date",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 			},
@@ -722,7 +722,7 @@ func TestDAYS(t *testing.T) {
 		},
 		{
 			Name: "cross year boundary",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2026-01-01 00:00:00")},
 				ast.DateExpression{Value: parseDate("2025-12-31 23:59:59")},
 			},
@@ -730,19 +730,19 @@ func TestDAYS(t *testing.T) {
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `DAYS(start:date, end:date):number expects 2 arguments, got 0 in DAYS(), at <: input:0:0>`,
 		},
 		{
 			Name: "too few arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.DateExpression{Value: parseDate("2025-08-17 13:41:55")},
 			},
 			Error: `DAYS(start:date, end:date):number expects 2 arguments, got 1 in DAYS(<2025-08-17 13:41:55>), at <: input:0:0>`,
 		},
 		{
 			Name: "wrong argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2025-08-17"},
 				ast.DateExpression{Value: parseDate("2025-08-20 13:41:55")},
 			},
@@ -757,40 +757,40 @@ func TestDATEVALUE(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name: "ISO date format",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2025-08-17"},
 			},
 			Expected: `<2025-08-17 00:00:00>`,
 		},
 		{
 			Name: "US date format",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "08/17/2025"},
 			},
 			Expected: `<2025-08-17 00:00:00>`,
 		},
 		{
 			Name: "with time",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2025-08-17 13:41:55"},
 			},
 			Expected: `<2025-08-17 13:41:55>`,
 		},
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `DATEVALUE(value:string):date expects 1 argument, got 0 in DATEVALUE(), at <: input:0:0>`,
 		},
 		{
 			Name: "wrong argument type",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 20250817},
 			},
 			Error: `DATEVALUE(value:string):date received an invalid argument 20250817 in DATEVALUE(20250817), at <: input:0:0>`,
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2025-08-17"},
 				ast.StringExpression{Value: "extra"},
 			},

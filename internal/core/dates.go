@@ -10,8 +10,8 @@ import (
 func ToDate(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsString, ast.IsString)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -31,8 +31,8 @@ func ToDate(
 func DateValue(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsString)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -78,8 +78,8 @@ func ParseDateWithoutFormat(value string) (*time.Time, error) {
 func FromDate(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsString, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -93,7 +93,7 @@ func FromDate(
 	return ast.StringExpression{Value: formatted, Token: call.Token}, nil
 }
 
-func Day(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Day(format string, call ast.CallExpression, values ...ast.Node) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -107,8 +107,8 @@ func Day(format string, call ast.CallExpression, values ...ast.Expression) (ast.
 func Hour(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -122,8 +122,8 @@ func Hour(
 func Minute(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -137,8 +137,8 @@ func Minute(
 func Month(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -152,8 +152,8 @@ func Month(
 func Second(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -167,8 +167,8 @@ func Second(
 func Year(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -182,8 +182,8 @@ func Year(
 func Weekday(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -197,8 +197,8 @@ func Weekday(
 func Now(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeArityGuard(format, 0)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -210,8 +210,8 @@ func Now(
 func Date(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsInt, ast.IsInt, ast.IsInt)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -230,8 +230,8 @@ func Date(
 func Days(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -251,8 +251,8 @@ func Days(
 func DateDiff(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate, ast.IsDate, ast.IsString)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err

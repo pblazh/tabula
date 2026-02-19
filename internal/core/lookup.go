@@ -5,8 +5,8 @@ import (
 )
 
 func Address(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	guard := MakeExactTypesGuard(format, ast.IsInt, ast.IsInt)
 	if err := guard(call, values...); err != nil {
 		return nil, err
@@ -21,8 +21,8 @@ func Address(format string,
 }
 
 func Row(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	identifierGuard := MakeExactTypesGuard(format, ast.IsIdentifier)
 	identifierErr := identifierGuard(call, values...)
 
@@ -47,8 +47,8 @@ func Row(format string,
 }
 
 func Column(format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	identifierGuard := MakeExactTypesGuard(format, ast.IsIdentifier)
 	identifierErr := identifierGuard(call, values...)
 
@@ -75,8 +75,8 @@ func Column(format string,
 func Ref(
 	context map[string]string, input [][]string, formats map[string]string,
 	format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	argsGuard := MakeExactTypesGuard(format, ast.IsString)
 	identifierErr := argsGuard(call, values...)
 	if identifierErr != nil {
@@ -106,8 +106,8 @@ func Ref(
 func Range(
 	context map[string]string, input [][]string, formats map[string]string,
 	format string,
-	call ast.CallExpression, values ...ast.Expression,
-) (ast.Expression, error) {
+	call ast.CallExpression, values ...ast.Node,
+) (ast.Node, error) {
 	guard := MakeExactTypesGuard(format, ast.IsString, ast.IsString)
 
 	err := guard(call, values...)

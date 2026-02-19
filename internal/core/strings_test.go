@@ -10,19 +10,19 @@ func TestCONCATENATE(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:     "empty input",
-			Input:    []ast.Expression{},
+			Input:    []ast.Node{},
 			Expected: `""`,
 		},
 		{
 			Name: "single string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `"hello"`,
 		},
 		{
 			Name: "multiple strings",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: " "},
 				ast.StringExpression{Value: "world"},
@@ -31,7 +31,7 @@ func TestCONCATENATE(t *testing.T) {
 		},
 		{
 			Name: "with empty strings",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "start"},
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: "end"},
@@ -40,7 +40,7 @@ func TestCONCATENATE(t *testing.T) {
 		},
 		{
 			Name: "all empty strings",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: ""},
@@ -49,7 +49,7 @@ func TestCONCATENATE(t *testing.T) {
 		},
 		{
 			Name: "special characters",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Line1\n"},
 				ast.StringExpression{Value: "Line2\t"},
 				ast.StringExpression{Value: "Line3"},
@@ -59,7 +59,7 @@ Line2	Line3"`,
 		},
 		{
 			Name: "string and integer",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 42},
 			},
@@ -81,33 +81,33 @@ func TestLEN(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `LEN(value:string):number expects 1 argument, got 0 in LEN(), at <: input:0:0>`,
 		},
 		{
 			Name: "simple string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `5`,
 		},
 		{
 			Name: "empty string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: ""},
 			},
 			Expected: `0`,
 		},
 		{
 			Name: "string with spaces",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "  hello world  "},
 			},
 			Expected: `15`,
 		},
 		{
 			Name: "multiple arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 			},
@@ -115,7 +115,7 @@ func TestLEN(t *testing.T) {
 		},
 		{
 			Name: "integer input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 123},
 			},
 			Error: `LEN(value:string):number received an invalid argument 123 in LEN(123), at <: input:0:0>`,
@@ -129,40 +129,40 @@ func TestLOWER(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `LOWER(value:string):string expects 1 argument, got 0 in LOWER(), at <: input:0:0>`,
 		},
 		{
 			Name: "simple string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `"hello"`,
 		},
 		{
 			Name: "mixed case string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello World"},
 			},
 			Expected: `"hello world"`,
 		},
 		{
 			Name: "uppercase string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "HELLO"},
 			},
 			Expected: `"hello"`,
 		},
 		{
 			Name: "string with numbers",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello123"},
 			},
 			Expected: `"hello123"`,
 		},
 		{
 			Name: "multiple arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello"},
 				ast.StringExpression{Value: "World"},
 			},
@@ -177,40 +177,40 @@ func TestUPPER(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `UPPER(value:string):string expects 1 argument, got 0 in UPPER(), at <: input:0:0>`,
 		},
 		{
 			Name: "simple string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `"HELLO"`,
 		},
 		{
 			Name: "mixed case string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello World"},
 			},
 			Expected: `"HELLO WORLD"`,
 		},
 		{
 			Name: "lowercase string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `"HELLO"`,
 		},
 		{
 			Name: "string with numbers",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello123"},
 			},
 			Expected: `"HELLO123"`,
 		},
 		{
 			Name: "multiple arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 			},
@@ -225,47 +225,47 @@ func TestTRIM(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `TRIM(value:string):string expects 1 argument, got 0 in TRIM(), at <: input:0:0>`,
 		},
 		{
 			Name: "string without spaces",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `"hello"`,
 		},
 		{
 			Name: "string with leading and trailing spaces",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "  hello world  "},
 			},
 			Expected: `"hello world"`,
 		},
 		{
 			Name: "string with only leading spaces",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "  hello"},
 			},
 			Expected: `"hello"`,
 		},
 		{
 			Name: "string with only trailing spaces",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello  "},
 			},
 			Expected: `"hello"`,
 		},
 		{
 			Name: "string with tabs and newlines",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "\t\n  hello  \n\t"},
 			},
 			Expected: `"hello"`,
 		},
 		{
 			Name: "multiple arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "  hello  "},
 				ast.StringExpression{Value: "  world  "},
 			},
@@ -280,19 +280,19 @@ func TestEXACT(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `EXACT(a:string, b:string):boolean expects 2 arguments, got 0 in EXACT(), at <: input:0:0>`,
 		},
 		{
 			Name: "single argument",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Error: `EXACT(a:string, b:string):boolean expects 2 arguments, got 1 in EXACT("hello"), at <: input:0:0>`,
 		},
 		{
 			Name: "identical strings",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "hello"},
 			},
@@ -300,7 +300,7 @@ func TestEXACT(t *testing.T) {
 		},
 		{
 			Name: "different strings",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 			},
@@ -308,7 +308,7 @@ func TestEXACT(t *testing.T) {
 		},
 		{
 			Name: "case sensitive test",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello"},
 				ast.StringExpression{Value: "hello"},
 			},
@@ -316,7 +316,7 @@ func TestEXACT(t *testing.T) {
 		},
 		{
 			Name: "empty strings",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: ""},
 			},
@@ -324,7 +324,7 @@ func TestEXACT(t *testing.T) {
 		},
 		{
 			Name: "spaces matter",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello "},
 				ast.StringExpression{Value: "hello"},
 			},
@@ -332,7 +332,7 @@ func TestEXACT(t *testing.T) {
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "extra"},
@@ -348,12 +348,12 @@ func TestFIND(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `FIND(what:string, where:string, [start:int]):number expects 3 arguments, got 0 in FIND(), at <: input:0:0>`,
 		},
 		{
 			Name: "basic substring search",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.StringExpression{Value: "world"},
 			},
@@ -361,7 +361,7 @@ func TestFIND(t *testing.T) {
 		},
 		{
 			Name: "substring at beginning",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.StringExpression{Value: "hello"},
 			},
@@ -369,7 +369,7 @@ func TestFIND(t *testing.T) {
 		},
 		{
 			Name: "substring not found",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.StringExpression{Value: "xyz"},
 			},
@@ -377,7 +377,7 @@ func TestFIND(t *testing.T) {
 		},
 		{
 			Name: "empty search string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: ""},
 			},
@@ -385,7 +385,7 @@ func TestFIND(t *testing.T) {
 		},
 		{
 			Name: "search in empty string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: "hello"},
 			},
@@ -393,7 +393,7 @@ func TestFIND(t *testing.T) {
 		},
 		{
 			Name: "both strings empty",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: ""},
 			},
@@ -401,7 +401,7 @@ func TestFIND(t *testing.T) {
 		},
 		{
 			Name: "case sensitive search",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello World"},
 				ast.StringExpression{Value: "world"},
 			},
@@ -409,7 +409,7 @@ func TestFIND(t *testing.T) {
 		},
 		{
 			Name: "with start position",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello hello world"},
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 1},
@@ -418,7 +418,7 @@ func TestFIND(t *testing.T) {
 		},
 		{
 			Name: "start position beyond string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 10},
@@ -427,7 +427,7 @@ func TestFIND(t *testing.T) {
 		},
 		{
 			Name: "negative start position",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.StringExpression{Value: "world"},
 				ast.IntExpression{Value: -1},
@@ -436,7 +436,7 @@ func TestFIND(t *testing.T) {
 		},
 		{
 			Name: "wrong type for third argument",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "not_int"},
@@ -452,19 +452,19 @@ func TestLEFT(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `LEFT(value:string, [amount:int]):string expects 2 arguments, got 0 in LEFT(), at <: input:0:0>`,
 		},
 		{
 			Name: "single character default",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `"h"`,
 		},
 		{
 			Name: "with count",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.IntExpression{Value: 5},
 			},
@@ -472,7 +472,7 @@ func TestLEFT(t *testing.T) {
 		},
 		{
 			Name: "count larger than string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 10},
 			},
@@ -480,7 +480,7 @@ func TestLEFT(t *testing.T) {
 		},
 		{
 			Name: "zero count",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 0},
 			},
@@ -488,7 +488,7 @@ func TestLEFT(t *testing.T) {
 		},
 		{
 			Name: "negative count",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: -5},
 			},
@@ -496,14 +496,14 @@ func TestLEFT(t *testing.T) {
 		},
 		{
 			Name: "empty string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: ""},
 			},
 			Expected: `""`,
 		},
 		{
 			Name: "empty string with count",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: ""},
 				ast.IntExpression{Value: 5},
 			},
@@ -511,7 +511,7 @@ func TestLEFT(t *testing.T) {
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 3},
 				ast.StringExpression{Value: "extra"},
@@ -527,19 +527,19 @@ func TestRIGHT(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `RIGHT(value:string, [amount:int]):string expects 2 arguments, got 0 in RIGHT(), at <: input:0:0>`,
 		},
 		{
 			Name: "single character default",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `"o"`,
 		},
 		{
 			Name: "with count",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.IntExpression{Value: 5},
 			},
@@ -547,7 +547,7 @@ func TestRIGHT(t *testing.T) {
 		},
 		{
 			Name: "count larger than string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 10},
 			},
@@ -555,7 +555,7 @@ func TestRIGHT(t *testing.T) {
 		},
 		{
 			Name: "zero count",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 0},
 			},
@@ -563,7 +563,7 @@ func TestRIGHT(t *testing.T) {
 		},
 		{
 			Name: "negative count",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: -5},
 			},
@@ -571,14 +571,14 @@ func TestRIGHT(t *testing.T) {
 		},
 		{
 			Name: "empty string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: ""},
 			},
 			Expected: `""`,
 		},
 		{
 			Name: "empty string with count",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: ""},
 				ast.IntExpression{Value: 5},
 			},
@@ -586,7 +586,7 @@ func TestRIGHT(t *testing.T) {
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 3},
 				ast.StringExpression{Value: "extra"},
@@ -602,12 +602,12 @@ func TestMID(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `MID(value:string, start:int, amount:int):string expects 3 arguments, got 0 in MID(), at <: input:0:0>`,
 		},
 		{
 			Name: "basic usage",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.IntExpression{Value: 7},
 				ast.IntExpression{Value: 5},
@@ -616,7 +616,7 @@ func TestMID(t *testing.T) {
 		},
 		{
 			Name: "start at beginning",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 5},
@@ -625,7 +625,7 @@ func TestMID(t *testing.T) {
 		},
 		{
 			Name: "single character",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 1},
@@ -634,7 +634,7 @@ func TestMID(t *testing.T) {
 		},
 		{
 			Name: "length larger than remaining string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 3},
 				ast.IntExpression{Value: 10},
@@ -643,7 +643,7 @@ func TestMID(t *testing.T) {
 		},
 		{
 			Name: "zero length",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 3},
 				ast.IntExpression{Value: 0},
@@ -652,7 +652,7 @@ func TestMID(t *testing.T) {
 		},
 		{
 			Name: "negative start position",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: -2},
 				ast.IntExpression{Value: 3},
@@ -661,7 +661,7 @@ func TestMID(t *testing.T) {
 		},
 		{
 			Name: "empty string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: ""},
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 5},
@@ -670,7 +670,7 @@ func TestMID(t *testing.T) {
 		},
 		{
 			Name: "extract entire string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 5},
@@ -679,7 +679,7 @@ func TestMID(t *testing.T) {
 		},
 		{
 			Name: "too few arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 2},
 			},
@@ -687,7 +687,7 @@ func TestMID(t *testing.T) {
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 3},
@@ -704,12 +704,12 @@ func TestSUBSTITUTE(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `SUBSTITUTE(text:string, old:string, new:string, [instances:int]):string expects 4 arguments, got 0 in SUBSTITUTE(), at <: input:0:0>`,
 		},
 		{
 			Name: "basic replacement",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "universe"},
@@ -718,7 +718,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 		{
 			Name: "replace first occurrence",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world world"},
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "universe"},
@@ -728,7 +728,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 		{
 			Name: "replace second occurrence",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world world"},
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "universe"},
@@ -738,7 +738,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 		{
 			Name: "replace all occurrences (zero index)",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world world world"},
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "universe"},
@@ -748,7 +748,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 		{
 			Name: "no match found",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.StringExpression{Value: "universe"},
 				ast.StringExpression{Value: "galaxy"},
@@ -757,7 +757,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 		{
 			Name: "empty old value",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: ""},
 				ast.StringExpression{Value: "x"},
@@ -766,7 +766,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 		{
 			Name: "empty new value",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: ""},
@@ -775,7 +775,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 		{
 			Name: "case sensitive",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "Hello World"},
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "universe"},
@@ -784,7 +784,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 		{
 			Name: "occurrence index beyond matches",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world"},
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "universe"},
@@ -794,7 +794,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 		{
 			Name: "negative occurrence index",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello world world"},
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "universe"},
@@ -804,7 +804,7 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 		{
 			Name: "too few arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 			},
@@ -826,61 +826,61 @@ func TestVALUE(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `VALUE(value:string):number expects 1 argument, got 0 in VALUE(), at <: input:0:0>`,
 		},
 		{
 			Name: "string input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `"hello"`,
 		},
 		{
 			Name: "boolean string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "true"},
 			},
 			Expected: `true`,
 		},
 		{
 			Name: "false boolean string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "false"},
 			},
 			Expected: `false`,
 		},
 		{
 			Name: "integer string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "7"},
 			},
 			Expected: `7`,
 		},
 		{
 			Name: "float string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "1.55"},
 			},
 			Expected: `1.55`,
 		},
 		{
 			Name: "negative integer string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "-42"},
 			},
 			Expected: `-42`,
 		},
 		{
 			Name: "date string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2025-08-17 15:39"},
 			},
 			Expected: `<2025-08-17 15:39:00>`,
 		},
 		{
 			Name: "multiple arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "7"},
 				ast.StringExpression{Value: "42"},
 			},
@@ -888,7 +888,7 @@ func TestVALUE(t *testing.T) {
 		},
 		{
 			Name: "non-string input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 			},
 			Error: `VALUE(value:string):number received an invalid argument 42 in VALUE(42), at <: input:0:0>`,

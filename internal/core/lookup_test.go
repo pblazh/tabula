@@ -10,12 +10,12 @@ func TestADDRESS(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `ADDRESS(row:int, column:int):string expects 2 arguments, got 0 in ADDRESS(), at <: input:0:0>`,
 		},
 		{
 			Name: "single int",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 			},
 			Error: `ADDRESS(row:int, column:int):string expects 2 arguments, got 1 in ADDRESS(42), at <: input:0:0>`,
@@ -23,7 +23,7 @@ func TestADDRESS(t *testing.T) {
 		},
 		{
 			Name: "multiple ints",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 3},
@@ -32,7 +32,7 @@ func TestADDRESS(t *testing.T) {
 		},
 		{
 			Name: "with string column",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 				ast.StringExpression{Value: "A"},
 			},
@@ -40,7 +40,7 @@ func TestADDRESS(t *testing.T) {
 		},
 		{
 			Name: "happy path",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 4},
 				ast.IntExpression{Value: 2},
 			},
@@ -55,12 +55,12 @@ func TestROW(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `ROW(cell:string):int expects 1 argument, got 0 in ROW(), at <: input:0:0>`,
 		},
 		{
 			Name: "multiple strings",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 			},
@@ -68,21 +68,21 @@ func TestROW(t *testing.T) {
 		},
 		{
 			Name: "with an int column",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 			},
 			Error: `ROW(cell:string):int received an invalid argument 42 in ROW(42), at <: input:0:0>`,
 		},
 		{
 			Name: "with an Identifier",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IdentifierExpression{Value: "B4"},
 			},
 			Expected: `4`,
 		},
 		{
 			Name: "with a Range",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.RangeExpression{Value: []string{"B4", "C5"}},
 			},
 			Expected: `4`,
@@ -96,12 +96,12 @@ func TestCOLUMN(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `COLUMN(cell:string):int expects 1 argument, got 0 in COLUMN(), at <: input:0:0>`,
 		},
 		{
 			Name: "multiple strings",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 			},
@@ -109,21 +109,21 @@ func TestCOLUMN(t *testing.T) {
 		},
 		{
 			Name: "with an int column",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 			},
 			Error: `COLUMN(cell:string):int received an invalid argument 42 in COLUMN(42), at <: input:0:0>`,
 		},
 		{
 			Name: "with an Identifier",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IdentifierExpression{Value: "B4"},
 			},
 			Expected: `2`,
 		},
 		{
 			Name: "with a Range",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.RangeExpression{Value: []string{"B4", "C5"}},
 			},
 			Expected: `2`,
@@ -137,12 +137,12 @@ func TestREF(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `REF(cell:string):any expects 1 argument, got 0 in REF(), at <: input:0:0>`,
 		},
 		{
 			Name: "multiple strings",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "A1"},
 				ast.StringExpression{Value: "B2"},
 			},
@@ -150,35 +150,35 @@ func TestREF(t *testing.T) {
 		},
 		{
 			Name: "with an int",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 			},
 			Error: `REF(cell:string):any received an invalid argument 42 in REF(42), at <: input:0:0>`,
 		},
 		{
 			Name: "with a cell Identifier",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "B2"},
 			},
 			Expected: `3`,
 		},
 		{
 			Name: "with a formated cell Identifier",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "B1"},
 			},
 			Expected: `1`,
 		},
 		{
 			Name: "with a variable Identifier",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `"world"`,
 		},
 		{
 			Name: "with a wrong identifier",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "2B"},
 			},
 			Error: `REF(cell:string):any received an invalid argument "2B" in REF("2B"), at <: input:0:0>`,
@@ -203,19 +203,19 @@ func TestRANGE(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `RANGE(a:string, b:string):range expects 2 arguments, got 0 in RANGE(), at <: input:0:0>`,
 		},
 		{
 			Name: "multiple strings",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Error: `RANGE(a:string, b:string):range expects 2 arguments, got 1 in RANGE("hello"), at <: input:0:0>`,
 		},
 		{
 			Name: "with an int column",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 				ast.IntExpression{Value: 24},
 			},
@@ -223,7 +223,7 @@ func TestRANGE(t *testing.T) {
 		},
 		{
 			Name: "with a variable",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "x"},
 				ast.StringExpression{Value: "C5"},
 			},
@@ -231,7 +231,7 @@ func TestRANGE(t *testing.T) {
 		},
 		{
 			Name: "with a Range",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "B4"},
 				ast.StringExpression{Value: "C5"},
 			},

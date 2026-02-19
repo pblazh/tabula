@@ -8,7 +8,7 @@ import (
 )
 
 func EvaluateStatement(
-	statement ast.Statement,
+	statement ast.Node,
 	context map[string]string,
 	input [][]string,
 	formats map[string]string,

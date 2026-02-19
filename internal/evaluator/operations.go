@@ -5,7 +5,7 @@ import (
 	"github.com/pblazh/tabula/internal/lexer"
 )
 
-func evaluateNegation(expr ast.Expression, token lexer.Token) (ast.Expression, error) {
+func evaluateNegation(expr ast.Node, token lexer.Token) (ast.Node, error) {
 	switch r := expr.(type) {
 	case ast.IntExpression:
 		return ast.IntExpression{Value: -r.Value, Token: token}, nil
@@ -16,7 +16,7 @@ func evaluateNegation(expr ast.Expression, token lexer.Token) (ast.Expression, e
 	}
 }
 
-func evaluateNot(expr ast.Expression, token lexer.Token) (ast.Expression, error) {
+func evaluateNot(expr ast.Node, token lexer.Token) (ast.Node, error) {
 	switch r := expr.(type) {
 	case ast.BooleanExpression:
 		return ast.BooleanExpression{Value: !r.Value, Token: token}, nil
@@ -25,7 +25,7 @@ func evaluateNot(expr ast.Expression, token lexer.Token) (ast.Expression, error)
 	}
 }
 
-func evaluateAddition(left, right ast.Expression, operator lexer.Token) (ast.Expression, error) {
+func evaluateAddition(left, right ast.Node, operator lexer.Token) (ast.Node, error) {
 	if l, ok := left.(ast.StringExpression); ok {
 		if r, ok := right.(ast.StringExpression); ok {
 			return ast.StringExpression{Value: l.Value + r.Value, Token: operator}, nil
@@ -33,46 +33,46 @@ func evaluateAddition(left, right ast.Expression, operator lexer.Token) (ast.Exp
 	}
 
 	return evaluateNumericOperation(left, right, operator,
-		func(a, b int) (ast.Expression, error) {
+		func(a, b int) (ast.Node, error) {
 			return ast.IntExpression{Value: a + b, Token: operator}, nil
 		},
-		func(a, b float64) (ast.Expression, error) {
+		func(a, b float64) (ast.Node, error) {
 			return ast.FloatExpression{Value: a + b, Token: operator}, nil
 		})
 }
 
-func evaluateSubtraction(left, right ast.Expression, operator lexer.Token) (ast.Expression, error) {
+func evaluateSubtraction(left, right ast.Node, operator lexer.Token) (ast.Node, error) {
 	return evaluateNumericOperation(left, right, operator,
-		func(a, b int) (ast.Expression, error) {
+		func(a, b int) (ast.Node, error) {
 			return ast.IntExpression{Value: a - b, Token: operator}, nil
 		},
-		func(a, b float64) (ast.Expression, error) {
+		func(a, b float64) (ast.Node, error) {
 			return ast.FloatExpression{Value: a - b, Token: operator}, nil
 		})
 }
 
 func evaluateMultiplication(
-	left, right ast.Expression,
+	left, right ast.Node,
 	operator lexer.Token,
-) (ast.Expression, error) {
+) (ast.Node, error) {
 	return evaluateNumericOperation(left, right, operator,
-		func(a, b int) (ast.Expression, error) {
+		func(a, b int) (ast.Node, error) {
 			return ast.IntExpression{Value: a * b, Token: operator}, nil
 		},
-		func(a, b float64) (ast.Expression, error) {
+		func(a, b float64) (ast.Node, error) {
 			return ast.FloatExpression{Value: a * b, Token: operator}, nil
 		})
 }
 
-func evaluateDivision(left, right ast.Expression, operator lexer.Token) (ast.Expression, error) {
+func evaluateDivision(left, right ast.Node, operator lexer.Token) (ast.Node, error) {
 	return evaluateNumericOperation(left, right, operator,
-		func(a, b int) (ast.Expression, error) {
+		func(a, b int) (ast.Node, error) {
 			if b == 0 {
 				return nil, ErrDivisionByZero(operator)
 			}
 			return ast.IntExpression{Value: a / b, Token: operator}, nil
 		},
-		func(a, b float64) (ast.Expression, error) {
+		func(a, b float64) (ast.Node, error) {
 			if b == 0 {
 				return nil, ErrDivisionByZero(operator)
 			}

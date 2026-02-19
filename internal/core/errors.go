@@ -31,7 +31,7 @@ func ErrUnsupportedArity(format string, function ast.CallExpression, expected, g
 func ErrUnsupportedArgument(
 	format string,
 	function ast.CallExpression,
-	argument ast.Expression,
+	argument ast.Node,
 ) error {
 	return fmt.Errorf(
 		"%s received an invalid argument %s in %s, at %v",
@@ -54,7 +54,7 @@ func ErrParseWithFormat(input, format, reason string) error {
 	return fmt.Errorf("failed to parse %q with format %q, %s", input, format, reason)
 }
 
-func ErrUnsupportedExpressionType(expr ast.Expression) error {
+func ErrUnsupportedExpressionType(expr ast.Node) error {
 	return fmt.Errorf("unsupported expression type: %T", expr)
 }
 

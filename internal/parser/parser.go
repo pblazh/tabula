@@ -15,8 +15,8 @@ import (
 )
 
 type (
-	prefixParse func() (ast.Expression, error)
-	infixParse  func(ast.Expression) (ast.Expression, error)
+	prefixParse func() (ast.Node, error)
+	infixParse  func(ast.Node) (ast.Node, error)
 )
 
 type Parser struct {
@@ -82,7 +82,7 @@ func (p *Parser) nextTokenIs(typ lexer.TokenType) bool {
 }
 
 func (p *Parser) Parse() (ast.Program, []string, error) {
-	program := make([]ast.Statement, 0)
+	program := make([]ast.Node, 0)
 	p.identifiers = make([]string, 0) // Reset identifiers for each parse
 
 	err := p.advance(1)
@@ -177,7 +177,7 @@ func (p *Parser) registerInfix(l lexer.TokenType, parse infixParse) {
 	p.infixParsers[l] = parse
 }
 
-func (p *Parser) parseLetStatement() ([]ast.Statement, error) {
+func (p *Parser) parseLetStatement() ([]ast.Node, error) {
 	// Advance past the LET token
 	err := p.advance(1)
 	if err != nil {
@@ -218,7 +218,7 @@ func (p *Parser) parseLetStatement() ([]ast.Statement, error) {
 	}
 
 	// Convert to slice of individual LetStatements
-	var statements []ast.Statement
+	var statements []ast.Node
 	for _, identifier := range identifiers {
 		stmt := ast.LetStatement{
 			Identifier: identifier,
@@ -263,48 +263,49 @@ func (p *Parser) parseIdentifierOrRange() ([]ast.IdentifierExpression, error) {
 	// Current token is an identifier
 	firstIdent := ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal}
 
-	// Check if this is a range (next token is ':')
-	if p.nextTokenIs(lexer.COLUMN) {
-		// Advance to ':'
-		err := p.advance(1)
-		if err != nil {
-			return nil, err
-		}
-
-		// Advance to second identifier
-		err = p.advance(1)
-		if err != nil {
-			return nil, err
-		}
-
-		if !p.expectCurrentToken(lexer.IDENT) {
-			return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
-		}
-
-		secondIdent := ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal}
-
-		// Expand the range to get all identifiers
-		cells, err := ast.ExpandRange(firstIdent.Value, secondIdent.Value)
-		if err != nil {
-			return nil, fmt.Errorf("failed to parse indent %s:%s, %s", firstIdent, secondIdent, err)
-		}
-
-		// Add all cells to the identifiers list
-		for _, cell := range cells {
-			ident := ast.IdentifierExpression{Token: firstIdent.Token, Value: cell}
-			identifiers = append(identifiers, ident)
-			p.identifiers = append(p.identifiers, cell)
-		}
-	} else {
+	if !p.nextTokenIs(lexer.COLUMN) {
 		// Just a single identifier
 		identifiers = append(identifiers, firstIdent)
 		p.identifiers = append(p.identifiers, firstIdent.Value)
+
+		return identifiers, nil
+	}
+
+	// This is a range, advance to ':'
+	err := p.advance(1)
+	if err != nil {
+		return nil, err
+	}
+
+	// Advance to second identifier
+	err = p.advance(1)
+	if err != nil {
+		return nil, err
+	}
+
+	if !p.expectCurrentToken(lexer.IDENT) {
+		return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
+	}
+
+	secondIdent := ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal}
+
+	// Expand the range to get all identifiers
+	cells, err := ast.ExpandRange(firstIdent.Value, secondIdent.Value)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse indent %s:%s, %s", firstIdent, secondIdent, err)
+	}
+
+	// Add all cells to the identifiers list
+	for _, cell := range cells {
+		ident := ast.IdentifierExpression{Token: firstIdent.Token, Value: cell}
+		identifiers = append(identifiers, ident)
+		p.identifiers = append(p.identifiers, cell)
 	}
 
 	return identifiers, nil
 }
 
-func (p *Parser) parseFmtStatement() ([]ast.Statement, error) {
+func (p *Parser) parseFmtStatement() ([]ast.Node, error) {
 	// Advance past the FMT token
 	err := p.advance(1)
 	if err != nil {
@@ -349,7 +350,7 @@ func (p *Parser) parseFmtStatement() ([]ast.Statement, error) {
 	}
 
 	// Convert to slice of individual FmtStatements
-	var statements []ast.Statement
+	var statements []ast.Node
 	for _, identifier := range identifiers {
 		stmt := ast.FmtStatement{
 			Identifier: identifier,
@@ -361,7 +362,7 @@ func (p *Parser) parseFmtStatement() ([]ast.Statement, error) {
 	return statements, nil
 }
 
-func (p *Parser) parseExpressionStatement() (ast.Statement, error) {
+func (p *Parser) parseExpressionStatement() (ast.Node, error) {
 	statement := ast.ExpressionStatement{
 		Token: p.cur,
 	}
@@ -382,7 +383,7 @@ func (p *Parser) parseExpressionStatement() (ast.Statement, error) {
 	return statement, nil
 }
 
-func (p *Parser) parseExpression(precedence int) (ast.Expression, error) {
+func (p *Parser) parseExpression(precedence int) (ast.Node, error) {
 	prefix := p.prefixParsers[p.cur.Type]
 
 	if prefix == nil {
@@ -409,7 +410,7 @@ func (p *Parser) parseExpression(precedence int) (ast.Expression, error) {
 	return leftExpr, err
 }
 
-func (p *Parser) parseIdentifier() (ast.Expression, error) {
+func (p *Parser) parseIdentifier() (ast.Node, error) {
 	// Add identifier to the list (convert cell identifiers to uppercase)
 	literal := p.cur.Literal
 	token := p.cur
@@ -427,7 +428,7 @@ func (p *Parser) parseIdentifier() (ast.Expression, error) {
 	return expr, nil
 }
 
-func (p *Parser) parseInt() (ast.Expression, error) {
+func (p *Parser) parseInt() (ast.Node, error) {
 	value, err := strconv.Atoi(p.cur.Literal)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse int %s ,%s", p.cur, err)
@@ -440,7 +441,7 @@ func (p *Parser) parseInt() (ast.Expression, error) {
 	return expr, nil
 }
 
-func (p *Parser) parseFloat() (ast.Expression, error) {
+func (p *Parser) parseFloat() (ast.Node, error) {
 	value, err := strconv.ParseFloat(p.cur.Literal, 64)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse float %s ,%s", p.cur, err)
@@ -454,7 +455,7 @@ func (p *Parser) parseFloat() (ast.Expression, error) {
 	return expr, nil
 }
 
-func (p *Parser) parseBool() (ast.Expression, error) {
+func (p *Parser) parseBool() (ast.Node, error) {
 	expr := ast.BooleanExpression{Token: p.cur, Value: p.cur.Type == lexer.TRUE}
 	err := p.advance(1)
 	if err != nil {
@@ -463,7 +464,7 @@ func (p *Parser) parseBool() (ast.Expression, error) {
 	return expr, nil
 }
 
-func (p *Parser) parseString() (ast.Expression, error) {
+func (p *Parser) parseString() (ast.Node, error) {
 	expr := ast.StringExpression{Value: p.cur.Literal[1 : len(p.cur.Literal)-1], Token: p.cur}
 	err := p.advance(1)
 	if err != nil {
@@ -472,7 +473,7 @@ func (p *Parser) parseString() (ast.Expression, error) {
 	return expr, nil
 }
 
-func (p *Parser) parseLparen() (ast.Expression, error) {
+func (p *Parser) parseLparen() (ast.Node, error) {
 	err := p.advance(1)
 	if err != nil {
 		return nil, err
@@ -493,7 +494,7 @@ func (p *Parser) parseLparen() (ast.Expression, error) {
 	return expression, nil
 }
 
-func (p *Parser) parsePrefix() (ast.Expression, error) {
+func (p *Parser) parsePrefix() (ast.Node, error) {
 	if _, ok := p.prefixParsers[p.cur.Type]; !ok {
 		return nil, ErrExpectedPrefix(p.cur)
 	}
@@ -512,7 +513,7 @@ func (p *Parser) parsePrefix() (ast.Expression, error) {
 	return prefix, nil
 }
 
-func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
+func (p *Parser) parseInfix(left ast.Node) (ast.Node, error) {
 	// Check if this is a range operator (:)
 	if p.cur.Type == lexer.COLUMN {
 		return p.parseRange(left)
@@ -538,7 +539,7 @@ func (p *Parser) parseInfix(left ast.Expression) (ast.Expression, error) {
 	return expression, nil
 }
 
-func (p *Parser) parseRange(left ast.Expression) (ast.Expression, error) {
+func (p *Parser) parseRange(left ast.Node) (ast.Node, error) {
 	// store the ':' token
 	colonToken := p.cur
 	// advance past the ':'
@@ -563,7 +564,7 @@ func (p *Parser) parseRange(left ast.Expression) (ast.Expression, error) {
 	return ast.RangeExpression{Token: colonToken, Value: cells}, nil
 }
 
-func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error) {
+func (p *Parser) parseCallExpression(left ast.Node) (ast.Node, error) {
 	identifier := left.(ast.IdentifierExpression)
 	expr := ast.CallExpression{Identifier: identifier, Token: identifier.Token}
 	arguments, err := p.parseCallArguments()
@@ -571,7 +572,7 @@ func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error
 		return nil, err
 	}
 
-	expandedArguments := make([]ast.Expression, 0, len(arguments))
+	expandedArguments := make([]ast.Node, 0, len(arguments))
 	for _, arg := range arguments {
 		if rangeExpr, ok := arg.(ast.RangeExpression); ok {
 			for _, expandedArg := range rangeExpr.Value {
@@ -589,13 +590,13 @@ func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error
 	return expr, nil
 }
 
-func (p *Parser) parseCallArguments() ([]ast.Expression, error) {
+func (p *Parser) parseCallArguments() ([]ast.Node, error) {
 	err := p.advance(1)
 	if err != nil {
 		return nil, err
 	}
 
-	arguments := []ast.Expression{}
+	arguments := []ast.Node{}
 	if p.expectCurrentToken(lexer.RPAREN) {
 		err = p.advance(1)
 		if err != nil {
@@ -653,7 +654,7 @@ func (p *Parser) resolveIncludePath(includePath string) (string, error) {
 	return absPath, nil
 }
 
-func (p *Parser) parseIncludeStatement() ([]ast.Statement, error) {
+func (p *Parser) parseIncludeStatement() ([]ast.Node, error) {
 	includeToken := p.cur
 
 	// Advance past #include
@@ -694,7 +695,7 @@ func (p *Parser) parseIncludeStatement() ([]ast.Statement, error) {
 				return nil, err
 			}
 		}
-		return []ast.Statement{}, nil
+		return []ast.Node{}, nil
 	}
 
 	// Mark as being processed (for circular detection)
@@ -732,7 +733,7 @@ func (p *Parser) parseIncludeStatement() ([]ast.Statement, error) {
 func (p *Parser) parseIncludedFile(
 	filePath string,
 	includeToken lexer.Token,
-) ([]ast.Statement, error) {
+) ([]ast.Node, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, ErrParseInclude(

@@ -13,14 +13,10 @@ type Node interface {
 	String() string
 }
 
-type Statement interface {
-	Node
-}
-
 type LetStatement struct {
-	Statement
+	Node
 	Identifier IdentifierExpression
-	Value      Expression
+	Value      Node
 }
 
 func (stmt LetStatement) String() string {
@@ -28,9 +24,9 @@ func (stmt LetStatement) String() string {
 }
 
 type FmtStatement struct {
-	Statement
+	Node
 	Identifier IdentifierExpression
-	Value      Expression
+	Value      Node
 }
 
 func (stmt FmtStatement) String() string {
@@ -38,9 +34,9 @@ func (stmt FmtStatement) String() string {
 }
 
 type ExpressionStatement struct {
-	Statement
+	Node
 	Token lexer.Token
-	Value Expression
+	Value Node
 }
 
 func (stmt ExpressionStatement) String() string {
@@ -48,7 +44,7 @@ func (stmt ExpressionStatement) String() string {
 }
 
 type IncludeStatement struct {
-	Statement
+	Node
 	Token    lexer.Token
 	FilePath string
 }
@@ -57,12 +53,8 @@ func (stmt IncludeStatement) String() string {
 	return fmt.Sprintf("#include \"%s\";", stmt.FilePath)
 }
 
-type Expression interface {
-	Node
-}
-
 type IdentifierExpression struct {
-	Expression
+	Node
 	Token lexer.Token
 	Value string
 }
@@ -72,7 +64,7 @@ func (expr IdentifierExpression) String() string {
 }
 
 type BooleanExpression struct {
-	Expression
+	Node
 	Token lexer.Token
 	Value bool
 }
@@ -82,7 +74,7 @@ func (expr BooleanExpression) String() string {
 }
 
 type IntExpression struct {
-	Expression
+	Node
 	Token lexer.Token
 	Value int
 }
@@ -92,7 +84,7 @@ func (expr IntExpression) String() string {
 }
 
 type FloatExpression struct {
-	Expression
+	Node
 	Token lexer.Token
 	Value float64
 }
@@ -102,7 +94,7 @@ func (expr FloatExpression) String() string {
 }
 
 type StringExpression struct {
-	Expression
+	Node
 	Token lexer.Token
 	Value string
 }
@@ -112,7 +104,7 @@ func (expr StringExpression) String() string {
 }
 
 type DateExpression struct {
-	Expression
+	Node
 	Token lexer.Token
 	Value time.Time
 }
@@ -122,10 +114,10 @@ func (expr DateExpression) String() string {
 }
 
 type PrefixExpression struct {
-	Expression
+	Node
 	Token    lexer.Token
 	Operator lexer.Token
-	Value    Expression
+	Value    Node
 }
 
 func (expr PrefixExpression) String() string {
@@ -133,11 +125,11 @@ func (expr PrefixExpression) String() string {
 }
 
 type InfixExpression struct {
-	Expression
+	Node
 	Token    lexer.Token
-	Left     Expression
+	Left     Node
 	Operator lexer.Token
-	Right    Expression
+	Right    Node
 }
 
 func (expr InfixExpression) String() string {
@@ -145,10 +137,10 @@ func (expr InfixExpression) String() string {
 }
 
 type CallExpression struct {
-	Expression
+	Node
 	Token      lexer.Token
-	Identifier Expression
-	Arguments  []Expression
+	Identifier Node
+	Arguments  []Node
 }
 
 func (expr CallExpression) String() string {
@@ -168,7 +160,7 @@ func (expr CallExpression) String() string {
 }
 
 type RangeExpression struct {
-	Expression
+	Node
 	Token lexer.Token
 	Value []string
 }
@@ -177,4 +169,4 @@ func (expr RangeExpression) String() string {
 	return fmt.Sprintf("[%s]", strings.Join(expr.Value, ", "))
 }
 
-type Program []Statement
+type Program []Node

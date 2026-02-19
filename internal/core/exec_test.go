@@ -11,13 +11,13 @@ func TestCall(t *testing.T) {
 	t.Skip("Skipping EXEC function tests - external command execution is environment-dependent")
 	tests := []struct {
 		name     string
-		args     []ast.Expression
+		args     []ast.Node
 		expected string
 		hasError bool
 	}{
 		{
 			name: "echo with single arg",
-			args: []ast.Expression{
+			args: []ast.Node{
 				ast.StringExpression{Value: "echo"},
 				ast.StringExpression{Value: "Hello World"},
 			},
@@ -26,7 +26,7 @@ func TestCall(t *testing.T) {
 		},
 		{
 			name: "echo with multiple args",
-			args: []ast.Expression{
+			args: []ast.Node{
 				ast.StringExpression{Value: "echo"},
 				ast.StringExpression{Value: "Hello"},
 				ast.StringExpression{Value: "World"},
@@ -36,7 +36,7 @@ func TestCall(t *testing.T) {
 		},
 		{
 			name: "nonexistent command",
-			args: []ast.Expression{
+			args: []ast.Node{
 				ast.StringExpression{Value: "nonexistentcommand"},
 			},
 			expected: "",
@@ -44,7 +44,7 @@ func TestCall(t *testing.T) {
 		},
 		{
 			name: "empty command name",
-			args: []ast.Expression{
+			args: []ast.Node{
 				ast.StringExpression{Value: ""},
 			},
 			expected: "",

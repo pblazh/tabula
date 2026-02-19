@@ -10,26 +10,26 @@ func TestNOT(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `NOT(value:boolean):boolean expects 1 argument, got 0 in NOT(), at <: input:0:0>`,
 		},
 		{
 			Name: "true input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
 			Expected: `false`,
 		},
 		{
 			Name: "false input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: false},
 			},
 			Expected: `true`,
 		},
 		{
 			Name: "multiple inputs",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 			},
@@ -37,21 +37,21 @@ func TestNOT(t *testing.T) {
 		},
 		{
 			Name: "string input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "true"},
 			},
 			Error: `NOT(value:boolean):boolean received an invalid argument "true" in NOT("true"), at <: input:0:0>`,
 		},
 		{
 			Name: "integer input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
 			Error: `NOT(value:boolean):boolean received an invalid argument 1 in NOT(1), at <: input:0:0>`,
 		},
 		{
 			Name: "float input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.FloatExpression{Value: 1.0},
 			},
 			Error: `NOT(value:boolean):boolean received an invalid argument 1.00 in NOT(1.00), at <: input:0:0>`,
@@ -65,19 +65,19 @@ func TestAND(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `AND(a:boolean, b:boolean):boolean expects 2 arguments, got 0 in AND(), at <: input:0:0>`,
 		},
 		{
 			Name: "single input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
 			Error: `AND(a:boolean, b:boolean):boolean expects 2 arguments, got 1 in AND(true), at <: input:0:0>`,
 		},
 		{
 			Name: "true and false",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 			},
@@ -85,7 +85,7 @@ func TestAND(t *testing.T) {
 		},
 		{
 			Name: "true and true",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: true},
 			},
@@ -93,7 +93,7 @@ func TestAND(t *testing.T) {
 		},
 		{
 			Name: "false and false",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: false},
 				ast.BooleanExpression{Value: false},
 			},
@@ -101,7 +101,7 @@ func TestAND(t *testing.T) {
 		},
 		{
 			Name: "three arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 				ast.BooleanExpression{Value: true},
@@ -110,7 +110,7 @@ func TestAND(t *testing.T) {
 		},
 		{
 			Name: "boolean and string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "false"},
 			},
@@ -125,19 +125,19 @@ func TestOR(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `OR(a:boolean, b:boolean):boolean expects 2 arguments, got 0 in OR(), at <: input:0:0>`,
 		},
 		{
 			Name: "single input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
 			Error: `OR(a:boolean, b:boolean):boolean expects 2 arguments, got 1 in OR(true), at <: input:0:0>`,
 		},
 		{
 			Name: "true and false",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 			},
@@ -145,7 +145,7 @@ func TestOR(t *testing.T) {
 		},
 		{
 			Name: "true and true",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: true},
 			},
@@ -153,7 +153,7 @@ func TestOR(t *testing.T) {
 		},
 		{
 			Name: "false and false",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: false},
 				ast.BooleanExpression{Value: false},
 			},
@@ -161,7 +161,7 @@ func TestOR(t *testing.T) {
 		},
 		{
 			Name: "three arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 				ast.BooleanExpression{Value: true},
@@ -170,7 +170,7 @@ func TestOR(t *testing.T) {
 		},
 		{
 			Name: "boolean and string",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "false"},
 			},
@@ -185,19 +185,19 @@ func TestIF(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:  "empty input",
-			Input: []ast.Expression{},
+			Input: []ast.Node{},
 			Error: `IF(predicate:boolean, positive:any, negative:any):any expects 3 arguments, got 0 in IF(), at <: input:0:0>`,
 		},
 		{
 			Name: "single input",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
 			Error: `IF(predicate:boolean, positive:any, negative:any):any expects 3 arguments, got 1 in IF(true), at <: input:0:0>`,
 		},
 		{
 			Name: "true condition",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
@@ -206,7 +206,7 @@ func TestIF(t *testing.T) {
 		},
 		{
 			Name: "false condition",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: false},
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
@@ -215,7 +215,7 @@ func TestIF(t *testing.T) {
 		},
 		{
 			Name: "mixed types true",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.IntExpression{Value: 42},
 				ast.FloatExpression{Value: 3.14},
@@ -224,7 +224,7 @@ func TestIF(t *testing.T) {
 		},
 		{
 			Name: "mixed types false",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: false},
 				ast.IntExpression{Value: 42},
 				ast.FloatExpression{Value: 3.14},
@@ -233,7 +233,7 @@ func TestIF(t *testing.T) {
 		},
 		{
 			Name: "boolean results",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 				ast.BooleanExpression{Value: true},
@@ -242,7 +242,7 @@ func TestIF(t *testing.T) {
 		},
 		{
 			Name: "non-boolean condition",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.StringExpression{Value: "true"},
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
@@ -251,7 +251,7 @@ func TestIF(t *testing.T) {
 		},
 		{
 			Name: "too many arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
@@ -268,12 +268,12 @@ func TestTRUE(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:     "no arguments",
-			Input:    []ast.Expression{},
+			Input:    []ast.Node{},
 			Expected: `true`,
 		},
 		{
 			Name: "with arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
 			Error: `TRUE():boolean expects 0 arguments, got 1 in TRUE(true), at <: input:0:0>`,
@@ -287,12 +287,12 @@ func TestFALSE(t *testing.T) {
 	testcases := []InfoTestCase{
 		{
 			Name:     "no arguments",
-			Input:    []ast.Expression{},
+			Input:    []ast.Node{},
 			Expected: `false`,
 		},
 		{
 			Name: "with arguments",
-			Input: []ast.Expression{
+			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
 			Error: `FALSE():boolean expects 0 arguments, got 1 in FALSE(true), at <: input:0:0>`,

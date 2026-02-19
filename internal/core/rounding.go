@@ -6,7 +6,7 @@ import (
 	"github.com/pblazh/tabula/internal/ast"
 )
 
-func Int(call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Int(call ast.CallExpression, values ...ast.Node) (ast.Node, error) {
 	callGuard := MakeExactTypesGuard("INT(number)", ast.IsNumeric)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -19,8 +19,8 @@ func Int(call ast.CallExpression, values ...ast.Expression) (ast.Expression, err
 func Round(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	first, second, err := extractRoundingArguments(format, call, values)
 	if err != nil {
 		return nil, err
@@ -36,8 +36,8 @@ func Round(
 func RoundUp(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	first, second, err := extractRoundingArguments(format, call, values)
 	if err != nil {
 		return nil, err
@@ -52,8 +52,8 @@ func RoundUp(
 func RoundDown(
 	format string,
 	call ast.CallExpression,
-	values ...ast.Expression,
-) (ast.Expression, error) {
+	values ...ast.Node,
+) (ast.Node, error) {
 	first, second, err := extractRoundingArguments(format, call, values)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func RoundDown(
 func extractRoundingArguments(
 	format string,
 	call ast.CallExpression,
-	values []ast.Expression,
+	values []ast.Node,
 ) (float64, float64, error) {
 	var callGuard CallGuard
 

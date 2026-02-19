@@ -7,7 +7,7 @@ import (
 
 type DependencyInfo struct {
 	Name         string
-	Statement    Statement
+	Statement    Node
 	Dependencies []string
 }
 
@@ -17,7 +17,7 @@ type DependencyGraph struct {
 	InDegree map[string]int
 }
 
-func ExtractDependencies(expr Expression) []string {
+func ExtractDependencies(expr Node) []string {
 	var deps []string
 	switch e := expr.(type) {
 	case IdentifierExpression:
@@ -41,7 +41,7 @@ func ExtractDependencies(expr Expression) []string {
 }
 
 // GetStatementName returns the name/identifier of a statement if it defines one
-func GetStatementName(stmt Statement) string {
+func GetStatementName(stmt Node) string {
 	switch s := stmt.(type) {
 	case LetStatement:
 		return s.Identifier.Value
@@ -51,7 +51,7 @@ func GetStatementName(stmt Statement) string {
 }
 
 // GetStatementDependencies returns the dependencies of a statement
-func GetStatementDependencies(stmt Statement) []string {
+func GetStatementDependencies(stmt Node) []string {
 	switch s := stmt.(type) {
 	case LetStatement:
 		return ExtractDependencies(s.Value)
@@ -119,7 +119,7 @@ func NewDependencyGraph(program Program) *DependencyGraph {
 }
 
 // Sort performs Kahn's algorithm for topological sorting
-func (g *DependencyGraph) Sort() ([]Statement, error) {
+func (g *DependencyGraph) Sort() ([]Node, error) {
 	// Copy in-degrees to avoid modifying original
 	inDegree := make(map[string]int)
 	maps.Copy(inDegree, g.InDegree)
@@ -134,7 +134,7 @@ func (g *DependencyGraph) Sort() ([]Statement, error) {
 	// Sort queue for deterministic ordering
 	sort.Strings(queue)
 
-	var result []Statement
+	var result []Node
 	processed := 0
 
 	for len(queue) > 0 {

@@ -15,11 +15,11 @@ linters:
     - recvcheck
     - unused
     - wrapcheck
-    # - unparam
-    # - thelper
-    # - nilnil
-    # - nestif
+    - thelper
+    - nestif
     # - ireturn
+    # - unparam
+    # - nilnil
     # - iface
     # - gosec
     # - gocognit

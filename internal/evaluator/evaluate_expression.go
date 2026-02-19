@@ -10,12 +10,12 @@ import (
 
 // EvaluateExpression evaluates any AST expression and returns the result
 func EvaluateExpression(
-	expr ast.Expression,
+	expr ast.Node,
 	context map[string]string,
 	input [][]string,
 	formats map[string]string,
 	target string,
-) (ast.Expression, error) {
+) (ast.Node, error) {
 	switch node := expr.(type) {
 	case ast.IntExpression, ast.FloatExpression, ast.BooleanExpression, ast.StringExpression:
 		return node, nil
@@ -43,7 +43,7 @@ func evaluatePrefixExpression(
 	input [][]string,
 	formats map[string]string,
 	target string,
-) (ast.Expression, error) {
+) (ast.Node, error) {
 	value, err := EvaluateExpression(expr.Value, context, input, formats, target)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func evaluateInfixExpression(
 	input [][]string,
 	formats map[string]string,
 	target string,
-) (ast.Expression, error) {
+) (ast.Node, error) {
 	left, err := EvaluateExpression(expr.Left, context, input, formats, target)
 	if err != nil {
 		return nil, err
@@ -103,8 +103,8 @@ func evaluateCallExpression(
 	input [][]string,
 	formats map[string]string,
 	target string,
-) (ast.Expression, error) {
-	args := make([]ast.Expression, 0, len(expr.Arguments))
+) (ast.Node, error) {
+	args := make([]ast.Node, 0, len(expr.Arguments))
 	for _, arg := range expr.Arguments {
 		evaluated, err := EvaluateExpression(arg, context, input, formats, target)
 		if err != nil {
@@ -113,7 +113,7 @@ func evaluateCallExpression(
 
 		if ast.IsRange(evaluated) {
 			r := evaluated.(ast.RangeExpression)
-			var expanded []ast.Expression
+			var expanded []ast.Node
 			for _, cell := range r.Value {
 				val, err := evaluateCellExpression(cell, input, formats)
 				if err != nil {
@@ -142,10 +142,10 @@ func evaluateCallExpression(
 func evaluateRel(
 	expr ast.CallExpression,
 	target string,
-	args []ast.Expression,
+	args []ast.Node,
 	input [][]string,
 	_ map[string]string,
-) (ast.Expression, error) {
+) (ast.Node, error) {
 	if !ast.IsCellIdentifier(target) || len(args) != 2 {
 		return nil, ErrUnsupportedCall(expr, target)
 	}
@@ -179,7 +179,7 @@ func evaluateVariableExpression(
 	expr ast.IdentifierExpression,
 	context map[string]string,
 	formats map[string]string,
-) (ast.Expression, error) {
+) (ast.Node, error) {
 	name := expr.Value
 	value, exists := context[name]
 	if !exists {
@@ -199,7 +199,7 @@ func evaluateCellExpression(
 	cellRef string,
 	input [][]string,
 	formats map[string]string,
-) (ast.Expression, error) {
+) (ast.Node, error) {
 	// cellRef := expr.Value
 	col, row := ast.ParseCell(cellRef)
 
@@ -226,13 +226,13 @@ func EvaluateRangeExpression(
 	expr ast.RangeExpression,
 	input [][]string,
 	formats map[string]string,
-) ([]ast.Expression, error) {
+) ([]ast.Node, error) {
 	cells := make([]ast.IdentifierExpression, len(expr.Value))
 	for i, cell := range expr.Value {
 		cells[i] = ast.IdentifierExpression{Token: expr.Token, Value: cell}
 	}
 
-	result := make([]ast.Expression, len(expr.Value))
+	result := make([]ast.Node, len(expr.Value))
 
 	for i, cell := range cells {
 		res, err := evaluateCellExpression(cell.Value, input, formats)

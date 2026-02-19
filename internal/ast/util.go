@@ -51,7 +51,7 @@ func ToCell(column, row int) string {
 }
 
 // TypeName returns a human-readable name for the expression type.
-func TypeName(expr Expression) string {
+func TypeName(expr Node) string {
 	switch expr.(type) {
 	case IntExpression:
 		return "integer"
@@ -76,7 +76,7 @@ func TypeName(expr Expression) string {
 	}
 }
 
-func IsCell(expr Expression) bool {
+func IsCell(expr Node) bool {
 	switch c := expr.(type) {
 	case IdentifierExpression:
 		return IsCellIdentifier(c.Value)
@@ -85,7 +85,7 @@ func IsCell(expr Expression) bool {
 	}
 }
 
-func IsInt(expr Expression) bool {
+func IsInt(expr Node) bool {
 	switch expr.(type) {
 	case IntExpression:
 		return true
@@ -94,7 +94,7 @@ func IsInt(expr Expression) bool {
 	}
 }
 
-func ToInt(expr *Expression) (*IntExpression, bool) {
+func ToInt(expr *Node) (*IntExpression, bool) {
 	switch e := (*expr).(type) {
 	case IntExpression:
 		return &e, true
@@ -105,7 +105,7 @@ func ToInt(expr *Expression) (*IntExpression, bool) {
 	}
 }
 
-func IsFloat(expr Expression) bool {
+func IsFloat(expr Node) bool {
 	switch expr.(type) {
 	case FloatExpression:
 		return true
@@ -114,7 +114,7 @@ func IsFloat(expr Expression) bool {
 	}
 }
 
-func ToFloat(expr *Expression) (*FloatExpression, bool) {
+func ToFloat(expr *Node) (*FloatExpression, bool) {
 	switch e := (*expr).(type) {
 	case IntExpression:
 		return &FloatExpression{Value: float64(e.Value), Token: e.Token}, true
@@ -126,11 +126,11 @@ func ToFloat(expr *Expression) (*FloatExpression, bool) {
 }
 
 // IsNumeric returns true if the expression is a numeric type (int or float)
-func IsNumeric(expr Expression) bool {
+func IsNumeric(expr Node) bool {
 	return IsInt(expr) || IsFloat(expr)
 }
 
-func IsIdentifier(expr Expression) bool {
+func IsIdentifier(expr Node) bool {
 	switch expr.(type) {
 	case IdentifierExpression:
 		return true
@@ -139,7 +139,7 @@ func IsIdentifier(expr Expression) bool {
 	}
 }
 
-func IsRange(expr Expression) bool {
+func IsRange(expr Node) bool {
 	switch expr.(type) {
 	case RangeExpression:
 		return true
@@ -148,7 +148,7 @@ func IsRange(expr Expression) bool {
 	}
 }
 
-func IsFunction(expr Expression) bool {
+func IsFunction(expr Node) bool {
 	switch expr.(type) {
 	case CallExpression:
 		return true
@@ -157,7 +157,7 @@ func IsFunction(expr Expression) bool {
 	}
 }
 
-func IsString(expr Expression) bool {
+func IsString(expr Node) bool {
 	switch expr.(type) {
 	case StringExpression:
 		return true
@@ -166,7 +166,7 @@ func IsString(expr Expression) bool {
 	}
 }
 
-func IsDate(expr Expression) bool {
+func IsDate(expr Node) bool {
 	switch expr.(type) {
 	case DateExpression:
 		return true
@@ -175,7 +175,7 @@ func IsDate(expr Expression) bool {
 	}
 }
 
-func IsBoolean(expr Expression) bool {
+func IsBoolean(expr Node) bool {
 	switch expr.(type) {
 	case BooleanExpression:
 		return true
@@ -185,7 +185,7 @@ func IsBoolean(expr Expression) bool {
 }
 
 // IsLiteral returns true if the expression is a literal value type
-func IsLiteral(expr Expression) bool {
+func IsLiteral(expr Node) bool {
 	switch expr.(type) {
 	case IntExpression, FloatExpression, BooleanExpression, StringExpression:
 		return true

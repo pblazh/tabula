@@ -9,7 +9,7 @@ import (
 	"github.com/pblazh/tabula/internal/lexer"
 )
 
-func parseNumberWithoutFormat(value string) ast.Expression {
+func parseNumberWithoutFormat(value string) ast.Node {
 	// Trim whitespace as the first step
 	value = strings.TrimSpace(value)
 

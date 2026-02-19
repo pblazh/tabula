@@ -10,7 +10,7 @@ import (
 // InfoTestCase defines the structure for info function test cases
 type InfoTestCase struct {
 	Name     string
-	Input    []ast.Expression
+	Input    []ast.Node
 	Expected string
 	Error    string
 }

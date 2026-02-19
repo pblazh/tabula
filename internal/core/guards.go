@@ -4,13 +4,13 @@ import (
 	"github.com/pblazh/tabula/internal/ast"
 )
 
-type CallGuard func(ast.CallExpression, ...ast.Expression) error
+type CallGuard func(ast.CallExpression, ...ast.Node) error
 
-func EmptyGuard(function ast.CallExpression, values ...ast.Expression) error {
+func EmptyGuard(function ast.CallExpression, values ...ast.Node) error {
 	return nil
 }
 
-func NumericGuard(function ast.CallExpression, values ...ast.Expression) error {
+func NumericGuard(function ast.CallExpression, values ...ast.Node) error {
 	for _, t := range values {
 		if !ast.IsNumeric(t) {
 			return ErrUnsupportedFunction(function)
@@ -20,7 +20,7 @@ func NumericGuard(function ast.CallExpression, values ...ast.Expression) error {
 }
 
 func MakeArityGuard(format string, arity int) CallGuard {
-	checkArity := func(function ast.CallExpression, values ...ast.Expression) error {
+	checkArity := func(function ast.CallExpression, values ...ast.Node) error {
 		if arity >= 0 && len(values) != arity {
 			return ErrUnsupportedArity(format, function, arity, len(values))
 		}
@@ -30,10 +30,10 @@ func MakeArityGuard(format string, arity int) CallGuard {
 	return checkArity
 }
 
-type typeGuard func(expr ast.Expression) bool
+type typeGuard func(expr ast.Node) bool
 
 func MakeExactTypesGuard(format string, guards ...typeGuard) CallGuard {
-	checkTypes := func(function ast.CallExpression, values ...ast.Expression) error {
+	checkTypes := func(function ast.CallExpression, values ...ast.Node) error {
 		if len(values) != len(guards) {
 			return ErrUnsupportedArity(format, function, len(guards), len(values))
 		}
@@ -51,7 +51,7 @@ func MakeExactTypesGuard(format string, guards ...typeGuard) CallGuard {
 }
 
 func MakeSameTypeGuard(format string, guard typeGuard) CallGuard {
-	checkTypes := func(function ast.CallExpression, values ...ast.Expression) error {
+	checkTypes := func(function ast.CallExpression, values ...ast.Node) error {
 		for _, value := range values {
 			if !guard(value) {
 				return ErrUnsupportedArgument(format, function, value)

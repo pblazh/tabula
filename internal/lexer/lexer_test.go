@@ -408,23 +408,23 @@ func TestLexer(t *testing.T) {
 	}
 }
 
-func EqualTokens(t testing.TB, a, b Token) {
-	t.Helper()
+func EqualTokens(tb testing.TB, a, b Token) {
+	tb.Helper()
 
 	if a.Type != b.Type ||
 		a.Literal != b.Literal ||
 		a.Column != b.Column {
-		t.Errorf("Expected %v to equal %v", a, b)
+		tb.Errorf("Expected %v to equal %v", a, b)
 	}
 }
 
-func ExpectError(t testing.TB, err error, expected string) {
-	t.Helper()
+func ExpectError(tb testing.TB, err error, expected string) {
+	tb.Helper()
 	if err == nil || expected == "" {
 		return
 	}
 
 	if err.Error() != expected {
-		t.Errorf("Expected %s to equal %s", err, expected)
+		tb.Errorf("Expected %s to equal %s", err, expected)
 	}
 }

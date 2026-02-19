@@ -12,7 +12,7 @@ import (
 )
 
 // ParseWithoutFormat parses a value without format specification using default rules
-func ParseWithoutFormat(value string) (ast.Expression, error) {
+func ParseWithoutFormat(value string) (ast.Node, error) {
 	// Trim whitespace as the first step
 	value = strings.TrimSpace(value)
 
@@ -58,7 +58,7 @@ func ParseWithoutFormat(value string) (ast.Expression, error) {
 	return ast.StringExpression{Value: value, Token: lexer.Token{Literal: value}}, nil
 }
 
-func ReadValue(value string, format string) (ast.Expression, error) {
+func ReadValue(value string, format string) (ast.Node, error) {
 	if format == "" {
 		return ParseWithoutFormat(value)
 	}
@@ -108,7 +108,7 @@ func detectPlaceholderType(format string) int {
 }
 
 // parseInt parses an integer value using the specified format
-func parseInt(value, formatSpec string) (ast.Expression, error) {
+func parseInt(value, formatSpec string) (ast.Node, error) {
 	var resultInt int
 	_, err := fmt.Sscanf(value, formatSpec, &resultInt)
 	if err != nil {
@@ -126,7 +126,7 @@ func cleanFormat(format string) string {
 }
 
 // parseFloat parses a float value using the specified format
-func parseFloat(value, formatSpec string) (ast.Expression, error) {
+func parseFloat(value, formatSpec string) (ast.Node, error) {
 	var resultFloat float64
 	cleaned := cleanFormat(formatSpec)
 	_, err := fmt.Sscanf(value, cleaned, &resultFloat)
@@ -139,7 +139,7 @@ func parseFloat(value, formatSpec string) (ast.Expression, error) {
 }
 
 // parseString parses a string value using the specified format
-func parseString(value, format string) (ast.Expression, error) {
+func parseString(value, format string) (ast.Node, error) {
 	var resultString string
 	cleaned := cleanFormat(format)
 	_, err := fmt.Sscanf(value, cleaned, &resultString)
@@ -150,7 +150,7 @@ func parseString(value, format string) (ast.Expression, error) {
 }
 
 // parseBool parses a boolean value using the specified format
-func parseBool(value, formatSpec string) (ast.Expression, error) {
+func parseBool(value, formatSpec string) (ast.Node, error) {
 	var resultBool bool
 	_, err := fmt.Sscanf(value, formatSpec, &resultBool)
 	if err != nil {

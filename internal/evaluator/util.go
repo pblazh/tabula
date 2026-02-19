@@ -6,11 +6,11 @@ import (
 )
 
 func evaluateNumericOperation(
-	left, right ast.Expression,
+	left, right ast.Node,
 	operator lexer.Token,
-	intOp func(int, int) (ast.Expression, error),
-	floatOp func(float64, float64) (ast.Expression, error),
-) (ast.Expression, error) {
+	intOp func(int, int) (ast.Node, error),
+	floatOp func(float64, float64) (ast.Node, error),
+) (ast.Node, error) {
 	switch l := left.(type) {
 	case ast.IntExpression:
 		switch r := right.(type) {

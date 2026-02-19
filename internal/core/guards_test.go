@@ -17,21 +17,21 @@ var call ast.CallExpression = ast.CallExpression{
 func TestEmptyGuard(t *testing.T) {
 	tests := []struct {
 		name   string
-		values []ast.Expression
+		values []ast.Node
 	}{
 		{
 			name:   "no arguments",
-			values: []ast.Expression{},
+			values: []ast.Node{},
 		},
 		{
 			name: "one argument",
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
 		},
 		{
 			name: "multiple arguments",
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.FloatExpression{Value: 2.5},
 				ast.StringExpression{Value: "test"},
@@ -54,19 +54,19 @@ func TestMakeArityGuard(t *testing.T) {
 	tests := []struct {
 		name         string
 		arity        int
-		values       []ast.Expression
+		values       []ast.Node
 		expectsError string
 	}{
 		{
 			name:         "zero arity with no arguments",
 			arity:        0,
-			values:       []ast.Expression{},
+			values:       []ast.Node{},
 			expectsError: "",
 		},
 		{
 			name:  "zero arity with arguments",
 			arity: 0,
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
 			expectsError: `TEST() expects 0 arguments, got 1 in TEST(1), at <: input:0:0>`,
@@ -74,7 +74,7 @@ func TestMakeArityGuard(t *testing.T) {
 		{
 			name:  "one arity with correct argument",
 			arity: 1,
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
 			expectsError: "",
@@ -82,13 +82,13 @@ func TestMakeArityGuard(t *testing.T) {
 		{
 			name:         "one arity with no arguments",
 			arity:        1,
-			values:       []ast.Expression{},
+			values:       []ast.Node{},
 			expectsError: `TEST() expects 1 argument, got 0 in TEST(), at <: input:0:0>`,
 		},
 		{
 			name:  "one arity with too many arguments",
 			arity: 1,
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 2},
 			},
@@ -97,7 +97,7 @@ func TestMakeArityGuard(t *testing.T) {
 		{
 			name:  "two arity with correct arguments",
 			arity: 2,
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.FloatExpression{Value: 2.5},
 			},
@@ -106,7 +106,7 @@ func TestMakeArityGuard(t *testing.T) {
 		{
 			name:  "two arity with one argument",
 			arity: 2,
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
 			expectsError: `TEST() expects 2 arguments, got 1 in TEST(1), at <: input:0:0>`,
@@ -114,7 +114,7 @@ func TestMakeArityGuard(t *testing.T) {
 		{
 			name:  "negative arity should always pass",
 			arity: -1,
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 3},
@@ -148,19 +148,19 @@ func TestMakeExactTypesGuard(t *testing.T) {
 	tests := []struct {
 		name         string
 		typeGuards   []typeGuard
-		values       []ast.Expression
+		values       []ast.Node
 		expectsError string
 	}{
 		{
 			name:         "no type guards with no arguments",
 			typeGuards:   []typeGuard{},
-			values:       []ast.Expression{},
+			values:       []ast.Node{},
 			expectsError: "",
 		},
 		{
 			name:       "no type guards with arguments",
 			typeGuards: []typeGuard{},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
 			expectsError: `TEST() expects 0 arguments, got 1 in TEST(1), at <: input:0:0>`,
@@ -168,7 +168,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "one numeric guard with int",
 			typeGuards: []typeGuard{ast.IsNumeric},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
 			expectsError: "",
@@ -176,7 +176,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "one numeric guard with float",
 			typeGuards: []typeGuard{ast.IsNumeric},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.FloatExpression{Value: 1.5},
 			},
 			expectsError: "",
@@ -184,7 +184,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "one numeric guard with string",
 			typeGuards: []typeGuard{ast.IsNumeric},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			expectsError: `TEST() received an invalid argument "hello" in TEST("hello"), at <: input:0:0>`,
@@ -192,7 +192,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "one numeric guard with boolean",
 			typeGuards: []typeGuard{ast.IsNumeric},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
 			expectsError: `TEST() received an invalid argument true in TEST(true), at <: input:0:0>`,
@@ -200,7 +200,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "two numeric guards with correct types",
 			typeGuards: []typeGuard{ast.IsNumeric, ast.IsNumeric},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.FloatExpression{Value: 2.5},
 			},
@@ -209,7 +209,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "two numeric guards with one wrong type",
 			typeGuards: []typeGuard{ast.IsNumeric, ast.IsNumeric},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.StringExpression{Value: "hello"},
 			},
@@ -218,7 +218,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "mixed type guards with correct types",
 			typeGuards: []typeGuard{ast.IsNumeric, ast.IsString},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.StringExpression{Value: "hello"},
 			},
@@ -227,7 +227,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "mixed type guards with wrong types",
 			typeGuards: []typeGuard{ast.IsNumeric, ast.IsString},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 				ast.IntExpression{Value: 1},
 			},
@@ -236,7 +236,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "wrong arity - too few arguments",
 			typeGuards: []typeGuard{ast.IsNumeric, ast.IsNumeric},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
 			expectsError: `TEST() expects 2 arguments, got 1 in TEST(1), at <: input:0:0>`,
@@ -244,7 +244,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "wrong arity - too many arguments",
 			typeGuards: []typeGuard{ast.IsNumeric},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 				ast.IntExpression{Value: 2},
 			},
@@ -253,7 +253,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "boolean guard with correct type",
 			typeGuards: []typeGuard{ast.IsBoolean},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.BooleanExpression{Value: false},
 			},
 			expectsError: "",
@@ -261,7 +261,7 @@ func TestMakeExactTypesGuard(t *testing.T) {
 		{
 			name:       "boolean guard with wrong type",
 			typeGuards: []typeGuard{ast.IsBoolean},
-			values: []ast.Expression{
+			values: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
 			expectsError: `TEST() received an invalid argument 1 in TEST(1), at <: input:0:0>`,
