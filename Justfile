@@ -125,8 +125,9 @@ pack-vim:
   mkdir -p dist
   tar -czf dist/tabula.vim.${VERSION}.tar.gz doc ftdetect plugin syntax README.md
 
-github-validate:
+lint-github:
   wrkflw validate
+
 # --------------------------------------------------
 # Version bump targets (no git here)
 # --------------------------------------------------
