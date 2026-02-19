@@ -350,7 +350,13 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 
 			var input [][]string
-			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string), "target")
+			result, err := EvaluateExpression(
+				expr,
+				make(map[string]string),
+				input,
+				make(map[string]string),
+				"target",
+			)
 			if err != nil {
 				t.Errorf("Unexpects error: %v", err)
 				return
@@ -442,7 +448,13 @@ func TestPrefixExpressionEvaluate(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 
 			var input [][]string
-			result, err := EvaluateExpression(expr, make(map[string]string), input, make(map[string]string), "target")
+			result, err := EvaluateExpression(
+				expr,
+				make(map[string]string),
+				input,
+				make(map[string]string),
+				"target",
+			)
 			if err != nil {
 				t.Errorf("Unexpects error: %v", err)
 				return
@@ -563,7 +575,13 @@ func TestOperationErrors(t *testing.T) {
 			expr := testutil.ParseExpression(t, tc.input)
 			var input [][]string
 			formats := make(map[string]string)
-			result, err := EvaluateExpression(expr, make(map[string]string), input, formats, "target")
+			result, err := EvaluateExpression(
+				expr,
+				make(map[string]string),
+				input,
+				formats,
+				"target",
+			)
 			if err == nil {
 				t.Errorf("Expected error, got result: %s", result.String())
 				return
@@ -611,7 +629,11 @@ func TestRangeExpressionTokenPreservation(t *testing.T) {
 
 			// Check the Token position of the range expression itself
 			if rangeExpr.Token.Position.String() != tc.expectsPos {
-				t.Errorf("Expected range token position %s, got %s", tc.expectsPos, rangeExpr.Token.Position.String())
+				t.Errorf(
+					"Expected range token position %s, got %s",
+					tc.expectsPos,
+					rangeExpr.Token.Position.String(),
+				)
 			}
 
 			// The key test: verify that when we expand the range expression,
@@ -625,8 +647,13 @@ func TestRangeExpressionTokenPreservation(t *testing.T) {
 			// Verify each generated IdentifierExpression has the correct Token
 			for i, cell := range cells {
 				if cell.Token.Position.String() != tc.expectsPos {
-					t.Errorf("Generated identifier %d (%s) has wrong token position expects %s, got %s",
-						i, cell.Value, tc.expectsPos, cell.Token.Position.String())
+					t.Errorf(
+						"Generated identifier %d (%s) has wrong token position expects %s, got %s",
+						i,
+						cell.Value,
+						tc.expectsPos,
+						cell.Token.Position.String(),
+					)
 				}
 
 				if cell.Token.Type != rangeExpr.Token.Type {

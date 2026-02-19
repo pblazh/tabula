@@ -16,7 +16,11 @@ func Int(call ast.CallExpression, values ...ast.Expression) (ast.Expression, err
 	return result, nil
 }
 
-func Round(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Round(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	first, second, err := extractRoundingArguments(format, call, values)
 	if err != nil {
 		return nil, err
@@ -29,7 +33,11 @@ func Round(format string, call ast.CallExpression, values ...ast.Expression) (as
 	return ast.FloatExpression{Value: roundPrecise(first, second)}, nil
 }
 
-func RoundUp(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func RoundUp(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	first, second, err := extractRoundingArguments(format, call, values)
 	if err != nil {
 		return nil, err
@@ -41,7 +49,11 @@ func RoundUp(format string, call ast.CallExpression, values ...ast.Expression) (
 	return ast.FloatExpression{Value: roundUpPrecise(first, second)}, nil
 }
 
-func RoundDown(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func RoundDown(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	first, second, err := extractRoundingArguments(format, call, values)
 	if err != nil {
 		return nil, err
@@ -52,7 +64,11 @@ func RoundDown(format string, call ast.CallExpression, values ...ast.Expression)
 	return ast.FloatExpression{Value: roundDownPrecise(first, second)}, nil
 }
 
-func extractRoundingArguments(format string, call ast.CallExpression, values []ast.Expression) (float64, float64, error) {
+func extractRoundingArguments(
+	format string,
+	call ast.CallExpression,
+	values []ast.Expression,
+) (float64, float64, error) {
 	var callGuard CallGuard
 
 	if len(values) == 1 {

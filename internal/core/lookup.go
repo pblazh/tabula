@@ -127,7 +127,7 @@ func Range(
 
 	cells, err := ast.ExpandRange(a.Value, b.Value)
 	if err != nil {
-		return nil, err
+		return nil, ErrExpand(err)
 	}
 
 	return ast.RangeExpression{Value: cells, Token: call.Token}, nil

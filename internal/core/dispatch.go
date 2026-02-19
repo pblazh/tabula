@@ -18,7 +18,7 @@ var DispatchMap dispatchMap = dispatchMap{
 		return Exec(format, call, values...)
 	},
 
-	// numberic functions
+	// numeric functions
 	"SUM": func(context map[string]string, input [][]string, formats map[string]string,
 		call ast.CallExpression, values ...ast.Expression,
 	) (ast.Expression, error) {
@@ -38,19 +38,40 @@ var DispatchMap dispatchMap = dispatchMap{
 	"PRODUCT": func(context map[string]string, input [][]string, formats map[string]string,
 		call ast.CallExpression, values ...ast.Expression,
 	) (ast.Expression, error) {
-		return callNumbersFunction("PRODUCT(values:number...):number", product, product, EmptyGuard, call, values...)
+		return callNumbersFunction(
+			"PRODUCT(values:number...):number",
+			product,
+			product,
+			EmptyGuard,
+			call,
+			values...,
+		)
 	},
 
 	"AVERAGE": func(context map[string]string, input [][]string, formats map[string]string,
 		call ast.CallExpression, values ...ast.Expression,
 	) (ast.Expression, error) {
-		return callNumbersFunction("AVERAGE(values:number...):number", average, average, EmptyGuard, call, values...)
+		return callNumbersFunction(
+			"AVERAGE(values:number...):number",
+			average,
+			average,
+			EmptyGuard,
+			call,
+			values...,
+		)
 	},
 
 	"MAX": func(context map[string]string, input [][]string, formats map[string]string,
 		call ast.CallExpression, values ...ast.Expression,
 	) (ast.Expression, error) {
-		return callNumbersFunction("MAX(values:number...):number", max, max, EmptyGuard, call, values...)
+		return callNumbersFunction(
+			"MAX(values:number...):number",
+			max,
+			max,
+			EmptyGuard,
+			call,
+			values...,
+		)
 	},
 
 	"MAXA": func(context map[string]string, input [][]string, formats map[string]string,
@@ -61,13 +82,26 @@ var DispatchMap dispatchMap = dispatchMap{
 			return nil, ErrUnsupportedArgument("MAXA(values:number|string...):number",
 				call, failed)
 		}
-		return callNumbersFunction("MAXA(values:number|string...):number", max, max, EmptyGuard, call, converted...)
+		return callNumbersFunction(
+			"MAXA(values:number|string...):number",
+			max,
+			max,
+			EmptyGuard,
+			call,
+			converted...,
+		)
 	},
 
 	"MIN": func(context map[string]string, input [][]string, formats map[string]string,
 		call ast.CallExpression, values ...ast.Expression,
 	) (ast.Expression, error) {
-		return callNumbersFunction("MIN(values:number...):number", min, min, EmptyGuard, call, values...)
+		return callNumbersFunction(
+			"MIN(values:number...):number",
+			min,
+			min,
+			EmptyGuard,
+			call,
+			values...)
 	},
 
 	"MINA": func(context map[string]string, input [][]string, formats map[string]string,
@@ -78,7 +112,13 @@ var DispatchMap dispatchMap = dispatchMap{
 			return nil, ErrUnsupportedArgument("MINA(values:number|string...):number",
 				call, failed)
 		}
-		return callNumbersFunction("MINA(values:number|string...):number", min, min, EmptyGuard, call, converted...)
+		return callNumbersFunction(
+			"MINA(values:number|string...):number",
+			min,
+			min,
+			EmptyGuard,
+			call,
+			converted...)
 	},
 
 	"ABS": func(context map[string]string, input [][]string, formats map[string]string,

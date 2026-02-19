@@ -157,7 +157,10 @@ func (g *DependencyGraph) Sort() ([]Statement, error) {
 				for insertPos < len(queue) && queue[insertPos] < neighbor {
 					insertPos++
 				}
-				queue = append(queue[:insertPos], append([]string{neighbor}, queue[insertPos:]...)...)
+				queue = append(
+					queue[:insertPos],
+					append([]string{neighbor}, queue[insertPos:]...)...,
+				)
 			}
 		}
 	}

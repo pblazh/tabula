@@ -66,42 +66,45 @@ func ReadValue(value string, format string) (ast.Expression, error) {
 	placeholderType := detectPlaceholderType(format)
 
 	switch placeholderType {
-	case intPlacehoder:
+	case intPlaceholder:
 		return parseInt(value, format)
-	case floatPlacehoder:
+	case floatPlaceholder:
 		return parseFloat(value, format)
-	case stringPlacehoder:
+	case stringPlaceholder:
 		return parseString(value, format)
-	case boolPlacehoder:
+	case boolPlaceholder:
 		return parseBool(value, format)
 	default:
-		return parseFormatedDate(value, format)
+		return parseFormattedDate(value, format)
 	}
 }
 
 const (
-	intPlacehoder = iota
-	floatPlacehoder
-	stringPlacehoder
-	boolPlacehoder
-	datePlacehoder
+	intPlaceholder = iota
+	floatPlaceholder
+	stringPlaceholder
+	boolPlaceholder
+	datePlaceholder
 )
 
 // detectPlaceholderType detects the type of scanf placeholder in the format string
 func detectPlaceholderType(format string) int {
 	if matched, _ := regexp.MatchString(`%[#+ -]?(?:\*|\d+)?[diouxX]`, format); matched {
-		return intPlacehoder
+		return intPlaceholder
 	}
-	if matched, _ := regexp.MatchString(`%[#+ -]?(?:\*|\d+)?(?:\.(?:\*|\d+))?[eEfFgGaA]`, format); matched {
-		return floatPlacehoder
+	if matched, _ := regexp.MatchString(
+		`%[#+ -]?(?:\*|\d+)?(?:\.(?:\*|\d+))?[eEfFgGaA]`,
+		format,
+	); matched {
+		return floatPlaceholder
 	}
 	if matched, _ := regexp.MatchString(`%[#+ -]?(?:\*|\d+)?[sc]`, format); matched {
-		return stringPlacehoder
+		return stringPlaceholder
 	}
 	if matched, _ := regexp.MatchString(`%[#+ -]?(?:\*|\d+)?[t]`, format); matched {
-		return boolPlacehoder
+		return boolPlaceholder
 	}
-	return datePlacehoder
+	return datePlaceholder
 }
 
 // parseInt parses an integer value using the specified format
@@ -109,7 +112,9 @@ func parseInt(value, formatSpec string) (ast.Expression, error) {
 	var resultInt int
 	_, err := fmt.Sscanf(value, formatSpec, &resultInt)
 	if err != nil {
-		return nil, ErrParseWithFormat(value, formatSpec, err.Error())
+		return ast.DateExpression{}, ErrParseInt(
+			ErrParseWithFormat(value, formatSpec, err.Error()),
+		)
 	}
 	return ast.IntExpression{Value: resultInt, Token: lexer.Token{Literal: value}}, nil
 }
@@ -126,7 +131,9 @@ func parseFloat(value, formatSpec string) (ast.Expression, error) {
 	cleaned := cleanFormat(formatSpec)
 	_, err := fmt.Sscanf(value, cleaned, &resultFloat)
 	if err != nil {
-		return nil, ErrParseWithFormat(value, formatSpec, err.Error())
+		return ast.DateExpression{}, ErrParseFloat(
+			ErrParseWithFormat(value, formatSpec, err.Error()),
+		)
 	}
 	return ast.FloatExpression{Value: resultFloat, Token: lexer.Token{Literal: value}}, nil
 }
@@ -137,7 +144,7 @@ func parseString(value, format string) (ast.Expression, error) {
 	cleaned := cleanFormat(format)
 	_, err := fmt.Sscanf(value, cleaned, &resultString)
 	if err != nil {
-		return nil, ErrParseWithFormat(value, cleaned, err.Error())
+		return ast.DateExpression{}, ErrParseString(ErrParseWithFormat(value, cleaned, err.Error()))
 	}
 	return ast.StringExpression{Value: resultString, Token: lexer.Token{Literal: value}}, nil
 }
@@ -147,15 +154,17 @@ func parseBool(value, formatSpec string) (ast.Expression, error) {
 	var resultBool bool
 	_, err := fmt.Sscanf(value, formatSpec, &resultBool)
 	if err != nil {
-		return nil, ErrParseWithFormat(value, formatSpec, err.Error())
+		return ast.DateExpression{}, ErrParseBoolean(
+			ErrParseWithFormat(value, formatSpec, err.Error()),
+		)
 	}
 	return ast.BooleanExpression{Value: resultBool, Token: lexer.Token{Literal: value}}, nil
 }
 
-func parseFormatedDate(value, format string) (ast.DateExpression, error) {
+func parseFormattedDate(value, format string) (ast.DateExpression, error) {
 	date, err := time.Parse(format, value)
 	if err != nil {
-		return ast.DateExpression{}, err
+		return ast.DateExpression{}, ErrParseDate(err)
 	}
 
 	return ast.DateExpression{Value: date, Token: lexer.Token{Literal: value}}, nil

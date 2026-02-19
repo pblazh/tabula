@@ -88,7 +88,10 @@ func roundDownPrecise(value, precision float64) float64 {
 	return math.Floor(value/precision) * precision
 }
 
-func parseStringExpressions(call ast.CallExpression, values []ast.Expression) ([]ast.Expression, ast.Expression) {
+func parseStringExpressions(
+	_ ast.CallExpression,
+	values []ast.Expression,
+) ([]ast.Expression, ast.Expression) {
 	var converted []ast.Expression
 	for _, v := range values {
 		switch expr := v.(type) {

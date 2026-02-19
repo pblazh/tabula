@@ -55,13 +55,23 @@ func TestParserIdentifiers(t *testing.T) {
 			}
 
 			if len(identifiers) != len(tc.expectedIds) {
-				t.Errorf("Expected %d identifiers, got %d: %v", len(tc.expectedIds), len(identifiers), identifiers)
+				t.Errorf(
+					"Expected %d identifiers, got %d: %v",
+					len(tc.expectedIds),
+					len(identifiers),
+					identifiers,
+				)
 				return
 			}
 
 			for i, expected := range tc.expectedIds {
 				if identifiers[i] != expected {
-					t.Errorf("Expected identifier %d to be '%s', got '%s'", i, expected, identifiers[i])
+					t.Errorf(
+						"Expected identifier %d to be '%s', got '%s'",
+						i,
+						expected,
+						identifiers[i],
+					)
 				}
 			}
 		})

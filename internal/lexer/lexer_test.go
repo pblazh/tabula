@@ -377,10 +377,10 @@ func TestLexer(t *testing.T) {
 					},
 				},
 			},
-			error: "Lexer error: invalid char literal at invalid quotes:1:1",
+			error: "invalid char literal at invalid quotes:1:1",
 		},
 		{
-			name:  "unmached quote",
+			name:  "unmatched quote",
 			input: ` "some`,
 			expected: []Token{
 				{
@@ -390,7 +390,7 @@ func TestLexer(t *testing.T) {
 					},
 				},
 			},
-			error: "Lexer error: literal not terminated at unmached quote:1:2",
+			error: "literal not terminated at unmatched quote:1:2",
 		},
 	}
 

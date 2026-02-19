@@ -124,11 +124,11 @@ func (p *Parser) Parse() (ast.Program, []string, error) {
 			}
 			program = append(program, statements...)
 		case lexer.FMT:
-			stms, err := p.parseFmtStatement()
+			statements, err := p.parseFmtStatement()
 			if err != nil {
 				return nil, nil, err
 			}
-			program = append(program, stms...)
+			program = append(program, statements...)
 		default:
 			stm, err := p.parseExpressionStatement()
 			if err != nil {
@@ -158,7 +158,7 @@ func (p *Parser) advance(steps int) error {
 		p.cur = p.nex
 		nex, err := p.lex.Next()
 		if err != nil {
-			return err
+			return fmt.Errorf("can not read expression, %s", err)
 		}
 		p.nex = nex
 	}
@@ -286,7 +286,7 @@ func (p *Parser) parseIdentifierOrRange() ([]ast.IdentifierExpression, error) {
 		// Expand the range to get all identifiers
 		cells, err := ast.ExpandRange(firstIdent.Value, secondIdent.Value)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to parse indent %s:%s, %s", firstIdent, secondIdent, err)
 		}
 
 		// Add all cells to the identifiers list
@@ -430,7 +430,7 @@ func (p *Parser) parseIdentifier() (ast.Expression, error) {
 func (p *Parser) parseInt() (ast.Expression, error) {
 	value, err := strconv.Atoi(p.cur.Literal)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse int %s ,%s", p.cur, err)
 	}
 	expr := ast.IntExpression{Token: p.cur, Value: value}
 	err = p.advance(1)
@@ -443,7 +443,7 @@ func (p *Parser) parseInt() (ast.Expression, error) {
 func (p *Parser) parseFloat() (ast.Expression, error) {
 	value, err := strconv.ParseFloat(p.cur.Literal, 64)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse float %s ,%s", p.cur, err)
 	}
 
 	expr := ast.FloatExpression{Token: p.cur, Value: value}
@@ -557,7 +557,7 @@ func (p *Parser) parseRange(left ast.Expression) (ast.Expression, error) {
 
 	cells, err := ast.ExpandRange(leftIdent.Value, rightIdent.Value)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to expand, %s", err)
 	}
 
 	return ast.RangeExpression{Token: colonToken, Value: cells}, nil
@@ -575,7 +575,10 @@ func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error
 	for _, arg := range arguments {
 		if rangeExpr, ok := arg.(ast.RangeExpression); ok {
 			for _, expandedArg := range rangeExpr.Value {
-				expandedArguments = append(expandedArguments, ast.IdentifierExpression{Value: expandedArg, Token: rangeExpr.Token})
+				expandedArguments = append(
+					expandedArguments,
+					ast.IdentifierExpression{Value: expandedArg, Token: rangeExpr.Token},
+				)
 			}
 		} else {
 			expandedArguments = append(expandedArguments, arg)
@@ -632,7 +635,7 @@ func (p *Parser) resolveIncludePath(includePath string) (string, error) {
 	if p.currentFile == "" || p.currentFile == "<inline>" || strings.HasPrefix(includePath, "/") {
 		absPath, err := filepath.Abs(includePath)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("failed to resolve absolute #include %s", err)
 		}
 		return absPath, nil
 	}
@@ -644,7 +647,7 @@ func (p *Parser) resolveIncludePath(includePath string) (string, error) {
 	// Convert to absolute path for deduplication
 	absPath, err := filepath.Abs(resolvedPath)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to resolve relative #include %s", err)
 	}
 
 	return absPath, nil
@@ -673,8 +676,11 @@ func (p *Parser) parseIncludeStatement() ([]ast.Statement, error) {
 
 	// Check for circular dependency FIRST (before checking if already included)
 	if slices.Contains(p.includeStack, absPath) {
-		chain := append(p.includeStack, absPath)
-		return nil, ast.ErrCircularInclude(chain)
+		return nil, fmt.Errorf(
+			"failed parse #include %s, %s",
+			absPath,
+			ast.ErrCircularInclude(append(p.includeStack, absPath)),
+		)
 	}
 	// Skip already processed for duplicate includes
 	if p.includedFiles[absPath] {
@@ -723,11 +729,18 @@ func (p *Parser) parseIncludeStatement() ([]ast.Statement, error) {
 	return statements, nil
 }
 
-func (p *Parser) parseIncludedFile(filePath string, includeToken lexer.Token) ([]ast.Statement, error) {
+func (p *Parser) parseIncludedFile(
+	filePath string,
+	includeToken lexer.Token,
+) ([]ast.Statement, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		return nil, ast.ErrIncludeFileNotFound(filePath, includeToken.Position)
+		return nil, ErrParseInclude(
+			filePath,
+			ast.ErrIncludeFileNotFound(filePath, includeToken.Position),
+		)
 	}
+
 	defer func() { _ = file.Close() }()
 
 	includeLex := lexer.New(file, filePath)

@@ -51,7 +51,10 @@ func evaluateSubtraction(left, right ast.Expression, operator lexer.Token) (ast.
 		})
 }
 
-func evaluateMultiplication(left, right ast.Expression, operator lexer.Token) (ast.Expression, error) {
+func evaluateMultiplication(
+	left, right ast.Expression,
+	operator lexer.Token,
+) (ast.Expression, error) {
 	return evaluateNumericOperation(left, right, operator,
 		func(a, b int) (ast.Expression, error) {
 			return ast.IntExpression{Value: a * b, Token: operator}, nil

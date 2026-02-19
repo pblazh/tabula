@@ -1,4 +1,4 @@
-// Package testutil provides shared testing utilities for the csvss project.
+// Package testutil provides shared testing utilities for the Tabula project.
 package testutil
 
 import (
@@ -16,7 +16,7 @@ func ParseExpression(t *testing.T, input string) ast.Expression {
 	t.Helper()
 	expr, err := parseExpression(input)
 	if err != nil {
-		t.Fatalf("Failed to parse expression %q: %v", input, err)
+		t.Fatalf("fatal, %s", ErrParse(input, err))
 	}
 	return expr
 }
@@ -26,7 +26,7 @@ func parseExpression(input string) (ast.Expression, error) {
 	p := parser.New(lex)
 	program, _, err := p.Parse()
 	if err != nil {
-		return nil, err
+		return nil, ErrParse(input, err)
 	}
 
 	if len(program) == 0 {
@@ -46,14 +46,17 @@ func ParseProgram(input string) (ast.Program, error) {
 	lex := lexer.New(strings.NewReader(input), "test")
 	p := parser.New(lex)
 	program, _, err := p.Parse()
-	return program, err
+	if err != nil {
+		return nil, ErrParse(input, err)
+	}
+	return program, nil
 }
 
 // ParseProgramFromFile is a helper function to parse a program from a file
 func ParseProgramFromFile(filename string) (ast.Program, error) {
 	content, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, err
+		return nil, ErrParse(filename, err)
 	}
 	return ParseProgram(string(content))
 }

@@ -67,7 +67,14 @@ Line2	Line3"`,
 		},
 	}
 
-	RunFunctionTest(t, "CONCATENATE", testcases, map[string]string{}, [][]string{}, map[string]string{})
+	RunFunctionTest(
+		t,
+		"CONCATENATE",
+		testcases,
+		map[string]string{},
+		[][]string{},
+		map[string]string{},
+	)
 }
 
 func TestLEN(t *testing.T) {
@@ -805,7 +812,14 @@ func TestSUBSTITUTE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "SUBSTITUTE", testcases, map[string]string{}, [][]string{}, map[string]string{})
+	RunFunctionTest(
+		t,
+		"SUBSTITUTE",
+		testcases,
+		map[string]string{},
+		[][]string{},
+		map[string]string{},
+	)
 }
 
 func TestVALUE(t *testing.T) {
