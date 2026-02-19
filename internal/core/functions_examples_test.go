@@ -481,12 +481,17 @@ func TestFunctionExamples(t *testing.T) {
 		t.Run(functionName, func(t *testing.T) {
 			for _, tc := range tests {
 				t.Run(tc.Name, func(t *testing.T) {
-					result, err := DispatchMap[functionName](map[string]string{}, [][]string{}, map[string]string{}, ast.CallExpression{
-						Identifier: ast.IdentifierExpression{
-							Value: functionName,
-							Token: lexer.Token{Literal: functionName},
-						}, Arguments: tc.Input,
-					}, tc.Input...)
+					result, err := DispatchMap[functionName](
+						map[string]string{},
+						[][]string{},
+						map[string]string{},
+						ast.CallExpression{
+							Identifier: ast.IdentifierExpression{
+								Value: functionName,
+								Token: lexer.Token{Literal: functionName},
+							}, Arguments: tc.Input,
+						},
+						tc.Input...)
 
 					if tc.Error != "" {
 						if err == nil {

@@ -17,7 +17,10 @@ func detectPlaceholderType(format string) int {
 	if matched, _ := regexp.MatchString(`%[#+ -]?(?:\*|\d+)?[diouxX]`, format); matched {
 		return intPlacehoder
 	}
-	if matched, _ := regexp.MatchString(`%[#+ -]?(?:\*|\d+)?(?:\.(?:\*|\d+))?[eEfFgGaA]`, format); matched {
+	if matched, _ := regexp.MatchString(
+		`%[#+ -]?(?:\*|\d+)?(?:\.(?:\*|\d+))?[eEfFgGaA]`,
+		format,
+	); matched {
 		return floatPlacehoder
 	}
 	if matched, _ := regexp.MatchString(`%[#+ -]?(?:\*|\d+)?[sc]`, format); matched {

@@ -57,8 +57,6 @@ install:
 
 # --- Vet & Lint ---
 lint-go:
-	{{GO_CMD}} fmt ./...
-	{{GO_CMD}} vet ./...
 	golangci-lint run
 
 # --------------------------------------------------

@@ -7,7 +7,11 @@ import (
 	"github.com/pblazh/tabula/internal/ast"
 )
 
-func Exec(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Exec(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeSameTypeGuard(format, ast.IsString)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -25,7 +29,9 @@ func Exec(format string, call ast.CallExpression, values ...ast.Expression) (ast
 	cmd := exec.Command(name.Value, args...)
 	output, err := cmd.Output()
 	if err != nil {
-		return ast.StringExpression{Value: err.Error(), Token: call.Token}, err
+		expression := ast.StringExpression{Value: err.Error(), Token: call.Token}
+
+		return expression, ErrExecute(err)
 	}
 
 	// Return stdout output as one string (trimmed of trailing whitespace)

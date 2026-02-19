@@ -22,3 +22,7 @@ func ErrUnexpectedToken(literal string, position scanner.Position) error {
 func ErrExpectedPrefix(actual lexer.Token) error {
 	return fmt.Errorf("expected prefix, got %v", actual)
 }
+
+func ErrParseInclude(path string, err error) error {
+	return fmt.Errorf("failed to parse included file %s %s", path, err)
+}

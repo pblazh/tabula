@@ -7,7 +7,12 @@ import (
 	functions "github.com/pblazh/tabula/internal/core"
 )
 
-func EvaluateStatement(statement ast.Statement, context map[string]string, input [][]string, formats map[string]string) error {
+func EvaluateStatement(
+	statement ast.Statement,
+	context map[string]string,
+	input [][]string,
+	formats map[string]string,
+) error {
 	switch s := statement.(type) {
 	case ast.LetStatement:
 
@@ -19,7 +24,7 @@ func EvaluateStatement(statement ast.Statement, context map[string]string, input
 		format := formats[s.Identifier.Value]
 		output, error := functions.WriteValue(value, format)
 		if error != nil {
-			return error
+			return ErrEvaluation(statement, error)
 		}
 
 		if ast.IsCellIdentifier(s.Identifier.Value) {

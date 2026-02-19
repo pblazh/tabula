@@ -80,7 +80,10 @@ func Exact(format string,
 
 	a := values[0].(ast.StringExpression)
 	b := values[1].(ast.StringExpression)
-	return ast.BooleanExpression{Value: strings.Compare(a.Value, b.Value) == 0, Token: call.Token}, nil
+	return ast.BooleanExpression{
+		Value: strings.Compare(a.Value, b.Value) == 0,
+		Token: call.Token,
+	}, nil
 }
 
 func Find(format string,
@@ -231,7 +234,10 @@ func Substitute(format string,
 	}
 
 	if n == 0 {
-		return ast.StringExpression{Value: strings.ReplaceAll(source, target, replacement), Token: call.Token}, nil
+		return ast.StringExpression{
+			Value: strings.ReplaceAll(source, target, replacement),
+			Token: call.Token,
+		}, nil
 	}
 
 	indices := []int{}

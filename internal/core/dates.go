@@ -7,7 +7,11 @@ import (
 	"github.com/pblazh/tabula/internal/ast"
 )
 
-func ToDate(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func ToDate(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsString, ast.IsString)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -24,7 +28,11 @@ func ToDate(format string, call ast.CallExpression, values ...ast.Expression) (a
 	return ast.DateExpression{Value: parsed, Token: call.Token}, nil
 }
 
-func DateValue(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func DateValue(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsString)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -67,7 +75,11 @@ func ParseDateWithoutFormat(value string) (*time.Time, error) {
 	return nil, nil
 }
 
-func FromDate(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func FromDate(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsString, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -76,9 +88,9 @@ func FromDate(format string, call ast.CallExpression, values ...ast.Expression) 
 	layout := values[0].(ast.StringExpression)
 	value := values[1].(ast.DateExpression)
 
-	formated := value.Value.Format(layout.Value)
+	formatted := value.Value.Format(layout.Value)
 
-	return ast.StringExpression{Value: formated, Token: call.Token}, nil
+	return ast.StringExpression{Value: formatted, Token: call.Token}, nil
 }
 
 func Day(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
@@ -92,7 +104,11 @@ func Day(format string, call ast.CallExpression, values ...ast.Expression) (ast.
 	return ast.IntExpression{Value: value.Value.Day(), Token: call.Token}, nil
 }
 
-func Hour(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Hour(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -103,7 +119,11 @@ func Hour(format string, call ast.CallExpression, values ...ast.Expression) (ast
 	return ast.IntExpression{Value: value.Value.Hour(), Token: call.Token}, nil
 }
 
-func Minute(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Minute(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -114,7 +134,11 @@ func Minute(format string, call ast.CallExpression, values ...ast.Expression) (a
 	return ast.IntExpression{Value: value.Value.Minute(), Token: call.Token}, nil
 }
 
-func Month(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Month(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -125,7 +149,11 @@ func Month(format string, call ast.CallExpression, values ...ast.Expression) (as
 	return ast.IntExpression{Value: int(value.Value.Month()), Token: call.Token}, nil
 }
 
-func Second(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Second(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -136,7 +164,11 @@ func Second(format string, call ast.CallExpression, values ...ast.Expression) (a
 	return ast.IntExpression{Value: int(value.Value.Second()), Token: call.Token}, nil
 }
 
-func Year(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Year(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -147,7 +179,11 @@ func Year(format string, call ast.CallExpression, values ...ast.Expression) (ast
 	return ast.IntExpression{Value: int(value.Value.Year()), Token: call.Token}, nil
 }
 
-func Weekday(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Weekday(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -158,7 +194,11 @@ func Weekday(format string, call ast.CallExpression, values ...ast.Expression) (
 	return ast.IntExpression{Value: int(value.Value.Weekday()), Token: call.Token}, nil
 }
 
-func Now(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Now(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeArityGuard(format, 0)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -167,7 +207,11 @@ func Now(format string, call ast.CallExpression, values ...ast.Expression) (ast.
 	return ast.DateExpression{Value: time.Now(), Token: call.Token}, nil
 }
 
-func Date(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Date(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsInt, ast.IsInt, ast.IsInt)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -177,10 +221,17 @@ func Date(format string, call ast.CallExpression, values ...ast.Expression) (ast
 	month := values[1].(ast.IntExpression).Value
 	day := values[2].(ast.IntExpression).Value
 
-	return ast.DateExpression{Value: time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC), Token: call.Token}, nil
+	return ast.DateExpression{
+		Value: time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC),
+		Token: call.Token,
+	}, nil
 }
 
-func Days(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Days(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate, ast.IsDate)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -197,7 +248,11 @@ func Days(format string, call ast.CallExpression, values ...ast.Expression) (ast
 	return ast.IntExpression{Value: result, Token: call.Token}, nil
 }
 
-func DateDiff(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func DateDiff(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsDate, ast.IsDate, ast.IsString)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -226,7 +281,8 @@ func calculatesDatesDifference(unit string, start, end time.Time) (int, error) {
 	case "Y":
 		// Years between dates
 		result = end.Year() - start.Year()
-		if end.Month() < start.Month() || (end.Month() == start.Month() && end.Day() < start.Day()) {
+		if end.Month() < start.Month() ||
+			(end.Month() == start.Month() && end.Day() < start.Day()) {
 			result--
 		}
 	case "M":

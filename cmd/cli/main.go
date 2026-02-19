@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 )
 
@@ -29,17 +30,24 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Setup output writer
-	csvWriter, cleanup, err := setupOutputWriter(config)
+	err = doProcessing(config, scriptReader, csvReader, comments)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
+}
+
+func doProcessing(
+	config *Config,
+	scriptReader io.Reader,
+	csvReader io.Reader,
+	comments map[int]string,
+) error {
+	csvWriter, cleanup, err := setupOutputWriter(config)
+	if err != nil {
+		return err
+	}
 	defer cleanup()
 
-	// Process CSV with script
-	if err := processCSV(config, scriptReader, csvReader, csvWriter, comments); err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
-	}
+	return processCSV(config, scriptReader, csvReader, csvWriter, comments)
 }

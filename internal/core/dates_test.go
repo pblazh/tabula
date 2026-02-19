@@ -145,7 +145,14 @@ func TestFROMDATE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "FROMDATE", testcases, map[string]string{}, [][]string{}, map[string]string{})
+	RunFunctionTest(
+		t,
+		"FROMDATE",
+		testcases,
+		map[string]string{},
+		[][]string{},
+		map[string]string{},
+	)
 }
 
 func TestDAY(t *testing.T) {
@@ -504,7 +511,14 @@ func TestNOW(t *testing.T) {
 	for _, tc := range testcases {
 		t.Run(tc.Name, func(t *testing.T) {
 			if tc.Error != "" {
-				RunFunctionTest(t, "NOW", []InfoTestCase{tc}, map[string]string{}, [][]string{}, map[string]string{})
+				RunFunctionTest(
+					t,
+					"NOW",
+					[]InfoTestCase{tc},
+					map[string]string{},
+					[][]string{},
+					map[string]string{},
+				)
 				return
 			}
 
@@ -512,7 +526,12 @@ func TestNOW(t *testing.T) {
 			call := ast.CallExpression{
 				Identifier: ast.IdentifierExpression{Value: "NOW"},
 			}
-			result, err := DispatchMap["NOW"](map[string]string{}, [][]string{}, map[string]string{}, call, tc.Input...)
+			result, err := DispatchMap["NOW"](
+				map[string]string{},
+				[][]string{},
+				map[string]string{},
+				call,
+				tc.Input...)
 			if err != nil {
 				t.Errorf("Unexpects error: %v", err)
 				return
@@ -779,5 +798,12 @@ func TestDATEVALUE(t *testing.T) {
 		},
 	}
 
-	RunFunctionTest(t, "DATEVALUE", testcases, map[string]string{}, [][]string{}, map[string]string{})
+	RunFunctionTest(
+		t,
+		"DATEVALUE",
+		testcases,
+		map[string]string{},
+		[][]string{},
+		map[string]string{},
+	)
 }

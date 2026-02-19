@@ -8,7 +8,13 @@ import (
 	"github.com/pblazh/tabula/internal/evaluator"
 )
 
-func processCSV(config *Config, scriptReader io.Reader, csvReader io.Reader, csvWriter io.Writer, comments map[int]string) error {
+func processCSV(
+	config *Config,
+	scriptReader io.Reader,
+	csvReader io.Reader,
+	csvWriter io.Writer,
+	comments map[int]string,
+) error {
 	// Read and parse CSV
 	reader := csv.NewReader(csvReader)
 	reader.LazyQuotes = true

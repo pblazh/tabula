@@ -1,0 +1,36 @@
+version: "2"
+linters:
+  enable:
+    - errcheck
+    - govet
+    - errname
+    - gocritic
+    - godoclint
+    - godox
+    - ineffassign
+    - makezero
+    - modernize
+    - nolintlint
+    - reassign
+    - recvcheck
+    - unused
+    - wrapcheck
+    # - unparam
+    # - thelper
+    # - nilnil
+    # - nestif
+    # - ireturn
+    # - iface
+    # - gosec
+    # - gocognit
+    # - exhaustruct
+    # - err113
+    # - cyclop
+formatters:
+  enable:
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
+run:
+  timeout: 5m

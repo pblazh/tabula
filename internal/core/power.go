@@ -6,7 +6,11 @@ import (
 	"github.com/pblazh/tabula/internal/ast"
 )
 
-func Power(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Power(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeExactTypesGuard(format, ast.IsNumeric, ast.IsNumeric)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -18,7 +22,11 @@ func Power(format string, call ast.CallExpression, values ...ast.Expression) (as
 	return ast.FloatExpression{Value: math.Pow(first.Value, second.Value)}, nil
 }
 
-func Sqrt(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func Sqrt(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	guard := MakeExactTypesGuard(format, ast.IsNumeric)
 	if err := guard(call, values...); err != nil {
 		return nil, err

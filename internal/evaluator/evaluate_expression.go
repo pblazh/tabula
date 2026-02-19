@@ -1,13 +1,21 @@
 package evaluator
 
 import (
+	"fmt"
+
 	"github.com/pblazh/tabula/internal/ast"
 	core "github.com/pblazh/tabula/internal/core"
 	"github.com/pblazh/tabula/internal/lexer"
 )
 
 // EvaluateExpression evaluates any AST expression and returns the result
-func EvaluateExpression(expr ast.Expression, context map[string]string, input [][]string, formats map[string]string, target string) (ast.Expression, error) {
+func EvaluateExpression(
+	expr ast.Expression,
+	context map[string]string,
+	input [][]string,
+	formats map[string]string,
+	target string,
+) (ast.Expression, error) {
 	switch node := expr.(type) {
 	case ast.IntExpression, ast.FloatExpression, ast.BooleanExpression, ast.StringExpression:
 		return node, nil
@@ -29,7 +37,13 @@ func EvaluateExpression(expr ast.Expression, context map[string]string, input []
 	}
 }
 
-func evaluatePrefixExpression(expr ast.PrefixExpression, context map[string]string, input [][]string, formats map[string]string, target string) (ast.Expression, error) {
+func evaluatePrefixExpression(
+	expr ast.PrefixExpression,
+	context map[string]string,
+	input [][]string,
+	formats map[string]string,
+	target string,
+) (ast.Expression, error) {
 	value, err := EvaluateExpression(expr.Value, context, input, formats, target)
 	if err != nil {
 		return nil, err
@@ -45,7 +59,13 @@ func evaluatePrefixExpression(expr ast.PrefixExpression, context map[string]stri
 	}
 }
 
-func evaluateInfixExpression(expr ast.InfixExpression, context map[string]string, input [][]string, formats map[string]string, target string) (ast.Expression, error) {
+func evaluateInfixExpression(
+	expr ast.InfixExpression,
+	context map[string]string,
+	input [][]string,
+	formats map[string]string,
+	target string,
+) (ast.Expression, error) {
 	left, err := EvaluateExpression(expr.Left, context, input, formats, target)
 	if err != nil {
 		return nil, err
@@ -77,7 +97,13 @@ func evaluateInfixExpression(expr ast.InfixExpression, context map[string]string
 	}
 }
 
-func evaluateCallExpression(expr ast.CallExpression, context map[string]string, input [][]string, formats map[string]string, target string) (ast.Expression, error) {
+func evaluateCallExpression(
+	expr ast.CallExpression,
+	context map[string]string,
+	input [][]string,
+	formats map[string]string,
+	target string,
+) (ast.Expression, error) {
 	args := make([]ast.Expression, 0, len(expr.Arguments))
 	for _, arg := range expr.Arguments {
 		evaluated, err := EvaluateExpression(arg, context, input, formats, target)
@@ -113,7 +139,13 @@ func evaluateCallExpression(expr ast.CallExpression, context map[string]string, 
 	return internalFunction(context, input, formats, expr, args...)
 }
 
-func evaluateRel(expr ast.CallExpression, target string, args []ast.Expression, input [][]string, formats map[string]string) (ast.Expression, error) {
+func evaluateRel(
+	expr ast.CallExpression,
+	target string,
+	args []ast.Expression,
+	input [][]string,
+	_ map[string]string,
+) (ast.Expression, error) {
 	if !ast.IsCellIdentifier(target) || len(args) != 2 {
 		return nil, ErrUnsupportedCall(expr, target)
 	}
@@ -143,7 +175,11 @@ func evaluateRel(expr ast.CallExpression, target string, args []ast.Expression, 
 	}, nil
 }
 
-func evaluateVariableExpression(expr ast.IdentifierExpression, context map[string]string, formats map[string]string) (ast.Expression, error) {
+func evaluateVariableExpression(
+	expr ast.IdentifierExpression,
+	context map[string]string,
+	formats map[string]string,
+) (ast.Expression, error) {
 	name := expr.Value
 	value, exists := context[name]
 	if !exists {
@@ -151,11 +187,19 @@ func evaluateVariableExpression(expr ast.IdentifierExpression, context map[strin
 	}
 
 	format := formats[name]
-	return core.ReadValue(value, format)
+	result, err := core.ReadValue(value, format)
+	if err != nil {
+		return nil, fmt.Errorf(" failed to read %s, %s", result, err)
+	}
+	return result, nil
 }
 
 // evaluateCellExpression evaluates a cell reference (like A1, B2) and returns the value from the CSV input
-func evaluateCellExpression(cellRef string, input [][]string, formats map[string]string) (ast.Expression, error) {
+func evaluateCellExpression(
+	cellRef string,
+	input [][]string,
+	formats map[string]string,
+) (ast.Expression, error) {
 	// cellRef := expr.Value
 	col, row := ast.ParseCell(cellRef)
 
@@ -169,11 +213,20 @@ func evaluateCellExpression(cellRef string, input [][]string, formats map[string
 
 	// Get the value from the CSV input
 	value := input[row][col]
-	return core.ReadValue(value, formats[cellRef])
+	expr, err := core.ReadValue(value, formats[cellRef])
+	if err != nil {
+		return nil, fmt.Errorf("failed to evaluate cell, %s", err)
+	}
+	return expr, nil
+	// return core.ReadValue(value, formats[cellRef])
 }
 
 // EvaluateRangeExpression evaluates a range cell reference (like A1:A2, A1:B2) and returns the value from the CSV input
-func EvaluateRangeExpression(expr ast.RangeExpression, input [][]string, formats map[string]string) ([]ast.Expression, error) {
+func EvaluateRangeExpression(
+	expr ast.RangeExpression,
+	input [][]string,
+	formats map[string]string,
+) ([]ast.Expression, error) {
 	cells := make([]ast.IdentifierExpression, len(expr.Value))
 	for i, cell := range expr.Value {
 		cells[i] = ast.IdentifierExpression{Token: expr.Token, Value: cell}

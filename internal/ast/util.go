@@ -45,7 +45,7 @@ func ToCell(column, row int) string {
 	for column > 0 {
 		column--
 		result = string(rune('A'+column%letters)) + result
-		column = column / letters
+		column /= letters
 	}
 	return fmt.Sprintf("%s%d", result, row)
 }

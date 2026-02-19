@@ -29,10 +29,10 @@ func writeCompact(csvWriter io.Writer, result [][]string, comments map[int]strin
 		if comment, ok := comments[lineNum]; ok {
 			writer.Flush()
 			if err := writer.Error(); err != nil {
-				return err
+				return ErrWriteCSV(err)
 			}
 			if _, err := fmt.Fprintln(csvWriter, comment); err != nil {
-				return err
+				return ErrWriteComments(err)
 			}
 			lineNum++
 		}
@@ -63,11 +63,11 @@ func writeAligned(csvWriter io.Writer, result [][]string, comments map[int]strin
 		}
 		sb.Write([]byte("\n"))
 		if _, err := tb.Write([]byte(sb.String())); err != nil {
-			return err
+			return ErrWriteCSV(err)
 		}
 	}
 	if err := tb.Flush(); err != nil {
-		return err
+		return ErrWriteCSV(err)
 	}
 
 	scanner := bufio.NewScanner(&buf)
@@ -75,11 +75,11 @@ func writeAligned(csvWriter io.Writer, result [][]string, comments map[int]strin
 	for scanner.Scan() {
 		if comment, ok := comments[lineNum]; ok {
 			if _, err := fmt.Fprintln(csvWriter, comment); err != nil {
-				return err
+				return fmt.Errorf("failed to read comments from csv, %s", err)
 			}
 		}
 		if _, err := fmt.Fprintln(csvWriter, scanner.Text()); err != nil {
-			return err
+			return fmt.Errorf("failed to write csv, %s", err)
 		}
 		lineNum++
 	}
@@ -101,7 +101,7 @@ func dumpComments(comments map[int]string, lineNum int, w io.Writer) error {
 	// Write comments in order
 	for _, lineNo := range remainingLines {
 		if _, err := fmt.Fprintln(w, comments[lineNo]); err != nil {
-			return err
+			return ErrWriteComments(err)
 		}
 	}
 	return nil

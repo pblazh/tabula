@@ -5,7 +5,14 @@ import (
 	"github.com/pblazh/tabula/internal/lexer"
 )
 
-func evaluateComparison(operator lexer.Token, left, right ast.Expression, intOp func(int, int) (ast.Expression, error), floatOp func(float64, float64) (ast.Expression, error), stringOp func(string, string) (ast.Expression, error), boolOp func(bool, bool) (ast.Expression, error)) (ast.Expression, error) {
+func evaluateComparison(
+	operator lexer.Token,
+	left, right ast.Expression,
+	intOp func(int, int) (ast.Expression, error),
+	floatOp func(float64, float64) (ast.Expression, error),
+	stringOp func(string, string) (ast.Expression, error),
+	boolOp func(bool, bool) (ast.Expression, error),
+) (ast.Expression, error) {
 	if ast.IsNumeric(left) && ast.IsNumeric(right) {
 		return evaluateNumericOperation(left, right, operator, intOp, floatOp)
 	}
@@ -69,7 +76,11 @@ func evaluateLessThan(operator lexer.Token, left, right ast.Expression) (ast.Exp
 			return ast.BooleanExpression{Value: a < b, Token: operator}, nil
 		},
 		func(a, b bool) (ast.Expression, error) {
-			return nil, ErrUnsupportedBinaryOperation(operator, ast.BooleanExpression{}, ast.BooleanExpression{})
+			return nil, ErrUnsupportedBinaryOperation(
+				operator,
+				ast.BooleanExpression{},
+				ast.BooleanExpression{},
+			)
 		})
 }
 
@@ -85,6 +96,10 @@ func evaluateGreaterThan(operator lexer.Token, left, right ast.Expression) (ast.
 			return ast.BooleanExpression{Value: a > b, Token: operator}, nil
 		},
 		func(a, b bool) (ast.Expression, error) {
-			return nil, ErrUnsupportedBinaryOperation(operator, ast.BooleanExpression{}, ast.BooleanExpression{})
+			return nil, ErrUnsupportedBinaryOperation(
+				operator,
+				ast.BooleanExpression{},
+				ast.BooleanExpression{},
+			)
 		})
 }

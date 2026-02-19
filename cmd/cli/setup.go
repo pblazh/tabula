@@ -43,7 +43,7 @@ func setupOutputWriter(config *Config) (io.Writer, func(), error) {
 		}
 
 		cleanup := func() {
-			dclose(file)
+			closeOrFatal(file)
 		}
 
 		return file, cleanup, nil
@@ -61,7 +61,7 @@ func setupCSVReader(config *Config) (io.Reader, string, map[int]string, error) {
 		if err != nil {
 			return nil, "", nil, ErrOpenCSVFile(err)
 		}
-		defer dclose(file)
+		defer closeOrFatal(file)
 
 		// Extract comments and embedded script references
 		embedded, comments, err := readComments(file)

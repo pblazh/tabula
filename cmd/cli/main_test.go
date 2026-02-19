@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -83,19 +84,19 @@ func TestExecuteInlineCode(t *testing.T) {
 	// Read expected output
 	input, err := os.ReadFile(inputPath)
 	if err != nil {
-		t.Fatalf("Failed to read expected output: %v", err)
+		t.Fatalf("Failed to read expected output, %s", err)
 	}
 	csvIn := strings.ReplaceAll(string(input), `#tabula:#include "script.tbl"`, "")
 	// Read expected output
 	script, err := os.ReadFile(scriptPath)
 	if err != nil {
-		t.Fatalf("Failed to read expected output: %v", err)
+		t.Fatalf("Failed to read expected output, %s", err)
 	}
 
 	// Read expected output
 	output, err := os.ReadFile(outputPath)
 	if err != nil {
-		t.Fatalf("Failed to read expected output: %v", err)
+		t.Fatalf("Failed to read expected output, %s", err)
 	}
 	csvOut := strings.ReplaceAll(string(output), `#tabula:#include "script.tbl"`, "")
 
@@ -115,7 +116,11 @@ func TestExecuteInlineCode(t *testing.T) {
 	actualStr := normalizeOutput(stdout.String())
 
 	if expectedStr != actualStr {
-		t.Errorf("Apartment example with -e flag: output mismatch\nExpected:\n%s\n\nActual:\n%s", expectedStr, actualStr)
+		t.Errorf(
+			"Apartment example with -e flag: output mismatch\nExpected:\n%s\n\nActual:\n%s",
+			expectedStr,
+			actualStr,
+		)
 	}
 
 	// Ensure stderr is empty (no errors)
@@ -135,7 +140,7 @@ func TestUpdateInPlace(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create test CSV file: %v", err)
 	}
-	defer dremove(csvFile)
+	defer removeOrFatal(csvFile)
 
 	// Create test script file (copy the working example)
 	scriptFile := filepath.Join(tempDir, "script.tbl")
@@ -145,7 +150,7 @@ func TestUpdateInPlace(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create test script file: %v", err)
 	}
-	defer dremove(scriptFile)
+	defer removeOrFatal(scriptFile)
 
 	// Execute command with -u flag
 	cmd := exec.Command("go", "run", ".", "-s", scriptFile, "-u", csvFile)
@@ -168,7 +173,11 @@ func TestUpdateInPlace(t *testing.T) {
 	expectedContent := "1,2,3\n"
 
 	if string(updatedContent) != expectedContent {
-		t.Errorf("Expected file content:\n%s\nBut got:\n%s", expectedContent, string(updatedContent))
+		t.Errorf(
+			"Expected file content:\n%s\nBut got:\n%s",
+			expectedContent,
+			string(updatedContent),
+		)
 	}
 
 	// Ensure stdout is empty (since we're updating in place)
@@ -191,7 +200,7 @@ func TestScriptPathFromCSVComment(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create test subdirectory: %v", err)
 	}
-	defer dremove(subDir)
+	defer removeOrFatal(subDir)
 
 	tests := []struct {
 		name           string
@@ -238,14 +247,14 @@ func TestScriptPathFromCSVComment(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to create CSV file: %v", err)
 			}
-			defer dremove(tt.csvPath)
+			defer removeOrFatal(tt.csvPath)
 
 			// Create script file
 			err = os.WriteFile(tt.scriptPath, []byte(tt.scriptContent), 0o644)
 			if err != nil {
 				t.Fatalf("Failed to create script file: %v", err)
 			}
-			defer dremove(tt.scriptPath)
+			defer removeOrFatal(tt.scriptPath)
 
 			// Execute command - only specify CSV file, let it find script from comment
 			cmd := exec.Command("go", "run", ".", "-i", tt.csvPath)
@@ -357,7 +366,7 @@ func executeTabulaCommand(inputFile string) ([]byte, error) {
 
 	err := cmd.Run()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error executing command %s", err)
 	}
 
 	return stdout.Bytes(), nil
@@ -438,7 +447,7 @@ func TestCSVDimensionExtension(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to create CSV file: %v", err)
 			}
-			defer dremove(csvFile)
+			defer removeOrFatal(csvFile)
 
 			// Create temporary script file
 			scriptFile := filepath.Join(tempDir, tt.name+".tbl")
@@ -446,7 +455,7 @@ func TestCSVDimensionExtension(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to create script file: %v", err)
 			}
-			defer dremove(scriptFile)
+			defer removeOrFatal(scriptFile)
 
 			// Execute command
 			cmd := exec.Command("go", "run", ".", "-s", scriptFile, "-i", csvFile)
@@ -456,7 +465,16 @@ func TestCSVDimensionExtension(t *testing.T) {
 
 			err = cmd.Run()
 			if err != nil {
-				t.Fatalf("Command failed: %v\nStderr: %s\nDescription: %s", err, stderr.String(), tt.description)
+				t.Fatalf(
+					`
+	Command failed: %v
+	Stderr: %s
+	Description: %s
+	`,
+					err,
+					stderr.String(),
+					tt.description,
+				)
 			}
 
 			// Normalize and compare output

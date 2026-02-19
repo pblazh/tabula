@@ -7,7 +7,11 @@ import (
 )
 
 func ErrInvalidRange(start, end string) error {
-	return fmt.Errorf("range must contain valid cell references (like A1:B2), got %s:%s", start, end)
+	return fmt.Errorf(
+		"range must contain valid cell references (like A1:B2), got %s:%s",
+		start,
+		end,
+	)
 }
 
 func ErrCircularDependency() error {
@@ -23,5 +27,5 @@ func ErrCircularInclude(chain []string) error {
 }
 
 func ErrIncludeReadError(path string, err error) error {
-	return fmt.Errorf("failed to read include file %s: %w", path, err)
+	return fmt.Errorf("failed to read include file %s, %w", path, err)
 }

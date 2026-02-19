@@ -6,13 +6,13 @@ import (
 	"os"
 )
 
-func dclose(c io.Closer) {
+func closeOrFatal(c io.Closer) {
 	if err := c.Close(); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func dremove(f string) {
+func removeOrFatal(f string) {
 	if err := os.Remove(f); err != nil {
 		log.Fatal(err)
 	}

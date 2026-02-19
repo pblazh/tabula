@@ -32,7 +32,12 @@ func ErrUnknownExpressionType(expr ast.Expression) error {
 }
 
 func ErrUnsupportedOperation(operator lexer.Token, expr ast.Expression) error {
-	return fmt.Errorf("operator %s is not supported for type %s at %v", operator.Literal, ast.TypeName(expr), operator.Position)
+	return fmt.Errorf(
+		"operator %s is not supported for type %s at %v",
+		operator.Literal,
+		ast.TypeName(expr),
+		operator.Position,
+	)
 }
 
 func ErrUnsupportedType(receiver ast.Expression, expr ast.Expression) error {
@@ -40,7 +45,13 @@ func ErrUnsupportedType(receiver ast.Expression, expr ast.Expression) error {
 }
 
 func ErrUnsupportedBinaryOperation(operator lexer.Token, left, right ast.Expression) error {
-	return fmt.Errorf("operator %s is not supported for type %s and %s at %v", operator.Literal, ast.TypeName(left), ast.TypeName(right), operator.Position)
+	return fmt.Errorf(
+		"operator %s is not supported for type %s and %s at %v",
+		operator.Literal,
+		ast.TypeName(left),
+		ast.TypeName(right),
+		operator.Position,
+	)
 }
 
 func ErrUnsupportedPrefixOperator(operator lexer.Token) error {
@@ -61,4 +72,12 @@ func ErrStatementExecution(statement string, err error) error {
 
 func ErrUnsupportedFunctions(identifier string) error {
 	return fmt.Errorf("unsupported function: %s", identifier)
+}
+
+func ErrEvaluation(statement ast.Statement, err error) error {
+	return fmt.Errorf("failed to evaluate %s, %s", statement, err)
+}
+
+func ErrParsing(name string, err error) error {
+	return fmt.Errorf("failed to parse program %s, %s", name, err)
 }

@@ -29,8 +29,11 @@ func TestWriteValue(t *testing.T) {
 			expected: "3.14",
 		},
 		{
-			name:     "write string without format",
-			input:    ast.StringExpression{Value: "hello", Token: lexer.Token{Literal: "\"hello\""}},
+			name: "write string without format",
+			input: ast.StringExpression{
+				Value: "hello",
+				Token: lexer.Token{Literal: "\"hello\""},
+			},
 			format:   "",
 			expected: "hello",
 		},
@@ -55,14 +58,20 @@ func TestWriteValue(t *testing.T) {
 			expected: "3.14",
 		},
 		{
-			name:     "write string with format",
-			input:    ast.StringExpression{Value: "world", Token: lexer.Token{Literal: "\"hello\""}},
+			name: "write string with format",
+			input: ast.StringExpression{
+				Value: "world",
+				Token: lexer.Token{Literal: "\"hello\""},
+			},
 			format:   "Hello, %s!",
 			expected: "Hello, world!",
 		},
 		{
-			name:     "write string without format",
-			input:    ast.StringExpression{Value: "world", Token: lexer.Token{Literal: "\"hello\""}},
+			name: "write string without format",
+			input: ast.StringExpression{
+				Value: "world",
+				Token: lexer.Token{Literal: "\"hello\""},
+			},
 			format:   "",
 			expected: "world",
 		},
@@ -73,34 +82,49 @@ func TestWriteValue(t *testing.T) {
 			expected: "Value: true",
 		},
 		{
-			name:     "write date without format",
-			input:    ast.DateExpression{Value: getTime("2025-08-12 17:51:21"), Token: lexer.Token{Literal: "2025-08-12 17:51:21"}},
+			name: "write date without format",
+			input: ast.DateExpression{
+				Value: getTime("2025-08-12 17:51:21"),
+				Token: lexer.Token{Literal: "2025-08-12 17:51:21"},
+			},
 			format:   "",
 			expected: "2025-08-12 17:51:21",
 		},
 
 		// Date with format specification
 		{
-			name:     "write date with format",
-			input:    ast.DateExpression{Value: getTime("2025-08-12 17:51:21"), Token: lexer.Token{Literal: "2025-08-12 17:51:21"}},
+			name: "write date with format",
+			input: ast.DateExpression{
+				Value: getTime("2025-08-12 17:51:21"),
+				Token: lexer.Token{Literal: "2025-08-12 17:51:21"},
+			},
 			format:   "2006/01/02",
 			expected: "2025/08/12",
 		},
 		{
-			name:     "write date with time format",
-			input:    ast.DateExpression{Value: getTime("2025-08-12 17:51:21"), Token: lexer.Token{Literal: "2025-08-12 17:51:21"}},
+			name: "write date with time format",
+			input: ast.DateExpression{
+				Value: getTime("2025-08-12 17:51:21"),
+				Token: lexer.Token{Literal: "2025-08-12 17:51:21"},
+			},
 			format:   "15:04:05",
 			expected: "17:51:21",
 		},
 		{
-			name:     "write date with custom format",
-			input:    ast.DateExpression{Value: getTime("2025-08-12 17:51:21"), Token: lexer.Token{Literal: "2025-08-12 17:51:21"}},
+			name: "write date with custom format",
+			input: ast.DateExpression{
+				Value: getTime("2025-08-12 17:51:21"),
+				Token: lexer.Token{Literal: "2025-08-12 17:51:21"},
+			},
 			format:   "Jan 2, 2006 at 3:04 PM",
 			expected: "Aug 12, 2025 at 5:51 PM",
 		},
 		{
-			name:     "write date with RFC3339 format",
-			input:    ast.DateExpression{Value: getTime("2025-08-12 17:51:21"), Token: lexer.Token{Literal: "2025-08-12 17:51:21"}},
+			name: "write date with RFC3339 format",
+			input: ast.DateExpression{
+				Value: getTime("2025-08-12 17:51:21"),
+				Token: lexer.Token{Literal: "2025-08-12 17:51:21"},
+			},
 			format:   "2006-01-02T15:04:05Z07:00",
 			expected: "2025-08-12T17:51:21Z",
 		},

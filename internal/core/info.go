@@ -4,7 +4,11 @@ import (
 	"github.com/pblazh/tabula/internal/ast"
 )
 
-func IsNumber(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func IsNumber(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeArityGuard(format, 1)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -13,7 +17,11 @@ func IsNumber(format string, call ast.CallExpression, values ...ast.Expression) 
 	return ast.BooleanExpression{Value: ast.IsNumeric(values[0]), Token: call.Token}, nil
 }
 
-func IsText(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func IsText(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeArityGuard(format, 1)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -22,7 +30,11 @@ func IsText(format string, call ast.CallExpression, values ...ast.Expression) (a
 	return ast.BooleanExpression{Value: ast.IsString(values[0]), Token: call.Token}, nil
 }
 
-func IsBoolean(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func IsBoolean(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeArityGuard(format, 1)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err
@@ -31,7 +43,11 @@ func IsBoolean(format string, call ast.CallExpression, values ...ast.Expression)
 	return ast.BooleanExpression{Value: ast.IsBoolean(values[0]), Token: call.Token}, nil
 }
 
-func IsBlank(format string, call ast.CallExpression, values ...ast.Expression) (ast.Expression, error) {
+func IsBlank(
+	format string,
+	call ast.CallExpression,
+	values ...ast.Expression,
+) (ast.Expression, error) {
 	callGuard := MakeArityGuard(format, 1)
 	if err := callGuard(call, values...); err != nil {
 		return nil, err

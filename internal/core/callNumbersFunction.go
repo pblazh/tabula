@@ -55,8 +55,7 @@ func callNumbersFunction(
 		// All arguments are integers, use int processing
 		var args []int
 		for _, arg := range values {
-			switch a := arg.(type) {
-			case ast.IntExpression:
+			if a, ok := arg.(ast.IntExpression); ok {
 				args = append(args, a.Value)
 			}
 		}
