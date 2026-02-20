@@ -1,4 +1,4 @@
-package main
+package csv
 
 import (
 	"bufio"
@@ -11,16 +11,7 @@ import (
 	"text/tabwriter"
 )
 
-func escapeCSVField(field string) string {
-	var buf bytes.Buffer
-	writer := csv.NewWriter(&buf)
-	_ = writer.Write([]string{field})
-	writer.Flush()
-	escaped := buf.String()
-	return escaped[:len(escaped)-1] // remove trailing newline
-}
-
-func writeCompact(csvWriter io.Writer, result [][]string, comments map[int]string) error {
+func Write(csvWriter io.Writer, result [][]string, comments map[int]string) error {
 	writer := csv.NewWriter(csvWriter)
 	defer writer.Flush()
 
@@ -47,7 +38,7 @@ func writeCompact(csvWriter io.Writer, result [][]string, comments map[int]strin
 	return dumpComments(comments, lineNum, csvWriter)
 }
 
-func writeAligned(csvWriter io.Writer, result [][]string, comments map[int]string) error {
+func WriteAligned(csvWriter io.Writer, result [][]string, comments map[int]string) error {
 	var buf bytes.Buffer
 	tb := new(tabwriter.Writer)
 	tb.Init(&buf, 0, 0, 1, ' ', 0)
@@ -85,6 +76,38 @@ func writeAligned(csvWriter io.Writer, result [][]string, comments map[int]strin
 	}
 
 	return dumpComments(comments, lineNum, csvWriter)
+}
+
+func ToAlignedCSV(result [][]string, comments map[int]string) (string, error) {
+	var csvWriter bytes.Buffer
+	writer := csv.NewWriter(&csvWriter)
+
+	lineNum := 0
+	for _, row := range result {
+		if comment, ok := comments[lineNum]; ok {
+			writer.Flush()
+			if err := writer.Error(); err != nil {
+				return "", ErrWriteCSV(err)
+			}
+			if _, err := fmt.Fprintln(&csvWriter, comment); err != nil {
+				return "", ErrWriteComments(err)
+			}
+			lineNum++
+		}
+		if err := writer.Write(row); err != nil {
+			return "", ErrWriteCSVOutput(err)
+		}
+		lineNum++
+	}
+
+	writer.Flush()
+
+	err := dumpComments(comments, lineNum, &csvWriter)
+	if err != nil {
+		return "", err
+	}
+
+	return csvWriter.String(), nil
 }
 
 func dumpComments(comments map[int]string, lineNum int, w io.Writer) error {

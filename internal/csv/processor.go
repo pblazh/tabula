@@ -1,32 +1,28 @@
-package main
+package csv
 
 import (
-	"encoding/csv"
 	"io"
 
 	"github.com/pblazh/tabula/internal/ast"
 	"github.com/pblazh/tabula/internal/evaluator"
 )
 
-func processCSV(
+func Process(
 	config *Config,
-	scriptReader io.Reader,
 	csvReader io.Reader,
 	csvWriter io.Writer,
-	comments map[int]string,
 ) error {
-	// Read and parse CSV
-	reader := csv.NewReader(csvReader)
-	reader.LazyQuotes = true
-	reader.TrimLeadingSpace = true
-	reader.Comment = '#'
-
-	records, err := reader.ReadAll()
+	records, comments, embedded, err := Read(csvReader)
 	if err != nil {
 		return ErrReadCSV(err)
 	}
 
-	program, identifiers, err := evaluator.ParseProgram(scriptReader, config.Name)
+	scriptReader, err := setupScriptReader(config, embedded)
+	if err != nil {
+		return ErrReadCSV(err)
+	}
+
+	program, identifiers, err := evaluator.ParseProgram(scriptReader, config.Input)
 	records = ensureProgramDimensions(identifiers, records)
 
 	if err != nil {
@@ -48,9 +44,17 @@ func processCSV(
 	}
 
 	if config.Align {
-		return writeAligned(csvWriter, result, comments)
+		err = WriteAligned(csvWriter, result, comments)
+		if err != nil {
+			return ErrWriteDataOutput(err)
+		}
+		return nil
 	}
 
-	// Output result in the expected format
-	return writeCompact(csvWriter, result, comments)
+	err = Write(csvWriter, result, comments)
+	if err != nil {
+		return ErrWriteDataOutput(err)
+	}
+
+	return nil
 }

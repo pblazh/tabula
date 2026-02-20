@@ -4,32 +4,24 @@ import (
 	"fmt"
 )
 
-func ErrCreateTempFile(err error) error {
-	return fmt.Errorf("error creating temp file, %v", err)
-}
-
 func ErrCreateOutputFile(err error) error {
 	return fmt.Errorf("error creating output file, %v", err)
 }
 
-func ErrOpenCSVFile(err error) error {
-	return fmt.Errorf("error opening CSV file, %v", err)
+func ErrOpenDataFile(err error) error {
+	return fmt.Errorf("error opening data file, %v", err)
 }
 
-func ErrSeekCSVFile(err error) error {
-	return fmt.Errorf("error seeking CSV file, %v", err)
+func ErrSeekDataFile(err error) error {
+	return fmt.Errorf("error seeking data file, %v", err)
 }
 
-func ErrReopenCSVFile(err error) error {
-	return fmt.Errorf("error reopening CSV file, %v", err)
+func ErrReopenDataFile(err error) error {
+	return fmt.Errorf("error reopening data file, %v", err)
 }
 
 func ErrReadStdin(err error) error {
 	return fmt.Errorf("error reading stdin, %v", err)
-}
-
-func ErrOpenScriptFile(err error) error {
-	return fmt.Errorf("error opening script file, %v", err)
 }
 
 func ErrReadCSV(err error) error {
@@ -48,14 +40,6 @@ func ErrEvaluateScript(scriptName string, err error) error {
 	return fmt.Errorf("error evaluating script %s, %v", scriptName, err)
 }
 
-func ErrWriteCSVOutput(err error) error {
-	return fmt.Errorf("error writing CSV output, %v", err)
-}
-
-func ErrWriteCSV(err error) error {
-	return fmt.Errorf("failed to write csv, %s", err)
-}
-
-func ErrWriteComments(err error) error {
-	return fmt.Errorf("failed to write comments to csv, %s", err)
+func ErrWriteDataOutput(err error) error {
+	return fmt.Errorf("error writing data output, %v", err)
 }

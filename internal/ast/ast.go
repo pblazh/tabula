@@ -45,12 +45,12 @@ func (stmt ExpressionStatement) String() string {
 
 type IncludeStatement struct {
 	Node
-	Token    lexer.Token
-	FilePath string
+	Token lexer.Token
+	Path  string
 }
 
 func (stmt IncludeStatement) String() string {
-	return fmt.Sprintf("#include \"%s\";", stmt.FilePath)
+	return fmt.Sprintf("#include \"%s\";", stmt.Path)
 }
 
 type IdentifierExpression struct {

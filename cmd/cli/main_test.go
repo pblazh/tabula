@@ -90,7 +90,7 @@ func TestExecuteInlineCode(t *testing.T) {
 	// Read expected output
 	script, err := os.ReadFile(scriptPath)
 	if err != nil {
-		t.Fatalf("Failed to read expected output, %s", err)
+		t.Fatalf("Failed to read script, %s", err)
 	}
 
 	// Read expected output
@@ -313,19 +313,24 @@ func TestExamples(t *testing.T) {
 		outputFile := filepath.Join(path, "output.csv")
 
 		// Check if all required files exist
-		if !fileExists(inputFile) {
-			t.Errorf("Example %s: missing input.csv", exampleName)
-			return nil
-		}
-		if !fileExists(outputFile) {
-			t.Errorf("Example %s: missing output.csv", exampleName)
+		if fileExists(inputFile) && fileExists(outputFile) {
+			t.Run(exampleName, func(t *testing.T) {
+				testCsvExample(t, exampleName, inputFile, outputFile)
+			})
 			return nil
 		}
 
-		// Run the test for this example
-		t.Run(exampleName, func(t *testing.T) {
-			testExample(t, exampleName, inputFile, outputFile)
-		})
+		inputFile = filepath.Join(path, "input.md")
+		outputFile = filepath.Join(path, "output.md")
+
+		if fileExists(inputFile) && fileExists(outputFile) {
+			t.Run(exampleName, func(t *testing.T) {
+				testMarkdownExample(t, exampleName, inputFile, outputFile)
+			})
+			return nil
+		}
+
+		t.Fatalf("Failed to find files in directory: %s", path)
 
 		return nil
 	})
@@ -334,7 +339,7 @@ func TestExamples(t *testing.T) {
 	}
 }
 
-func testExample(t *testing.T, exampleName, inputFile, outputFile string) {
+func testMarkdownExample(t *testing.T, exampleName, inputFile, outputFile string) {
 	t.Helper()
 	// Read expected output
 	expectedOutput, err := os.ReadFile(outputFile)
@@ -343,7 +348,7 @@ func testExample(t *testing.T, exampleName, inputFile, outputFile string) {
 	}
 
 	// Execute tabula command: tabula -i input.csv -s script.csvs
-	actualOutput, err := executeTabulaCommand(inputFile)
+	actualOutput, err := executeTabulaCommand(inputFile, "markdown")
 	if err != nil {
 		t.Fatalf("Failed to execute tabula command for example %s: %v", exampleName, err)
 	}
@@ -358,8 +363,32 @@ func testExample(t *testing.T, exampleName, inputFile, outputFile string) {
 	}
 }
 
-func executeTabulaCommand(inputFile string) ([]byte, error) {
-	cmd := exec.Command("go", "run", ".", "-i", inputFile, "-a")
+func testCsvExample(t *testing.T, exampleName, inputFile, outputFile string) {
+	t.Helper()
+	// Read expected output
+	expectedOutput, err := os.ReadFile(outputFile)
+	if err != nil {
+		t.Fatalf("Failed to read expected output file %s: %v", outputFile, err)
+	}
+
+	// Execute tabula command: tabula -i input.csv -s script.csvs
+	actualOutput, err := executeTabulaCommand(inputFile, "csv")
+	if err != nil {
+		t.Fatalf("Failed to execute tabula command for example %s: %v", exampleName, err)
+	}
+
+	// Normalize whitespace for comparison
+	expectedStr := normalizeOutput(string(expectedOutput))
+	actualStr := normalizeOutput(string(actualOutput))
+
+	if expectedStr != actualStr {
+		t.Errorf("Example %s: output mismatch\nExpected:\n%s\n\nActual:\n%s",
+			exampleName, expectedStr, actualStr)
+	}
+}
+
+func executeTabulaCommand(inputFile string, format string) ([]byte, error) {
+	cmd := exec.Command("go", "run", ".", "-f", format, "-a", "-i", inputFile)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
