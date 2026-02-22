@@ -169,11 +169,6 @@ func TestParseArgs(t *testing.T) {
 			errMsg: "either script or data has to be read from a file",
 		},
 		{
-			name:   "script flag without script file",
-			args:   []string{"tabula", "-f", "html", "-i", "file.html"},
-			errMsg: "only markdown and csv formats are supported",
-		},
-		{
 			name:   "input flag without input file",
 			args:   []string{"tabula", "-i"},
 			errMsg: "either script or data has to be read from a file",

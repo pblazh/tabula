@@ -65,7 +65,7 @@ func doCsvProcessing(
 		Sort:    config.Sort,
 	}
 
-	return csv.Process(&csvConfig, reader, writer)
+	return csv.Process(&csvConfig, reader, writer) //nolint:wrapcheck
 }
 
 func doMarkdownProcessing(
@@ -86,5 +86,5 @@ func doMarkdownProcessing(
 		Script:  config.Script,
 		Sort:    config.Sort,
 	}
-	return markdown.Process(&markdownConfig, reader, writer)
+	return markdown.Process(&markdownConfig, reader, writer) //nolint:wrapcheck
 }

@@ -13,7 +13,7 @@ import (
 func Read(input io.Reader) (records [][]string, comments map[int]string, script string, err error) {
 	data, err := io.ReadAll(input)
 	if err != nil {
-		return nil, nil, "", err
+		return nil, nil, "", ErrReadCSV(err)
 	}
 
 	script, comments, err = readComments(bytes.NewReader(data))
@@ -28,7 +28,7 @@ func Read(input io.Reader) (records [][]string, comments map[int]string, script 
 
 	records, err = reader.ReadAll()
 	if err != nil {
-		return nil, nil, "", err
+		return nil, nil, "", ErrReadCSV(err)
 	}
 
 	return records, comments, script, nil

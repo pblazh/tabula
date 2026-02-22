@@ -9,7 +9,7 @@ import (
 func readTable(reader io.Reader) ([][]string, error) {
 	input, err := io.ReadAll(reader)
 	if err != nil {
-		return nil, err
+		return nil, ErrReadMD(err)
 	}
 
 	lines := strings.Split(string(input), "\n")

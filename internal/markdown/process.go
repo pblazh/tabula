@@ -66,7 +66,7 @@ func Process(
 	for _, ch := range result {
 		_, err = fmt.Fprintf(writer, "%s\n", ch)
 		if err != nil {
-			return err
+			return ErrWriteMD(err)
 		}
 	}
 

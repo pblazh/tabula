@@ -348,7 +348,7 @@ func testMarkdownExample(t *testing.T, exampleName, inputFile, outputFile string
 	}
 
 	// Execute tabula command: tabula -i input.csv -s script.csvs
-	actualOutput, err := executeTabulaCommand(inputFile, "markdown")
+	actualOutput, err := executeTabulaCommandMarkdown(inputFile)
 	if err != nil {
 		t.Fatalf("Failed to execute tabula command for example %s: %v", exampleName, err)
 	}
@@ -372,7 +372,7 @@ func testCsvExample(t *testing.T, exampleName, inputFile, outputFile string) {
 	}
 
 	// Execute tabula command: tabula -i input.csv -s script.csvs
-	actualOutput, err := executeTabulaCommand(inputFile, "csv")
+	actualOutput, err := executeTabulaCommand(inputFile)
 	if err != nil {
 		t.Fatalf("Failed to execute tabula command for example %s: %v", exampleName, err)
 	}
@@ -387,8 +387,23 @@ func testCsvExample(t *testing.T, exampleName, inputFile, outputFile string) {
 	}
 }
 
-func executeTabulaCommand(inputFile string, format string) ([]byte, error) {
-	cmd := exec.Command("go", "run", ".", "-f", format, "-a", "-i", inputFile)
+func executeTabulaCommand(inputFile string) ([]byte, error) {
+	cmd := exec.Command("go", "run", ".", "-a", "-i", inputFile)
+
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+	if err != nil {
+		return nil, fmt.Errorf("error executing command %s", err)
+	}
+
+	return stdout.Bytes(), nil
+}
+
+func executeTabulaCommandMarkdown(inputFile string) ([]byte, error) {
+	cmd := exec.Command("go", "run", ".", "-m", "-a", "-i", inputFile)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout

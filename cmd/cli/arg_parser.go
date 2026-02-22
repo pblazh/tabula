@@ -4,7 +4,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"strings"
 )
 
 var (
@@ -18,7 +17,7 @@ Options:
   -u           Update input CSV file in place
   -a           Align output
   -t           Sort statements topologically
-  -f <format>  Parse input as "markdown" or "csv" (default)
+  -m           Parse input as markdown
   -h           Show this help
   -v           Show version
 
@@ -42,11 +41,10 @@ Examples:
   tabula -u data.csv
 
 	# Update markdown file in place
-  tabula -f markdown -s script.tbl -u data.md
+  tabula -m -s script.tbl -u data.md
 `
 	outputConflictMessage = "conflicting output flags: -o and -u cannot be used together"
 	inputConflictMessage  = "either script or data has to be read from a file"
-	unsupportedFormat     = "only markdown and csv formats are supported"
 )
 
 func parseArgs() (*Config, error) {
@@ -55,7 +53,7 @@ func parseArgs() (*Config, error) {
 	var output string
 	var input string
 	var update string
-	var format string
+	var markdown bool
 	var align bool
 	var sort bool
 	var help bool
@@ -66,7 +64,7 @@ func parseArgs() (*Config, error) {
 	flag.StringVar(&execute, "e", "", "execute code directly")
 	flag.StringVar(&output, "o", "", "output CSV file")
 	flag.StringVar(&update, "u", "", "update CSV file in place")
-	flag.StringVar(&format, "f", "csv", "input file format \"markdown\" or \"csv\" (default)")
+	flag.BoolVar(&markdown, "m", false, "input file format \"markdown\" or \"csv\" (default)")
 	flag.BoolVar(&align, "a", false, "Align CSV output")
 	flag.BoolVar(&sort, "t", false, "Sort statements topologically")
 	flag.BoolVar(&help, "h", false, "usage")
@@ -104,11 +102,6 @@ func parseArgs() (*Config, error) {
 		return nil, errors.New(inputConflictMessage)
 	}
 
-	format = strings.ToLower(format)
-	if format != "csv" && format != "markdown" {
-		return nil, errors.New(unsupportedFormat)
-	}
-
 	config := Config{
 		Script:   script,
 		Execute:  execute,
@@ -116,7 +109,7 @@ func parseArgs() (*Config, error) {
 		Output:   output,
 		Align:    align,
 		Sort:     sort,
-		Markdown: format == "markdown",
+		Markdown: markdown,
 	}
 	return &config, nil
 }

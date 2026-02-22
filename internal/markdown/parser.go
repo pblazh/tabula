@@ -94,7 +94,7 @@ func parse(reader io.Reader) ([]chunk, error) {
 
 	err := scanner.Err()
 	if err != nil {
-		return nil, err
+		return nil, ErrReadMD(err)
 	}
 	return chunks, nil
 }
