@@ -58,6 +58,12 @@ Alice    , 25  , 85
 Bob      , 30  , 92
 ```
 
+### `-m` - Use markdown as Input and Output
+
+```bash
+tabula -s script.tbl data.md -m
+```
+
 ### `-t` - Topological Sort
 
 Sort statements in the script based on their dependencies before execution. This ensures that variables are defined before they are used.

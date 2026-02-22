@@ -14,6 +14,7 @@ Download the binary for your system:
 
 - **[Command Line Usage](command-line.md)** - CLI options, flags, and usage patterns
 - **[Syntax Reference](syntax.md)** - Language syntax, statements, and expressions
+- **[Markdown support](../examples/markdown/README.md)** - Suitable for use with any markdown editors as a post processor
 - **[Examples](examples.md)** - Real-world usage examples and use cases
 
 ## Reference
