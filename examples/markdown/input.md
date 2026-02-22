@@ -11,11 +11,12 @@ Table
 
 | Title  | Price | amount | Total |
 | ------ | ----- | ------ | ----- |
-| Apples | $10   | 3      | $0    |
-| Pears  | $15   | 7      | $0    |
-|        |       | Total  | $0    |
+| Apples | $10   | 3      |       |
+| Pears  | $15   | 7      |       |
+|        |       | Total  |       |
 
 ```tabula
+fmt B2:B4,D2:D4 = "$%.2f"
 let D2 = B2 * C2;
 let D3 = B3 * C3;
 let D4 = SUM(D2:D3);

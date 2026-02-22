@@ -19,11 +19,10 @@ func execute(config *Config, data *chunk, script *chunk) ([][]string, map[int]st
 		scriptReader = strings.NewReader(scriptData)
 	}
 
-	dataLines := data.text[1 : len(data.text)-1]
-	dataString := strings.Join(dataLines, "\n")
-	dataReader := strings.NewReader(dataString)
-
 	if data.kind == csvKind {
+		dataLines := data.text[1 : len(data.text)-1]
+		dataString := strings.Join(dataLines, "\n")
+		dataReader := strings.NewReader(dataString)
 		records, comments, embedded, err := csv.Read(dataReader)
 		if err != nil {
 			return nil, nil, ErrReadCSV(err)
@@ -39,7 +38,10 @@ func execute(config *Config, data *chunk, script *chunk) ([][]string, map[int]st
 	}
 
 	if data.kind == tableKind {
-		records, err := readMarkdown(dataReader)
+		dataLines := data.text
+		dataString := strings.Join(dataLines, "\n")
+		dataReader := strings.NewReader(dataString)
+		records, err := readTable(dataReader)
 		if err != nil {
 			return nil, nil, err
 		}

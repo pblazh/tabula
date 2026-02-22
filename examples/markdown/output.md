@@ -9,13 +9,14 @@ updated: 2026.02.20 08:16
 
 Table
 
-| Title  | Price | amount | Total |
-| ------ | ----- | ------ | ----- |
-| Apples | $10   | 3      | $0    |
-| Pears  | $15   | 7      | $0    |
-|        |       | Total  | $0    |
+| Title  | Price | amount | Total   |
+| ------ | ----- | ------ | ------- |
+| Apples | $10   | 3      | $30.00  |
+| Pears  | $15   | 7      | $105.00 |
+|        |       | Total  | $135.00 |
 
 ```tabula
+fmt B2:B4,D2:D4 = "$%.2f"
 let D2 = B2 * C2;
 let D3 = B3 * C3;
 let D4 = SUM(D2:D3);

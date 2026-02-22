@@ -1,15 +1,29 @@
 package markdown
 
 import (
-	"encoding/csv"
 	"io"
+	"slices"
+	"strings"
 )
 
-func readMarkdown(input io.Reader) ([][]string, error) {
-	reader := csv.NewReader(input)
-	reader.LazyQuotes = true
-	reader.TrimLeadingSpace = true
-	reader.Comment = '#'
+func readTable(reader io.Reader) ([][]string, error) {
+	input, err := io.ReadAll(reader)
+	if err != nil {
+		return nil, err
+	}
 
-	return reader.ReadAll()
+	lines := strings.Split(string(input), "\n")
+
+	output := make([][]string, len(lines))
+
+	for i := range lines {
+		rawFields := strings.Split(string(lines[i]), "|")
+		output[i] = make([]string, len(rawFields)-2)
+		for j := 1; j < len(rawFields)-1; j++ {
+			output[i][j-1] = strings.TrimSpace(rawFields[j])
+		}
+	}
+
+	output = slices.Delete(output, 1, 2)
+	return output, nil
 }

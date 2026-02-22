@@ -22,7 +22,19 @@ func Process(
 
 	for i := range chunks {
 		ch := chunks[i]
-		if ch.kind == csvKind {
+		write := csv.Write
+		wrap := wrapCodeBlock
+
+		if ch.kind == csvKind && config.Align {
+			write = csv.WriteAligned
+		}
+
+		if ch.kind == tableKind {
+			write = WriteAligned
+			wrap = wrapTable
+		}
+
+		if ch.kind == csvKind || ch.kind == tableKind {
 			data, comments, err := execute(config, &ch, getScriptChunk(chunks, i))
 			if err != nil {
 				result = append(result, ch)
@@ -38,18 +50,12 @@ func Process(
 
 			// create a formatter depending on if align was requested
 			var sb strings.Builder
-			if config.Align {
-				err = csv.WriteAligned(&sb, data, comments)
-			} else {
-				err = csv.Write(&sb, data, comments)
-			}
+			err = write(&sb, data, comments)
 			if err != nil {
 				return ErrWriteCSV(err)
 			}
 
-			lines := []string{ch.text[0]}
-			lines = append(lines, strings.Split(strings.TrimSpace(sb.String()), "\n")...)
-			lines = append(lines, ch.text[len(ch.text)-1])
+			lines := wrap(sb.String())
 
 			result = append(result, chunk{kind: csvKind, text: lines})
 			continue
@@ -65,4 +71,15 @@ func Process(
 	}
 
 	return nil
+}
+
+func wrapCodeBlock(code string) []string {
+	lines := []string{"```csv"}
+	lines = append(lines, strings.Split(strings.TrimSpace(code), "\n")...)
+	lines = append(lines, "```")
+	return lines
+}
+
+func wrapTable(code string) []string {
+	return strings.Split(strings.TrimSpace(code), "\n")
 }

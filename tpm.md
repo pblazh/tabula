@@ -73,7 +73,7 @@
   - [ ] #21.2: Add position tracking for error messages
   - [ ] #21.3: Add semantic analysis phase
 - [ ] #22: Feature Extensions
-  - [ ] #22.1: Add support for multiple output formats (markdown, rst, etc)
+  - [-] #22.1: Add support for markdown
   - [ ] #22.2: Add more data types beyond basic five
   - [x] #22.3: Add include directive
   - [x] #22.4: Add semver
