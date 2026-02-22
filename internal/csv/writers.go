@@ -47,7 +47,8 @@ func WriteAligned(csvWriter io.Writer, result [][]string, comments map[int]strin
 	for _, row := range result {
 		sb.Reset()
 		for c, col := range row {
-			sb.Write([]byte(escapeCSVField(strings.TrimSpace(col))))
+			// remove spaces and a new line
+			sb.Write([]byte(strings.Replace(strings.TrimSpace(col), "\n", "", 1)))
 			if c < len(row)-1 {
 				sb.Write([]byte("\t, "))
 			}

@@ -1,8 +1,6 @@
 package csv
 
 import (
-	"bytes"
-	"encoding/csv"
 	"strings"
 
 	"github.com/pblazh/tabula/internal/ast"
@@ -30,6 +28,9 @@ func ensureProgramDimensions(identifiers []string, records [][]string) [][]strin
 }
 
 func getProgramDimensions(identifiers []string) (int, int) {
+	if len(identifiers) == 0 {
+		return 0, 0
+	}
 	requiredWidth := 0
 	requiredHeight := 0
 
@@ -47,13 +48,4 @@ func getProgramDimensions(identifiers []string) (int, int) {
 	}
 
 	return requiredWidth + 1, requiredHeight + 1
-}
-
-func escapeCSVField(field string) string {
-	var buf bytes.Buffer
-	writer := csv.NewWriter(&buf)
-	_ = writer.Write([]string{field})
-	writer.Flush()
-	escaped := buf.String()
-	return escaped[:len(escaped)-1] // remove trailing newline
 }

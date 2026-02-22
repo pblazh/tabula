@@ -1,5 +1,0 @@
-fmt D2:D4,E2:E9 = "$%.2f" 
-
-let E2:E4 = (REF(REL(-2,0)) - REF(REL(-3,0))) * REF(REL(-1,0))
-
-let E9 = SUM(E2:E8)
