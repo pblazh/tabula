@@ -79,38 +79,6 @@ func WriteAligned(csvWriter io.Writer, result [][]string, comments map[int]strin
 	return dumpComments(comments, lineNum, csvWriter)
 }
 
-func ToAlignedCSV(result [][]string, comments map[int]string) (string, error) {
-	var csvWriter bytes.Buffer
-	writer := csv.NewWriter(&csvWriter)
-
-	lineNum := 0
-	for _, row := range result {
-		if comment, ok := comments[lineNum]; ok {
-			writer.Flush()
-			if err := writer.Error(); err != nil {
-				return "", ErrWriteCSV(err)
-			}
-			if _, err := fmt.Fprintln(&csvWriter, comment); err != nil {
-				return "", ErrWriteComments(err)
-			}
-			lineNum++
-		}
-		if err := writer.Write(row); err != nil {
-			return "", ErrWriteCSVOutput(err)
-		}
-		lineNum++
-	}
-
-	writer.Flush()
-
-	err := dumpComments(comments, lineNum, &csvWriter)
-	if err != nil {
-		return "", err
-	}
-
-	return csvWriter.String(), nil
-}
-
 func dumpComments(comments map[int]string, lineNum int, w io.Writer) error {
 	var remainingLines []int
 	for lineNo := range comments {

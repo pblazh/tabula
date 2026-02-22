@@ -74,7 +74,7 @@ Manual installation:
 
 Automatic syntax highlighting for .tbl files including:
   - Keywords: let, fmt
-  - Preprocessor directives: #include, #tabula:
+  - Preprocessor directives: #include, #tabula
   - Cell references: A1, B2, AA1, etc.
   - Cell ranges: A1:C3
   - Comments: // and /* */
@@ -93,7 +93,7 @@ For CSV files with embedded Tabula scripts:
 
 Sets foldmethod=marker for CSV files to support: >
     #tabula ---{{{
-    #tabula:#include "script.tbl"
+    #tabula #include "script.tbl"
     #tabula ---}}}
 <
 
@@ -168,7 +168,7 @@ Example script: >
 8.2 Working with CSV Files                                 *tabula-csv-files*
 
 Add a Tabula script directive at the top of your CSV file: >
-    #tabula:#include "process.tbl"
+    #tabula #include "process.tbl"
     Name,Age,Score
     John,25,85
     Jane,30,92
@@ -180,7 +180,7 @@ When you save the file, Tabula runs automatically and updates the CSV.
 
 Organize Tabula directives with fold markers: >
     #tabula ---{{{
-    #tabula:#include "script.tbl"
+    #tabula #include "script.tbl"
     #tabula ---}}}
 <
 

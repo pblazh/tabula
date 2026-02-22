@@ -3,4 +3,4 @@ Apple   , 1.20  , 11       , 13.2
 Banana  , 10.80 , 2        , 21.6
 Cherry  , 2.50  , 33       , 82.5
 TOTAL   ,       ,          , 117.3
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"

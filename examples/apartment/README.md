@@ -24,12 +24,12 @@ water delivery,           ,           ,          , $20.00
 maintenance   ,           ,           ,          , $409.49
 apartment     ,           ,           ,          , $8000.00
               ,           ,           , total    , $0.00
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 ```
 
 ### Script
 
-```tbl
+```tabula
 // Setting up a monetary format
 fmt D2:D4,E2:E9 = "$%.2f"
 
@@ -52,5 +52,5 @@ water delivery ,          ,          ,        , $20.00
 maintenance    ,          ,          ,        , $409.49
 apartment      ,          ,          ,        , $8000.00
                ,          ,          , total  , $9865.83
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 ```

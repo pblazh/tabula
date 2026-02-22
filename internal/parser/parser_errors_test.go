@@ -43,6 +43,11 @@ func TestParserErrors(t *testing.T) {
 			input:  `fmt A1 = true;`,
 			output: "expected string, got <TRUE:true invalid fmt statements bool:1:10>",
 		},
+		{
+			name:   "unsupported operator :",
+			input:  `2 : 3`,
+			output: `expected an identifier, got 2 at unsupported operator ::1:6`,
+		},
 	}
 
 	for _, tc := range testcases {

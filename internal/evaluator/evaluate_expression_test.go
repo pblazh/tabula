@@ -347,7 +347,11 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			expr := testutil.ParseExpression(t, tc.input)
+			expr, err := testutil.ParseExpression(t, tc.input)
+			if err != nil {
+				t.Errorf("Unexpected error: %v", err)
+				return
+			}
 
 			var input [][]string
 			result, err := EvaluateExpression(
@@ -358,7 +362,7 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 				"target",
 			)
 			if err != nil {
-				t.Errorf("Unexpects error: %v", err)
+				t.Errorf("Unexpected error: %v", err)
 				return
 			}
 
@@ -432,6 +436,31 @@ func TestPrefixExpressionEvaluate(t *testing.T) {
 			expects: "8",
 		},
 		{
+			name:    "equality strings",
+			input:   `"abc" == "abc"`,
+			expects: "true",
+		},
+		{
+			name:    "less string",
+			input:   `"ABC" < "abc"`,
+			expects: "true",
+		},
+		{
+			name:    "more string",
+			input:   `"ABC" > "abc"`,
+			expects: "false",
+		},
+		{
+			name:    "equality boolean",
+			input:   `true == false`,
+			expects: "false",
+		},
+		{
+			name:    "not equality boolean",
+			input:   `true != false`,
+			expects: "true",
+		},
+		{
 			name:    "comparison with arithmetic",
 			input:   `5 + 3 > 7`,
 			expects: "true",
@@ -441,11 +470,20 @@ func TestPrefixExpressionEvaluate(t *testing.T) {
 			input:   `2 * 3 == 6`,
 			expects: "true",
 		},
+		{
+			name:    "range",
+			input:   `A1:B2`,
+			expects: "[A1, B1, A2, B2]",
+		},
 	}
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			expr := testutil.ParseExpression(t, tc.input)
+			expr, err := testutil.ParseExpression(t, tc.input)
+			if err != nil {
+				t.Errorf("Unexpected error: %v", err)
+				return
+			}
 
 			var input [][]string
 			result, err := EvaluateExpression(
@@ -456,7 +494,7 @@ func TestPrefixExpressionEvaluate(t *testing.T) {
 				"target",
 			)
 			if err != nil {
-				t.Errorf("Unexpects error: %v", err)
+				t.Errorf("Unexpected error: %v", err)
 				return
 			}
 
@@ -572,7 +610,15 @@ func TestOperationErrors(t *testing.T) {
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			expr := testutil.ParseExpression(t, tc.input)
+			expr, err := testutil.ParseExpression(t, tc.input)
+
+			if err != nil && err.Error() != tc.expectsError {
+				t.Fatalf("Expected error '%s', got '%s'", tc.expectsError, err.Error())
+			}
+			if err != nil {
+				return
+			}
+
 			var input [][]string
 			formats := make(map[string]string)
 			result, err := EvaluateExpression(
@@ -582,13 +628,14 @@ func TestOperationErrors(t *testing.T) {
 				formats,
 				"target",
 			)
-			if err == nil {
-				t.Errorf("Expected error, got result: %s", result.String())
+
+			if err == nil && tc.expectsError != "" {
+				t.Errorf("Expected error, got result: '%s'", result.String())
 				return
 			}
 
 			if err.Error() != tc.expectsError {
-				t.Errorf("Expected error %q, got %q", tc.expectsError, err.Error())
+				t.Errorf("Expected error '%s', got '%s'", tc.expectsError, err.Error())
 			}
 		})
 	}
@@ -619,7 +666,11 @@ func TestRangeExpressionTokenPreservation(t *testing.T) {
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			expr := testutil.ParseExpression(t, tc.input)
+			expr, err := testutil.ParseExpression(t, tc.input)
+			if err != nil {
+				t.Fatalf("Unexpected error %s", err)
+				return
+			}
 
 			// Verify it's a RangeExpression
 			rangeExpr, ok := expr.(ast.RangeExpression)

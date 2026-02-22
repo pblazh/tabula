@@ -18,12 +18,12 @@ Item,Amount,
 Revenue,123456.789,
 Expenses,98765.432,
 Profit,24691.357,
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 ```
 
 ### Script
 
-```tbl
+```tabula
 // Format amounts as currency with 2 decimal places
 fmt B2:B4 = "%.2f";
 
@@ -45,5 +45,5 @@ Item     , Amount     , Percentage
 Revenue  , 123456.789 , 100.0%
 Expenses , 98765.432  , 80.0%
 Profit   , 24691.357  , 20.0%
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 ```

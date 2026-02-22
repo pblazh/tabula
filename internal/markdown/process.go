@@ -42,7 +42,7 @@ func Process(
 					result,
 					chunk{
 						kind: messageKind,
-						text: []string{fmt.Sprintf("<!-- tabula: %s -->\n", err)},
+						text: []string{toMessage(err.Error())},
 					},
 				)
 				continue

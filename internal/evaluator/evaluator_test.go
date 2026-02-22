@@ -80,6 +80,18 @@ func TestEvaluate(t *testing.T) {
 			},
 		},
 		{
+			name:    "function call",
+			program: `let A2 = SUM(A1:C1);`,
+			input: [][]string{
+				{"1", "2", "3"},
+				{"0", "0", "o"},
+			},
+			output: [][]string{
+				{"1", "2", "3"},
+				{"6", "0", "o"},
+			},
+		},
+		{
 			name: "REL function",
 			program: `
 			let C1:C2 = SUM(REF(REL(-1,0)), REF(REL(-2,0)));
@@ -114,6 +126,50 @@ func TestEvaluate(t *testing.T) {
 
 			if !reflect.DeepEqual(result, tc.output) {
 				t.Errorf("Expected %v to equal %v", result, tc.output)
+				return
+			}
+		})
+	}
+}
+
+func TestParseProgram(t *testing.T) {
+	testcases := []struct {
+		name        string
+		program     string
+		output      string
+		identifiers []string
+		error       string
+	}{
+		{
+			name:        "let statement",
+			program:     `let B2 = 42;`,
+			output:      `let B2 = 42;`,
+			identifiers: []string{"B2"},
+		},
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			// Parse the program
+			ast, identifiers, err := ParseProgram(strings.NewReader(tc.program), tc.name)
+
+			if err != nil && tc.error == "" {
+				t.Errorf("Unexpected evaluation error: %v", err)
+				return
+			}
+
+			if err != nil && tc.error != err.Error() {
+				t.Errorf("Expected error: '%s', but got '%s'", tc.error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(identifiers, tc.identifiers) {
+				t.Errorf("Expected identifiers %v to equal %v", identifiers, tc.identifiers)
+				return
+			}
+
+			if ast.String() != tc.output {
+				t.Errorf("Expected AST %v to equal %v", identifiers, tc.identifiers)
 				return
 			}
 		})

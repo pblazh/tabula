@@ -2,6 +2,7 @@ package markdown
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"regexp"
 	"strings"
@@ -33,8 +34,12 @@ var (
 	scriptBegin = regexp.MustCompile("^```tabula\\s*$")
 	csvBegin    = regexp.MustCompile("^```csv\\s*$")
 	scriptEnd   = regexp.MustCompile("^```\\s*$")
-	message     = regexp.MustCompile(`^<!-- tabula:\s.*$`)
+	message     = regexp.MustCompile(`^<!-- tabula\s.*$`)
 )
+
+func toMessage(msg string) string {
+	return fmt.Sprintf("<!-- tabula %s -->", msg)
+}
 
 func parse(reader io.Reader) ([]chunk, error) {
 	var chunks []chunk

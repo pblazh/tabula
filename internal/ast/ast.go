@@ -170,3 +170,11 @@ func (expr RangeExpression) String() string {
 }
 
 type Program []Node
+
+func (p Program) String() string {
+	var sb strings.Builder
+	for i := range p {
+		sb.WriteString(p[i].String())
+	}
+	return sb.String()
+}

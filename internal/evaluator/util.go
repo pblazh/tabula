@@ -62,6 +62,9 @@ func EnsureProgramDimensions(identifiers []string, records [][]string) [][]strin
 }
 
 func getProgramDimensions(identifiers []string) (int, int) {
+	if len(identifiers) == 0 {
+		return 0, 0
+	}
 	requiredWidth := 0
 	requiredHeight := 0
 

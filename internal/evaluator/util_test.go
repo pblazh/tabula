@@ -1,4 +1,4 @@
-package csv
+package evaluator
 
 import (
 	"strings"
@@ -79,7 +79,7 @@ func TestEnsureProgramDimensions(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run("ensureProgramDimensions "+strings.Join(tc.identifiers, ", "), func(t *testing.T) {
-			expanded := ensureProgramDimensions(tc.identifiers, tc.records)
+			expanded := EnsureProgramDimensions(tc.identifiers, tc.records)
 
 			height := len(expanded)
 			width := 0

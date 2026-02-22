@@ -23,7 +23,7 @@ func Process(
 	}
 
 	program, identifiers, err := evaluator.ParseProgram(scriptReader, config.Input)
-	records = ensureProgramDimensions(identifiers, records)
+	records = evaluator.EnsureProgramDimensions(identifiers, records)
 
 	if err != nil {
 		return ErrParseScript(err)

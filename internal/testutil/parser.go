@@ -12,13 +12,13 @@ import (
 )
 
 // ParseExpression parses an input string as an expression and returns the AST.
-func ParseExpression(t *testing.T, input string) ast.Node {
+func ParseExpression(t *testing.T, input string) (ast.Node, error) {
 	t.Helper()
 	expr, err := parseExpression(input)
 	if err != nil {
-		t.Fatalf("fatal, %s", ErrParse(input, err))
+		return nil, err
 	}
-	return expr
+	return expr, nil
 }
 
 func parseExpression(input string) (ast.Node, error) {

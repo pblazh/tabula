@@ -27,12 +27,12 @@ Command, Arg, Out
 echo,hello,
 ls,examples/call-function/,
 date,Jun 20 1975,
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 ```
 
 ### Script
 
-```tbl
+```tabula
 let C2 = EXEC(A2, B2);
 let C3 = EXEC(A3, B3);
 let C4 = EXEC(A4, "-j", "-f", "%b %d %Y", B4, "+%A");
@@ -45,5 +45,5 @@ Command , Arg                     , Out
 echo    , hello                   , hello
 ls      , examples/call-function/ , input.csv output.csv README.md script.csvs
 date    , Jun 20 1975             , Friday
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 ```

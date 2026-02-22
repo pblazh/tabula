@@ -37,7 +37,7 @@ water delivery ,          ,          ,        , $20.00
 maintenance    ,          ,          ,        , $409.49
 apartment      ,          ,          ,        , $8000.00
                ,          ,          , total  , $0
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 ```
 
 Some content between

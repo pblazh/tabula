@@ -26,7 +26,7 @@ Automatic highlighting for `.tbl` files including:
 
 ### Auto-execution
 
-For CSV files with embedded Tabula scripts (marked with `#tabula:`):
+For CSV files with embedded Tabula scripts (marked with `#tabula`):
 
 - Automatically runs Tabula when you save the file
 - Automatically runs Tabula when you leave insert mode
@@ -191,7 +191,7 @@ The plugin automatically activates for:
 2. Add a Tabula script directive at the top:
 
    ```csv
-   #tabula:#include "process.tbl"
+   #tabula #include "process.tbl"
    A,B,C
    1,2,3
    4,5,6
@@ -214,7 +214,7 @@ The plugin sets up fold markers for Tabula sections in CSV files:
 
 ```csv
 #tabula ---{{{
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 #tabula ---}}}
 Name,Age,Score
 John,25,85

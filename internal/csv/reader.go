@@ -38,7 +38,7 @@ func Read(input io.Reader) (records [][]string, comments map[int]string, script 
 func readComments(f io.Reader) (string, map[int]string, error) {
 	const (
 		commentPrefix     = "#"
-		tabulaEmbedPrefix = "#tabula:"
+		tabulaEmbedPrefix = "#tabula"
 	)
 
 	scanner := bufio.NewScanner(f)
