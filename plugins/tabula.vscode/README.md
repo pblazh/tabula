@@ -64,7 +64,7 @@ These extensions work great together! View your CSV in table mode, make changes,
 2. Add Tabula script directive:
 
    ```csv
-   #tabula:#include "process.tbl"
+   #tabula #include "process.tbl"
    A,B,C
    1,2,3
    4,5,6

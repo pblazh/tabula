@@ -86,11 +86,11 @@ func TestExecuteInlineCode(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to read expected output, %s", err)
 	}
-	csvIn := strings.ReplaceAll(string(input), `#tabula:#include "script.tbl"`, "")
+	csvIn := strings.ReplaceAll(string(input), `#tabula #include "script.tbl"`, "")
 	// Read expected output
 	script, err := os.ReadFile(scriptPath)
 	if err != nil {
-		t.Fatalf("Failed to read expected output, %s", err)
+		t.Fatalf("Failed to read script, %s", err)
 	}
 
 	// Read expected output
@@ -98,7 +98,7 @@ func TestExecuteInlineCode(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to read expected output, %s", err)
 	}
-	csvOut := strings.ReplaceAll(string(output), `#tabula:#include "script.tbl"`, "")
+	csvOut := strings.ReplaceAll(string(output), `#tabula #include "script.tbl"`, "")
 
 	cmd := exec.Command("go", "run", ".", "-e", string(script), "-a")
 	var stdout, stderr bytes.Buffer
@@ -216,27 +216,27 @@ func TestScriptPathFromCSVComment(t *testing.T) {
 			csvPath:        filepath.Join(subDir, "test.csv"),
 			scriptPath:     filepath.Join(tempDir, "parent_script.tbl"),
 			scriptComment:  "../parent_script.tbl",
-			csvContent:     "A,B\n1,2\n#tabula:#include \"../parent_script.tbl\"\n",
+			csvContent:     "A,B\n1,2\n#tabula #include \"../parent_script.tbl\"\n",
 			scriptContent:  "let A1 = \"ParentScript\"; let B1 = \"Modified\";",
-			expectedOutput: "ParentScript,Modified\n1,2\n#tabula:#include \"../parent_script.tbl\"\n",
+			expectedOutput: "ParentScript,Modified\n1,2\n#tabula #include \"../parent_script.tbl\"\n",
 		},
 		{
 			name:           "same directory script reference",
 			csvPath:        filepath.Join(subDir, "test2.csv"),
 			scriptPath:     filepath.Join(subDir, "local_script.tbl"),
 			scriptComment:  "./local_script.tbl",
-			csvContent:     "A,B\n1,2\n#tabula:#include \"local_script.tbl\"\n",
+			csvContent:     "A,B\n1,2\n#tabula #include \"local_script.tbl\"\n",
 			scriptContent:  "let A1 = \"LocalScript\"; let B1 = \"Local\";",
-			expectedOutput: "LocalScript,Local\n1,2\n#tabula:#include \"local_script.tbl\"\n",
+			expectedOutput: "LocalScript,Local\n1,2\n#tabula #include \"local_script.tbl\"\n",
 		},
 		{
 			name:           "relative path without dot prefix",
 			csvPath:        filepath.Join(subDir, "test3.csv"),
 			scriptPath:     filepath.Join(subDir, "simple_script.tbl"),
 			scriptComment:  "simple_script.tbl",
-			csvContent:     "A,B\n1,2\n#tabula:#include \"simple_script.tbl\"\n",
+			csvContent:     "A,B\n1,2\n#tabula #include \"simple_script.tbl\"\n",
 			scriptContent:  "let A1 = \"SimpleScript\"; let B1 = \"Simple\";",
-			expectedOutput: "SimpleScript,Simple\n1,2\n#tabula:#include \"simple_script.tbl\"\n",
+			expectedOutput: "SimpleScript,Simple\n1,2\n#tabula #include \"simple_script.tbl\"\n",
 		},
 	}
 
@@ -313,19 +313,24 @@ func TestExamples(t *testing.T) {
 		outputFile := filepath.Join(path, "output.csv")
 
 		// Check if all required files exist
-		if !fileExists(inputFile) {
-			t.Errorf("Example %s: missing input.csv", exampleName)
-			return nil
-		}
-		if !fileExists(outputFile) {
-			t.Errorf("Example %s: missing output.csv", exampleName)
+		if fileExists(inputFile) && fileExists(outputFile) {
+			t.Run(exampleName, func(t *testing.T) {
+				testCsvExample(t, exampleName, inputFile, outputFile)
+			})
 			return nil
 		}
 
-		// Run the test for this example
-		t.Run(exampleName, func(t *testing.T) {
-			testExample(t, exampleName, inputFile, outputFile)
-		})
+		inputFile = filepath.Join(path, "input.md")
+		outputFile = filepath.Join(path, "output.md")
+
+		if fileExists(inputFile) && fileExists(outputFile) {
+			t.Run(exampleName, func(t *testing.T) {
+				testMarkdownExample(t, exampleName, inputFile, outputFile)
+			})
+			return nil
+		}
+
+		t.Fatalf("Failed to find files in directory: %s", path)
 
 		return nil
 	})
@@ -334,7 +339,31 @@ func TestExamples(t *testing.T) {
 	}
 }
 
-func testExample(t *testing.T, exampleName, inputFile, outputFile string) {
+func testMarkdownExample(t *testing.T, exampleName, inputFile, outputFile string) {
+	t.Helper()
+	// Read expected output
+	expectedOutput, err := os.ReadFile(outputFile)
+	if err != nil {
+		t.Fatalf("Failed to read expected output file %s: %v", outputFile, err)
+	}
+
+	// Execute tabula command: tabula -i input.csv -s script.csvs
+	actualOutput, err := executeTabulaCommandMarkdown(inputFile)
+	if err != nil {
+		t.Fatalf("Failed to execute tabula command for example %s: %v", exampleName, err)
+	}
+
+	// Normalize whitespace for comparison
+	expectedStr := normalizeOutput(string(expectedOutput))
+	actualStr := normalizeOutput(string(actualOutput))
+
+	if expectedStr != actualStr {
+		t.Errorf("Example %s: output mismatch\nExpected:\n%s\n\nActual:\n%s",
+			exampleName, expectedStr, actualStr)
+	}
+}
+
+func testCsvExample(t *testing.T, exampleName, inputFile, outputFile string) {
 	t.Helper()
 	// Read expected output
 	expectedOutput, err := os.ReadFile(outputFile)
@@ -359,7 +388,22 @@ func testExample(t *testing.T, exampleName, inputFile, outputFile string) {
 }
 
 func executeTabulaCommand(inputFile string) ([]byte, error) {
-	cmd := exec.Command("go", "run", ".", "-i", inputFile, "-a")
+	cmd := exec.Command("go", "run", ".", "-a", "-i", inputFile)
+
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+	if err != nil {
+		return nil, fmt.Errorf("error executing command %s", err)
+	}
+
+	return stdout.Bytes(), nil
+}
+
+func executeTabulaCommandMarkdown(inputFile string) ([]byte, error) {
+	cmd := exec.Command("go", "run", ".", "-m", "-a", "-i", inputFile)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout

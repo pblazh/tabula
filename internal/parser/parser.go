@@ -553,8 +553,15 @@ func (p *Parser) parseRange(left ast.Node) (ast.Node, error) {
 		return nil, err
 	}
 
-	leftIdent := left.(ast.IdentifierExpression)
-	rightIdent := right.(ast.IdentifierExpression)
+	leftIdent, ok := left.(ast.IdentifierExpression)
+	if !ok {
+		return nil, ErrExpectedIdentifier(left.String(), p.cur.Position)
+	}
+
+	rightIdent, ok := right.(ast.IdentifierExpression)
+	if !ok {
+		return nil, ErrExpectedIdentifier(right.String(), p.cur.Position)
+	}
 
 	cells, err := ast.ExpandRange(leftIdent.Value, rightIdent.Value)
 	if err != nil {

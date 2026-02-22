@@ -124,7 +124,7 @@ CSV files can contain embedded script with #include references in comments. The 
 Name,Age,Score
 Alice,25,85
 Bob,30,92
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 ```
 
 Then run without specifying a script file:

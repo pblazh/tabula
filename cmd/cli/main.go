@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/pblazh/tabula/internal/csv"
+	"github.com/pblazh/tabula/internal/markdown"
 )
 
 func main() {
@@ -16,38 +19,72 @@ func main() {
 		os.Exit(0)
 	}
 
+	var dataReader io.Reader
+
 	// Setup CSV input reader
-	csvReader, embedded, comments, err := setupCSVReader(config)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
+	if config.Input == "" {
+		dataReader = os.Stdin
 	}
 
-	// Setup script reader
-	scriptReader, err := setupScriptReader(config, embedded)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
+	if config.Input != "" {
+		dataReader, err = os.Open(config.Input)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%v\n", err)
+			os.Exit(1)
+		}
 	}
 
-	err = doProcessing(config, scriptReader, csvReader, comments)
+	if config.Markdown {
+		err = doMarkdownProcessing(config, dataReader)
+	} else {
+		err = doCsvProcessing(config, dataReader)
+	}
+
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
 }
 
-func doProcessing(
+func doCsvProcessing(
 	config *Config,
-	scriptReader io.Reader,
-	csvReader io.Reader,
-	comments map[int]string,
+	reader io.Reader,
 ) error {
-	csvWriter, cleanup, err := setupOutputWriter(config)
+	writer, cleanup, err := setupOutputWriter(config)
 	if err != nil {
 		return err
 	}
 	defer cleanup()
 
-	return processCSV(config, scriptReader, csvReader, csvWriter, comments)
+	csvConfig := csv.Config{
+		Align:   config.Align,
+		Execute: config.Execute,
+		Input:   config.Input,
+		Output:  config.Output,
+		Script:  config.Script,
+		Sort:    config.Sort,
+	}
+
+	return csv.Process(&csvConfig, reader, writer) //nolint:wrapcheck
+}
+
+func doMarkdownProcessing(
+	config *Config,
+	reader io.Reader,
+) error {
+	writer, cleanup, err := setupOutputWriter(config)
+	if err != nil {
+		return err
+	}
+	defer cleanup()
+
+	markdownConfig := markdown.Config{
+		Align:   config.Align,
+		Execute: config.Execute,
+		Input:   config.Input,
+		Output:  config.Output,
+		Script:  config.Script,
+		Sort:    config.Sort,
+	}
+	return markdown.Process(&markdownConfig, reader, writer) //nolint:wrapcheck
 }

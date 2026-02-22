@@ -45,7 +45,7 @@ The semicolon after `#include` is optional:
 Include paths are resolved relative to the file containing the `#include` directive:
 
 - If you include from `main.tbl`, paths are relative to `main.tbl`'s directory
-- If you include from a CSV file using `#tabula:#include`, paths are relative to the CSV file's directory
+- If you include from a CSV file using `#tabula #include`, paths are relative to the CSV file's directory
 - Subdirectories are supported: `#include "lib/utils.tbl"`
 - Parent directories are supported: `#include "../shared/common.tbl"`
 
@@ -83,10 +83,10 @@ let A1 = 42;
 
 #### CSV-Embedded Includes
 
-You can use `#include` in CSV files by prefixing with `#tabula:`:
+You can use `#include` in CSV files by prefixing with `#tabula`:
 
 ```csv
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 A,B,C
 1,2,3
 ```

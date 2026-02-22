@@ -17,13 +17,11 @@ linters:
     - wrapcheck
     - thelper
     - nestif
+    - nilnil
+    - iface
     # - ireturn
     # - unparam
-    # - nilnil
-    # - iface
     # - gosec
-    # - gocognit
-    # - exhaustruct
     # - err113
     # - cyclop
 formatters:

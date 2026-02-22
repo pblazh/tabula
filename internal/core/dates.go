@@ -72,7 +72,7 @@ func ParseDateWithoutFormat(value string) (*time.Time, error) {
 		}
 	}
 
-	return nil, nil
+	return nil, nil //nolint:nilnil
 }
 
 func FromDate(

@@ -57,12 +57,12 @@ Widget I,9,450.00
 ,,
 ,,
 ,,
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 ```
 
 ### Script
 
-```tbl
+```tabula
 // Define constants
 let tax_rate = 0.08;
 let discount_threshold = 1000;
@@ -116,5 +116,5 @@ Subtotal , 2275     ,
 Discount , 113.75   ,
 Tax      , 172.9    ,
 Total    , 2334.15  ,
-#tabula:#include "script.tbl"
+#tabula #include "script.tbl"
 ```

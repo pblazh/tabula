@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"os"
-	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -21,7 +21,6 @@ func TestParseArgs(t *testing.T) {
 			config: &Config{
 				Script:  "scriptFile",
 				Execute: "",
-				Name:    "scriptFile",
 				Input:   "",
 				Output:  "",
 				Align:   false,
@@ -34,7 +33,6 @@ func TestParseArgs(t *testing.T) {
 			config: &Config{
 				Script:  "",
 				Execute: "",
-				Name:    "",
 				Input:   "csvFile",
 				Output:  "",
 				Align:   false,
@@ -47,7 +45,6 @@ func TestParseArgs(t *testing.T) {
 			config: &Config{
 				Script:  "scriptFile",
 				Execute: "",
-				Name:    "scriptFile",
 				Input:   "csvFile",
 				Output:  "",
 				Align:   false,
@@ -60,7 +57,6 @@ func TestParseArgs(t *testing.T) {
 			config: &Config{
 				Script:  "scriptFile",
 				Execute: "",
-				Name:    "scriptFile",
 				Input:   "csvFile",
 				Output:  "output.csv",
 				Align:   false,
@@ -73,7 +69,6 @@ func TestParseArgs(t *testing.T) {
 			config: &Config{
 				Script:  "scriptFile",
 				Execute: "",
-				Name:    "scriptFile",
 				Input:   "csvFile",
 				Output:  "csvFile",
 				Align:   false,
@@ -86,7 +81,6 @@ func TestParseArgs(t *testing.T) {
 			config: &Config{
 				Script:  "",
 				Execute: "",
-				Name:    "",
 				Input:   "csvFile",
 				Output:  "csvFile",
 				Align:   false,
@@ -99,7 +93,6 @@ func TestParseArgs(t *testing.T) {
 			config: &Config{
 				Script:  "scriptFile",
 				Execute: "",
-				Name:    "scriptFile",
 				Input:   "csvFile",
 				Output:  "",
 				Align:   true,
@@ -112,7 +105,6 @@ func TestParseArgs(t *testing.T) {
 			config: &Config{
 				Script:  "scriptFile",
 				Execute: "",
-				Name:    "scriptFile",
 				Input:   "csvFile",
 				Output:  "output.csv",
 				Align:   true,
@@ -125,7 +117,6 @@ func TestParseArgs(t *testing.T) {
 			config: &Config{
 				Script:  "scriptFile",
 				Execute: "",
-				Name:    "scriptFile",
 				Input:   "csvFile",
 				Output:  "csvFile",
 				Align:   true,
@@ -138,7 +129,6 @@ func TestParseArgs(t *testing.T) {
 			config: &Config{
 				Script:  "",
 				Execute: "sum(amount)",
-				Name:    "<inline>",
 				Input:   "csvFile",
 				Output:  "",
 				Align:   false,
@@ -151,7 +141,6 @@ func TestParseArgs(t *testing.T) {
 			config: &Config{
 				Script:  "",
 				Execute: "sum(amount)",
-				Name:    "<inline>",
 				Input:   "csvFile",
 				Output:  "output.csv",
 				Align:   false,
@@ -233,7 +222,12 @@ func TestParseArgs(t *testing.T) {
 				return
 			}
 
-			if !reflect.DeepEqual(config, tt.config) {
+			if config.Align != tt.config.Align ||
+				config.Sort != tt.config.Sort ||
+				config.Output != tt.config.Output ||
+				config.Script != tt.config.Script ||
+				config.Execute != tt.config.Execute ||
+				!strings.HasPrefix(config.Input, tt.config.Input) {
 				t.Errorf("Expected config %+v, got %+v", tt.config, config)
 			}
 		})

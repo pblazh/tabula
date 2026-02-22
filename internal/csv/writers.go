@@ -1,4 +1,4 @@
-package main
+package csv
 
 import (
 	"bufio"
@@ -11,16 +11,7 @@ import (
 	"text/tabwriter"
 )
 
-func escapeCSVField(field string) string {
-	var buf bytes.Buffer
-	writer := csv.NewWriter(&buf)
-	_ = writer.Write([]string{field})
-	writer.Flush()
-	escaped := buf.String()
-	return escaped[:len(escaped)-1] // remove trailing newline
-}
-
-func writeCompact(csvWriter io.Writer, result [][]string, comments map[int]string) error {
+func Write(csvWriter io.Writer, result [][]string, comments map[int]string) error {
 	writer := csv.NewWriter(csvWriter)
 	defer writer.Flush()
 
@@ -47,7 +38,7 @@ func writeCompact(csvWriter io.Writer, result [][]string, comments map[int]strin
 	return dumpComments(comments, lineNum, csvWriter)
 }
 
-func writeAligned(csvWriter io.Writer, result [][]string, comments map[int]string) error {
+func WriteAligned(csvWriter io.Writer, result [][]string, comments map[int]string) error {
 	var buf bytes.Buffer
 	tb := new(tabwriter.Writer)
 	tb.Init(&buf, 0, 0, 1, ' ', 0)
@@ -56,7 +47,8 @@ func writeAligned(csvWriter io.Writer, result [][]string, comments map[int]strin
 	for _, row := range result {
 		sb.Reset()
 		for c, col := range row {
-			sb.Write([]byte(escapeCSVField(strings.TrimSpace(col))))
+			// remove spaces and a new line
+			sb.Write([]byte(strings.Replace(strings.TrimSpace(col), "\n", "", 1)))
 			if c < len(row)-1 {
 				sb.Write([]byte("\t, "))
 			}
