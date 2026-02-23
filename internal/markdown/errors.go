@@ -35,3 +35,11 @@ func ErrWriteMD(err error) error {
 func ErrProcessing(err error) error {
 	return fmt.Errorf("failed to process markdown, %v", err)
 }
+
+func ErrProcessingTableLine(n int) error {
+	return fmt.Errorf("failed to process markdown, %v", n)
+}
+
+func ErrProcessingTableHeader() error {
+	return fmt.Errorf("malformed table header")
+}

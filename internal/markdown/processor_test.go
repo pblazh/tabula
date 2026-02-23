@@ -19,6 +19,12 @@ func TestProcess(t *testing.T) {
 			output: "",
 		},
 		{
+			name:  "CSV malformed",
+			input: "```csv\none,two\n1,2,3\n```\n",
+			output: "```csv\none,two\n1,2,3\n```\n" +
+				"<!-- tabula error reading CSV, error reading CSV, record on line 2: wrong number of fields -->\n",
+		},
+		{
 			name:   "CSV no code",
 			input:  "```csv\none,two,three\n1,2,3\n```\n",
 			output: "```csv\none,two,three\n1,2,3\n```\n",
@@ -87,6 +93,47 @@ func TestProcess(t *testing.T) {
 				"```",
 				"",
 			}, "\n"),
+		},
+		{
+			name: "table one cell",
+			input: `
+| one |
+| - |
+| 1 |
+`,
+			output: `
+| one |
+| --- |
+| 1   |
+`,
+		},
+		{
+			name: "table malformed header",
+			input: `
+| one |
+| - | - |
+| 1 |
+`,
+			output: `
+| one |
+| - | - |
+| 1 |
+<!-- tabula malformed table header -->
+`,
+		},
+		{
+			name: "table malformed body",
+			input: `
+| one |
+| - |
+| 1 | 2 |
+`,
+			output: `
+| one |
+| - |
+| 1 | 2 |
+<!-- tabula malformed table body line 1 -->
+`,
 		},
 		{
 			name: "table no code",

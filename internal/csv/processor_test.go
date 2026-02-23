@@ -19,6 +19,17 @@ func TestProcess(t *testing.T) {
 			output: "",
 		},
 		{
+			name:   "malformed",
+			input:  "one,two\n1,2,3\n4\n",
+			output: "",
+			error:  "Unexpected error error reading CSV, error reading CSV, record on line 2: wrong number of fields",
+		},
+		{
+			name:   "single value",
+			input:  "one\n",
+			output: "one\n",
+		},
+		{
 			name:   "no code",
 			input:  "one,two,three\n1,2,3\n",
 			output: "one,two,three\n1,2,3\n",

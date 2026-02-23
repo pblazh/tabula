@@ -30,7 +30,7 @@ func (ch chunk) isEmpty() bool {
 }
 
 var (
-	tableRowRg  = regexp.MustCompile(`^\|*([^|]+\|)+[^|]+\|*$`)
+	tableRowRg  = regexp.MustCompile(`^\|*([^|]+\|)+([^|]+\|)*$`)
 	scriptBegin = regexp.MustCompile("^```tabula\\s*$")
 	csvBegin    = regexp.MustCompile("^```csv\\s*$")
 	scriptEnd   = regexp.MustCompile("^```\\s*$")
