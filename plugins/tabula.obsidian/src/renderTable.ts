@@ -54,7 +54,7 @@ export function parseCSV(source: string): Promise<string[][]> {
   })
 }
 
-function getIndexLetter(n: number) {
+export function getIndexLetter(n: number) {
   n = Math.max(0, n)
 
   let result = ''

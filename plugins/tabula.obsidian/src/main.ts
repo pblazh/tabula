@@ -1,7 +1,6 @@
 import { App, Plugin, PluginManifest, TFile } from 'obsidian'
 import { TabulaSettings, DEFAULT_SETTINGS } from './types'
 import { TabulaSettingTab } from './settings'
-import { extractChunks, processChunks, outputChunks } from './processor'
 import { Executer } from './executer'
 import { renderTable } from './renderTable'
 import { renderCode } from './renderCode'
@@ -72,19 +71,16 @@ export default class TabulaPlugin extends Plugin {
     // Only process markdown files
     if (file.extension === 'md') {
       const content = await this.app.vault.read(file)
-      const chunks = extractChunks(content)
-
       const executer = new Executer(
         this.settings,
         this.app.vault.adapter,
         file.parent?.path || '',
       )
-      const processed = await processChunks(executer, chunks)
-      const output = outputChunks(processed)
+      const processed = await executer.execute(content)
 
-      this.updatingFiles.add(file.path)
       try {
-        await file.vault.modify(file, output)
+        this.updatingFiles.add(file.path)
+        await file.vault.modify(file, processed)
       } finally {
         this.updatingFiles.delete(file.path)
       }
