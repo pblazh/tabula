@@ -1,6 +1,7 @@
 package csv
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/pblazh/tabula/internal/ast"
@@ -23,11 +24,10 @@ func Process(
 	}
 
 	program, identifiers, err := evaluator.ParseProgram(scriptReader, config.Input)
-	records = evaluator.EnsureProgramDimensions(identifiers, records)
-
 	if err != nil {
-		return ErrParseScript(err)
+		return fmt.Errorf("%s", err)
 	}
+	records = evaluator.EnsureProgramDimensions(identifiers, records)
 
 	// Sort program topologically if Sort flag is set
 	if config.Sort {
@@ -44,17 +44,8 @@ func Process(
 	}
 
 	if config.Align {
-		err = WriteAligned(csvWriter, result, comments)
-		if err != nil {
-			return ErrWriteDataOutput(err)
-		}
-		return nil
+		return WriteAligned(csvWriter, result, comments)
 	}
 
-	err = Write(csvWriter, result, comments)
-	if err != nil {
-		return ErrWriteDataOutput(err)
-	}
-
-	return nil
+	return Write(csvWriter, result, comments)
 }

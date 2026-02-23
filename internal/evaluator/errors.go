@@ -78,6 +78,9 @@ func ErrEvaluation(statement ast.Node, err error) error {
 	return fmt.Errorf("failed to evaluate %s, %s", statement, err)
 }
 
-func ErrParsing(name string, err error) error {
-	return fmt.Errorf("failed to parse program %s, %s", name, err)
+func ErrParsing(input string, err error) error {
+	if input == "" {
+		return fmt.Errorf("failed to parse program, %s", err)
+	}
+	return fmt.Errorf("failed to parse program %s, %s", input, err)
 }

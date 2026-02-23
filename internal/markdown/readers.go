@@ -1,7 +1,6 @@
 package markdown
 
 import (
-	"fmt"
 	"io"
 	"slices"
 	"strings"
@@ -29,10 +28,10 @@ func readTable(reader io.Reader) ([][]string, error) {
 	for i := range len(output) - 1 {
 		line := output[i+1]
 		if columns != len(line) && i == 0 {
-			return nil, fmt.Errorf("malformed table header")
+			return nil, ErrProcessingTableHeader
 		}
 		if columns != len(line) {
-			return nil, fmt.Errorf("malformed table body line %d", i)
+			return nil, ErrProcessingTableLine(i)
 		}
 	}
 

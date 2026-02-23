@@ -28,7 +28,7 @@ func Write(csvWriter io.Writer, result [][]string, comments map[int]string) erro
 			lineNum++
 		}
 		if err := writer.Write(row); err != nil {
-			return ErrWriteCSVOutput(err)
+			return ErrWriteCSV(err)
 		}
 		lineNum++
 	}

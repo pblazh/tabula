@@ -22,7 +22,7 @@ func TestProcess(t *testing.T) {
 			name:   "malformed",
 			input:  "one,two\n1,2,3\n4\n",
 			output: "",
-			error:  "Unexpected error error reading CSV, error reading CSV, record on line 2: wrong number of fields",
+			error:  "tabula failed to read CSV, record on line 2: wrong number of fields",
 		},
 		{
 			name:   "single value",
@@ -51,7 +51,7 @@ func TestProcess(t *testing.T) {
 			config: Config{Execute: `let A1=`},
 			input:  "one,two,three\n1,2,3\n",
 			output: "",
-			error:  "parsing script, failed to parse program , unexpected  at <input>:1:8",
+			error:  "failed to parse program, unexpected  at <input>:1:8",
 		},
 		{
 			name:   "comments",

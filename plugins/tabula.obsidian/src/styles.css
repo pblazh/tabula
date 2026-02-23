@@ -1,40 +1,21 @@
 /* Styles for Tabula plugin */
-.csv-table {
+.tabula-csv-table {
   width: 100%;
 }
 
-.csv-tr--thead {
-  background: silver;
-}
-
-tbody tr > td:nth-child(2n + 2).csv-td--a,
-.markdown-rendered td.csv-td--a {
+.markdown-rendered .tabula-csv-table td.tabula-csv-table-guide-cell,
+.markdown-rendered .tabula-csv-table .tabula-csv-table-guide-row td {
+  font-size: small;
   font-weight: bold;
-  color: white;
   background: darkgray;
-  text-align: center;
-  padding: 0;
-  display: none;
+  color: white;
 }
 
-.markdown-rendered td.csv-td--a:first-child {
+.markdown-rendered .tabula-csv-table td.tabula-csv-table-guide-cell,
+.markdown-rendered .tabula-csv-table td.csv-td--a:first-child {
   width: 1.8em;
   min-width: 1.8em;
 }
-.markdown-rendered td.csv-td--n {
-  font-weight: bold;
-  width: 1.8em;
-  min-width: 1.8em;
-  color: white;
-  background: darkgray;
+.markdown-rendered .tabula-csv-table td.tabula-csv-table-guide-cell {
   text-align: center;
-  padding: 0;
-  display: none;
-}
-
-.csv-table:hover .csv-td--a:not(.disabled) {
-  display: table-cell;
-}
-.csv-table:hover .csv-td--n:not(.disabled) {
-  display: table-cell;
 }

@@ -22,7 +22,7 @@ func TestProcess(t *testing.T) {
 			name:  "CSV malformed",
 			input: "```csv\none,two\n1,2,3\n```\n",
 			output: "```csv\none,two\n1,2,3\n```\n" +
-				"<!-- tabula error reading CSV, error reading CSV, record on line 2: wrong number of fields -->\n",
+				"<!-- tabula failed to read CSV, record on line 2: wrong number of fields -->\n",
 		},
 		{
 			name:   "CSV no code",
@@ -87,7 +87,7 @@ func TestProcess(t *testing.T) {
 				"one,two,three",
 				"1,2,3",
 				"```",
-				"<!-- tabula error parsing script, failed to parse program , unexpected ; at <input>:1:10 -->",
+				"<!-- tabula failed to parse program, unexpected ; at <input>:1:10 -->",
 				"```tabula",
 				"let A2 = ;",
 				"```",
@@ -132,7 +132,7 @@ func TestProcess(t *testing.T) {
 | one |
 | - |
 | 1 | 2 |
-<!-- tabula malformed table body line 1 -->
+<!-- tabula failed to process table line 1 -->
 `,
 		},
 		{
@@ -191,7 +191,7 @@ func TestProcess(t *testing.T) {
 				"| one | two | three |",
 				"| - | - | - |",
 				"| 1 | 2 | 3 |",
-				"<!-- tabula error parsing script, failed to parse program , unexpected ; at <input>:1:10 -->",
+				"<!-- tabula failed to parse program, unexpected ; at <input>:1:10 -->",
 				"",
 				"```tabula",
 				"let A2 = ;",

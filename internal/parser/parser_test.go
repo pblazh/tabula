@@ -185,7 +185,7 @@ let A3 = sum(A1:A2);`,
 			parser := New(lex)
 			program, _, err := parser.Parse()
 			if err != nil {
-				t.Errorf("Unexpected error '%v'", err)
+				t.Errorf("Unexpected error '%s'", err)
 			}
 
 			literal := ""

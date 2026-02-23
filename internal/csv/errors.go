@@ -4,34 +4,22 @@ import (
 	"fmt"
 )
 
-func ErrParseScript(err error) error {
-	return fmt.Errorf("error parsing script, %v", err)
+func ErrReadCSV(err error) error {
+	return fmt.Errorf("failed to read CSV, %v", err)
 }
 
 func ErrSortScriptStatements(err error) error {
-	return fmt.Errorf("error sorting script statements, %v", err)
+	return fmt.Errorf("failed to sort statements, %v", err)
 }
 
 func ErrEvaluateScript(scriptName string, err error) error {
-	return fmt.Errorf("error evaluating script %s, %v", scriptName, err)
-}
-
-func ErrWriteCSVOutput(err error) error {
-	return fmt.Errorf("error writing CSV output, %v", err)
+	return fmt.Errorf("failed to evaluate %s, %v", scriptName, err)
 }
 
 func ErrWriteCSV(err error) error {
-	return fmt.Errorf("failed to write csv, %s", err)
+	return fmt.Errorf("failed to write CSV, %s", err)
 }
 
 func ErrWriteComments(err error) error {
-	return fmt.Errorf("failed to write comments to csv, %s", err)
-}
-
-func ErrWriteDataOutput(err error) error {
-	return fmt.Errorf("error writing data output, %v", err)
-}
-
-func ErrReadCSV(err error) error {
-	return fmt.Errorf("error reading CSV, %v", err)
+	return fmt.Errorf("failed to write comments to, %s", err)
 }
