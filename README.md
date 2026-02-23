@@ -64,6 +64,17 @@ Product,Price,Quantity
 Apple,1.20,10
 Cherry,2.50,8
 Banana,0.80,15
+
+```
+
+**Or user markdown as an input and output**
+
+```markdown
+| Product | Price | Quantity |
+| ------- | ----- | -------- |
+| Apple   | 1.20  | 10       |
+| Cherry  | 2.50  | 8        |
+| Banana  | 0.80  | 15       |
 ```
 
 **Script** (`script.tbl`):
