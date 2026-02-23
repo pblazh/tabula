@@ -10,16 +10,16 @@ var (
 	usageMessage = `Usage: tabula [OPTIONS]
 
 Options:
-  -i <file>    Input CSV path (default: stdin)
-  -s <file>    Script file path (default: stdin)
-  -e <code>    Execute code
-  -o <file>    Output CSV file (default: stdout)
-  -u           Update input CSV file in place
-  -a           Align output
-  -t           Sort statements topologically
-  -m           Parse input as markdown
-  -h           Show this help
-  -v           Show version
+  -i, --input <file>    Input CSV path (default: stdin)
+  -s, --script <file>   Script file path (default: stdin)
+  -e, --execute <code>  Execute code
+  -o, --output <file>   Output CSV file (default: stdout)
+  -u, --update          Update input CSV file in place
+  -a, --align           Align output
+  -t, --topologically   Sort statements topologically
+  -m, --markdown        Parse input as markdown
+  -h, --help            Show this help
+  -v, --version         Show version
 
 Examples:
 	# CSV from file, script from stdin → stdout
@@ -59,16 +59,35 @@ func parseArgs() (*Config, error) {
 	var help bool
 	var showVersion bool
 
-	flag.StringVar(&input, "i", "", "read CSV file")
-	flag.StringVar(&script, "s", "", "path to a script file")
-	flag.StringVar(&execute, "e", "", "execute code directly")
-	flag.StringVar(&output, "o", "", "output CSV file")
-	flag.StringVar(&update, "u", "", "update CSV file in place")
-	flag.BoolVar(&markdown, "m", false, "input file format \"markdown\" or \"csv\" (default)")
-	flag.BoolVar(&align, "a", false, "Align CSV output")
-	flag.BoolVar(&sort, "t", false, "Sort statements topologically")
-	flag.BoolVar(&help, "h", false, "usage")
-	flag.BoolVar(&showVersion, "v", false, "show version")
+	flag.StringVar(&input, "i", "", "")
+	flag.StringVar(&input, "input", "", "input CSV or MD file")
+
+	flag.StringVar(&script, "s", "", "")
+	flag.StringVar(&script, "script", "", "path to a script file")
+
+	flag.StringVar(&execute, "e", "", "")
+	flag.StringVar(&execute, "execute", "", "code to execute")
+
+	flag.StringVar(&output, "o", "", "")
+	flag.StringVar(&output, "output", "", "output file")
+
+	flag.StringVar(&update, "u", "", "")
+	flag.StringVar(&update, "update", "", "update file in place")
+
+	flag.BoolVar(&markdown, "m", false, "")
+	flag.BoolVar(&markdown, "markdown", false, "input/output file format is \"markdown\"")
+
+	flag.BoolVar(&align, "a", false, "")
+	flag.BoolVar(&align, "align", false, "align CSV output")
+
+	flag.BoolVar(&sort, "t", false, "")
+	flag.BoolVar(&sort, "topologically", false, "sort statements topologically")
+
+	flag.BoolVar(&help, "h", false, "")
+	flag.BoolVar(&help, "help", false, "help")
+
+	flag.BoolVar(&showVersion, "v", false, "")
+	flag.BoolVar(&showVersion, "version", false, "version")
 	flag.Parse()
 
 	if help {
