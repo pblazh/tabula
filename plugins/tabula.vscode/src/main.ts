@@ -6,7 +6,7 @@ import {
 } from './commands'
 
 export function activate(context: vscode.ExtensionContext) {
-  // Auto-execute Tabula on CSV file save
+  // Auto-execute Tabula on CSV or Markdown file save
   const autoExecuteDisposable =
     vscode.workspace.onDidSaveTextDocument(commandAutoExecute)
 

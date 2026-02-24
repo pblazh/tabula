@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { runScript } from './runner'
 import { reloadDocument } from './reload'
 
-export const commandExecute = async () => {
+export const commandExecute = async (..._: string[]) => {
   const editor = vscode.window.activeTextEditor
   if (!editor) {
     vscode.window.showErrorMessage('No active editor found')
@@ -10,11 +10,10 @@ export const commandExecute = async () => {
   }
 
   const document = editor.document
-
-  // Check if it's a CSV file
-  if (document.languageId !== 'csv') {
+  // Check if it's a CSV or Markdown file
+  if (!['csv', 'md'].includes(document.languageId.toLowerCase())) {
     vscode.window.showErrorMessage(
-      'Current file is not a CSV file. Tabula can only be executed on CSV files.',
+      'Current file is not a CSV nor Markdown file.',
     )
     return
   }
@@ -77,7 +76,7 @@ export const commandAutoExecute = async (document: vscode.TextDocument) => {
   if (
     editor &&
     editor.document.uri.toString() === document.uri.toString() &&
-    document.languageId === 'csv'
+    ['md', 'csv'].includes(document.languageId.toLowerCase())
   ) {
     // Execute the tabula.execute command
     await vscode.commands.executeCommand('tabula.execute')

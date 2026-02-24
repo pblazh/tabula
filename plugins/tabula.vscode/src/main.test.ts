@@ -217,7 +217,15 @@ suite('Tabula Extension Tests', () => {
   })
 
   test('Should handle CSV file detection', async () => {
-    const testFilePath = path.join(__dirname, '..', 'example', 'input.csv')
+    const testFilePath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'examples',
+      'apartment',
+      'input.csv',
+    )
 
     assert.ok(fs.existsSync(testFilePath), 'Test CSV file not found')
 
@@ -227,6 +235,29 @@ suite('Tabula Extension Tests', () => {
     assert.equal(
       document.languageId,
       'csv',
+      `Document languageId should be "csv" but got "${document.languageId}"`,
+    )
+  })
+
+  test('Should handle Markdown file detection', async () => {
+    const testFilePath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'examples',
+      'markdown',
+      'input.md',
+    )
+
+    assert.ok(fs.existsSync(testFilePath), 'Test Markdown file not found')
+
+    const document = await vscode.workspace.openTextDocument(testFilePath)
+
+    // Verify the file is recognized as a CSV by extension
+    assert.equal(
+      document.languageId,
+      'markdown',
       `Document languageId should be "csv" but got "${document.languageId}"`,
     )
   })
@@ -256,7 +287,15 @@ suite('Tabula Extension Tests', () => {
     )
 
     // Create a test CSV file path
-    const testFilePath = path.join(__dirname, '..', 'example', 'input.csv')
+    const testFilePath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'examples',
+      'apartment',
+      'input.csv',
+    )
 
     // Track if tabula.execute was called
     let executeCommandCalled: boolean
