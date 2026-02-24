@@ -58,7 +58,7 @@ export class TabulaSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Table index')
-      .setDesc('Show columns and rows names on hover')
+      .setDesc('Show columns and rows names')
       .addToggle((toggle) =>
         toggle
           .setValue(this.plugin.settings.tableIndex)

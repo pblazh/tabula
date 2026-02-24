@@ -4,7 +4,7 @@ import * as crypto from 'node:crypto'
 import * as path from 'node:path'
 import * as os from 'node:os'
 import * as fs from 'node:fs/promises'
-import { DataAdapter } from 'obsidian'
+import { DataAdapter, normalizePath } from 'obsidian'
 
 export class Executer {
   constructor(
@@ -13,39 +13,34 @@ export class Executer {
     private path: string,
   ) {}
 
-  async execute(data: string, code: string): Promise<string> {
+  async execute(content: string): Promise<string> {
     // @ts-expect-error undocumented
     const createSource = this.adapter.basePath
       ? createVaultSource
       : createTmpSource
 
-    const { code: codePath, data: dataPath } = await createSource(
-      this.adapter,
-      this.path,
-      code,
-      data,
-    )
+    const dataPath = await createSource(this.adapter, this.path, content)
 
     try {
       const args = [
         this.settings.autoFormat ? '-a' : '',
-        '-s',
-        codePath,
+        '-m',
         '-i',
         dataPath,
       ].filter(Boolean)
 
-      return await run(this.settings.executablePath, args, data)
+      return await run(this.settings.executablePath, args)
     } finally {
-      await Promise.all([
-        this.adapter.remove(codePath),
-        this.adapter.remove(dataPath),
-      ]).catch((err) => {
-        return {
-          result: '',
-          error: String(err),
-        }
-      })
+      fs.unlink(path.join('/', normalizePath(dataPath)))
+        .catch((err) => {
+          return {
+            result: '',
+            error: String(err),
+          }
+        })
+        .catch((err) => {
+          console.log('FAILED TO REMOVE', dataPath, err)
+        })
     }
   }
 }
@@ -89,9 +84,8 @@ function run(
 async function createVaultSource(
   adapter: DataAdapter,
   basePath: string,
-  code: string,
-  data: string,
-): Promise<{ code: string; data: string }> {
+  content: string,
+): Promise<string> {
   // @ts-expect-error undocumented
   if (!adapter.basePath) {
     throw new Error('Can not determine base path of a vault')
@@ -99,45 +93,25 @@ async function createVaultSource(
   // @ts-expect-error undocumented
   const adapterBasePath: string = adapter.basePath
 
-  const codePath = path.join(
+  const tmpPath = path.join(
     basePath,
-    `tabula_${crypto.randomBytes(6).toString('hex')}.tbl`,
+    `tabula_${crypto.randomBytes(6).toString('hex')}.md`,
   )
-  const codePathAbsolute = path.join(adapterBasePath, codePath)
 
-  const dataPath = path.join(
-    basePath,
-    `tabula_${crypto.randomBytes(6).toString('hex')}.csv`,
-  )
-  const dataPathAbsolute = path.join(adapterBasePath, dataPath)
-
-  await Promise.all([
-    adapter.write(codePath, code),
-    adapter.write(dataPath, data),
-  ])
-
-  return { data: dataPathAbsolute, code: codePathAbsolute }
+  await adapter.write(tmpPath, content)
+  return path.join(adapterBasePath, tmpPath)
 }
 
 async function createTmpSource(
   _adapter: DataAdapter,
   _basePath: string,
-  code: string,
-  data: string,
-): Promise<{ code: string; data: string }> {
-  const codePath = path.join(
+  content: string,
+): Promise<string> {
+  const tmpPath = path.join(
     os.tmpdir(),
-    `tabula_${crypto.randomBytes(6).toString('hex')}.tbl`,
+    `tabula_${crypto.randomBytes(6).toString('hex')}.md`,
   )
+  await fs.writeFile(tmpPath, content)
 
-  const dataPath = path.join(
-    os.tmpdir(),
-    `tabula_${crypto.randomBytes(6).toString('hex')}.csv`,
-  )
-  await Promise.all([
-    fs.writeFile(codePath, code),
-    fs.writeFile(dataPath, data),
-  ])
-
-  return { data: dataPath, code: codePath }
+  return tmpPath
 }

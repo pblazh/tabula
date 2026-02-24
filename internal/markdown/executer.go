@@ -2,6 +2,7 @@ package markdown
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"strings"
 
@@ -25,7 +26,7 @@ func execute(config *Config, data *chunk, script *chunk) ([][]string, map[int]st
 		dataReader := strings.NewReader(dataString)
 		records, comments, embedded, err := csv.Read(dataReader)
 		if err != nil {
-			return nil, nil, ErrReadCSV(err)
+			return nil, nil, fmt.Errorf("%s", err)
 		}
 
 		codeReader := io.MultiReader(strings.NewReader(embedded), scriptReader)
@@ -66,7 +67,7 @@ func executeChunk(
 	records = evaluator.EnsureProgramDimensions(identifiers, records)
 
 	if err != nil {
-		return nil, ErrParseScript(err)
+		return nil, fmt.Errorf("%s", err)
 	}
 
 	// Sort program topologically if Sort flag is set

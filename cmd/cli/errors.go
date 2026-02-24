@@ -28,10 +28,6 @@ func ErrReadCSV(err error) error {
 	return fmt.Errorf("error reading CSV, %v", err)
 }
 
-func ErrParseScript(err error) error {
-	return fmt.Errorf("error parsing script, %v", err)
-}
-
 func ErrSortScriptStatements(err error) error {
 	return fmt.Errorf("error sorting script statements, %v", err)
 }

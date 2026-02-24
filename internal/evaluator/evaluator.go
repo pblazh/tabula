@@ -24,12 +24,12 @@ func Evaluate(program ast.Program, input [][]string) ([][]string, error) {
 	return input, nil
 }
 
-func ParseProgram(r io.Reader, name string) (ast.Program, []string, error) {
-	lex := lexer.New(r, name)
+func ParseProgram(r io.Reader, input string) (ast.Program, []string, error) {
+	lex := lexer.New(r, input)
 	p := parser.New(lex)
 	program, identifiers, err := p.Parse()
 	if err != nil {
-		return nil, nil, ErrParsing(name, err)
+		return nil, nil, ErrParsing(input, err)
 	}
 	return program, identifiers, nil
 }

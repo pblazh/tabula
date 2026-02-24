@@ -1,44 +1,75 @@
 import { TabulaSettings } from './types'
 import * as csv from '@fast-csv/parse'
+import * as m from 'mustache'
 
 export async function renderTable(
   settings: TabulaSettings,
   source: string,
   el: HTMLElement,
 ) {
+  const html = await renderTableHTML(settings, source)
+  el.innerHTML = html
+}
+
+const template = `
+<table class="tabula-csv-table{{#guide}} tabula-csv-table--guide{{/guide}}">
+  <tbody>
+{{#guide}}
+    <tr class="tabula-csv-table-guide-row">
+      <td class="tabula-csv-table-guide-cell"></td>
+{{#header}}
+      <td>{{.}}</td>
+{{/header}}
+    <tr>
+{{/guide}}
+  {{#matrix}}
+    <tr>
+{{#guide}}
+      <td class="tabula-csv-table-guide-cell">{{index}}</td>
+{{/guide}}
+{{#cells}}
+      <td>{{value}}</td>
+{{/cells}}
+    <tr>
+  {{/matrix}}
+  </tbody>
+</table>`
+
+m.parse(template)
+
+export async function renderTableHTML(
+  settings: TabulaSettings,
+  source: string,
+): Promise<string> {
   const csv = await parseCSV(source)
+  const guide = settings.tableIndex // ? '' : 'csv-table--hidden'
 
-  const table = el.createEl('table')
-  table.className = 'csv-table'
-  const body = table.createEl('tbody')
-  body.className = 'csv-tbody'
-
-  const row = body.createEl('tr')
-  row.className = 'csv-tr'
-
-  const columns = csv[0].length
-
-  for (let j = 0; j <= columns; j++) {
-    const td = row.createEl('td', {
-      text: j === 0 ? '' : getIndexLetter(j),
-    })
-    td.className = `csv-td--a ${settings.tableIndex ? '' : 'disabled'}`
+  if (csv.length === 0) {
+    return ''
   }
 
-  for (let i = 0; i < csv.length; i++) {
-    const cols = csv[i]
-
-    const row = body.createEl('tr')
-    row.className = 'csv-tr'
-
-    const td = row.createEl('td', { text: String(i + 1) })
-    td.className = `csv-td--n ${settings.tableIndex ? '' : 'disabled'}`
-
-    for (let j = 0; j < cols.length; j++) {
-      const td = row.createEl('td', { text: cols[j] })
-      td.className = 'csv-td'
-    }
+  type Cell = {
+    index: string
+    value: string
   }
+  type Row = { index: string; cells: Cell[] }
+
+  const header: string[] = Array(csv[0].length)
+    .fill(null)
+    .map((_, i) => String(getIndexLetter(i + 1)))
+
+  const matrix: Row[] = csv.map((row, j) => ({
+    index: String(j + 1),
+    cells: row.map(
+      (cell) =>
+        ({
+          index: String(j),
+          value: cell,
+        }) as Cell,
+    ),
+  }))
+
+  return m.render(template, { guide, header, matrix })
 }
 
 export function parseCSV(source: string): Promise<string[][]> {
@@ -54,7 +85,7 @@ export function parseCSV(source: string): Promise<string[][]> {
   })
 }
 
-function getIndexLetter(n: number) {
+export function getIndexLetter(n: number) {
   n = Math.max(0, n)
 
   let result = ''

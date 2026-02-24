@@ -24,6 +24,17 @@ func readTable(reader io.Reader) ([][]string, error) {
 		}
 	}
 
+	columns := len(output[0])
+	for i := range len(output) - 1 {
+		line := output[i+1]
+		if columns != len(line) && i == 0 {
+			return nil, ErrProcessingTableHeader
+		}
+		if columns != len(line) {
+			return nil, ErrProcessingTableLine(i)
+		}
+	}
+
 	output = slices.Delete(output, 1, 2)
 	return output, nil
 }
