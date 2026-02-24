@@ -32,7 +32,7 @@ export class TabulaSettingTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName('Tabula executable path')
       .setDesc(
-        "Path to the tabula executable. Use 'tabula' to use the version in your PATH, or specify an absolute path.",
+        "Use 'tabula' to use the version in your PATH, or specify an absolute path.",
       )
       .addText((text) =>
         text
@@ -46,7 +46,7 @@ export class TabulaSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Auto format output')
-      .setDesc('Auto format output (adds -a flag to tabula command).')
+      .setDesc('align CSV output to make it resemble a table')
       .addToggle((toggle) =>
         toggle
           .setValue(this.plugin.settings.autoFormat)

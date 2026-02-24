@@ -169,6 +169,7 @@ major:
   echo $CUR_VERSION "->" $NEW_VERSION
 
   just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/package.json"
+  just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/manifest.json"
   just _update_json_version ${NEW_VERSION} "plugins/tabula.vscode/package.json"
   just _update_files_version ${NEW_VERSION}
   just _update_version ${NEW_VERSION}
@@ -186,6 +187,7 @@ minor:
   echo $CUR_VERSION "->" $NEW_VERSION
 
   just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/package.json"
+  just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/manifest.json"
   just _update_json_version ${NEW_VERSION} "plugins/tabula.vscode/package.json"
   just _update_files_version ${NEW_VERSION}
   just _update_version ${NEW_VERSION}
@@ -205,6 +207,7 @@ patch:
   echo $CUR_VERSION "->" $NEW_VERSION
 
   just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/package.json"
+  just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/manifest.json"
   just _update_json_version ${NEW_VERSION} "plugins/tabula.vscode/package.json"
   just _update_files_version ${NEW_VERSION}
   just _update_version ${NEW_VERSION}

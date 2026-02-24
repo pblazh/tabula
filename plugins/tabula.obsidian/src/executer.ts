@@ -1,10 +1,11 @@
-import { TabulaSettings } from './types'
 import { spawn } from 'node:child_process'
 import * as crypto from 'node:crypto'
 import * as path from 'node:path'
 import * as os from 'node:os'
 import * as fs from 'node:fs/promises'
+
 import { DataAdapter, normalizePath } from 'obsidian'
+import { TabulaSettings } from './types'
 
 export class Executer {
   constructor(
