@@ -35,13 +35,26 @@ function! s:ExecuteTabula() abort
   " Get the current file path
   let l:filepath = expand('%:p')
 
-  " Build tabula command with optional -a flag
+  " optional -a flag
   if g:tabula_auto_format
-    let l:flg = ' -a -u '
+    let l:a_flg = ' -a '
   else
-    let l:flg = ' -u '
+    let l:a_flg = ''
   endif
-  let l:output = system(g:tabula_command . l:flg . shellescape(l:filepath))
+
+
+  " optional -m flag if file is a markdown
+  if &filetype ==# 'markdown'
+    let l:m_flg = ' -m '
+  else
+    let l:m_flg = ''
+  endif
+
+  echohl ErrorMsg
+  echohm g:tabula_command . l:m_flg . l:a_flg . " -u " . shellescape(l:filepath)
+  echohl None
+
+  let l:output = system(g:tabula_command . l:m_flg . l:a_flg . " -u " . shellescape(l:filepath))
 
   " Check for errors
   if v:shell_error != 0
@@ -70,16 +83,16 @@ EOF
   endif
 endfunction
 
-" Setup autocommands for CSV files
-augroup tabula_csv
+" Setup autocommands for CSV and Markdown files
+augroup tabula
   autocmd!
 
-  " When a CSV file is opened
-  autocmd FileType csv call s:SetupTabulaCsv()
+  " When a CSV or Markdown file is opened
+  autocmd FileType csv,markdown call s:SetupTabula()
 augroup END
 
 " Setup function for CSV files
-function! s:SetupTabulaCsv() abort
+function! s:SetupTabula() abort
   " Don't setup if already done for this buffer
   if exists('b:tabula_is_loaded')
     return
@@ -104,7 +117,7 @@ function! s:SetupTabulaCsv() abort
     " Auto-execute on write
     autocmd BufWritePost <buffer> call s:ExecuteTabula()
     " Auto-execute on leaving insert mode (auto-save enabled)
-    autocmd InsertLeave <buffer> call s:ExecuteTabula()
+    " autocmd InsertLeave <buffer> call s:ExecuteTabula()
   augroup END
 endfunction
 
