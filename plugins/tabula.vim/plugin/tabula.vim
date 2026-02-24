@@ -1,12 +1,16 @@
 " Tabula plugin for Vim/Neovim
-" Maintainer: Tabula Team
-" Latest Revision: 2026-02-13
+" Maintainer: Pawel Blazejewski
+" Latest Revision: 2026-02-24
 
 " Prevent loading the plugin twice
 if exists('g:loaded_tabula')
   finish
 endif
 let g:loaded_tabula = 1
+
+" Save compatibility options
+let s:save_cpo = &cpo
+set cpo&vim
 
 " Configuration: enable csvview integration (default: enabled)
 if !exists('g:tabula_enable_csvview')
@@ -23,9 +27,32 @@ if !exists('g:tabula_command')
   let g:tabula_command = 'tabula'
 endif
 
-" Save compatibility options
-let s:save_cpo = &cpo
-set cpo&vim
+" Setup autocommands for CSV and Markdown files
+augroup tabula
+  autocmd!
+  autocmd FileType csv,markdown call s:SetupTabula()
+
+  " ??? autocmd FileType markdown call s:DisableCsvView()
+  if g:tabula_enable_csvview
+    autocmd FileType csv call s:EnableCsvView()
+  endif
+augroup END
+
+" Function to check if csvview is available and enable it
+function! s:EnableCsvView() abort
+  if exists(':CsvViewEnable') && !get(b:, 'tabula_csvview_enabled', 0)
+    silent! CsvViewEnable
+    let b:tabula_csvview_enabled = 1
+  endif
+endfunction
+
+" Function to check if csvview is available and disable it
+function! s:DisableCsvView() abort
+  if exists(':CsvViewDisable') && get(b:, 'tabula_csvview_enabled', 0)
+    silent! CsvViewDisable
+    let b:tabula_csvview_enabled = 0
+  endif
+endfunction
 
 " Main function to execute Tabula on the current file
 function! s:ExecuteTabula() abort
@@ -37,59 +64,44 @@ function! s:ExecuteTabula() abort
 
   " optional -a flag
   if g:tabula_auto_format
-    let l:a_flg = ' -a '
+    let l:a_flg = ' -a'
   else
     let l:a_flg = ''
   endif
 
-
   " optional -m flag if file is a markdown
   if &filetype ==# 'markdown'
-    let l:m_flg = ' -m '
+    let l:m_flg = ' -m'
   else
     let l:m_flg = ''
   endif
 
-  echohl ErrorMsg
-  echohm g:tabula_command . l:m_flg . l:a_flg . " -u " . shellescape(l:filepath)
-  echohl None
+  " Build the command string
+  let l:cmd = g:tabula_command . l:m_flg . l:a_flg . " -u " . shellescape(l:filepath)
 
-  let l:output = system(g:tabula_command . l:m_flg . l:a_flg . " -u " . shellescape(l:filepath))
+  " Helper function to run after job finishes
+  function! s:TabulaJobExit(job_id, code, event) abort
+    execute 'checktime'
+  endfunction
 
-  " Check for errors
-  if v:shell_error != 0
-    echohl ErrorMsg
-    echom 'Tabula error: ' . l:output
-    echohl None
-  endif
+  " Run asynchronously in Neovim
+  if has('nvim')
+    call jobstart(l:cmd, {'on_exit': function('s:TabulaJobExit')})
+  else
+    " Fallback for Vim using system()
+    let l:output = system(l:cmd)
 
-  " Reload the file to show changes
-  silent! edit
-endfunction
+    " Check for errors
+    if v:shell_error != 0
+      echohl ErrorMsg
+      echom 'Tabula error: ' . l:output
+      echohl None
+    endif
 
-" Function to check if csvview is available and enable it
-function! s:EnableCsvView() abort
-  " Try to enable csvview if available (Neovim with csvview.nvim)
-  if exists(':CsvViewEnable')
-    CsvViewEnable
-  elseif has('nvim')
-    " Try to call csvview via Lua if available
-    lua << EOF
-      local ok, csvview = pcall(require, "csvview")
-      if ok and not csvview.is_enabled(0) then
-        csvview.enable(0)
-      end
-EOF
+    " Reload the file and refresh CSVView
+    call s:TabulaJobExit(0, 0, 0)
   endif
 endfunction
-
-" Setup autocommands for CSV and Markdown files
-augroup tabula
-  autocmd!
-
-  " When a CSV or Markdown file is opened
-  autocmd FileType csv,markdown call s:SetupTabula()
-augroup END
 
 " Setup function for CSV files
 function! s:SetupTabula() abort
@@ -106,18 +118,14 @@ function! s:SetupTabula() abort
   " Enable auto-read for external changes
   setlocal autoread
 
-  " Enable csvview if configured
-  if g:tabula_enable_csvview
-    call s:EnableCsvView()
-  endif
-
   " Setup autocommands for this buffer
   augroup tabula_save
-    autocmd! * <buffer>
+    autocmd! tabula_save BufWritePost <buffer>
+
     " Auto-execute on write
     autocmd BufWritePost <buffer> call s:ExecuteTabula()
     " Auto-execute on leaving insert mode (auto-save enabled)
-    " autocmd InsertLeave <buffer> call s:ExecuteTabula()
+    " ??? autocmd InsertLeave <buffer> call s:ExecuteTabula()
   augroup END
 endfunction
 
@@ -137,7 +145,7 @@ function! s:ToggleTabula() abort
     augroup tabula_save
       autocmd! * <buffer>
       autocmd BufWritePost <buffer> call s:ExecuteTabula()
-      autocmd InsertLeave <buffer> call s:ExecuteTabula()
+      " autocmd InsertLeave <buffer> call s:ExecuteTabula()
     augroup END
     echom 'Tabula auto-execution enabled'
   endif

@@ -49,7 +49,7 @@ Using Lazy.nvim (Neovim): >
       "pblazh/tabula",
       branch = "vim-plugin",
       dependencies = { "hat0uma/csvview.nvim" },
-      ft = { "csv", "tabula" },
+      ft = { "csv", "tabula", "markdown" },
     }
 <
 
@@ -83,7 +83,7 @@ Automatic syntax highlighting for .tbl files including:
 
 4.2 Auto-execution                                      *tabula-auto-execution*
 
-For CSV files with embedded Tabula scripts:
+For CSV and Markdown files with embedded Tabula scripts:
   - Automatically runs Tabula on BufWritePost
   - Automatically runs Tabula on InsertLeave
   - Displays errors in the command line
@@ -167,13 +167,12 @@ Example script: >
 
 8.2 Working with CSV Files                                 *tabula-csv-files*
 
-Add a Tabula script directive at the top of your CSV file: >
+Add a Tabula script directive to your CSV file: >
     #tabula #include "process.tbl"
     Name,Age,Score
     John,25,85
     Jane,30,92
 <
-
 When you save the file, Tabula runs automatically and updates the CSV.
 
 8.3 Using Folds                                               *tabula-folds*
@@ -190,6 +189,36 @@ Fold commands:
   za  - Toggle fold
   zR  - Open all folds
   zM  - Close all folds
+
+8.4 Working with Markdown Files                                 *tabula-markdown-files*
+
+Add a CSV script blockto your Markdown file: >
+```csv
+Name,Age,Score
+John,25,85
+Jane,30,92
+#tabula #include "process.tbl"
+```
+
+Instead of #tabula comments in csv, you can add a Tabula script block below: >
+```tabula
+#include "process.tbl"
+let D2 = A2 + B2 + C2;
+```
+
+The same works with Markdown tables
+
+| Name | Age | Score |
+| ---- | --- | ----- |
+| John | 25  | 85    |
+| Jane | 30  | 92    |
+
+<!-- Calculate grand total ---{{{
+```tabula
+#include "script.tbl"
+```
+---}}} -->
+<
 
 ==============================================================================
 9. TROUBLESHOOTING                                  *tabula-troubleshooting*
