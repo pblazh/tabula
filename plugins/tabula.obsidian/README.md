@@ -76,7 +76,8 @@ For complete documentation visit [Tabula Website](https://pblazh.github.io/tabul
 Access commands via Command Palette (Ctrl+P / Cmd+P):
 
 - **Tabula: execute** - Manually run Tabula on the active markdown file
-- **Tablua: toggle auto execution: Toggle auto-execution on Save** - Enable/disable automatic execution
+- **Tablua: toggle** - Toggles auto-execution on Save\*\* - Enable/disable automatic execution
+- **Tablua: index** - Toggles visibility of column/row names in CSV blocks
 
 ### Settings
 
@@ -100,15 +101,18 @@ Path to the tabula executable. Use `tabula` to use the version in your PATH, or 
 
 #### Auto format output
 
-Enable/disable the `-a` flag passed to tabula. When enabled, tabula will automatically format the output CSV.
+Enable/disable the `-a` flag passed to tabula. When enabled, Tabula will automatically format the output CSV
+to make it resemble a table
 
 - Default: `true`
 
 ## How It Works
 
-1. **File Save Detection** - Plugin listens for CSV file saves
-2. **Execute Tabula** - Runs `tabula [-a] -u <file>` on the saved file (with optional `-a` flag based on settings)
-3. **Reload File** - Updates the editor with transformed content
+1. **File Save Detection** - Plugin listens for Markdown file saves
+1. **Extract Code blocks** - Plugin extract every table, csv and Tabula code block in a temporal file inside the vault
+1. **Execute Tabula** - Runs `tabula [-a] -u <file>` on the temporal files (with optional `-a` flag based on settings)
+1. **Reload File** - Updates the editor with transformed content
+1. **Delete temporal files**
 
 ## Troubleshooting
 
