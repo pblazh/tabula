@@ -10,12 +10,6 @@ export const reloadDocument = async (uri: vscode.Uri): Promise<void> => {
     return
   }
 
-  // Close the document
-  await vscode.commands.executeCommand('workbench.action.closeActiveEditor')
-
-  // Small delay to ensure file system changes are visible
-  await new Promise((resolve) => setTimeout(resolve, 100))
-
   // Reopen the document
   const document = await vscode.workspace.openTextDocument(uri)
   await vscode.window.showTextDocument(document, {
