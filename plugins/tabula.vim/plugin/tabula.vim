@@ -12,11 +12,6 @@ let g:loaded_tabula = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-" Configuration: enable csvview integration (default: enabled)
-if !exists('g:tabula_enable_csvview')
-  let g:tabula_enable_csvview = 1
-endif
-
 " Configuration: enable auto-format with -a flag (default: enabled)
 if !exists('g:tabula_auto_format')
   let g:tabula_auto_format = 1
@@ -27,79 +22,123 @@ if !exists('g:tabula_command')
   let g:tabula_command = 'tabula'
 endif
 
+" Configuration: enable folding (default: enabled)
+if !exists('g:tabula_enable_folding')
+  let g:tabula_enable_folding = 1
+endif
+
 " Setup autocommands for CSV and Markdown files
 augroup tabula
   autocmd!
   autocmd FileType csv,markdown call s:SetupTabula()
-
-  " ??? autocmd FileType markdown call s:DisableCsvView()
-  if g:tabula_enable_csvview
-    autocmd FileType csv call s:EnableCsvView()
-  endif
 augroup END
 
-" Function to check if csvview is available and enable it
-function! s:EnableCsvView() abort
-  if exists(':CsvViewEnable') && !get(b:, 'tabula_csvview_enabled', 0)
-    silent! CsvViewEnable
-    let b:tabula_csvview_enabled = 1
+" Async handlers (Neovim)
+function! s:TabulaOnStdout(job_id, data, event) abort
+  if !exists('b:tabula_stdout')
+    let b:tabula_stdout = []
   endif
+  call extend(b:tabula_stdout, a:data)
 endfunction
 
-" Function to check if csvview is available and disable it
-function! s:DisableCsvView() abort
-  if exists(':CsvViewDisable') && get(b:, 'tabula_csvview_enabled', 0)
-    silent! CsvViewDisable
-    let b:tabula_csvview_enabled = 0
+function! s:TabulaOnStderr(job_id, data, event) abort
+  if !exists('b:tabula_stderr')
+    let b:tabula_stderr = []
   endif
+  call extend(b:tabula_stderr, a:data)
+endfunction
+
+" Helper function to run after job finishes
+function! s:TabulaJobExit(job_id, code, event) abort
+  " Handle errors
+  if a:code != 0
+    echohl ErrorMsg
+
+    if exists('b:tabula_stderr') && !empty(b:tabula_stderr)
+      for l:line in b:tabula_stderr
+        if !empty(l:line)
+          echom 'Tabula error: ' . l:line
+        endif
+      endfor
+    elseif exists('b:tabula_stdout') && !empty(b:tabula_stdout)
+      for l:line in b:tabula_stdout
+        if !empty(l:line)
+          echom 'Tabula error: ' . l:line
+        endif
+      endfor
+    else
+      echom 'Tabula error: exit code ' . a:code
+    endif
+
+    echohl None
+  else
+    " Reload file silently
+    silent! checktime
+  endif
+
+  " Cleanup buffers
+  unlet! b:tabula_stdout
+  unlet! b:tabula_stderr
+
+  " Release debounce lock
+  let b:tabula_job_running = 0
 endfunction
 
 " Main function to execute Tabula on the current file
 function! s:ExecuteTabula() abort
+  " Debounce: skip if job already running
+  if exists('b:tabula_job_running') && b:tabula_job_running
+    return
+  endif
+  let b:tabula_job_running = 1
+
   " Save the file first
   silent! write!
 
   " Get the current file path
   let l:filepath = expand('%:p')
 
-  " optional -a flag
-  if g:tabula_auto_format
-    let l:a_flg = ' -a'
-  else
-    let l:a_flg = ''
-  endif
+  " Build command as list (single source of truth)
+  let l:cmd_list = [g:tabula_command]
 
-  " optional -m flag if file is a markdown
   if &filetype ==# 'markdown'
-    let l:m_flg = ' -m'
-  else
-    let l:m_flg = ''
+    call add(l:cmd_list, '-m')
   endif
 
-  " Build the command string
-  let l:cmd = g:tabula_command . l:m_flg . l:a_flg . " -u " . shellescape(l:filepath)
+  if g:tabula_auto_format
+    call add(l:cmd_list, '-a')
+  endif
 
-  " Helper function to run after job finishes
-  function! s:TabulaJobExit(job_id, code, event) abort
-    execute 'checktime'
-  endfunction
+  call extend(l:cmd_list, ['-u', l:filepath])
 
   " Run asynchronously in Neovim
   if has('nvim')
-    call jobstart(l:cmd, {'on_exit': function('s:TabulaJobExit')})
+    call jobstart(l:cmd_list, {
+          \ 'on_stdout': function('s:TabulaOnStdout'),
+          \ 'on_stderr': function('s:TabulaOnStderr'),
+          \ 'on_exit': function('s:TabulaJobExit')
+          \ })
   else
-    " Fallback for Vim using system()
-    let l:output = system(l:cmd)
+    " string version for Vim
+    let l:cmd_string = join(map(copy(l:cmd_list), 'shellescape(v:val)'), ' ')
+    let l:output = system(l:cmd_string)
 
     " Check for errors
     if v:shell_error != 0
       echohl ErrorMsg
-      echom 'Tabula error: ' . l:output
+      for l:line in split(l:output, "\n")
+        if !empty(l:line)
+          echom 'Tabula error: ' . l:line
+        endif
+      endfor
       echohl None
+    else
+      " Reload the file and refresh CSVView
+      silent! checktime
     endif
 
-    " Reload the file and refresh CSVView
-    call s:TabulaJobExit(0, 0, 0)
+    " Release debounce lock (sync case)
+    let b:tabula_job_running = 0
   endif
 endfunction
 
@@ -111,22 +150,27 @@ function! s:SetupTabula() abort
   endif
   let b:tabula_is_loaded = 1
 
-  " Enable folding for #tabula markers
-  setlocal foldmethod=marker
-  setlocal foldlevel=0
+  " Enable folding for #tabula markers (optional)
+  if g:tabula_enable_folding
+    setlocal foldmethod=marker
+    setlocal foldlevel=0
+  endif
 
   " Enable auto-read for external changes
   setlocal autoread
 
   " Setup autocommands for this buffer
+  " Auto-execute on write
   augroup tabula_save
-    autocmd! tabula_save BufWritePost <buffer>
-
-    " Auto-execute on write
+    autocmd! * <buffer>
     autocmd BufWritePost <buffer> call s:ExecuteTabula()
-    " Auto-execute on leaving insert mode (auto-save enabled)
-    " ??? autocmd InsertLeave <buffer> call s:ExecuteTabula()
   augroup END
+
+  " Mark auto-execution as enabled by default
+  let b:tabula_auto_enabled = 1
+
+  " Initialize debounce state
+  let b:tabula_job_running = 0
 endfunction
 
 " Command to manually execute Tabula
@@ -135,19 +179,31 @@ command! Tabula call s:ExecuteTabula()
 " Command to toggle auto-execution
 command! TabulaToggle call s:ToggleTabula()
 
+" Command to show status
+command! TabulaStatus call s:TabulaStatus()
+
 function! s:ToggleTabula() abort
-  if exists('#tabula_save#BufWritePost')
+  if exists('b:tabula_auto_enabled') && b:tabula_auto_enabled
     augroup tabula_save
-      autocmd!
+      autocmd! * <buffer>
     augroup END
+    let b:tabula_auto_enabled = 0
     echom 'Tabula auto-execution disabled'
   else
     augroup tabula_save
       autocmd! * <buffer>
       autocmd BufWritePost <buffer> call s:ExecuteTabula()
-      " autocmd InsertLeave <buffer> call s:ExecuteTabula()
     augroup END
+    let b:tabula_auto_enabled = 1
     echom 'Tabula auto-execution enabled'
+  endif
+endfunction
+
+function! s:TabulaStatus() abort
+  if exists('b:tabula_auto_enabled') && b:tabula_auto_enabled
+    echom 'Tabula auto-execution is ENABLED'
+  else
+    echom 'Tabula auto-execution is DISABLED'
   endif
 endfunction
 
