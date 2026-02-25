@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -81,13 +82,16 @@ func TestExecuteInlineCode(t *testing.T) {
 	inputPath := filepath.Join("..", "..", "examples", "apartment", "input.csv")
 	outputPath := filepath.Join("..", "..", "examples", "apartment", "output.csv")
 
-	// Read expected output
+	// Read test input
 	input, err := os.ReadFile(inputPath)
 	if err != nil {
 		t.Fatalf("Failed to read expected output, %s", err)
 	}
-	csvIn := strings.ReplaceAll(string(input), `#tabula #include "script.tbl"`, "")
-	// Read expected output
+
+	comment := regexp.MustCompile("#.*")
+	csvIn := comment.ReplaceAllString(string(input), "")
+
+	// Read script input
 	script, err := os.ReadFile(scriptPath)
 	if err != nil {
 		t.Fatalf("Failed to read script, %s", err)
@@ -98,7 +102,7 @@ func TestExecuteInlineCode(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to read expected output, %s", err)
 	}
-	csvOut := strings.ReplaceAll(string(output), `#tabula #include "script.tbl"`, "")
+	csvOut := comment.ReplaceAllString(string(output), "")
 
 	cmd := exec.Command("go", "run", ".", "-e", string(script), "-a")
 	var stdout, stderr bytes.Buffer
