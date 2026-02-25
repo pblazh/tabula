@@ -50,12 +50,6 @@ func doCsvProcessing(
 	config *Config,
 	reader io.Reader,
 ) error {
-	writer, cleanup, err := setupOutputWriter(config)
-	if err != nil {
-		return err
-	}
-	defer cleanup()
-
 	csvConfig := csv.Config{
 		Align:   config.Align,
 		Execute: config.Execute,
@@ -65,7 +59,21 @@ func doCsvProcessing(
 		Sort:    config.Sort,
 	}
 
-	return csv.Process(&csvConfig, reader, writer) //nolint:wrapcheck
+	result, comments, err := csv.Process(&csvConfig, reader)
+	if err != nil {
+		return err //nolint:wrapcheck
+	}
+
+	writer, cleanup, err := setupOutputWriter(config)
+	if err != nil {
+		return err
+	}
+	defer cleanup()
+
+	if config.Align {
+		return csv.WriteAligned(writer, result, comments) //nolint:wrapcheck
+	}
+	return csv.Write(writer, result, comments) //nolint:wrapcheck
 }
 
 func doMarkdownProcessing(
