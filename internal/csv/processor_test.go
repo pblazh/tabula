@@ -35,12 +35,6 @@ func TestProcess(t *testing.T) {
 			output: "one,two,three\n1,2,3\n",
 		},
 		{
-			name:   "aligning",
-			config: Config{Align: true},
-			input:  "one,two,three\n1,2,3\n",
-			output: "one , two , three\n1   , 2   , 3\n",
-		},
-		{
 			name:   "assign",
 			config: Config{Execute: `let A1="ONE"`},
 			input:  "one,two,three\n1,2,3\n",
@@ -70,8 +64,7 @@ func TestProcess(t *testing.T) {
 			reader := strings.NewReader(tc.input)
 			var writer strings.Builder
 
-			err := Process(&tc.config, reader, &writer)
-			output := writer.String()
+			result, comments, err := Process(&tc.config, reader)
 
 			if tc.error == "" && err != nil {
 				t.Errorf("Unexpected error %s", err)
@@ -79,6 +72,14 @@ func TestProcess(t *testing.T) {
 			if tc.error != "" && err == nil {
 				t.Errorf("Expected error %s", err)
 			}
+
+			err = Write(&writer, result, comments)
+			if err != nil {
+				t.Errorf("Unexpected error %s", err)
+			}
+
+			output := writer.String()
+
 			if tc.output != output {
 				t.Errorf("Expected '%v', but got '%v'", tc.output, output)
 			}

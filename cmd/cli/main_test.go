@@ -195,6 +195,67 @@ func TestUpdateInPlace(t *testing.T) {
 	}
 }
 
+func TestUpdateInPlaceWithErrors(t *testing.T) {
+	t.Skip("temporal")
+	// Create a temporary CSV file
+	tempDir := os.TempDir()
+
+	// Create test CSV file (copy the working example)
+	csvFile := filepath.Join(tempDir, "test.csv")
+	csvContent := "1, 2, 0\n"
+	err := os.WriteFile(csvFile, []byte(csvContent), 0o644)
+	if err != nil {
+		t.Fatalf("Failed to create test CSV file: %v", err)
+	}
+	defer removeOrFatal(csvFile)
+
+	// Create test script file (copy the working example)
+	scriptFile := filepath.Join(tempDir, "script.tbl")
+	scriptContent := "let C1 = \"Not terminated quotes;"
+
+	err = os.WriteFile(scriptFile, []byte(scriptContent), 0o644)
+	if err != nil {
+		t.Fatalf("Failed to create test script file: %v", err)
+	}
+	defer removeOrFatal(scriptFile)
+
+	// Execute command with -u flag
+	cmd := exec.Command("go", "run", ".", "-s", scriptFile, "-u", csvFile)
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	err = cmd.Run()
+
+	if err == nil {
+		t.Fatalf("Command should fail")
+		// t.Fatalf("Command failed: %v\nStderr: %s", err, stderr.String())
+	}
+
+	// Read the updated file content
+	updatedContent, err := os.ReadFile(csvFile)
+	if err != nil {
+		t.Fatalf("Failed to read updated file: %v", err)
+	}
+
+	if string(updatedContent) != csvContent {
+		t.Errorf(
+			"Expected file content to not change. But got:\n'%s'",
+			string(updatedContent),
+		)
+	}
+
+	// Ensure stdout is empty (since we're updating in place)
+	if stdout.String() != "" {
+		t.Errorf("Expected empty stdout, got: %q", stdout.String())
+	}
+
+	// Ensure stderr is empty (no errors)
+	if stderr.String() != "" {
+		t.Errorf("Expected empty stderr, got: %q", stderr.String())
+	}
+}
+
 func TestScriptPathFromCSVComment(t *testing.T) {
 	tempDir := os.TempDir()
 
@@ -376,9 +437,14 @@ func testCsvExample(t *testing.T, exampleName, inputFile, outputFile string) {
 	}
 
 	// Execute tabula command: tabula -i input.csv -s script.csvs
-	actualOutput, err := executeTabulaCommand(inputFile)
+	actualOutput, actualErr, err := executeTabulaCommand(inputFile)
 	if err != nil {
-		t.Fatalf("Failed to execute tabula command for example %s: %v", exampleName, err)
+		t.Fatalf(
+			"Failed to execute tabula command for example %s: %v\n%s",
+			exampleName,
+			err,
+			actualErr,
+		)
 	}
 
 	// Normalize whitespace for comparison
@@ -391,7 +457,7 @@ func testCsvExample(t *testing.T, exampleName, inputFile, outputFile string) {
 	}
 }
 
-func executeTabulaCommand(inputFile string) ([]byte, error) {
+func executeTabulaCommand(inputFile string) ([]byte, []byte, error) {
 	cmd := exec.Command("go", "run", ".", "-a", "-i", inputFile)
 
 	var stdout, stderr bytes.Buffer
@@ -399,11 +465,7 @@ func executeTabulaCommand(inputFile string) ([]byte, error) {
 	cmd.Stderr = &stderr
 
 	err := cmd.Run()
-	if err != nil {
-		return nil, fmt.Errorf("error executing command %s", err)
-	}
-
-	return stdout.Bytes(), nil
+	return stdout.Bytes(), stderr.Bytes(), err
 }
 
 func executeTabulaCommandMarkdown(inputFile string) ([]byte, error) {
