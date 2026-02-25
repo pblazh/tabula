@@ -27,7 +27,6 @@ Features:
   - Syntax highlighting for .tbl script files
   - Auto-execution of Tabula scripts on CSV files
   - Fold support for #tabula markers
-  - Integration with csvview.nvim (optional)
 
 ==============================================================================
 2. REQUIREMENTS                                          *tabula-requirements*
@@ -37,7 +36,7 @@ Required:
   - Tabula CLI tool installed and in $PATH
     https://github.com/pblazh/tabula
 
-Optional:
+Recomended:
   - csvview.nvim for enhanced CSV viewing (Neovim only)
     https://github.com/hat0uma/csvview.nvim
 
@@ -124,13 +123,6 @@ No default mappings are provided. You can create your own: >
 The plugin works out of the box with no configuration needed, but you can
 customize its behavior with the following options:
 
-                                                   *g:tabula_enable_csvview*
-g:tabula_enable_csvview
-                Enable or disable csvview.nvim integration (default: 1).
-                Set to 0 to disable csvview even if it's installed. >
-                    let g:tabula_enable_csvview = 0
-<
-                                                   *g:tabula_auto_format*
 g:tabula_auto_format
                 Enable or disable auto-formatting with the -a flag (default: 1).
                 When enabled, Tabula is called with `tabula -a -u <file>`.
@@ -144,10 +136,6 @@ g:tabula_command
                 Set this if tabula is not in your PATH or you want to use
                 a specific version: >
                     let g:tabula_command = '/usr/local/bin/tabula'
-<
-Future configuration options (not yet implemented):
-  *g:tabula_auto_execute*    Enable/disable auto-execution (default: 1)
-  *g:tabula_options*         Additional tabula CLI options
 
 ==============================================================================
 8. USAGE                                                        *tabula-usage*
