@@ -129,11 +129,19 @@ vim-pack:
   mkdir -p dist
   tar -czf dist/tabula.vim.${VERSION}.tar.gz doc ftdetect plugin syntax README.md
 
+webstorm-pack:
+  #!/bin/sh
+  tmp=`mktemp`
+  functions=`sed -En 's/^(\t| )*"(.*)": func\(context.*/\`\2\`,/p' ./internal/core/dispatch.go | tr "\n" " "`
+  echo $functions
+  sed -E "s/(^.*Functions\*\*: ).*/\1${functions}/" ./plugins/tabula.webstorm/README.md > $tmp
+  mv $tmp ./plugins/tabula.webstorm/README.md
+
 github-lint:
   wrkflw validate
 
 # --------------------------------------------------
-# Version bump targets (no git here)
+# Version bump targets
 # --------------------------------------------------
 _update_version version:
   #!/usr/bin/env bash
@@ -151,10 +159,11 @@ _update_files_version version:
   sed -e "s/^const VERSION = .*/const VERSION = \"{{version}}\"/" "cmd/cli/version.go" > tmp && mv tmp "cmd/cli/version.go"
 
 _commit_version version:
+  just webstorm-pack
 	git checkout -b release/v{{version}}
-	git add "VERSION.txt" "cmd/cli/version.go" "plugins/tabula.obsidian/package.json" "plugins/tabula.vscode/package.json"
-
-	git commit -m "chore(release): bump version to {{version}} [skip ci]"
+	git add "VERSION.txt" "cmd/cli/version.go" "plugins/tabula.vscode/package.json" "plugins/tabula.obsidian/package.json" "plugins/tabula.obsidian/manifest.json"
+  git add plugins/tabula.webstorm
+	git commit -m "chore(release): bump version to {{version}}"
 	echo "Committed version {{version}} on branch release/v{{version}}"
 
 major:
@@ -212,5 +221,3 @@ patch:
   just _update_files_version ${NEW_VERSION}
   just _update_version ${NEW_VERSION}
   just _commit_version ${NEW_VERSION}
-
-

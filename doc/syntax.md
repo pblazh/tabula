@@ -1,10 +1,10 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://stand-with-ukraine.pp.ua)
 
-# Tabula Syntax Guide
+# **Tabula** Syntax Guide
 
 ## Basic Syntax
 
-Tabula uses a simple, spreadsheet-inspired syntax. Each line in your script is a statement that performs an operation.
+**Tabula** uses a simple, spreadsheet-inspired syntax. Each line in your script is a statement that performs an operation.
 
 ### Statements
 
@@ -22,12 +22,12 @@ Single and multyline comments are supported:
 ```
 // comment
 /* here is a comment
-   that spans multiple lines */
+that spans multiple lines */
 ```
 
 ### Include Directives
 
-Use `#include` to include other script files in your Tabula scripts. This allows you to organize your code across multiple files and reuse common definitions.
+Use `#include` to include other script files in your **Tabula** scripts. This allows you to organize your code across multiple files and reuse common definitions.
 
 ```
 #include "utilities.tbl";
@@ -71,7 +71,7 @@ Include paths are resolved relative to the file containing the `#include` direct
 let A1 = 42;
 ```
 
-**Circular Dependency Detection**: Tabula detects and reports circular includes:
+**Circular Dependency Detection**: **Tabula** detects and reports circular includes:
 
 ```
 // a.tbl
@@ -90,6 +90,7 @@ You can use `#include` in CSV files by prefixing with `#tabula`:
 A,B,C
 1,2,3
 ```
+<!-- tabula failed to parse program /Users/pavlo.blazhyievskyi/work/private/tabula/doc/syntax.md, failed to parse included file /Users/pavlo.blazhyievskyi/work/private/tabula/doc/script.tbl include file not found: /Users/pavlo.blazhyievskyi/work/private/tabula/doc/script.tbl at /Users/pavlo.blazhyievskyi/work/private/tabula/doc/syntax.md:1:2 -->
 
 This allows you to reference external script files from within CSV data files.
 
@@ -241,7 +242,7 @@ Variables follow the same naming rules as programming languages:
 
 ## Expressions and Precedence
 
-Tabula follows standard mathematical precedence:
+**Tabula** follows standard mathematical precedence:
 
 1. Parentheses `()`
 2. Multiplication `*` and Division `/`
@@ -273,14 +274,14 @@ let A1 = CONCATENATE(B1, " ", C1);  # Join strings
 
 ## Script Processing Order
 
-Tabula automatically analyzes dependencies and executes statements in the correct order:
+**Tabula** automatically analyzes dependencies and executes statements in the correct order:
 
 ```
 let B1 = A1 * 2;    # This depends on A1
 let A1 = 10;        # This will be executed first
 ```
 
-This means you can write statements in any order, and Tabula will figure out the correct execution sequence.
+This means you can write statements in any order, and **Tabula** will figure out the correct execution sequence.
 
 ## Links
 

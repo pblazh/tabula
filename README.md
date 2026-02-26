@@ -4,11 +4,11 @@
 
 **Transform CSV files using familiar spreadsheet formulas from the command line.**
 
-## 🎯 What is Tabula?
+## 🎯 What is **Tabula**?
 
-Tabula is a command-line tool that brings the power of spreadsheet calculations to CSV file processing.
+**Tabula** is a command-line tool that brings the power of spreadsheet calculations to CSV file processing.
 
-## 💡 Why Tabula?
+## 💡 Why **Tabula**?
 
 ### **Own Your Data**
 
@@ -60,11 +60,10 @@ Or build from source
 **Input CSV** (`sales.csv`):
 
 ```csv
-Product,Price,Quantity
-Apple,1.20,10
-Cherry,2.50,8
-Banana,0.80,15
-
+Product , Price , Quantity
+Apple   , 1.20  , 10
+Cherry  , 2.50  , 8
+Banana  , 0.80  , 15
 ```
 
 **Or user markdown as an input and output**
@@ -149,9 +148,10 @@ For complete documentation, see **[doc/README.md](doc/README.md)**
 
 ## 🔌 Editor Plugins
 
-- **[Vim/Neovim](plugins/tabula.vim/README.md)** - Auto-execution on save of CSV files, syntax highlighting for .tbl files
-- **[Visual Studio Code](plugins/tabula.vscode/README.md)** - Auto-execution on save of CSV files, syntax highlighting for .tbl files
-- **[Obsidian](plugins/tabula.obsidian/README.md)** - Auto-execution on save of markdown files. Code-block support for CSV and Tabula scripts
+- **[Vim/Neovim](plugins/tabula.vim/README.md)** - Auto-execution on save of markdown and csv files. Markdown code-block support for CSV and **Tabula** scripts. Syntax highlighting for `*.tbl` files.
+- **[Visual Studio Code](plugins/tabula.vscode/README.md)** - Auto-execution on save of markdown and csv files. Markdown code-block support for CSV and **Tabula** scripts. Syntax highlighting for `*.tbl` files.
+- **[Obsidian](plugins/tabula.obsidian/README.md)** - Auto-execution on save of markdown files. Code-block support for CSV and **Tabula** scripts.
+- **[Web Storm](plugins/tabula.webstorm/README.md)** - Auto-execution on save of markdown and csv files. Code-block support for CSV and **Tabula** scripts. Syntax highlighting for `*.tbl` files.
 
 ## Links
 
