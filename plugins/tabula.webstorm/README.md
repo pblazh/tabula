@@ -70,11 +70,12 @@ You can configure Web Storm to make working with Tabula more convenient.
 ### Auto-Execution on Save
 
 Set up an auto execution on file save for `*.csv` and `*.md` files. For Markdown execute **Tabula** with `-m` flag.
-![./auto_execution.png]
+
+[Auto execution](./auto_execution.png)
 
 ## Syntax Highlighting for .tbl Files
 
-![./syntax_highlighting.png]
+[Syntax Highlighting execution](./syntax_highlighting.png)
 
 ### **Supported Elements:**
 
