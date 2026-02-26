@@ -160,11 +160,11 @@ _update_files_version version:
 
 _commit_version version:
   just webstorm-pack
-	git checkout -b release/v{{version}}
-	git add "VERSION.txt" "cmd/cli/version.go" "plugins/tabula.vscode/package.json" "plugins/tabula.obsidian/package.json" "plugins/tabula.obsidian/manifest.json"
+  git checkout -b release/v{{version}}
+  git add "VERSION.txt" "cmd/cli/version.go" "plugins/tabula.vscode/package.json" "plugins/tabula.obsidian/package.json" "plugins/tabula.obsidian/manifest.json"
   git add plugins/tabula.webstorm
-	git commit -m "chore(release): bump version to {{version}}"
-	echo "Committed version {{version}} on branch release/v{{version}}"
+  git commit -m "chore(release): bump version to {{version}}"
+  echo "Committed version {{version}} on branch release/v{{version}}"
 
 major:
   #!/usr/bin/env bash
