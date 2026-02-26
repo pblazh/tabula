@@ -12,13 +12,13 @@ tabula [options] [input.csv]
 
 ### `-s <file>` - Script File
 
-Specify the script file containing Tabula commands.
+Specify the script file containing **Tabula** commands.
 
 ```bash
 tabula -s script.tbl data.csv
 ```
 
-If not specified, Tabula reads the script from standard input:
+If not specified, **Tabula** reads the script from standard input:
 
 ```bash
 echo "let A1 = 'Hello';" | tabula data.csv
@@ -53,9 +53,9 @@ tabula -s script.tbl data.csv -a
 This formats the output with consistent column spacing:
 
 ```csv
-Name     , Age , Score
-Alice    , 25  , 85
-Bob      , 30  , 92
+Name  , Age , Score
+Alice , 25  , 85
+Bob   , 30  , 92
 ```
 
 ### `-m` - Use markdown as Input and Output
@@ -76,7 +76,7 @@ tabula -s script.tbl data.csv -t
 
 - When your script has interdependent statements that need to execute in dependency order
 - To automatically resolve statement ordering issues
-- When you want Tabula to determine the optimal execution sequence
+- When you want **Tabula** to determine the optimal execution sequence
 
 **Example without `-t` (execution order matters):**
 
@@ -132,6 +132,7 @@ Alice,25,85
 Bob,30,92
 #tabula #include "script.tbl"
 ```
+<!-- tabula failed to parse program /Users/pavlo.blazhyievskyi/work/private/tabula/doc/command-line.md, failed to parse included file /Users/pavlo.blazhyievskyi/work/private/tabula/doc/script.tbl include file not found: /Users/pavlo.blazhyievskyi/work/private/tabula/doc/script.tbl at /Users/pavlo.blazhyievskyi/work/private/tabula/doc/command-line.md:1:2 -->
 
 Then run without specifying a script file:
 
@@ -205,13 +206,13 @@ tabula -s script.tbl file2.csv -o processed2.csv
 ```bash
 # Part of a data pipeline
 curl -s "https://api.example.com/data.csv" | \
-  tabula -s transform.tbl | \
-  sort -t',' -k2 > final.csv
+tabula -s transform.tbl | \
+sort -t',' -k2 > final.csv
 
 # Multiple processing steps
 tabula -s step1.tbl data.csv | \
-  tabula -s step2.tbl | \
-  tabula -s step3.tbl -o result.csv
+tabula -s step2.tbl | \
+tabula -s step3.tbl -o result.csv
 ```
 
 ### Batch Processing
@@ -219,12 +220,12 @@ tabula -s step1.tbl data.csv | \
 ```bash
 # Process all CSV files in directory
 for file in *.csv; do
-  tabula -s common_script.tbl "$file" -o "processed_$file"
+tabula -s common_script.tbl "$file" -o "processed_$file"
 done
 
 # Update all files in place
 for file in *.csv; do
-  tabula -s cleanup.tbl -u "$file"
+tabula -s cleanup.tbl -u "$file"
 done
 ```
 
@@ -232,7 +233,7 @@ done
 
 ### Script Errors
 
-If there are syntax errors in your script, Tabula will display the error location:
+If there are syntax errors in your script, **Tabula** will display the error location:
 
 ```bash
 $ tabula -s bad_script.tbl data.csv

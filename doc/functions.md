@@ -1,8 +1,8 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://stand-with-ukraine.pp.ua)
 
-# Tabula Functions Reference
+# **Tabula** Functions Reference
 
-Tabula provides a comprehensive set of built-in functions for data
+**Tabula** provides a comprehensive set of built-in functions for data
 manipulation and calculations. These functions are mostly compatible with
 Google Sheets, so if you need more information about function behavior,
 you can refer to Google Sheets documentation.
@@ -1025,14 +1025,14 @@ Important notes:
 - Output is captured from stdout and trailing whitespace is trimmed
 - Newlines in the output are replaced with spaces to ensure CSV compatibility
 - If the command fails, an error is returned with the failure message
-- Commands run with the same environment and working directory as the Tabula process
+- Commands run with the same environment and working directory as the **Tabula** process
 - Be careful with security when using external commands, especially with user input
 
 Security considerations:
 
 - Validate input when using CSV data as command arguments
 - Consider using absolute paths for scripts to avoid PATH-based attacks
-- Be aware that external commands have access to the same environment as Tabula
+- Be aware that external commands have access to the same environment as **Tabula**
 
 ### Combining Functions
 

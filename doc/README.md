@@ -1,6 +1,6 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://stand-with-ukraine.pp.ua)
 
-# Tabula Documentation
+# **Tabula** Documentation
 
 ## Getting Started
 
@@ -20,11 +20,11 @@ Download the binary for your system:
 ## Reference
 
 - **[Function Reference](functions.md)** - Complete list of built-in functions with descriptions and examples
-  - Numbers: SUM, AVERAGE, MIN, MAX, ROUND, etc.
-  - Strings: CONCATENATE, UPPER, LOWER, TRIM, etc.
-  - Dates: DATE, TODAY, YEAR, MONTH, DAY, etc.
-  - Logic: IF, AND, OR, NOT
-  - Lookup: VLOOKUP, HLOOKUP, INDEX, MATCH
+- Numbers: SUM, AVERAGE, MIN, MAX, ROUND, etc.
+- Strings: CONCATENATE, UPPER, LOWER, TRIM, etc.
+- Dates: DATE, TODAY, YEAR, MONTH, DAY, etc.
+- Logic: IF, AND, OR, NOT
+- Lookup: VLOOKUP, HLOOKUP, INDEX, MATCH
 
 ## Editor Integration
 
