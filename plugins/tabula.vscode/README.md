@@ -11,76 +11,56 @@ VS Code extension for [Tabula](https://github.com/pblazh/tabula) - a spreadsheet
 - 🎛️ **Toggle Control** - Enable/disable auto-execution with a command
 - 🔄 **Smart Reload** - Automatically reloads file from disk after transformation
 - 🎨 **Syntax Highlighting** - Beautiful syntax coloring for `.tbl` script files
-- 📝 **Language Support** - Auto-completion brackets, comments, and code folding for Tabula scripts
+- 📝 **Language Support** - Auto-completion brackets, comments, and code folding
+  for **Tabula** scripts
 
 ## Prerequisites
 
 - **Tabula CLI** must be installed and in your `$PATH`
 
-  ```bash
-  # Download from GitHub Pages
-  curl -LO https://pblazh.github.io/tabula/bin/darwin/arm64/tabula  # macOS M1/M2
-  chmod +x tabula
-  sudo mv tabula /usr/local/bin/
-
-  ```
-
-  Or build from source
-
-## Recommended Extensions
-
-For a better CSV editing experience, we recommend installing a CSV formatting extension:
-
-**[CSV Extension by ReprEng](https://marketplace.visualstudio.com/items?itemName=ReprEng.csv)**
-
-This extension provides:
-
-- 📊 **Table view** - View CSV files in a formatted table
-- 🎨 **Column highlighting** - Color-coded columns for better readability
-- 🔍 **Filtering & sorting** - Interactive data manipulation
-- ✏️ **Cell editing** - Edit CSV data directly in table view
-
-**To install:**
-
 ```bash
-# Via command line
-code --install-extension ReprEng.csv
+# Download from GitHub Pages
+curl -LO https://pblazh.github.io/tabula/bin/darwin/arm64/tabula  # macOS M1/M2
+chmod +x tabula
+sudo mv tabula /usr/local/bin/
 
-# Or search "CSV" in VS Code Extensions marketplace
 ```
 
-**Why use both?**
-
-- **CSV Extension**: For viewing and editing CSV data in a nice table format
-- **Tabula Extension**: For running transformations and scripts on CSV files
-
-These extensions work great together! View your CSV in table mode, make changes, save, and watch Tabula automatically process it.
+Or build from source
 
 ## Usage
 
 ### Auto-Execution on Save
 
-1. Open a CSV file in VS Code
-2. Add Tabula script directive:
+- Open a CSV file in VS Code
+- Add **Tabula** script directive:
 
-   ```csv
-   #tabula #include "process.tbl"
-   A,B,C
-   1,2,3
-   4,5,6
-   ```
+```csv
+#tabula #include "process.tbl"
+A,B,C
+1,2,3
+4,5,6
+```
 
-3. Create your Tabula script (`process.tbl`):
+- Create your **Tabula** script (`process.tbl`):
 
-   ```tabula
-   // Calculate sum
-   let D1 = "Total";
-   let D2 = A2 + B2 + C2;
-   let D3 = A3 + B3 + C3;
-   ```
+```tabula
+// Calculate sum
+let D1 = "Total";
+let D2 = A2 + B2 + C2;
+let D3 = A3 + B3 + C3;
+```
 
-4. Save the CSV file (Ctrl+S / Cmd+S)
-5. Tabula runs automatically and updates the file!
+- Save the CSV file (Ctrl+S / Cmd+S)
+- **Tabula** runs automatically and updates the file!
+
+## How It Works
+
+1. **File Save Detection** - Extension listens for CSV file saves
+2. **Execute Tabula** - Runs `tabula [-a] -u <file>` on the saved file (with optional `-a` flag based on settings)
+3. **Reload File** - Updates the editor with transformed content
+4. **Show Errors** - Displays any errors in VS Code notifications in case of \*.csv
+   or add them as comments into the markdown file
 
 ### Commands
 
@@ -112,22 +92,22 @@ By default, the extension uses `tabula` from your system PATH. If you need to sp
 Examples:
 
 - Default (uses PATH): `tabula`
-- macOS/Linux: `/usr/local/bin/tabula`
+- MacOS/Linux: `/usr/local/bin/tabula`
 - Custom location: `/Users/yourname/bin/tabula`
 - Windows: `C:\Program Files\tabula\tabula.exe`
 
 **Auto Format Option:**
 
-The `tabula.autoFormat` setting controls the `-a` flag passed to tabula:
+The `tabula.autoFormat` setting controls the `-a` flag passed to **Tabula**:
 
 - **Enabled (default)**: Runs `tabula -a -u <file>` - Auto-formats the output CSV
 - **Disabled**: Runs `tabula -u <file>` - No automatic formatting
 
 This is useful if you want to control formatting manually or have custom formatting requirements.
 
-## Syntax Highlighting for .tbl Files
+## Syntax Highlighting for \*.tbl Files
 
-The extension provides rich syntax highlighting for Tabula script files (`.tbl`):
+The extension provides rich syntax highlighting for **Tabula** script files (`.tbl`):
 
 ### **Supported Elements:**
 
@@ -140,18 +120,11 @@ The extension provides rich syntax highlighting for Tabula script files (`.tbl`)
 - **Strings**: `"text"`, `'text'`
 - **Comments**: `// line comment`, `/* block comment */`
 
-## How It Works
-
-1. **File Save Detection** - Extension listens for CSV file saves
-2. **Execute Tabula** - Runs `tabula [-a] -u <file>` on the saved file (with optional `-a` flag based on settings)
-3. **Reload File** - Updates the editor with transformed content
-4. **Show Errors** - Displays any errors in VS Code notifications
-
 ## Troubleshooting
 
 ### "Tabula command not found"
 
-Make sure Tabula is installed and accessible:
+Make sure **Tabula** is installed and accessible:
 
 **Option 1: Add to PATH**
 
@@ -165,22 +138,25 @@ tabula -v
 1. Open VS Code Settings (Ctrl+, / Cmd+,)
 2. Search for "tabula executable"
 3. Set the full path to your tabula binary:
-   - macOS/Linux: `/usr/local/bin/tabula`
-   - Windows: `C:\path\to\tabula.exe`
+
+- macOS/Linux: `/usr/local/bin/tabula`
+- Windows: `C:\path\to\tabula.exe`
 
 ### Auto-execution not working
 
 1. Check if auto-execute is enabled:
-   - Open Command Palette
-   - Run "Tabula: Toggle Auto-Execute on Save"
-   - Ensure it says "enabled"
 
-2. Check VS Code settings:
-   ```json
-   {
-     "tabula.autoExecution": true
-   }
-   ```
+- Open Command Palette
+- Run "Tabula: Toggle Auto-Execute on Save"
+- Ensure it says "enabled"
+
+1. Check VS Code settings:
+
+```json
+{
+  "tabula.autoExecution": true
+}
+```
 
 ### Changes not appearing
 
@@ -197,6 +173,44 @@ Try manually reloading the file:
 cd plugins/tabula.vscode
 npm install
 npm run compile
+```
+
+## Recommended Companion Extensions
+
+For a better CSV editing experience, do recommend installing a CSV formatting extension:
+This extension provides:
+
+- 📊 **Table view** - View CSV files in a formatted table
+- 🎨 **Column highlighting** - Color-coded columns for better readability
+- 🔍 **Filtering & sorting** - Interactive data manipulation
+- ✏️ **Cell editing** - Edit CSV data directly in table view
+
+**Why use both?**
+
+- **CSV Extension**: For viewing and editing CSV data in a nice table format
+- **Tabula Extension**: For running transformations and scripts on CSV files
+
+These extensions work great together! View your CSV in table mode, make changes, save, and watch Tabula automatically process it.
+
+**[CSV Extension by ReprEng](https://marketplace.visualstudio.com/items?itemName=ReprEng.csv)**
+
+If for some reason you don't want to use this extension you might use [Run On Save](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave) plugin , and following configuration to execute **Tabula** on file save.
+
+```json
+{
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": ".csv",
+        "cmd": "~/.local/bin/tabula -a -u ${file}"
+      },
+      {
+        "match": ".md",
+        "cmd": "~/.local/bin/tabula -a -m -u ${file}"
+      }
+    ]
+  }
+}
 ```
 
 ## Links
