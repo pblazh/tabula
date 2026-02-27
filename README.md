@@ -24,7 +24,7 @@ Your data should be **yours** - not locked in proprietary formats or cloud servi
 
 Why install a multi-gigabyte office suite when you only need basic calculations?
 
-- 🪶 **Tiny footprint** - Single ~10MB binary, no installers, no dependencies
+- 🪶 **Tiny footprint** - Single < 5MB binary, no installers, no dependencies
 - 🚀 **Fast** - Processes large files efficiently from the command line
 - 🌍 **Cross-platform** - macOS, Linux, Windows - works everywhere
 - 💻 **Scriptable** - Integrates with shell scripts, CI/CD, and automation tools

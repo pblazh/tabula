@@ -63,14 +63,14 @@
   - [x] #19.2: Add CLI package tests
   - [ ] #19.3: Add test coverage reporting
   - [ ] #19.4: Add benchmark tests for large CSV files
-- [ ] #20: Examples and Documentation
+- [x] #20: Examples and Documentation
   - [x] #20.1: Create comprehensive script examples
-  - [ ] #20.2: Add language specification document
+  - [x] #20.2: Add language specification document
   - [x] #20.3: Add API documentation
-  - [ ] #20.4: Create tutorial/getting started guide
+  - [x] #20.4: Create tutorial/getting started guide
 - [ ] #21: Code Quality Improvements
-  - [ ] #21.1: Add better error recovery in parser
-  - [ ] #21.2: Add position tracking for error messages
+  - [x] #21.1: Add better error recovery in parser
+  - [x] #21.2: Add position tracking for error messages
   - [ ] #21.3: Add semantic analysis phase
 - [ ] #22: Feature Extensions
   - [-] #22.1: Add support for markdown
@@ -102,13 +102,14 @@
 - [ ] #27: Parser Improvements
   - [ ] #27.1: Add better error recovery mechanisms
   - [ ] #27.2: Add support for more complex expressions
-  - [ ] #27.3: Add validation for cell reference format
+  - [x] #27.3: Add validation for cell reference format
   - [ ] #27.4: Add semantic analysis phase after parsing
 - [ ] #28: Evaluator Enhancements
   - [ ] #28.1: Add proper type system
   - [x] #28.2: Add function argument validation
   - [x] #28.3: Add bounds checking for CSV operations
-  - [ ] #28.4: Add format specification improvements
+  - [ ] #28.4: For markdown run evaluations concurrently
+  - [ ] #28.4: For markdown run evaluation only for blocks which have script attached
 - [ ] #29: Math Functions
   - [x] #29.1: Implement ABS function
   - [x] #29.2: Implement AVERAGE function

@@ -11,9 +11,9 @@ Table
 
 | Title  | Price | amount | Total |
 | ------ | ----- | ------ | ----- |
-| Apples | $10   | 3      |       |
-| Pears  | $15   | 7      |       |
-|        |       | Total  |       |
+| Apples | $10   | 3      | $0.00 |
+| Pears  | $15   | 7      | $0.00 |
+|        |       | Total  | $0.00 |
 
 ```tabula
 fmt B2:B4,D2:D4 = "$%.2f"
@@ -23,20 +23,23 @@ let D4 = SUM(D2:D3);
 ```
 
 Some content between
-blocks
+
+- With:
+  - deeply
+    - nested lists
 
 ## CSV with an included script
 
 ```csv
 2025.08.01     , previous , current  , rate   , payment
-electricity    , 21025.8  , 21200.3  , $4.32  , $0
-water          , 82.102   , 89.519   , $56.88 , $0
-gas            , 9791.021 , 9808.410 , $7.96  , $0
+electricity    , 21025.8  , 21200.3  , $4.32  , $0.00
+water          , 82.102   , 89.519   , $56.88 , $0.00
+gas            , 9791.021 , 9808.410 , $7.96  , $0.00
 gas delivery   ,          ,          ,        , $122.20
 water delivery ,          ,          ,        , $20.00
 maintenance    ,          ,          ,        , $409.49
 apartment      ,          ,          ,        , $8000.00
-               ,          ,          , total  , $0
+               ,          ,          , total  , $0.00
 #tabula #include "script.tbl"
 ```
 
@@ -46,9 +49,8 @@ blocks
 ## CSV with an inline script
 
 ```csv
-10 , 30 , 0
+10 , 30 , 3010
 d  , e  , f
-
 ```
 
 ```tabula
@@ -60,14 +62,14 @@ let B1 = 30; let C1 = A1 + B1 * 100;
 
 ```csv
 2025.08.01     , previous , current  , rate   , payment
-electricity    , 21025.8  , 21200.3  , $4.32  , $0
-water          , 82.102   , 89.519   , $56.88 , $0
-gas            , 9791.021 , 9808.410 , $7.96  , $0
+electricity    , 21025.8  , 21200.3  , $4.32  , $0.00
+water          , 82.102   , 89.519   , $56.88 , $0.00
+gas            , 9791.021 , 9808.410 , $7.96  , $0.00
 gas delivery   ,          ,          ,        , $122.20
 water delivery ,          ,          ,        , $20.00
 maintenance    ,          ,          ,        , $409.49
 apartment      ,          ,          ,        , $8000.00
-               ,          ,          , total  , $0
+               ,          ,          , total  , $0.00
 ```
 
 ```tabula

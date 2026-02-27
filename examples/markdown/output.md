@@ -23,7 +23,10 @@ let D4 = SUM(D2:D3);
 ```
 
 Some content between
-blocks
+
+- With:
+  - deeply
+    - nested lists
 
 ## CSV with an included script
 
