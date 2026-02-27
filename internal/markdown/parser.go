@@ -49,7 +49,7 @@ func parse(reader io.Reader) ([]chunk, error) {
 	scanner := bufio.NewScanner(reader)
 
 	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
+		line := scanner.Text()
 
 		isTable := tableRowRg.MatchString(line)
 		isScriptStart := scriptBegin.MatchString(line)
