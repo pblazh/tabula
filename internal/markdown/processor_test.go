@@ -20,8 +20,8 @@ func TestProcess(t *testing.T) {
 		},
 		{
 			name:  "CSV malformed",
-			input: "```csv\none,two\n1,2,3\n```\n",
-			output: "```csv\none,two\n1,2,3\n```\n" +
+			input: "```csv\none,two\n1,2,3\n#tabula let x = 0;\n```\n",
+			output: "```csv\none,two\n1,2,3\n#tabula let x = 0;\n```\n" +
 				"<!-- tabula failed to read CSV, record on line 2: wrong number of fields -->\n",
 		},
 		{
@@ -36,6 +36,7 @@ func TestProcess(t *testing.T) {
 				"```csv",
 				"one,two,three",
 				"1,2,3",
+				"#tabula let x = 0;",
 				"```",
 				"",
 			}, "\n"),
@@ -43,6 +44,7 @@ func TestProcess(t *testing.T) {
 				"```csv",
 				"one , two , three",
 				"1   , 2   , 3",
+				"#tabula let x = 0;",
 				"```",
 				"",
 			}, "\n"),
@@ -96,44 +98,80 @@ func TestProcess(t *testing.T) {
 		},
 		{
 			name: "table one cell",
-			input: `
-| one |
-| - |
-| 1 |
-`,
-			output: `
-| one |
-| --- |
-| 1   |
-`,
+			input: strings.Join([]string{
+				"",
+				"| one |",
+				"| - |",
+				"| 1 |",
+				"",
+				"```tabula",
+				"let x = 0;",
+				"```",
+				"",
+			}, "\n"),
+			output: strings.Join([]string{
+				"",
+				"| one |",
+				"| --- |",
+				"| 1   |",
+				"",
+				"```tabula",
+				"let x = 0;",
+				"```",
+				"",
+			}, "\n"),
 		},
 		{
 			name: "table malformed header",
-			input: `
-| one |
-| - | - |
-| 1 |
-`,
-			output: `
-| one |
-| - | - |
-| 1 |
-<!-- tabula malformed table header -->
-`,
+			input: strings.Join([]string{
+				"",
+				"| one |",
+				"| - | - |",
+				"| 1 |",
+				"",
+				"```tabula",
+				"let x = 0;",
+				"```",
+				"",
+			}, "\n"),
+			output: strings.Join([]string{
+				"",
+				"| one |",
+				"| - | - |",
+				"| 1 |",
+				"<!-- tabula malformed table header -->",
+				"",
+				"```tabula",
+				"let x = 0;",
+				"```",
+				"",
+			}, "\n"),
 		},
 		{
 			name: "table malformed body",
-			input: `
-| one |
-| - |
-| 1 | 2 |
-`,
-			output: `
-| one |
-| - |
-| 1 | 2 |
-<!-- tabula failed to process table line 1 -->
-`,
+			input: strings.Join([]string{
+				"",
+				"| one |",
+				"| - |",
+				"| 1 | 2 |",
+				"",
+				"```tabula",
+				"let A2 = ;",
+				"```",
+				"",
+			}, "\n"),
+			output: strings.Join([]string{
+				"",
+				"| one |",
+				"| - |",
+				"| 1 | 2 |",
+				"<!-- tabula failed to process table line 1 -->",
+				"",
+				"```tabula",
+				"let A2 = ;",
+				"```",
+				"",
+			}, "\n"),
 		},
 		{
 			name: "table no code",
@@ -144,8 +182,8 @@ func TestProcess(t *testing.T) {
 `,
 			output: `
 | one | two | three |
-| --- | --- | ----- |
-| 1   | 2   | 3     |
+| - | - | - |
+| 1 | 2 | 3 |
 `,
 		},
 		{

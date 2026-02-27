@@ -105,6 +105,11 @@ func parse(reader io.Reader) ([]chunk, error) {
 }
 
 func getScriptChunk(chunks []chunk, i int) *chunk {
+	ch := chunks[i]
+	if ch.kind != csvKind && ch.kind != tableKind {
+		return nil
+	}
+
 	for j := i + 1; j < len(chunks); j++ {
 		if chunks[j].isEmpty() {
 			continue
