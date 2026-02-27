@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -89,4 +90,9 @@ func setupScriptReader(config *Config, embedded string) (io.Reader, error) {
 
 	// Default: read script from stdin (this should not happen due to validation)
 	return os.Stdin, nil
+}
+
+func HasEmbeddedScript(csv string) bool {
+	embeddedRe := regexp.MustCompile(`#tabula`)
+	return embeddedRe.MatchString(csv)
 }

@@ -34,8 +34,9 @@ func Process(
 			wrap = wrapTable
 		}
 
-		if ch.kind == csvKind || ch.kind == tableKind {
-			data, comments, err := execute(config, &ch, getScriptChunk(chunks, i))
+		scriptChunk := getScriptChunk(chunks, i)
+		if chunkNeedsProcessing(&ch, scriptChunk) {
+			data, comments, err := execute(config, &ch, scriptChunk)
 			if err != nil {
 				result = append(result, ch)
 				result = append(
@@ -82,4 +83,9 @@ func wrapCodeBlock(code string) []string {
 
 func wrapTable(code string) []string {
 	return strings.Split(strings.TrimSpace(code), "\n")
+}
+
+func chunkNeedsProcessing(ch *chunk, script *chunk) bool {
+	return (ch.kind == tableKind && script != nil) ||
+		(ch.kind == csvKind && (script != nil || csv.HasEmbeddedScript(strings.Join(ch.text, "\n"))))
 }

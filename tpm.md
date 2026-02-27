@@ -85,7 +85,7 @@
   - [ ] #23.2: Add memory usage optimization
   - [ ] #23.3: Add parallel evaluation where possible
 - [ ] #24: Enhancement Features
-  - [ ] #24.1: Add syntax highlighting for script files
+  - [x] #24.1: Add syntax highlighting for script files
   - [x] #24.3: Add plugin system for custom functions
         (execute external program for evaluation and format)
   - [ ] #24.4: Add debugging capabilities
@@ -93,23 +93,21 @@
   - [ ] #25.1: Add development documentation
   - [ ] #25.2: Add contribution guidelines
   - [ ] #25.3: Add code formatting checks
-  - [ ] #25.4: Add linting configuration
+  - [x] #25.4: Add linting configuration
 - [ ] #26: AST Enhancements
-  - [ ] #26.1: Add position information to nodes for better error reporting
+  - [x] #26.1: Add position information to nodes for better error reporting
   - [ ] #26.2: Add validation methods to AST nodes
-  - [ ] #26.3: Consider adding visitor pattern for AST traversal
-  - [ ] #26.4: Add type checking for expressions
+  - [ ] #26.3: Add type checking for expressions
 - [ ] #27: Parser Improvements
   - [ ] #27.1: Add better error recovery mechanisms
   - [ ] #27.2: Add support for more complex expressions
   - [x] #27.3: Add validation for cell reference format
   - [ ] #27.4: Add semantic analysis phase after parsing
 - [ ] #28: Evaluator Enhancements
-  - [ ] #28.1: Add proper type system
-  - [x] #28.2: Add function argument validation
-  - [x] #28.3: Add bounds checking for CSV operations
-  - [ ] #28.4: For markdown run evaluations concurrently
-  - [ ] #28.4: For markdown run evaluation only for blocks which have script attached
+  - [x] #28.1: Add function argument validation
+  - [x] #28.2: Add bounds checking for CSV operations
+  - [ ] #28.3: For markdown run evaluations concurrently
+  - [x] #28.4: For markdown run evaluation only for blocks which have script attached
 - [ ] #29: Math Functions
   - [x] #29.1: Implement ABS function
   - [x] #29.2: Implement AVERAGE function
