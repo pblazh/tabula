@@ -14,7 +14,7 @@ Download the binary for your system:
 
 - **[Command Line Usage](command-line.md)** - CLI options, flags, and usage patterns
 - **[Syntax Reference](syntax.md)** - Language syntax, statements, and expressions
-- **[Markdown support](../examples/markdown/README.md)** - Suitable for use with any markdown editors as a post processor
+- **[Markdown Support](markdown.md)** - Process Markdown tables and CSV blocks in note-taking apps
 - **[Examples](examples.md)** - Real-world usage examples and use cases
 
 ## Reference
@@ -22,9 +22,9 @@ Download the binary for your system:
 - **[Function Reference](functions.md)** - Complete list of built-in functions with descriptions and examples
 - Numbers: SUM, AVERAGE, MIN, MAX, ROUND, etc.
 - Strings: CONCATENATE, UPPER, LOWER, TRIM, etc.
-- Dates: DATE, TODAY, YEAR, MONTH, DAY, etc.
+- Dates: DATE, NOW, YEAR, MONTH, DAY, DATEVALUE, etc.
 - Logic: IF, AND, OR, NOT
-- Lookup: VLOOKUP, HLOOKUP, INDEX, MATCH
+- Lookup: ADDRESS, ROW, COLUMN, REF, RANGE
 
 ## Editor Integration
 
