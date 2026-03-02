@@ -186,6 +186,38 @@ let A1 = true;
 let A1 = false;
 ```
 
+### Dates
+
+**Tabula** supports dates as a first-class data type using Go's `time.Time` under the hood. Date values can be created from strings, date components, or the current time.
+
+#### Go's Date Format Approach
+
+Date parsing and formatting in **Tabula** uses Go's reference time layout approach. Instead of using format codes like `%Y-%m-%d`, you specify the format by showing what the reference time `Mon Jan 2 15:04:05 MST 2006` would look like in your desired format.
+
+For example, to parse ISO format dates (YYYY-MM-DD), use `"2006-01-02"` as the layout:
+- `2006` represents the year (4 digits)
+- `01` represents the month (2 digits)
+- `02` represents the day (2 digits)
+
+The key insight: the layout string positions define what to parse or format. The reference time itself is: `Mon Jan 2 15:04:05 MST 2006` (January 2, 2006, at 3:04:05 PM MST).
+
+#### Creating Dates
+
+```
+let A1 = TODATE("2006-01-02", "2023-12-25");        # Parse with explicit format
+let A1 = DATE(2023, 12, 25);                        # Create from year, month, day
+let A1 = DATEVALUE("2023-12-25");                   # Auto-detect format
+let A1 = NOW();                                     # Current date and time
+```
+
+#### Date Output
+
+Dates are written to CSV output in ISO 8601 format (YYYY-MM-DD HH:MM:SS). Use `FROMDATE()` to control output formatting explicitly.
+
+#### Working with Dates
+
+See the [Date Functions](#date-functions) section in functions.md for the complete set of date manipulation functions, including parsing, formatting, extracting components, and calculating differences.
+
 ## Operators
 
 ### Arithmetic Operators
