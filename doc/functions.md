@@ -536,26 +536,62 @@ Converts a string to a date using a specified format.
 TODATE(layout:string, value:string):date
 ```
 
-Example:
+TODATE uses Go's reference time layout for parsing. The layout string shows what the reference time `Mon Jan 2 15:04:05 MST 2006` would look like in your format.
+
+**Key insight**: The positions in the reference time define what to parse:
+- `2006` = 4-digit year
+- `01` = 2-digit month
+- `02` = 2-digit day
+- `15` = hour (24-hour)
+- `04` = minute
+- `05` = second
+
+**Common format examples**:
 
 ```tabula
-let A1 = TODATE("2006-01-02", "2023-12-25");     # Parse date string
-let A1 = TODATE("01/02/2006", "12/25/2023");     # Different format
+# ISO 8601 date
+let A1 = TODATE("2006-01-02", "2023-12-25");
+
+# ISO 8601 with time
+let A1 = TODATE("2006-01-02 15:04:05", "2023-12-25 14:30:00");
+
+# US format (MM/DD/YYYY)
+let A1 = TODATE("01/02/2006", "12/25/2023");
+
+# European format (DD.MM.YYYY)
+let A1 = TODATE("02.01.2006", "25.12.2023");
+
+# Month name format
+let A1 = TODATE("January 2, 2006", "December 25, 2023");
 ```
 
 ### FROMDATE
 
-Converts a date to a string using a specified format.
+Converts a date to a string using a specified format. This is the inverse of TODATE.
 
 ```tabula
 FROMDATE(layout:string, source:date):string
 ```
 
-Example:
+FROMDATE uses the same Go reference time layout as TODATE. The layout parameter controls the output format by showing what the reference time `Mon Jan 2 15:04:05 MST 2006` would look like.
+
+**Common format examples**:
 
 ```tabula
-let A1 = FROMDATE("2006-01-02", B1);             # Format date as string
-let A1 = FROMDATE("January 2, 2006", B1);        # Custom format
+# ISO 8601 date
+let A1 = FROMDATE("2006-01-02", B1);             # Output: "2023-12-25"
+
+# ISO 8601 with time
+let A1 = FROMDATE("2006-01-02 15:04:05", B1);    # Output: "2023-12-25 14:30:00"
+
+# US format (MM/DD/YYYY)
+let A1 = FROMDATE("01/02/2006", B1);             # Output: "12/25/2023"
+
+# European format (DD.MM.YYYY)
+let A1 = FROMDATE("02.01.2006", B1);             # Output: "25.12.2023"
+
+# Month name format
+let A1 = FROMDATE("January 2, 2006", B1);        # Output: "December 25, 2023"
 ```
 
 ### DAY
@@ -644,16 +680,28 @@ let A1 = YEAR(TODATE("2006-01-02", "2023-12-25")); # Result: 2023
 
 ### WEEKDAY
 
-Returns the day of the week from a date (1=Sunday, 7=Saturday).
+Returns the day of the week from a date as an integer (0=Sunday, 6=Saturday).
 
 ```tabula
 WEEKDAY(value:date):number
 ```
 
+The return value is 0-6, where:
+- 0 = Sunday
+- 1 = Monday
+- 2 = Tuesday
+- 3 = Wednesday
+- 4 = Thursday
+- 5 = Friday
+- 6 = Saturday
+
+This matches Go's `time.Weekday()` behavior.
+
 Example:
 
 ```tabula
-let A1 = WEEKDAY(TODATE("2006-01-02", "2023-12-25")); # Day of week
+let A1 = WEEKDAY(TODATE("2006-01-02", "2023-12-25")); # Returns: 1 (Monday)
+let A1 = WEEKDAY(DATE(2023, 1, 1));                   # Returns: 0 (Sunday)
 ```
 
 ### NOW
@@ -687,18 +735,44 @@ let A1 = DATE(B1, C1, D1);                      # Use cell values
 
 ### DATEDIF
 
-Calculates the difference between two dates in specified units.
+Calculates the difference between two dates in specified units. Returns the count of complete periods only (partial periods are not counted).
 
 ```tabula
 DATEDIF(start:date, end:date, unit:string):number
 ```
 
-Example:
+**Unit options**:
+
+- `"Y"` - Complete years between dates
+- `"M"` - Complete months between dates
+- `"D"` - Days between dates
+- `"MD"` - Days between dates, ignoring months and years (day difference only)
+- `"YM"` - Months between dates, ignoring years (month difference only)
+- `"YD"` - Days between dates, ignoring years
+
+**Examples**:
 
 ```tabula
-let A1 = DATEDIF(DATE(2020,1,1), DATE(2023,1,1), "Y"); # Years difference
-let A1 = DATEDIF(B1, C1, "M");                  # Months difference
+# Years difference
+let A1 = DATEDIF(DATE(2020,1,1), DATE(2023,1,1), "Y");   # Result: 3
+
+# Months difference
+let A1 = DATEDIF(DATE(2020,1,1), DATE(2023,6,1), "M");   # Result: 41
+
+# Days difference
+let A1 = DATEDIF(DATE(2023,1,1), DATE(2023,1,31), "D");  # Result: 30
+
+# Days ignoring months and years (day of month difference)
+let A1 = DATEDIF(DATE(2023,1,5), DATE(2023,3,25), "MD"); # Result: 20 (25 - 5)
+
+# Months ignoring years
+let A1 = DATEDIF(DATE(2020,3,1), DATE(2023,7,1), "YM");  # Result: 4 (July - March)
+
+# Days ignoring years
+let A1 = DATEDIF(DATE(2020,6,10), DATE(2023,8,25), "YD"); # Result: 15 (25 - 10)
 ```
+
+**Note**: DATEDIF counts only complete periods. For example, if calculating years and the end date hasn't reached the start date's month/day yet, that year doesn't count.
 
 ### DAYS
 
@@ -717,18 +791,39 @@ let A1 = DAYS(B1, C1);                          # Days between B1 and C1
 
 ### DATEVALUE
 
-Converts a date string to a date value.
+Converts a date string to a date value by automatically detecting the format.
 
 ```tabula
 DATEVALUE(value:string):date
 ```
 
-Example:
+DATEVALUE tries to parse the date string using a list of common formats. It attempts each format in order until one matches successfully.
+
+**Supported auto-detection formats** (in order of precedence):
+
+1. `2006-01-02` - ISO date (YYYY-MM-DD)
+2. `2006-01-02 15:04` - ISO date with time (hours and minutes)
+3. `02.01.2006` - European date (DD.MM.YYYY)
+4. `02.01.2006 15:04` - European date with time
+5. `02.01.2006 15:04:05` - European date with seconds
+6. `01/02/2006` - US date (MM/DD/YYYY)
+7. `01/02/2006 15:04` - US date with time
+8. `01/02/2006 15:04:05` - US date with seconds
+9. `2006-01-02 15:04:05` - ISO with seconds (full DateTime)
+10. `15:04:05` - Time only (no date)
+11. `3:04PM` - Kitchen format (12-hour time)
+
+**Examples**:
 
 ```tabula
-let A1 = DATEVALUE("2023-12-25");               # Convert string to date
-let A1 = DATEVALUE(B1);                         # Convert B1 string to date
+let A1 = DATEVALUE("2023-12-25");               # ISO format
+let A1 = DATEVALUE("25.12.2023");               # European format
+let A1 = DATEVALUE("12/25/2023");               # US format
+let A1 = DATEVALUE("2023-12-25 14:30:00");      # ISO with time
+let A1 = DATEVALUE(B1);                         # Auto-detect from B1
 ```
+
+**Note**: If your date format is not in the auto-detection list, use `TODATE()` with an explicit layout string for full control over parsing.
 
 ## Count Functions
 
