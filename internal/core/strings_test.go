@@ -349,7 +349,7 @@ func TestFIND(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `FIND(what:string, where:string, [start:int]):number expects 3 arguments, got 0 in FIND(), at <: input:0:0>`,
+			Error: `FIND(where:string, what:string, [start:int]):number expects 3 arguments, got 0 in FIND(), at <: input:0:0>`,
 		},
 		{
 			Name: "basic substring search",
@@ -441,7 +441,7 @@ func TestFIND(t *testing.T) {
 				ast.StringExpression{Value: "world"},
 				ast.StringExpression{Value: "not_int"},
 			},
-			Error: `FIND(what:string, where:string, [start:int]):number received an invalid argument "not_int" in FIND("hello", "world", "not_int"), at <: input:0:0>`,
+			Error: `FIND(where:string, what:string, [start:int]):number received an invalid argument "not_int" in FIND("hello", "world", "not_int"), at <: input:0:0>`,
 		},
 	}
 
