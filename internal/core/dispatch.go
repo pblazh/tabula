@@ -223,7 +223,7 @@ var DispatchMap dispatchMap = dispatchMap{
 	"FIND": func(context map[string]string, input [][]string, formats map[string]string,
 		call ast.CallExpression, values ...ast.Node,
 	) (ast.Node, error) {
-		format := "FIND(what:string, where:string, [start:int]):number"
+		format := "FIND(where:string, what:string, [start:int]):number"
 		return Find(format, call, values...)
 	},
 

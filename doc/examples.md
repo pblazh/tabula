@@ -16,6 +16,7 @@
 - [apartment](../examples/apartment/README.md)
 - [dates](../examples/dates/README.md)
 - [embed](../examples/embed/README.md)
+- [call-function](../examples/call-function/README.md)
 - [markdown](../examples/markdown/README.md)
 
 ## Links

@@ -539,6 +539,7 @@ TODATE(layout:string, value:string):date
 TODATE uses Go's reference time layout for parsing. The layout string shows what the reference time `Mon Jan 2 15:04:05 MST 2006` would look like in your format.
 
 **Key insight**: The positions in the reference time define what to parse:
+
 - `2006` = 4-digit year
 - `01` = 2-digit month
 - `02` = 2-digit day
@@ -687,6 +688,7 @@ WEEKDAY(value:date):number
 ```
 
 The return value is 0-6, where:
+
 - 0 = Sunday
 - 1 = Monday
 - 2 = Tuesday
@@ -1019,6 +1021,8 @@ REL creates relative cell references based on the target cell being assigned to.
 ```tabula
 REL(column_offset:int, row_offset:int): string
 ```
+
+**Note:** REL is a special function that is handled differently from other functions in **Tabula**. Unlike regular functions that are processed through the dispatch map, REL is evaluated directly by the interpreter because it needs to know the target cell context (which cell is being assigned to) in order to calculate the relative address. This is why REL must be used in assignment statements and cannot be evaluated independently.
 
 The REL function calculates a cell reference relative to the target cell.
 The offsets specify how many columns (positive = right, negative = left)
