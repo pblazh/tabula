@@ -122,7 +122,7 @@ Add `#tabula` script inside a CSV block:
 ## Complete Example
 
 Here's a complete Markdown document with **Tabula** processing:
-[[../examples/markdown/README.md]]
+[Markdown](../examples/markdown/README.md)
 
 **Error behavior:**
 
@@ -157,6 +157,7 @@ When processing Markdown tables, **Tabula** treats them as CSV data:
 - [Obsidian](../plugins/tabula.obsidian/README.md)
 - [Visual Studio Code](../plugins/tabula.vscode/README.md)
 - [Vim/NeoVim](../plugins/tabula.vim/README.md)
+- [Web Storm](plugins/tabula.webstorm/README.md)
 
 ## Limitations
 
