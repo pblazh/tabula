@@ -16,11 +16,15 @@ type Token struct {
 }
 
 func (t Token) String() string {
-	fn := t.Filename
-	if t.Filename == "" {
-		fn = "input"
+	return FormatPosition(t.Position)
+}
+
+func FormatPosition(pos scanner.Position) string {
+	fileName := pos.Filename
+	if fileName == "" {
+		fileName = "input"
 	}
-	return fmt.Sprintf("<%s:%s %s:%d:%d>", t.Type, t.Literal, fn, t.Line, t.Column)
+	return fmt.Sprintf("%s:%d:%d", fileName, pos.Line, pos.Column)
 }
 
 const (

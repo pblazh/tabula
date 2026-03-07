@@ -515,96 +515,96 @@ func TestOperationErrors(t *testing.T) {
 		{
 			name:         "int division by zero",
 			input:        `10 / 0`,
-			expectsError: `division by zero at <DIV:/ test:1:4>`,
+			expectsError: `division by zero at test:1:4`,
 		},
 		{
 			name:         "float division by zero",
 			input:        `10.5 / 0.0`,
-			expectsError: `division by zero at <DIV:/ test:1:6>`,
+			expectsError: `division by zero at test:1:6`,
 		},
 		{
 			name:         "int division by float zero",
 			input:        `10 / 0.0`,
-			expectsError: `division by zero at <DIV:/ test:1:4>`,
+			expectsError: `division by zero at test:1:4`,
 		},
 		{
 			name:         "float division by int zero",
 			input:        `10.5 / 0`,
-			expectsError: `division by zero at <DIV:/ test:1:6>`,
+			expectsError: `division by zero at test:1:6`,
 		},
 		// Type mismatch errors for arithmetic operations
 		{
 			name:         "bool + int",
 			input:        `true + 5`,
-			expectsError: `operator + is not supported for type boolean and integer at test:1:6`,
+			expectsError: `operator + not supported for boolean and integer at test:1:6`,
 		},
 		{
 			name:         "int + bool",
 			input:        `5 + true`,
-			expectsError: `operator + is not supported for type integer and boolean at test:1:3`,
+			expectsError: `operator + not supported for integer and boolean at test:1:3`,
 		},
 		{
 			name:         "bool - int",
 			input:        `true - 5`,
-			expectsError: `operator - is not supported for type boolean and integer at test:1:6`,
+			expectsError: `operator - not supported for boolean and integer at test:1:6`,
 		},
 		{
 			name:         "bool * int",
 			input:        `true * 5`,
-			expectsError: `operator * is not supported for type boolean and integer at test:1:6`,
+			expectsError: `operator * not supported for boolean and integer at test:1:6`,
 		},
 		{
 			name:         "bool / int",
 			input:        `true / 5`,
-			expectsError: `operator / is not supported for type boolean and integer at test:1:6`,
+			expectsError: `operator / not supported for boolean and integer at test:1:6`,
 		},
 		// Type mismatch errors for comparison operations
 		{
 			name:         "int < bool",
 			input:        `5 < true`,
-			expectsError: `operator < is not supported for type integer and boolean at test:1:3`,
+			expectsError: `operator < not supported for integer and boolean at test:1:3`,
 		},
 		{
 			name:         "bool > int",
 			input:        `true > 5`,
-			expectsError: `operator > is not supported for type boolean and integer at test:1:6`,
+			expectsError: `operator > not supported for boolean and integer at test:1:6`,
 		},
 		// Prefix operation errors
 		{
 			name:         "negation of bool",
 			input:        `-true`,
-			expectsError: `operator - is not supported for type boolean at test:1:1`,
+			expectsError: `operator - not supported for boolean at test:1:1`,
 		},
 		{
 			name:         "logical not of int",
 			input:        `!5`,
-			expectsError: `operator ! is not supported for type integer at test:1:1`,
+			expectsError: `operator ! not supported for integer at test:1:1`,
 		},
 		{
 			name:         "logical not of float",
 			input:        `!3.14`,
-			expectsError: `operator ! is not supported for type float at test:1:1`,
+			expectsError: `operator ! not supported for float at test:1:1`,
 		},
 		// Function call errors
 		{
 			name:         "SUM with unsupported boolean first argument",
 			input:        `SUM(true)`,
-			expectsError: `SUM(values:number...):number received an invalid argument true in SUM(true), at <IDENT:SUM test:1:1>`,
+			expectsError: `SUM(values:number...):number invalid argument true at test:1:1`,
 		},
 		{
 			name:         "SUM with mixed incompatible types in integer sum",
 			input:        `SUM(5, "hello")`,
-			expectsError: `SUM(values:number...):number received an invalid argument "hello" in SUM(5, "hello"), at <IDENT:SUM test:1:1>`,
+			expectsError: `SUM(values:number...):number invalid argument "hello" at test:1:1`,
 		},
 		{
 			name:         "SUM with mixed incompatible types in float sum",
 			input:        `SUM(5.5, true)`,
-			expectsError: `SUM(values:number...):number received an invalid argument true in SUM(5.50, true), at <IDENT:SUM test:1:1>`,
+			expectsError: `SUM(values:number...):number invalid argument true at test:1:1`,
 		},
 		{
 			name:         "SUM with mixed incompatible types in string sum",
 			input:        `SUM("hello", 42)`,
-			expectsError: `SUM(values:number...):number received an invalid argument "hello" in SUM("hello", 42), at <IDENT:SUM test:1:1>`,
+			expectsError: `SUM(values:number...):number invalid argument "hello" at test:1:1`,
 		},
 	}
 

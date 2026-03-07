@@ -20,11 +20,11 @@ func ErrCellOutOfBounds(cellRef, dimension string, index int) error {
 }
 
 func ErrRelOutOfBounds(expr ast.Node) error {
-	return fmt.Errorf("%s is outof bounds", expr)
+	return fmt.Errorf("%s is out of bounds", expr)
 }
 
 func ErrVariableNotFound(expr ast.Node) error {
-	return fmt.Errorf("%s not found in context", expr)
+	return fmt.Errorf("undefined: %s", expr)
 }
 
 func ErrUnknownExpressionType(expr ast.Node) error {
@@ -33,54 +33,66 @@ func ErrUnknownExpressionType(expr ast.Node) error {
 
 func ErrUnsupportedOperation(operator lexer.Token, expr ast.Node) error {
 	return fmt.Errorf(
-		"operator %s is not supported for type %s at %v",
+		"operator %s not supported for %s at %s",
 		operator.Literal,
 		ast.TypeName(expr),
-		operator.Position,
+		lexer.FormatPosition(operator.Position),
 	)
 }
 
 func ErrUnsupportedType(receiver ast.Node, expr ast.Node) error {
-	return fmt.Errorf("%s is not supported by %s", ast.TypeName(expr), receiver)
+	return fmt.Errorf("%s not supported by %s", ast.TypeName(expr), receiver)
 }
 
 func ErrUnsupportedBinaryOperation(operator lexer.Token, left, right ast.Node) error {
 	return fmt.Errorf(
-		"operator %s is not supported for type %s and %s at %v",
+		"operator %s not supported for %s and %s at %s",
 		operator.Literal,
 		ast.TypeName(left),
 		ast.TypeName(right),
-		operator.Position,
+		lexer.FormatPosition(operator.Position),
 	)
 }
 
 func ErrUnsupportedPrefixOperator(operator lexer.Token) error {
-	return fmt.Errorf("unsupported prefix operator %s at %v", operator.Literal, operator.Position)
+	return fmt.Errorf(
+		"unsupported prefix operator %s at %s",
+		operator.Literal,
+		lexer.FormatPosition(operator.Position),
+	)
 }
 
 func ErrUnsupportedOperator(operator lexer.Token) error {
-	return fmt.Errorf("unsupported operator %s at %v", operator.Literal, operator.Position)
+	return fmt.Errorf(
+		"unsupported operator %s at %s",
+		operator.Literal,
+		lexer.FormatPosition(operator.Position),
+	)
 }
 
 func ErrFmtExpectedString(identifier lexer.Token, actualValue string) error {
-	return fmt.Errorf("fmt accepts only strings, got %s at %v", actualValue, identifier.Position)
+	return fmt.Errorf(
+		"fmt accepts only strings, got %s at %s",
+		actualValue,
+		lexer.FormatPosition(identifier.Position),
+	)
 }
 
 func ErrStatementExecution(statement string, err error) error {
-	return fmt.Errorf("%s caused %s", statement, err)
+	return fmt.Errorf("%s: %w", statement, err)
 }
 
 func ErrUnsupportedFunctions(identifier string) error {
 	return fmt.Errorf("unsupported function: %s", identifier)
 }
 
-func ErrEvaluation(statement ast.Node, err error) error {
-	return fmt.Errorf("failed to evaluate %s, %s", statement, err)
+func ErrParsing(scriptName string, err error) error {
+	if scriptName == "" {
+		return err
+	}
+	return fmt.Errorf("%s: %w", scriptName, err)
 }
 
-func ErrParsing(input string, err error) error {
-	if input == "" {
-		return fmt.Errorf("failed to parse program, %s", err)
-	}
-	return fmt.Errorf("failed to parse program %s, %s", input, err)
+func ErrWriting(err error) error {
+	return fmt.Errorf("can not write value: %w", err)
 }

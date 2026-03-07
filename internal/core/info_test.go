@@ -54,7 +54,7 @@ func TestISNUMBER(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `ISNUMBER(value:any):boolean expects 1 argument, got 0 in ISNUMBER(), at <: input:0:0>`,
+			Error: `ISNUMBER(value:any):boolean expects 1 argument, got 0 at input:0:0`,
 		},
 		{
 			Name: "multiple values",
@@ -62,7 +62,7 @@ func TestISNUMBER(t *testing.T) {
 				ast.StringExpression{Value: "test"},
 				ast.IntExpression{Value: 39},
 			},
-			Error: `ISNUMBER(value:any):boolean expects 1 argument, got 2 in ISNUMBER("test", 39), at <: input:0:0>`,
+			Error: `ISNUMBER(value:any):boolean expects 1 argument, got 2 at input:0:0`,
 		},
 	}
 
@@ -123,7 +123,7 @@ func TestISTEXT(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `ISTEXT(value:any):boolean expects 1 argument, got 0 in ISTEXT(), at <: input:0:0>`,
+			Error: `ISTEXT(value:any):boolean expects 1 argument, got 0 at input:0:0`,
 		},
 		{
 			Name: "multiple values",
@@ -131,7 +131,7 @@ func TestISTEXT(t *testing.T) {
 				ast.StringExpression{Value: "test"},
 				ast.IntExpression{Value: 39},
 			},
-			Error: `ISTEXT(value:any):boolean expects 1 argument, got 2 in ISTEXT("test", 39), at <: input:0:0>`,
+			Error: `ISTEXT(value:any):boolean expects 1 argument, got 2 at input:0:0`,
 		},
 	}
 
@@ -185,7 +185,7 @@ func TestISLOGICAL(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `ISLOGICAL(value:any):boolean expects 1 argument, got 0 in ISLOGICAL(), at <: input:0:0>`,
+			Error: `ISLOGICAL(value:any):boolean expects 1 argument, got 0 at input:0:0`,
 		},
 		{
 			Name: "multiple values",
@@ -193,7 +193,7 @@ func TestISLOGICAL(t *testing.T) {
 				ast.StringExpression{Value: "test"},
 				ast.IntExpression{Value: 39},
 			},
-			Error: `ISLOGICAL(value:any):boolean expects 1 argument, got 2 in ISLOGICAL("test", 39), at <: input:0:0>`,
+			Error: `ISLOGICAL(value:any):boolean expects 1 argument, got 2 at input:0:0`,
 		},
 	}
 
@@ -254,7 +254,7 @@ func TestISBLANK(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `ISBLANK(value:any):boolean expects 1 argument, got 0 in ISBLANK(), at <: input:0:0>`,
+			Error: `ISBLANK(value:any):boolean expects 1 argument, got 0 at input:0:0`,
 		},
 		{
 			Name: "multiple values",
@@ -262,7 +262,7 @@ func TestISBLANK(t *testing.T) {
 				ast.StringExpression{Value: "test"},
 				ast.IntExpression{Value: 39},
 			},
-			Error: `ISBLANK(value:any):boolean expects 1 argument, got 2 in ISBLANK("test", 39), at <: input:0:0>`,
+			Error: `ISBLANK(value:any):boolean expects 1 argument, got 2 at input:0:0`,
 		},
 	}
 

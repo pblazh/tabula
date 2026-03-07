@@ -11,15 +11,14 @@ func TestADDRESS(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `ADDRESS(row:int, column:int):string expects 2 arguments, got 0 in ADDRESS(), at <: input:0:0>`,
+			Error: `ADDRESS(row:int, column:int):string expects 2 arguments, got 0 at input:0:0`,
 		},
 		{
 			Name: "single int",
 			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 			},
-			Error: `ADDRESS(row:int, column:int):string expects 2 arguments, got 1 in ADDRESS(42), at <: input:0:0>`,
-			// ADDRESS(row:int, column:int):string expects 2 arguments, got 1 in ADDRESS(42), at <: input:0:0>
+			Error: `ADDRESS(row:int, column:int):string expects 2 arguments, got 1 at input:0:0`,
 		},
 		{
 			Name: "multiple ints",
@@ -28,7 +27,7 @@ func TestADDRESS(t *testing.T) {
 				ast.IntExpression{Value: 2},
 				ast.IntExpression{Value: 3},
 			},
-			Error: `ADDRESS(row:int, column:int):string expects 2 arguments, got 3 in ADDRESS(1, 2, 3), at <: input:0:0>`,
+			Error: `ADDRESS(row:int, column:int):string expects 2 arguments, got 3 at input:0:0`,
 		},
 		{
 			Name: "with string column",
@@ -36,7 +35,7 @@ func TestADDRESS(t *testing.T) {
 				ast.IntExpression{Value: 42},
 				ast.StringExpression{Value: "A"},
 			},
-			Error: `ADDRESS(row:int, column:int):string received an invalid argument "A" in ADDRESS(42, "A"), at <: input:0:0>`,
+			Error: `ADDRESS(row:int, column:int):string invalid argument "A" at input:0:0`,
 		},
 		{
 			Name: "happy path",
@@ -56,7 +55,7 @@ func TestROW(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `ROW(cell:string):int expects 1 argument, got 0 in ROW(), at <: input:0:0>`,
+			Error: `ROW(cell:string):int expects 1 argument, got 0 at input:0:0`,
 		},
 		{
 			Name: "multiple strings",
@@ -64,14 +63,14 @@ func TestROW(t *testing.T) {
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 			},
-			Error: `ROW(cell:string):int expects 1 argument, got 2 in ROW("hello", "world"), at <: input:0:0>`,
+			Error: `ROW(cell:string):int expects 1 argument, got 2 at input:0:0`,
 		},
 		{
 			Name: "with an int column",
 			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 			},
-			Error: `ROW(cell:string):int received an invalid argument 42 in ROW(42), at <: input:0:0>`,
+			Error: `ROW(cell:string):int invalid argument 42 at input:0:0`,
 		},
 		{
 			Name: "with an Identifier",
@@ -97,7 +96,7 @@ func TestCOLUMN(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `COLUMN(cell:string):int expects 1 argument, got 0 in COLUMN(), at <: input:0:0>`,
+			Error: `COLUMN(cell:string):int expects 1 argument, got 0 at input:0:0`,
 		},
 		{
 			Name: "multiple strings",
@@ -105,14 +104,14 @@ func TestCOLUMN(t *testing.T) {
 				ast.StringExpression{Value: "hello"},
 				ast.StringExpression{Value: "world"},
 			},
-			Error: `COLUMN(cell:string):int expects 1 argument, got 2 in COLUMN("hello", "world"), at <: input:0:0>`,
+			Error: `COLUMN(cell:string):int expects 1 argument, got 2 at input:0:0`,
 		},
 		{
 			Name: "with an int column",
 			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 			},
-			Error: `COLUMN(cell:string):int received an invalid argument 42 in COLUMN(42), at <: input:0:0>`,
+			Error: `COLUMN(cell:string):int invalid argument 42 at input:0:0`,
 		},
 		{
 			Name: "with an Identifier",
@@ -138,7 +137,7 @@ func TestREF(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `REF(cell:string):any expects 1 argument, got 0 in REF(), at <: input:0:0>`,
+			Error: `REF(cell:string):any expects 1 argument, got 0 at input:0:0`,
 		},
 		{
 			Name: "multiple strings",
@@ -146,14 +145,14 @@ func TestREF(t *testing.T) {
 				ast.StringExpression{Value: "A1"},
 				ast.StringExpression{Value: "B2"},
 			},
-			Error: `REF(cell:string):any expects 1 argument, got 2 in REF("A1", "B2"), at <: input:0:0>`,
+			Error: `REF(cell:string):any expects 1 argument, got 2 at input:0:0`,
 		},
 		{
 			Name: "with an int",
 			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 			},
-			Error: `REF(cell:string):any received an invalid argument 42 in REF(42), at <: input:0:0>`,
+			Error: `REF(cell:string):any invalid argument 42 at input:0:0`,
 		},
 		{
 			Name: "with a cell Identifier",
@@ -181,7 +180,7 @@ func TestREF(t *testing.T) {
 			Input: []ast.Node{
 				ast.StringExpression{Value: "2B"},
 			},
-			Error: `REF(cell:string):any received an invalid argument "2B" in REF("2B"), at <: input:0:0>`,
+			Error: `REF(cell:string):any invalid argument "2B" at input:0:0`,
 		},
 	}
 
@@ -204,14 +203,14 @@ func TestRANGE(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `RANGE(a:string, b:string):range expects 2 arguments, got 0 in RANGE(), at <: input:0:0>`,
+			Error: `RANGE(a:string, b:string):range expects 2 arguments, got 0 at input:0:0`,
 		},
 		{
 			Name: "multiple strings",
 			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
-			Error: `RANGE(a:string, b:string):range expects 2 arguments, got 1 in RANGE("hello"), at <: input:0:0>`,
+			Error: `RANGE(a:string, b:string):range expects 2 arguments, got 1 at input:0:0`,
 		},
 		{
 			Name: "with an int column",
@@ -219,7 +218,7 @@ func TestRANGE(t *testing.T) {
 				ast.IntExpression{Value: 42},
 				ast.IntExpression{Value: 24},
 			},
-			Error: `RANGE(a:string, b:string):range received an invalid argument 42 in RANGE(42, 24), at <: input:0:0>`,
+			Error: `RANGE(a:string, b:string):range invalid argument 42 at input:0:0`,
 		},
 		{
 			Name: "with a variable",
@@ -227,7 +226,7 @@ func TestRANGE(t *testing.T) {
 				ast.StringExpression{Value: "x"},
 				ast.StringExpression{Value: "C5"},
 			},
-			Error: `RANGE(a:string, b:string):range received an invalid argument "x" in RANGE("x", "C5"), at <: input:0:0>`,
+			Error: `RANGE(a:string, b:string):range invalid argument "x" at input:0:0`,
 		},
 		{
 			Name: "with a Range",

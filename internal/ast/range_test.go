@@ -106,7 +106,7 @@ func TestExpandRange(t *testing.T) {
 			name:  "valid flipped rect",
 			start: "x",
 			end:   "y",
-			error: "range must contain valid cell references (like A1:B2), got x:y",
+			error: "invalid range x:y",
 		},
 	}
 
