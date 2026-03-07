@@ -134,7 +134,7 @@ func evaluateCallExpression(
 
 	internalFunction, ok := core.DispatchMap[identifier]
 	if !ok {
-		return nil, ErrUnsupportedFunctions(identifier)
+		return nil, ErrUnsupportedFunctions(expr)
 	}
 	return internalFunction(context, input, formats, expr, args...)
 }

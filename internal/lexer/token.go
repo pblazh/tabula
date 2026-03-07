@@ -4,6 +4,7 @@ package lexer
 
 import (
 	"fmt"
+	"path"
 	"text/scanner"
 )
 
@@ -16,11 +17,17 @@ type Token struct {
 }
 
 func (t Token) String() string {
-	fn := t.Filename
-	if t.Filename == "" {
-		fn = "input"
+	return FormatPosition(t.Position)
+}
+
+func FormatPosition(pos scanner.Position) string {
+	var fileName string
+	if pos.Filename == "" {
+		fileName = "input"
+	} else {
+		_, fileName = path.Split(pos.Filename)
 	}
-	return fmt.Sprintf("<%s:%s %s:%d:%d>", t.Type, t.Literal, fn, t.Line, t.Column)
+	return fmt.Sprintf("%s:%d:%d", fileName, pos.Line, pos.Column)
 }
 
 const (

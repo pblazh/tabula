@@ -112,9 +112,7 @@ func parseInt(value, formatSpec string) (ast.Node, error) {
 	var resultInt int
 	_, err := fmt.Sscanf(value, formatSpec, &resultInt)
 	if err != nil {
-		return ast.DateExpression{}, ErrParseInt(
-			ErrParseWithFormat(value, formatSpec, err.Error()),
-		)
+		return ast.DateExpression{}, ErrParseWithFormat(value, formatSpec, err.Error())
 	}
 	return ast.IntExpression{Value: resultInt, Token: lexer.Token{Literal: value}}, nil
 }
@@ -131,9 +129,7 @@ func parseFloat(value, formatSpec string) (ast.Node, error) {
 	cleaned := cleanFormat(formatSpec)
 	_, err := fmt.Sscanf(value, cleaned, &resultFloat)
 	if err != nil {
-		return ast.DateExpression{}, ErrParseFloat(
-			ErrParseWithFormat(value, formatSpec, err.Error()),
-		)
+		return ast.DateExpression{}, ErrParseWithFormat(value, formatSpec, err.Error())
 	}
 	return ast.FloatExpression{Value: resultFloat, Token: lexer.Token{Literal: value}}, nil
 }
@@ -144,7 +140,7 @@ func parseString(value, format string) (ast.Node, error) {
 	cleaned := cleanFormat(format)
 	_, err := fmt.Sscanf(value, cleaned, &resultString)
 	if err != nil {
-		return ast.DateExpression{}, ErrParseString(ErrParseWithFormat(value, cleaned, err.Error()))
+		return ast.DateExpression{}, ErrParseWithFormat(value, cleaned, err.Error())
 	}
 	return ast.StringExpression{Value: resultString, Token: lexer.Token{Literal: value}}, nil
 }
@@ -154,9 +150,7 @@ func parseBool(value, formatSpec string) (ast.Node, error) {
 	var resultBool bool
 	_, err := fmt.Sscanf(value, formatSpec, &resultBool)
 	if err != nil {
-		return ast.DateExpression{}, ErrParseBoolean(
-			ErrParseWithFormat(value, formatSpec, err.Error()),
-		)
+		return ast.DateExpression{}, ErrParseWithFormat(value, formatSpec, err.Error())
 	}
 	return ast.BooleanExpression{Value: resultBool, Token: lexer.Token{Literal: value}}, nil
 }
@@ -164,7 +158,7 @@ func parseBool(value, formatSpec string) (ast.Node, error) {
 func parseFormattedDate(value, format string) (ast.DateExpression, error) {
 	date, err := time.Parse(format, value)
 	if err != nil {
-		return ast.DateExpression{}, ErrParseDate(err)
+		return ast.DateExpression{}, ErrParseDate(value, format)
 	}
 
 	return ast.DateExpression{Value: date, Token: lexer.Token{Literal: value}}, nil

@@ -10,20 +10,18 @@ import (
 func ErrUnsupportedArity(format string, function ast.CallExpression, expected, given int) error {
 	if expected == 1 {
 		return fmt.Errorf(
-			"%s expects %d argument, got %d in %s, at %v",
+			"%s expects %d argument, got %d at %v",
 			format,
 			expected,
 			given,
-			function,
 			function.Token,
 		)
 	}
 	return fmt.Errorf(
-		"%s expects %d arguments, got %d in %s, at %v",
+		"%s expects %d arguments, got %d at %v",
 		format,
 		expected,
 		given,
-		function,
 		function.Token,
 	)
 }
@@ -34,10 +32,9 @@ func ErrUnsupportedArgument(
 	argument ast.Node,
 ) error {
 	return fmt.Errorf(
-		"%s received an invalid argument %s in %s, at %v",
+		"%s invalid argument %s at %v",
 		format,
 		argument,
-		function,
 		function.Token,
 	)
 }
@@ -47,11 +44,11 @@ func ErrUnsupportedFunction(function ast.CallExpression) error {
 }
 
 func ErrExecuting(format string, function ast.CallExpression, err error) error {
-	return fmt.Errorf("failed %s with %v at %v", format, function.Token, err)
+	return fmt.Errorf("failed %s with %v at %w", format, function.Token, err)
 }
 
 func ErrParseWithFormat(input, format, reason string) error {
-	return fmt.Errorf("failed to parse %q with format %q, %s", input, format, reason)
+	return fmt.Errorf("cannot parse %q with format %q", input, format)
 }
 
 func ErrUnsupportedExpressionType(expr ast.Node) error {
@@ -59,29 +56,29 @@ func ErrUnsupportedExpressionType(expr ast.Node) error {
 }
 
 func ErrExecute(err error) error {
-	return fmt.Errorf("fails to execute,  %s", err)
+	return fmt.Errorf("cannot execute: %w", err)
 }
 
 func ErrExpand(err error) error {
-	return fmt.Errorf("failed to expand, %s", err)
+	return fmt.Errorf("cannot expand: %w", err)
 }
 
-func ErrParseString(err error) error {
-	return fmt.Errorf("failed to parse string, %s", err)
+func ErrParse(typeName string, value string, err error) error {
+	return fmt.Errorf("cannot parse %q as %s: %w", value, typeName, err)
 }
 
 func ErrParseBoolean(err error) error {
-	return fmt.Errorf("failed to parse boolean, %s", err)
-}
-
-func ErrParseDate(err error) error {
-	return fmt.Errorf("failed to parse date, %s", err)
+	return fmt.Errorf("cannot parse boolean: %w", err)
 }
 
 func ErrParseInt(err error) error {
-	return fmt.Errorf("failed to parse int, %s", err)
+	return fmt.Errorf("cannot parse int: %w", err)
 }
 
 func ErrParseFloat(err error) error {
-	return fmt.Errorf("failed to parse float, %s", err)
+	return fmt.Errorf("cannot parse float: %w", err)
+}
+
+func ErrParseDate(value, format string) error {
+	return fmt.Errorf("cannot parse date: %s with format %s", value, format)
 }

@@ -18,7 +18,7 @@ func Evaluate(program ast.Program, input [][]string) ([][]string, error) {
 	for _, statement := range program {
 		error := EvaluateStatement(statement, context, input, formats)
 		if error != nil {
-			return nil, ErrStatementExecution(statement.String(), error)
+			return nil, ErrStatementExecution(error)
 		}
 	}
 	return input, nil

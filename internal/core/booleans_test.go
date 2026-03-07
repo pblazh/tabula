@@ -11,7 +11,7 @@ func TestNOT(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `NOT(value:boolean):boolean expects 1 argument, got 0 in NOT(), at <: input:0:0>`,
+			Error: `NOT(value:boolean):boolean expects 1 argument, got 0 at input:0:0`,
 		},
 		{
 			Name: "true input",
@@ -33,28 +33,28 @@ func TestNOT(t *testing.T) {
 				ast.BooleanExpression{Value: true},
 				ast.BooleanExpression{Value: false},
 			},
-			Error: `NOT(value:boolean):boolean expects 1 argument, got 2 in NOT(true, false), at <: input:0:0>`,
+			Error: `NOT(value:boolean):boolean expects 1 argument, got 2 at input:0:0`,
 		},
 		{
 			Name: "string input",
 			Input: []ast.Node{
 				ast.StringExpression{Value: "true"},
 			},
-			Error: `NOT(value:boolean):boolean received an invalid argument "true" in NOT("true"), at <: input:0:0>`,
+			Error: `NOT(value:boolean):boolean invalid argument "true" at input:0:0`,
 		},
 		{
 			Name: "integer input",
 			Input: []ast.Node{
 				ast.IntExpression{Value: 1},
 			},
-			Error: `NOT(value:boolean):boolean received an invalid argument 1 in NOT(1), at <: input:0:0>`,
+			Error: `NOT(value:boolean):boolean invalid argument 1 at input:0:0`,
 		},
 		{
 			Name: "float input",
 			Input: []ast.Node{
 				ast.FloatExpression{Value: 1.0},
 			},
-			Error: `NOT(value:boolean):boolean received an invalid argument 1.00 in NOT(1.00), at <: input:0:0>`,
+			Error: `NOT(value:boolean):boolean invalid argument 1.00 at input:0:0`,
 		},
 	}
 
@@ -66,14 +66,14 @@ func TestAND(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `AND(a:boolean, b:boolean):boolean expects 2 arguments, got 0 in AND(), at <: input:0:0>`,
+			Error: `AND(a:boolean, b:boolean):boolean expects 2 arguments, got 0 at input:0:0`,
 		},
 		{
 			Name: "single input",
 			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
-			Error: `AND(a:boolean, b:boolean):boolean expects 2 arguments, got 1 in AND(true), at <: input:0:0>`,
+			Error: `AND(a:boolean, b:boolean):boolean expects 2 arguments, got 1 at input:0:0`,
 		},
 		{
 			Name: "true and false",
@@ -106,7 +106,7 @@ func TestAND(t *testing.T) {
 				ast.BooleanExpression{Value: false},
 				ast.BooleanExpression{Value: true},
 			},
-			Error: `AND(a:boolean, b:boolean):boolean expects 2 arguments, got 3 in AND(true, false, true), at <: input:0:0>`,
+			Error: `AND(a:boolean, b:boolean):boolean expects 2 arguments, got 3 at input:0:0`,
 		},
 		{
 			Name: "boolean and string",
@@ -114,7 +114,7 @@ func TestAND(t *testing.T) {
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "false"},
 			},
-			Error: `AND(a:boolean, b:boolean):boolean received an invalid argument "false" in AND(true, "false"), at <: input:0:0>`,
+			Error: `AND(a:boolean, b:boolean):boolean invalid argument "false" at input:0:0`,
 		},
 	}
 
@@ -126,14 +126,14 @@ func TestOR(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `OR(a:boolean, b:boolean):boolean expects 2 arguments, got 0 in OR(), at <: input:0:0>`,
+			Error: `OR(a:boolean, b:boolean):boolean expects 2 arguments, got 0 at input:0:0`,
 		},
 		{
 			Name: "single input",
 			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
-			Error: `OR(a:boolean, b:boolean):boolean expects 2 arguments, got 1 in OR(true), at <: input:0:0>`,
+			Error: `OR(a:boolean, b:boolean):boolean expects 2 arguments, got 1 at input:0:0`,
 		},
 		{
 			Name: "true and false",
@@ -166,7 +166,7 @@ func TestOR(t *testing.T) {
 				ast.BooleanExpression{Value: false},
 				ast.BooleanExpression{Value: true},
 			},
-			Error: `OR(a:boolean, b:boolean):boolean expects 2 arguments, got 3 in OR(true, false, true), at <: input:0:0>`,
+			Error: `OR(a:boolean, b:boolean):boolean expects 2 arguments, got 3 at input:0:0`,
 		},
 		{
 			Name: "boolean and string",
@@ -174,7 +174,7 @@ func TestOR(t *testing.T) {
 				ast.BooleanExpression{Value: true},
 				ast.StringExpression{Value: "false"},
 			},
-			Error: `OR(a:boolean, b:boolean):boolean received an invalid argument "false" in OR(true, "false"), at <: input:0:0>`,
+			Error: `OR(a:boolean, b:boolean):boolean invalid argument "false" at input:0:0`,
 		},
 	}
 
@@ -186,14 +186,14 @@ func TestIF(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `IF(predicate:boolean, positive:any, negative:any):any expects 3 arguments, got 0 in IF(), at <: input:0:0>`,
+			Error: `IF(predicate:boolean, positive:any, negative:any):any expects 3 arguments, got 0 at input:0:0`,
 		},
 		{
 			Name: "single input",
 			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
-			Error: `IF(predicate:boolean, positive:any, negative:any):any expects 3 arguments, got 1 in IF(true), at <: input:0:0>`,
+			Error: `IF(predicate:boolean, positive:any, negative:any):any expects 3 arguments, got 1 at input:0:0`,
 		},
 		{
 			Name: "true condition",
@@ -247,7 +247,7 @@ func TestIF(t *testing.T) {
 				ast.StringExpression{Value: "yes"},
 				ast.StringExpression{Value: "no"},
 			},
-			Error: `IF(predicate:boolean, positive:any, negative:any):any received an invalid argument "true" in IF("true", "yes", "no"), at <: input:0:0>`,
+			Error: `IF(predicate:boolean, positive:any, negative:any):any invalid argument "true" at input:0:0`,
 		},
 		{
 			Name: "too many arguments",
@@ -257,7 +257,7 @@ func TestIF(t *testing.T) {
 				ast.StringExpression{Value: "no"},
 				ast.StringExpression{Value: "extra"},
 			},
-			Error: `IF(predicate:boolean, positive:any, negative:any):any expects 3 arguments, got 4 in IF(true, "yes", "no", "extra"), at <: input:0:0>`,
+			Error: `IF(predicate:boolean, positive:any, negative:any):any expects 3 arguments, got 4 at input:0:0`,
 		},
 	}
 
@@ -276,7 +276,7 @@ func TestTRUE(t *testing.T) {
 			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
-			Error: `TRUE():boolean expects 0 arguments, got 1 in TRUE(true), at <: input:0:0>`,
+			Error: `TRUE():boolean expects 0 arguments, got 1 at input:0:0`,
 		},
 	}
 
@@ -295,7 +295,7 @@ func TestFALSE(t *testing.T) {
 			Input: []ast.Node{
 				ast.BooleanExpression{Value: true},
 			},
-			Error: `FALSE():boolean expects 0 arguments, got 1 in FALSE(true), at <: input:0:0>`,
+			Error: `FALSE():boolean expects 0 arguments, got 1 at input:0:0`,
 		},
 	}
 

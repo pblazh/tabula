@@ -273,25 +273,25 @@ func TestEvaluateREL(t *testing.T) {
 			name:      "REL out of bounds row",
 			statement: "let A1 = REL(0, 5);",
 			input:     [][]string{{"10", "20"}},
-			error:     "REL(0, 5) is outof bounds",
+			error:     "REL(0, 5) is out of bounds",
 		},
 		{
 			name:      "REL out of bounds column",
 			statement: "let A1 = REL(5, 0);",
 			input:     [][]string{{"10", "20"}},
-			error:     "REL(5, 0) is outof bounds",
+			error:     "REL(5, 0) is out of bounds",
 		},
 		{
 			name:      "REL negative coordinates",
 			statement: "let A1 = REL(-1, 0);",
 			input:     [][]string{{"10", "20"}},
-			error:     "REL(-1, 0) is outof bounds",
+			error:     "REL(-1, 0) is out of bounds",
 		},
 		{
 			name:      "REL with non-integer offset",
 			statement: "let A1 = REL(\"hello\", 0);",
 			input:     [][]string{{"10", "20"}},
-			error:     "string is not supported by REL(\"hello\", 0)",
+			error:     "string not supported by REL(\"hello\", 0)",
 		},
 	}
 

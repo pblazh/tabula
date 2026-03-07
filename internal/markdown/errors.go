@@ -5,31 +5,27 @@ import (
 )
 
 func ErrSortScriptStatements(err error) error {
-	return fmt.Errorf("failed to sort statements, %v", err)
-}
-
-func ErrEvaluateScript(scriptName string, err error) error {
-	return fmt.Errorf("failed to evaluate %s, %v", scriptName, err)
+	return fmt.Errorf("cannot sort statements: %w", err)
 }
 
 func ErrReadMD(err error) error {
-	return fmt.Errorf("failed to read markdown, %v", err)
+	return fmt.Errorf("cannot read markdown: %w", err)
 }
 
 func ErrWriteCSV(err error) error {
-	return fmt.Errorf("failed to write CSV, %v", err)
+	return fmt.Errorf("cannot write CSV: %w", err)
 }
 
 func ErrWriteMD(err error) error {
-	return fmt.Errorf("failed to write Markdown, %v", err)
+	return fmt.Errorf("cannot write markdown: %w", err)
 }
 
 func ErrProcessing(err error) error {
-	return fmt.Errorf("failed to process markdown, %v", err)
+	return fmt.Errorf("cannot process markdown: %w", err)
 }
 
 func ErrProcessingTableLine(n int) error {
-	return fmt.Errorf("failed to process table line %d", n)
+	return fmt.Errorf("malformed table at line %d", n)
 }
 
 var ErrProcessingTableHeader = fmt.Errorf("malformed table header")

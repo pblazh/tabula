@@ -24,7 +24,7 @@ func EvaluateStatement(
 		format := formats[s.Identifier.Value]
 		output, error := functions.WriteValue(value, format)
 		if error != nil {
-			return ErrEvaluation(statement, error)
+			return ErrWriting(error)
 		}
 
 		if ast.IsCellIdentifier(s.Identifier.Value) {

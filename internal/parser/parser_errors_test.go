@@ -21,7 +21,7 @@ func TestParserErrors(t *testing.T) {
 		{
 			name:   "missed assign identifier",
 			input:  `let = 8;`,
-			output: "expected an identifier, got = at missed assign identifier:1:5",
+			output: "expected identifier, got = at missed assign identifier:1:5",
 		},
 		{
 			name:   "not terminated quote",
@@ -31,22 +31,22 @@ func TestParserErrors(t *testing.T) {
 		{
 			name:   "invalid range with variables",
 			input:  `A:B;`,
-			output: "failed to expand, range must contain valid cell references (like A1:B2), got A:B",
+			output: "failed to expand, invalid range A:B at invalid range with variables:1:2",
 		},
 		{
 			name:   "invalid fmt statements int",
 			input:  `fmt A1 = 1;`,
-			output: "expected string, got <INT:1 invalid fmt statements int:1:10>",
+			output: "expected string, got 1 at invalid fmt statements int:1:10",
 		},
 		{
 			name:   "invalid fmt statements bool",
 			input:  `fmt A1 = true;`,
-			output: "expected string, got <TRUE:true invalid fmt statements bool:1:10>",
+			output: "expected string, got true at invalid fmt statements bool:1:10",
 		},
 		{
-			name:   "unsupported operator :",
+			name:   "unsupported operator",
 			input:  `2 : 3`,
-			output: `expected an identifier, got 2 at unsupported operator ::1:6`,
+			output: `expected identifier, got 2 at unsupported operator:1:6`,
 		},
 	}
 

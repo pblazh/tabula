@@ -6,5 +6,5 @@ import (
 )
 
 func ErrLexerError(message string, position scanner.Position) error {
-	return fmt.Errorf("%s at %v", message, position)
+	return fmt.Errorf("%s at %s", message, FormatPosition(position))
 }
