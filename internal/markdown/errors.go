@@ -8,13 +8,6 @@ func ErrSortScriptStatements(err error) error {
 	return fmt.Errorf("cannot sort statements: %w", err)
 }
 
-func ErrEvaluateScript(scriptName string, err error) error {
-	if scriptName == "" {
-		return err
-	}
-	return fmt.Errorf("%s: %w", scriptName, err)
-}
-
 func ErrReadMD(err error) error {
 	return fmt.Errorf("cannot read markdown: %w", err)
 }

@@ -292,7 +292,13 @@ func (p *Parser) parseIdentifierOrRange() ([]ast.IdentifierExpression, error) {
 	// Expand the range to get all identifiers
 	cells, err := ast.ExpandRange(firstIdent.Value, secondIdent.Value)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse indent %s:%s, %s", firstIdent, secondIdent, err)
+		return nil, fmt.Errorf(
+			"failed to parse indent %s:%s, %s at %s",
+			firstIdent,
+			secondIdent,
+			err,
+			lexer.FormatPosition(firstIdent.Token.Position),
+		)
 	}
 
 	// Add all cells to the identifiers list
@@ -565,7 +571,11 @@ func (p *Parser) parseRange(left ast.Node) (ast.Node, error) {
 
 	cells, err := ast.ExpandRange(leftIdent.Value, rightIdent.Value)
 	if err != nil {
-		return nil, fmt.Errorf("failed to expand, %s", err)
+		return nil, fmt.Errorf(
+			"failed to expand, %s at %s",
+			err,
+			lexer.FormatPosition(colonToken.Position),
+		)
 	}
 
 	return ast.RangeExpression{Token: colonToken, Value: cells}, nil

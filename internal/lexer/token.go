@@ -4,6 +4,7 @@ package lexer
 
 import (
 	"fmt"
+	"path"
 	"text/scanner"
 )
 
@@ -20,9 +21,11 @@ func (t Token) String() string {
 }
 
 func FormatPosition(pos scanner.Position) string {
-	fileName := pos.Filename
-	if fileName == "" {
+	var fileName string
+	if pos.Filename == "" {
 		fileName = "input"
+	} else {
+		_, fileName = path.Split(pos.Filename)
 	}
 	return fmt.Sprintf("%s:%d:%d", fileName, pos.Line, pos.Column)
 }

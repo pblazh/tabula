@@ -31,7 +31,7 @@ func TestParserErrors(t *testing.T) {
 		{
 			name:   "invalid range with variables",
 			input:  `A:B;`,
-			output: "failed to expand, invalid range A:B",
+			output: "failed to expand, invalid range A:B at invalid range with variables:1:2",
 		},
 		{
 			name:   "invalid fmt statements int",

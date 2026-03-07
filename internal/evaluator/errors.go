@@ -23,8 +23,8 @@ func ErrRelOutOfBounds(expr ast.Node) error {
 	return fmt.Errorf("%s is out of bounds", expr)
 }
 
-func ErrVariableNotFound(expr ast.Node) error {
-	return fmt.Errorf("undefined: %s", expr)
+func ErrVariableNotFound(expr ast.IdentifierExpression) error {
+	return fmt.Errorf("undefined: %s at %s", expr.Value, lexer.FormatPosition(expr.Token.Position))
 }
 
 func ErrUnknownExpressionType(expr ast.Node) error {
@@ -78,19 +78,20 @@ func ErrFmtExpectedString(identifier lexer.Token, actualValue string) error {
 	)
 }
 
-func ErrStatementExecution(statement string, err error) error {
-	return fmt.Errorf("%s: %w", statement, err)
+func ErrStatementExecution(err error) error {
+	return fmt.Errorf("cannot evaluate: %w", err)
 }
 
-func ErrUnsupportedFunctions(identifier string) error {
-	return fmt.Errorf("unsupported function: %s", identifier)
+func ErrUnsupportedFunctions(expr ast.CallExpression) error {
+	return fmt.Errorf(
+		"unsupported function: %s at %s",
+		expr.Identifier.String(),
+		lexer.FormatPosition(expr.Token.Position),
+	)
 }
 
 func ErrParsing(scriptName string, err error) error {
-	if scriptName == "" {
-		return err
-	}
-	return fmt.Errorf("%s: %w", scriptName, err)
+	return fmt.Errorf("can not parse: %w", err)
 }
 
 func ErrWriting(err error) error {

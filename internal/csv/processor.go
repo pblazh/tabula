@@ -39,7 +39,7 @@ func Process(
 	// Evaluate the program with CSV data
 	result, err := evaluator.Evaluate(program, records)
 	if err != nil {
-		return nil, nil, ErrEvaluateScript(config.Name, err)
+		return nil, nil, err //nolint:wrapcheck
 	}
 
 	return result, comments, nil

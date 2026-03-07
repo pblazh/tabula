@@ -81,7 +81,7 @@ func executeChunk(
 	// Evaluate the program with CSV data
 	result, err := evaluator.Evaluate(program, records)
 	if err != nil {
-		return nil, ErrEvaluateScript(config.Input, err)
+		return nil, err //nolint:wrapcheck
 	}
 
 	return result, nil
