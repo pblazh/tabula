@@ -24,7 +24,7 @@ Download the binary for your system:
 - Strings: CONCATENATE, UPPER, LOWER, TRIM, etc.
 - Dates: DATE, NOW, YEAR, MONTH, DAY, DATEVALUE, etc.
 - Logic: IF, AND, OR, NOT
-- Lookup: ADDRESS, ROW, COLUMN, REF, RANGE
+- Lookup: ADDRESS, ROW, COLUMN, REF
 
 ## Editor Integration
 

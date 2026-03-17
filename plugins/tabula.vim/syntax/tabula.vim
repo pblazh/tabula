@@ -65,7 +65,7 @@ syn keyword tabulaFunction EDATE EOMONTH TIME TIMEVALUE
 syn keyword tabulaFunction IF AND OR NOT IFERROR IFNA
 
 " Lookup functions
-syn keyword tabulaFunction COLUMN ROW COLUMNS ROWS ADDRESS REF RANGE
+syn keyword tabulaFunction COLUMN ROW COLUMNS ROWS ADDRESS REF
 
 " Info functions
 syn keyword tabulaFunction ISNUMBER ISTEXT ISLOGICAL ISBLANK ISERROR

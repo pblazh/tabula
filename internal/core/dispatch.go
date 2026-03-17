@@ -470,14 +470,7 @@ var DispatchMap dispatchMap = dispatchMap{
 	"REF": func(context map[string]string, input [][]string, formats map[string]string,
 		call ast.CallExpression, values ...ast.Node,
 	) (ast.Node, error) {
-		format := "REF(cell:string):any"
+		format := "REF(address:string):any"
 		return Ref(context, input, formats, format, call, values...)
-	},
-
-	"RANGE": func(context map[string]string, input [][]string, formats map[string]string,
-		call ast.CallExpression, values ...ast.Node,
-	) (ast.Node, error) {
-		format := "RANGE(a:string, b:string):range"
-		return Range(context, input, formats, format, call, values...)
 	},
 }

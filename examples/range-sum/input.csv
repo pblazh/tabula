@@ -37,7 +37,7 @@ Date       , Expected payment , Expected sum , Real payment , Real sum    , Diff
 01.12.2025 , 1500.00 zł       , 0.00 zł  , 0.00 zł      , 0.00 zł , 0.00 zł
 # ---{{{
 #tabula fmt B1:B37,C1:C37,D1:D37,E1:E37,F1:F37 = "%.2f zł";
-#tabula let C2:C37 = SUM(RANGE("B2", REL(-1, 0)));
-#tabula let E2:E37 = SUM(RANGE("D2", REL(-1, 0)));
+#tabula let C2:C37 = SUM(REF("B2:" + REL(-1, 0)));
+#tabula let E2:E37 = SUM(REF("D2:" + REL(-1, 0)));
 #tabula let F2:F37 = REF(REL(-1, 0)) - REF(REL(-3, 0));
 # }}}---

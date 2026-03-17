@@ -237,6 +237,7 @@
   - [ ] #33.18: Implement CELL function
   - [x] #33.19: Implement REF function
   - [x] #33.19: Implement RANGE function
+  - [x] #33.20: Use REF instead of RANGE
 - [ ] #34: Statistical Functions
   - [ ] #34.1: Implement AVEDEV function
   - [ ] #34.2: Implement CORREL function

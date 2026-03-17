@@ -969,18 +969,14 @@ Example:
 let x = ROW("B3");                          # Result: 3
 ```
 
-### RANGE
+### REF Extended Syntax
 
-Takes two cell references and returns a range
-
-```tabula
-RANGE(a:string, b:string):range
-```
-
-Example:
+`REF` also accepts range and union addresses, returning a range expression.
 
 ```tabula
-let x = RANGE(B4, C5);                          # Result: [B4, C4, B5, C5]
+REF("A1:B2");                      # Result: [A1, B1, A2, B2]
+REF("A1:B2,C3");                   # Result: [A1, B1, A2, B2, C3]
+REF("B2:" + REL(-1, 0));  # Dynamic range up to current row
 ```
 
 ## Special Functions

@@ -1,6 +1,8 @@
 package core
 
 import (
+	"strings"
+
 	"github.com/pblazh/tabula/internal/ast"
 )
 
@@ -77,57 +79,47 @@ func Ref(
 	format string,
 	call ast.CallExpression, values ...ast.Node,
 ) (ast.Node, error) {
-	argsGuard := MakeExactTypesGuard(format, ast.IsString)
-	identifierErr := argsGuard(call, values...)
-	if identifierErr != nil {
-		return nil, identifierErr
-	}
-
-	identifier := values[0].(ast.StringExpression)
-	valueFormat := formats[identifier.Value]
-
-	if ast.IsCellIdentifier(identifier.Value) {
-		col, row := ast.ParseCell(identifier.Value)
-		if col >= len(input) || col >= len(input[row]) {
-			return ast.StringExpression{Value: "", Token: call.Token}, nil
-		}
-
-		return ReadValue(input[row][col], valueFormat)
-	}
-
-	value, ok := context[identifier.Value]
-	if !ok {
-		return nil, ErrUnsupportedArgument(format, call, identifier)
-	}
-
-	return ReadValue(value, valueFormat)
-}
-
-func Range(
-	context map[string]string, input [][]string, formats map[string]string,
-	format string,
-	call ast.CallExpression, values ...ast.Node,
-) (ast.Node, error) {
-	guard := MakeExactTypesGuard(format, ast.IsString, ast.IsString)
-
-	err := guard(call, values...)
-	if err != nil {
+	guard := MakeExactTypesGuard(format, ast.IsString)
+	if err := guard(call, values...); err != nil {
 		return nil, err
 	}
 
-	a := values[0].(ast.StringExpression)
-	b := values[1].(ast.StringExpression)
+	addressExpression := values[0].(ast.StringExpression)
+	address := strings.TrimSpace(addressExpression.Value)
+	valueFormat := formats[address]
 
-	if !ast.IsCellIdentifier(a.Value) {
-		return nil, ErrUnsupportedArgument(format, call, a)
-	}
-	if !ast.IsCellIdentifier(b.Value) {
-		return nil, ErrUnsupportedArgument(format, call, b)
+	value, ok := context[address]
+	if ok {
+		return ReadValue(value, valueFormat)
 	}
 
-	cells, err := ast.ExpandRange(a.Value, b.Value)
-	if err != nil {
-		return nil, ErrExpand(err)
+	if ast.IsCellIdentifier(address) {
+		col, row := ast.ParseCell(address)
+		return ReadValue(input[row][col], valueFormat)
+	}
+
+	var cells []string
+	for segment := range strings.SplitSeq(addressExpression.Value, ",") {
+		segment = strings.TrimSpace(segment)
+
+		if ast.IsCellIdentifier(segment) {
+			cells = append(cells, segment)
+			continue
+		}
+
+		if strings.Contains(segment, ":") {
+			parts := strings.SplitN(segment, ":", 2)
+			start := strings.TrimSpace(parts[0])
+			end := strings.TrimSpace(parts[1])
+			expanded, err := ast.ExpandRange(start, end)
+			if err != nil {
+				return nil, ErrExpand(err)
+			}
+			cells = append(cells, expanded...)
+			continue
+		}
+
+		return nil, ErrUnsupportedArgument(format, call, addressExpression)
 	}
 
 	return ast.RangeExpression{Value: cells, Token: call.Token}, nil

@@ -23,8 +23,8 @@ Date       , Expected payment , Expected sum , Real payment , Real sum , Differe
 
 ```
 fmt B1:B37,C1:C37,D1:D37,E1:E37,F1:F37 = "%.2f zł"; // setup format
-let C2:C37 = SUM(RANGE("B2", REL(-1, 0)));          // calculate expected total for a period
-let E2:E37 = SUM(RANGE("D2", REL(-1, 0)));          // calculate actual total
+let C2:C37 = SUM(REF("B2:" + REL(-1, 0)));  // calculate expected total for a period
+let E2:E37 = SUM(REF("D2:" + REL(-1, 0)));  // calculate actual total
 let F2:F37 = REF(REL(-1, 0)) - REF(REL(-3, 0));     // calculate a debt
 ```
 
@@ -43,4 +43,3 @@ Date       , Expected payment , Expected sum , Real payment , Real sum    , Diff
 13.09.2023 , 1200.00 zł       , 10800.00 zł  , 2400.00 zł   , 11000.00 zł , 200.00 zł
 03.10.2023 , 1200.00 zł       , 12000.00 zł  , 2400.00 zł   , 13400.00 zł , 1400.00 zł
 ```
-
