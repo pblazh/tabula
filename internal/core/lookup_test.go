@@ -137,106 +137,98 @@ func TestREF(t *testing.T) {
 		{
 			Name:  "empty input",
 			Input: []ast.Node{},
-			Error: `REF(cell:string):any expects 1 argument, got 0 at input:0:0`,
+			Error: `REF(address:string):any expects 1 argument, got 0 at input:0:0`,
 		},
 		{
-			Name: "multiple strings",
+			Name: "multiple arguments",
 			Input: []ast.Node{
 				ast.StringExpression{Value: "A1"},
 				ast.StringExpression{Value: "B2"},
 			},
-			Error: `REF(cell:string):any expects 1 argument, got 2 at input:0:0`,
+			Error: `REF(address:string):any expects 1 argument, got 2 at input:0:0`,
 		},
 		{
 			Name: "with an int",
 			Input: []ast.Node{
 				ast.IntExpression{Value: 42},
 			},
-			Error: `REF(cell:string):any invalid argument 42 at input:0:0`,
+			Error: `REF(address:string):any invalid argument 42 at input:0:0`,
 		},
 		{
-			Name: "with a cell Identifier",
+			Name: "single cell",
 			Input: []ast.Node{
 				ast.StringExpression{Value: "B2"},
 			},
 			Expected: `3`,
 		},
 		{
-			Name: "with a formated cell Identifier",
-			Input: []ast.Node{
-				ast.StringExpression{Value: "B1"},
-			},
-			Expected: `1`,
-		},
-		{
-			Name: "with a variable Identifier",
+			Name: "context variable",
 			Input: []ast.Node{
 				ast.StringExpression{Value: "hello"},
 			},
 			Expected: `"world"`,
 		},
 		{
-			Name: "with a wrong identifier",
+			Name: "cell range",
 			Input: []ast.Node{
-				ast.StringExpression{Value: "2B"},
+				ast.StringExpression{Value: "A1:B2"},
 			},
-			Error: `REF(cell:string):any invalid argument "2B" at input:0:0`,
+			Expected: `[A1, B1, A2, B2]`,
 		},
+		{
+			Name: "range with extra cell",
+			Input: []ast.Node{
+				ast.StringExpression{Value: "A1:B2,C3"},
+			},
+			Expected: `[A1, B1, A2, B2, C3]`,
+		},
+		{
+			Name: "range with spaces",
+			Input: []ast.Node{
+				ast.StringExpression{Value: " A1 : B2 , C3 "},
+			},
+			Expected: `[A1, B1, A2, B2, C3]`,
+		},
+		{
+			Name: "empty string",
+			Input: []ast.Node{
+				ast.StringExpression{Value: ""},
+			},
+			Error: `REF(address:string):any invalid argument "" at input:0:0`,
+		},
+		{
+			Name: "invalid single cell",
+			Input: []ast.Node{
+				ast.StringExpression{Value: "1A"},
+			},
+			Error: `REF(address:string):any invalid argument "1A" at input:0:0`,
+		},
+		{
+			Name: "invalid range start",
+			Input: []ast.Node{
+				ast.StringExpression{Value: "1A:B2"},
+			},
+			Error: `cannot expand: invalid range 1A:B2`,
+		},
+		{
+			Name: "invalid range end",
+			Input: []ast.Node{
+				ast.StringExpression{Value: "A1:2B"},
+			},
+			Error: `cannot expand: invalid range A1:2B`,
+		},
+	}
+
+	context := map[string]string{
+		"hello": "world",
 	}
 
 	input := [][]string{
 		{"0", "$1"},
 		{"2", "3"},
 	}
-	context := map[string]string{
-		"hello": "world",
-	}
-	formats := map[string]string{
-		"B1": "$%d",
-	}
+
+	formats := map[string]string{"B1": "$%d"}
 
 	RunFunctionTest(t, "REF", testcases, context, input, formats)
-}
-
-func TestRANGE(t *testing.T) {
-	testcases := []InfoTestCase{
-		{
-			Name:  "empty input",
-			Input: []ast.Node{},
-			Error: `RANGE(a:string, b:string):range expects 2 arguments, got 0 at input:0:0`,
-		},
-		{
-			Name: "multiple strings",
-			Input: []ast.Node{
-				ast.StringExpression{Value: "hello"},
-			},
-			Error: `RANGE(a:string, b:string):range expects 2 arguments, got 1 at input:0:0`,
-		},
-		{
-			Name: "with an int column",
-			Input: []ast.Node{
-				ast.IntExpression{Value: 42},
-				ast.IntExpression{Value: 24},
-			},
-			Error: `RANGE(a:string, b:string):range invalid argument 42 at input:0:0`,
-		},
-		{
-			Name: "with a variable",
-			Input: []ast.Node{
-				ast.StringExpression{Value: "x"},
-				ast.StringExpression{Value: "C5"},
-			},
-			Error: `RANGE(a:string, b:string):range invalid argument "x" at input:0:0`,
-		},
-		{
-			Name: "with a Range",
-			Input: []ast.Node{
-				ast.StringExpression{Value: "B4"},
-				ast.StringExpression{Value: "C5"},
-			},
-			Expected: `[B4, C4, B5, C5]`,
-		},
-	}
-
-	RunFunctionTest(t, "RANGE", testcases, map[string]string{}, [][]string{}, map[string]string{})
 }
