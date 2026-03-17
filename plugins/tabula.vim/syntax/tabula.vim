@@ -14,10 +14,6 @@ syn keyword tabulaBoolean true false
 " Preprocessor directives
 syn match tabulaPreProc "^#include\>"
 
-" Comments
-syn match tabulaComment "//.*$"
-syn region tabulaComment start="/\*" end="\*/"
-
 " Cell references (case-insensitive)
 " Match patterns like A1, B2, AA1, AB23, etc.
 syn match tabulaCellRef "\<[A-Za-z]\+[0-9]\+\>"
@@ -72,6 +68,10 @@ syn keyword tabulaFunction ISNUMBER ISTEXT ISLOGICAL ISBLANK ISERROR
 
 " Special function
 syn keyword tabulaFunction EXEC
+
+" Comments (defined last to take priority over operators at same position)
+syn match tabulaComment "//.*$"
+syn region tabulaComment start="/\*" end="\*/"
 
 " Delimiters
 syn match tabulaDelimiter ";"
