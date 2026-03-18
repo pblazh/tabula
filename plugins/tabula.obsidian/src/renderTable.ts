@@ -1,6 +1,6 @@
 import { TabulaSettings } from './types'
 import * as csv from '@fast-csv/parse'
-import * as m from 'mustache'
+import m from 'mustache'
 
 export async function renderTable(
   settings: TabulaSettings,

@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  NODE_VERSION: 20.x
+  NODE_VERSION: 24.x
   GO_VERSION: "1.22.x"
 
 concurrency:
@@ -89,6 +89,15 @@ jobs:
         with:
           name: tabula_obsidian
           path: plugins/tabula.obsidian/dist/tabula.obsidian.${{ env.VERSION }}.tar.gz
+
+      - name: Upload Obsidian release files
+        uses: actions/upload-artifact@v4
+        with:
+          name: tabula_obsidian_release_files
+          path: |
+            plugins/tabula.obsidian/out/main.js
+            plugins/tabula.obsidian/out/manifest.json
+            plugins/tabula.obsidian/out/styles.css
 
   # --------------------
   # Tabula VSCode Plugin
@@ -179,7 +188,7 @@ jobs:
 
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
-          if git rev-parse "v${VERSION}" >/dev/null 2>&1; then
+          if git rev-parse "${VERSION}" >/dev/null 2>&1; then
             echo "Tag exists, skipping deployment"
             echo "skip_deploy=true" >> $GITHUB_OUTPUT
           else
@@ -192,15 +201,46 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git tag "v${VERSION}"
-          git push origin "v${VERSION}"
+          git tag "${VERSION}"
+          git push origin "${VERSION}"
+
+  # --------------------
+  # Release Obsidian Plugin
+  # --------------------
+  release_obsidian:
+    runs-on: ubuntu-latest
+    needs: [version_check, tabula_obsidian]
+    if: needs.version_check.outputs.skip_deploy == 'false'
+    steps:
+      - name: Download Obsidian release files
+        uses: actions/download-artifact@v4
+        with:
+          name: tabula_obsidian_release_files
+          path: obsidian-release
+
+      - name: Create GitHub Release for Obsidian Plugin
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.version_check.outputs.version }}
+          name: ${{ needs.version_check.outputs.version }}
+          files: |
+            obsidian-release/main.js
+            obsidian-release/manifest.json
+            obsidian-release/styles.css
 
   # --------------------
   # Deploy Tabula GitHub pages
   # --------------------
   deploy_pages:
     needs:
-      [version_check, tabula_go, tabula_obsidian, tabula_vscode, tabula_vim]
+      [
+        version_check,
+        tabula_go,
+        tabula_obsidian,
+        tabula_vscode,
+        tabula_vim,
+        release_obsidian,
+      ]
     if: needs.version_check.outputs.skip_deploy == 'false'
     runs-on: ubuntu-latest
     environment: github-pages
