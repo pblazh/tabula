@@ -1,5 +1,3 @@
-[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://stand-with-ukraine.pp.ua)
-
 # Tabula for Visual Studio Code
 
 VS Code extension for [Tabula](https://github.com/pblazh/tabula) - a spreadsheet-inspired CSV transformation tool.
@@ -41,6 +39,7 @@ A,B,C
 1,2,3
 4,5,6
 ```
+<!-- Tabula: can not parse: /Users/pavlo.blazhyievskyi/work/private/tabula/plugins/tabula.vscode/process.tbl: include file not found: /Users/pavlo.blazhyievskyi/work/private/tabula/plugins/tabula.vscode/process.tbl at README.md:1:2 -->
 
 - Create your **Tabula** script (`process.tbl`):
 

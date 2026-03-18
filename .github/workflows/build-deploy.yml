@@ -95,8 +95,11 @@ jobs:
         with:
           name: tabula_obsidian_release_files
           path: |
+            plugins/tabula.obsidian/out/LICENSE.txt
+            plugins/tabula.obsidian/out/README.md
             plugins/tabula.obsidian/out/main.js
             plugins/tabula.obsidian/out/manifest.json
+            plugins/tabula.obsidian/out/versions.json
             plugins/tabula.obsidian/out/styles.css
 
   # --------------------
@@ -224,8 +227,11 @@ jobs:
           tag_name: ${{ needs.version_check.outputs.version }}
           name: ${{ needs.version_check.outputs.version }}
           files: |
+            obsidian-release/LICENSE.txt
+            obsidian-release/README.md
             obsidian-release/main.js
             obsidian-release/manifest.json
+            obsidian-release/versions.json
             obsidian-release/styles.css
 
   # --------------------
