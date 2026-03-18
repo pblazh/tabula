@@ -44,14 +44,15 @@ const context = await esbuild.context({
 
 if (prod) {
   await context.rebuild()
-  // Copy styles.css and manifest.json to out folder for distribution
   copyFileSync('src/styles.css', 'out/styles.css')
   copyFileSync('manifest.json', 'out/manifest.json')
-  writeFileSync('out/.hotreload', 'hot-reload')
+  copyFileSync('versions.json', 'out/versions.json')
+  copyFileSync('LICENSE.txt', 'out/LICENSE.txt')
+  copyFileSync('README.md', 'out/README.md')
   process.exit(0)
 } else {
   await context.watch()
-  // Copy styles.css and manifest.json to out folder for distribution
   copyFileSync('src/styles.css', 'out/styles.css')
   copyFileSync('manifest.json', 'out/manifest.json')
+  writeFileSync('out/.hotreload', 'hot-reload')
 }
