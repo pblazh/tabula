@@ -46,7 +46,7 @@ if (prod) {
   await context.rebuild()
   // Copy styles.css and manifest.json to out folder for distribution
   copyFileSync('src/styles.css', 'out/styles.css')
-  copyFileSync('manifest.json', 'manifest.json')
+  copyFileSync('manifest.json', 'out/manifest.json')
   writeFileSync('out/.hotreload', 'hot-reload')
   process.exit(0)
 } else {
