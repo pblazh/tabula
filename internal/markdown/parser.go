@@ -67,8 +67,12 @@ func parse(reader io.Reader) ([]chunk, error) {
 		// --- Table end ---
 		case kind == tableKind && !isTable:
 			appendChunk(&chunks, tableKind, buffer)
-			buffer = []string{line}
 			kind = detectKind(isScriptStart, isCsvStart, isMessage)
+			if kind == messageKind {
+				buffer = []string{}
+			} else {
+				buffer = []string{line}
+			}
 
 		// --- Script/CSV start ---
 		case isScriptStart || isCsvStart:
