@@ -36,9 +36,9 @@ let A2 = ;
 ### Malformed Table Header
 
 | name  | age | another |
-| ----- | --- |
+| ----- | --- | ------- |
 | Alice | 30  |
-<!-- Tabula: malformed table header -->
+<!-- Tabula: malformed table at line 1 -->
 
 ```tabula
 let A1 = 100;
@@ -390,3 +390,13 @@ let E1 = "unterminated;
 let A1 = B1 + ;
 let C1 = INVALID_FUNC(1, 2, 3);
 ```
+
+| one | two | three |
+| --- | --- | ----- |
+| 11  | 20  | 191   |
+
+```tabula
+let C2 = A2 + B2 * 9;
+```
+
+something

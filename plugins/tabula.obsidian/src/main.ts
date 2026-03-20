@@ -1,4 +1,11 @@
-import { App, Plugin, PluginManifest, TFile, WorkspaceLeaf } from 'obsidian'
+import {
+  App,
+  Notice,
+  Plugin,
+  PluginManifest,
+  TFile,
+  WorkspaceLeaf,
+} from 'obsidian'
 
 import { TabulaSettings, DEFAULT_SETTINGS } from './types'
 import { TabulaSettingTab } from './settings'
@@ -10,6 +17,7 @@ import { highlightSyntax } from './highlightSyntax'
 export default class TabulaPlugin extends Plugin {
   settings: TabulaSettings = DEFAULT_SETTINGS
   private updatingFiles = new Set<string>()
+  private lastErrorNotice: Notice | null = null
 
   constructor(app: App, manifest: PluginManifest) {
     super(app, manifest)
@@ -94,7 +102,19 @@ export default class TabulaPlugin extends Plugin {
         this.app.vault.adapter,
         file.parent?.path || '',
       )
-      const processed = await executer.execute(content)
+      let processed: string
+      try {
+        processed = await executer.execute(content)
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err))
+        const isNotFound = (error as NodeJS.ErrnoException).code === 'ENOENT'
+        const message = isNotFound
+          ? `Tabula: executable not found at "${this.settings.executablePath}". Check the path in settings.`
+          : `Tabula: ${error.message}`
+        this.lastErrorNotice?.hide()
+        this.lastErrorNotice = new Notice(message, 0)
+        return
+      }
 
       try {
         this.updatingFiles.add(file.path)

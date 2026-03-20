@@ -4,7 +4,7 @@ import * as path from 'node:path'
 import * as os from 'node:os'
 import * as fs from 'node:fs/promises'
 
-import { DataAdapter, normalizePath } from 'obsidian'
+import { DataAdapter } from 'obsidian'
 import { TabulaSettings } from './types'
 
 export class Executer {
@@ -32,7 +32,7 @@ export class Executer {
 
       return await run(this.settings.executablePath, args)
     } finally {
-      fs.unlink(path.join('/', normalizePath(dataPath)))
+      fs.unlink(dataPath)
         .catch((err) => {
           return {
             result: '',
