@@ -89,7 +89,9 @@ func parse(reader io.Reader) ([]chunk, error) {
 
 		// --- Error message ---
 		case isMessage:
-			appendChunk(&chunks, kind, buffer)
+			if strings.TrimSpace(strings.Join(buffer, "")) != "" {
+				appendChunk(&chunks, kind, buffer)
+			}
 			buffer = []string{}
 			kind = textKind
 

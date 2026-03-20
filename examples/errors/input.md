@@ -34,7 +34,7 @@ let A2 = ;
 ### Malformed Table Header
 
 | name  | age | another |
-| ----- | --- |
+| ----- | --- | ------- |
 | Alice | 30  |
 
 ```tabula
@@ -366,3 +366,15 @@ let E1 = "unterminated;
 let A1 = B1 + ;
 let C1 = INVALID_FUNC(1, 2, 3);
 ```
+
+| one | two | three |
+| --- | --- | ----- |
+| 11  | 20  | 191   |
+
+<!-- Tabula: can not parse: unexpected = at tabula_a215f12c9339.md:1:7 -->
+
+```tabula
+let C2 = A2 + B2 * 9;
+```
+
+something
