@@ -132,7 +132,6 @@ Alice,25,85
 Bob,30,92
 #tabula #include "script.tbl"
 ```
-<!-- tabula failed to parse program /Users/pavlo.blazhyievskyi/work/private/tabula/doc/command-line.md, failed to parse included file /Users/pavlo.blazhyievskyi/work/private/tabula/doc/script.tbl include file not found: /Users/pavlo.blazhyievskyi/work/private/tabula/doc/script.tbl at /Users/pavlo.blazhyievskyi/work/private/tabula/doc/command-line.md:1:2 -->
 
 Then run without specifying a script file:
 

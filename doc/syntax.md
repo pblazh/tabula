@@ -90,8 +90,6 @@ You can use `#include` in CSV files by prefixing with `#tabula`:
 A,B,C
 1,2,3
 ```
-<!-- tabula failed to parse program /Users/pavlo.blazhyievskyi/work/private/tabula/doc/syntax.md, failed to parse included file /Users/pavlo.blazhyievskyi/work/private/tabula/doc/script.tbl include file not found: /Users/pavlo.blazhyievskyi/work/private/tabula/doc/script.tbl at /Users/pavlo.blazhyievskyi/work/private/tabula/doc/syntax.md:1:2 -->
-
 
 This allows you to reference external script files from within CSV data files.
 

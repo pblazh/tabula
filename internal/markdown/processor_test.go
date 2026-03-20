@@ -73,6 +73,30 @@ func TestProcess(t *testing.T) {
 			}, "\n"),
 		},
 		{
+			name: "CSV with fixed code",
+			input: strings.Join([]string{
+				"```csv",
+				"one,two,three",
+				"1,2,3",
+				"```",
+				"<!-- Tabula: message to be removed -->",
+				"```tabula",
+				"let A2 = 99;",
+				"```",
+				"",
+			}, "\n"),
+			output: strings.Join([]string{
+				"```csv",
+				"one,two,three",
+				"99,2,3",
+				"```",
+				"```tabula",
+				"let A2 = 99;",
+				"```",
+				"",
+			}, "\n"),
+		},
+		{
 			name: "CSV with failing code",
 			input: strings.Join([]string{
 				"```csv",

@@ -34,7 +34,7 @@ var (
 	scriptBegin = regexp.MustCompile("^```tabula\\s*$")
 	csvBegin    = regexp.MustCompile("^```csv\\s*$")
 	scriptEnd   = regexp.MustCompile("^```\\s*$")
-	message     = regexp.MustCompile(`^<!-- Tabula: \s.*$`)
+	message     = regexp.MustCompile(`^<!-- Tabula: .* -->$`)
 )
 
 func toMessage(msg string) string {
