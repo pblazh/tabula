@@ -13,7 +13,6 @@ export class TabulaSettingTab extends PluginSettingTab {
     const { containerEl } = this
 
     containerEl.empty()
-    containerEl.createEl('h2', { text: 'Tabula Settings' })
 
     new Setting(containerEl)
       .setName('Auto-execute on save')

@@ -25,7 +25,7 @@ export default class TabulaPlugin extends Plugin {
 
   invalidate() {}
 
-  async onunload() {
+  onunload() {
     // @ts-expect-error wrong types
     delete CodeMirror.modes['tabula']
   }
@@ -37,11 +37,15 @@ export default class TabulaPlugin extends Plugin {
     this.addCommand({
       id: 'tabula-execute',
       name: 'execute',
-      callback: () => {
+      checkCallback: (checking: boolean) => {
         const file = this.app.workspace.getActiveFile()
         if (file instanceof TFile && file.extension === 'md') {
-          this.executeOnFile(file)
+          if (!checking) {
+            this.executeOnFile(file)
+          }
+          return true
         }
+        return false
       },
     })
 
@@ -89,39 +93,37 @@ export default class TabulaPlugin extends Plugin {
   }
 
   private async executeOnFile(file: TFile) {
-    if (file.extension.toLowerCase() !== 'md') {
-      console.error('file type is not supported')
-    }
     if (this.updatingFiles.has(file.path)) return
 
-    // Only process markdown files
-    if (file.extension === 'md') {
-      const content = await this.app.vault.read(file)
-      const executer = new Executer(
-        this.settings,
-        this.app.vault.adapter,
-        file.parent?.path || '',
-      )
-      let processed: string
-      try {
-        processed = await executer.execute(content)
-      } catch (err) {
-        const error = err instanceof Error ? err : new Error(String(err))
-        const isNotFound = (error as NodeJS.ErrnoException).code === 'ENOENT'
-        const message = isNotFound
-          ? `Tabula: executable not found at "${this.settings.executablePath}". Check the path in settings.`
-          : `Tabula: ${error.message}`
-        this.lastErrorNotice?.hide()
-        this.lastErrorNotice = new Notice(message, 0)
-        return
-      }
+    const content = await this.app.vault.read(file)
+    const executer = new Executer(
+      this.settings,
+      this.app.vault.adapter,
+      file.parent?.path || '',
+    )
+    let processed: string
+    try {
+      processed = await executer.execute(content)
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error(String(err))
+      const isNotFound = (error as NodeJS.ErrnoException).code === 'ENOENT'
+      const message = isNotFound
+        ? `Tabula: executable not found at "${this.settings.executablePath}". Check the path in settings.`
+        : `Tabula: ${error.message}`
+      this.lastErrorNotice?.hide()
+      this.lastErrorNotice = new Notice(message, 0)
+      return
+    }
 
-      try {
-        this.updatingFiles.add(file.path)
-        await file.vault.modify(file, processed)
-      } finally {
-        this.updatingFiles.delete(file.path)
-      }
+    try {
+      this.updatingFiles.add(file.path)
+      // vault.process ensures the write is serialized with other vault operations.
+      // The callback intentionally ignores the current content because `processed`
+      // was derived from the file content read above, and concurrent writes to this
+      // file are prevented by the `updatingFiles` guard.
+      await this.app.vault.process(file, () => processed)
+    } finally {
+      this.updatingFiles.delete(file.path)
     }
   }
 

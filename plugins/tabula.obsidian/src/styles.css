@@ -7,12 +7,11 @@
 .markdown-rendered .tabula-csv-table .tabula-csv-table-guide-row td {
   font-size: small;
   font-weight: bold;
-  background: darkgray;
-  color: white;
+  background: var(--table-header-background);
+  color: var(--table-header-color);
 }
 
-.markdown-rendered .tabula-csv-table td.tabula-csv-table-guide-cell,
-.markdown-rendered .tabula-csv-table td.csv-td--a:first-child {
+.markdown-rendered .tabula-csv-table td.tabula-csv-table-guide-cell {
   width: 1.8em;
   min-width: 1.8em;
 }

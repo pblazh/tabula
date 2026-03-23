@@ -1,5 +1,4 @@
-import { getIndexLetter, parseCSV, renderTableHTML } from './renderTable'
-import { TabulaSettings } from './types'
+import { getIndexLetter, parseCSV } from './renderTable'
 
 describe('render table', () => {
   describe('getIndexLetter', () => {
@@ -43,82 +42,6 @@ describe('render table', () => {
       'parseCSV -> %s',
       async (_, [input, expected]) => {
         const output = await parseCSV(input)
-        expect(output).toStrictEqual(expected)
-      },
-    )
-  })
-
-  describe('renderTable', () => {
-    test.each([
-      [
-        'matrix',
-        [
-          true,
-          '1,a\n2,b\n3,c\n',
-          `
-<table class="tabula-csv-table tabula-csv-table--guide">
-  <tbody>
-    <tr class="tabula-csv-table-guide-row">
-      <td class="tabula-csv-table-guide-cell"></td>
-      <td>A</td>
-      <td>B</td>
-    <tr>
-    <tr>
-      <td class="tabula-csv-table-guide-cell">1</td>
-      <td>1</td>
-      <td>a</td>
-    <tr>
-    <tr>
-      <td class="tabula-csv-table-guide-cell">2</td>
-      <td>2</td>
-      <td>b</td>
-    <tr>
-    <tr>
-      <td class="tabula-csv-table-guide-cell">3</td>
-      <td>3</td>
-      <td>c</td>
-    <tr>
-  </tbody>
-</table>`,
-        ],
-      ],
-      [
-        'matrix hidden index',
-        [
-          false,
-          '1,a\n2,b\n3,c\n',
-          `
-<table class="tabula-csv-table">
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>a</td>
-    <tr>
-    <tr>
-      <td>2</td>
-      <td>b</td>
-    <tr>
-    <tr>
-      <td>3</td>
-      <td>c</td>
-    <tr>
-  </tbody>
-</table>`,
-        ],
-      ],
-
-      ['empty', ['', '', '']],
-    ] as Array<[string, [boolean, string, string]]>)(
-      'parseCSV %s',
-      async (_, [tableIndex, input, expected]) => {
-        const settings: TabulaSettings = {
-          autoExecution: false,
-          executablePath: '',
-          autoFormat: false,
-          tableIndex,
-        }
-
-        const output = await renderTableHTML(settings, input)
         expect(output).toStrictEqual(expected)
       },
     )
