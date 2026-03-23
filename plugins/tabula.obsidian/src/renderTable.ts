@@ -1,75 +1,46 @@
 import { TabulaSettings } from './types'
 import * as csv from '@fast-csv/parse'
-import m from 'mustache'
 
 export async function renderTable(
   settings: TabulaSettings,
   source: string,
   el: HTMLElement,
 ) {
-  const html = await renderTableHTML(settings, source)
-  el.innerHTML = html
-}
+  const csvData = await parseCSV(source)
+  if (csvData.length === 0) return
 
-const template = `
-<table class="tabula-csv-table{{#guide}} tabula-csv-table--guide{{/guide}}">
-  <tbody>
-{{#guide}}
-    <tr class="tabula-csv-table-guide-row">
-      <td class="tabula-csv-table-guide-cell"></td>
-{{#header}}
-      <td>{{.}}</td>
-{{/header}}
-    <tr>
-{{/guide}}
-  {{#matrix}}
-    <tr>
-{{#guide}}
-      <td class="tabula-csv-table-guide-cell">{{index}}</td>
-{{/guide}}
-{{#cells}}
-      <td>{{value}}</td>
-{{/cells}}
-    <tr>
-  {{/matrix}}
-  </tbody>
-</table>`
-
-m.parse(template)
-
-export async function renderTableHTML(
-  settings: TabulaSettings,
-  source: string,
-): Promise<string> {
-  const csv = await parseCSV(source)
-  const guide = settings.tableIndex // ? '' : 'csv-table--hidden'
-
-  if (csv.length === 0) {
-    return ''
-  }
-
-  type Cell = {
-    index: string
-    value: string
-  }
-  type Row = { index: string; cells: Cell[] }
-
-  const header: string[] = Array(csv[0].length)
+  const guide = settings.tableIndex
+  const headers = Array(csvData[0].length)
     .fill(null)
-    .map((_, i) => String(getIndexLetter(i + 1)))
+    .map((_, i) => getIndexLetter(i + 1))
 
-  const matrix: Row[] = csv.map((row, j) => ({
-    index: String(j + 1),
-    cells: row.map(
-      (cell) =>
-        ({
-          index: String(j),
-          value: cell,
-        }) as Cell,
-    ),
-  }))
+  const table = el.createEl('table', {
+    cls: `tabula-csv-table${guide ? ' tabula-csv-table--guide' : ''}`,
+  })
+  const tbody = table.createEl('tbody')
 
-  return m.render(template, { guide, header, matrix })
+  if (guide) {
+    const headerRow = tbody.createEl('tr', {
+      cls: 'tabula-csv-table-guide-row',
+    })
+    headerRow.createEl('td', { cls: 'tabula-csv-table-guide-cell' })
+    for (const h of headers) {
+      headerRow.createEl('td', { text: h })
+    }
+  }
+
+  for (let j = 0; j < csvData.length; j++) {
+    const tr = tbody.createEl('tr')
+    if (guide) {
+      tr.createEl('td', {
+        cls: 'tabula-csv-table-guide-cell',
+        text: String(j + 1),
+      })
+    }
+    for (const cell of csvData[j]) {
+      tr.createEl('td', { text: cell })
+    }
+  }
 }
 
 export function parseCSV(source: string): Promise<string[][]> {

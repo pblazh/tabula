@@ -4,7 +4,7 @@ import * as path from 'node:path'
 import * as os from 'node:os'
 import * as fs from 'node:fs/promises'
 
-import { DataAdapter } from 'obsidian'
+import { DataAdapter, normalizePath, Notice } from 'obsidian'
 import { TabulaSettings } from './types'
 
 export class Executer {
@@ -37,7 +37,7 @@ export class Executer {
       return await run(this.settings.executablePath, args)
     } finally {
       cleanup().catch((err) => {
-        console.log('FAILED TO REMOVE', dataPath, err)
+        new Notice(`FAILED TO REMOVE ${dataPath}, ${err}`, 0)
       })
     }
   }
@@ -64,7 +64,7 @@ function run(
 
     child.on('error', reject)
 
-    child.on('close', (code: null) => {
+    child.on('close', (code: number | null) => {
       if (code === 0) {
         resolve(stdout)
       } else {
@@ -91,9 +91,8 @@ async function createVaultSource(
   // @ts-expect-error undocumented
   const adapterBasePath: string = adapter.basePath
 
-  const tmpPath = path.join(
-    basePath,
-    `tabula_${crypto.randomBytes(6).toString('hex')}.md`,
+  const tmpPath = normalizePath(
+    path.join(basePath, `tabula_${crypto.randomBytes(6).toString('hex')}.md`),
   )
 
   await adapter.write(tmpPath, content)
