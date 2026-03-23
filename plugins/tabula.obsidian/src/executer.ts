@@ -20,7 +20,11 @@ export class Executer {
       ? createVaultSource
       : createTmpSource
 
-    const dataPath = await createSource(this.adapter, this.path, content)
+    const { dataPath, cleanup } = await createSource(
+      this.adapter,
+      this.path,
+      content,
+    )
 
     try {
       const args = [
@@ -32,16 +36,9 @@ export class Executer {
 
       return await run(this.settings.executablePath, args)
     } finally {
-      fs.unlink(dataPath)
-        .catch((err) => {
-          return {
-            result: '',
-            error: String(err),
-          }
-        })
-        .catch((err) => {
-          console.log('FAILED TO REMOVE', dataPath, err)
-        })
+      cleanup().catch((err) => {
+        console.log('FAILED TO REMOVE', dataPath, err)
+      })
     }
   }
 }
@@ -86,7 +83,7 @@ async function createVaultSource(
   adapter: DataAdapter,
   basePath: string,
   content: string,
-): Promise<string> {
+): Promise<{ dataPath: string; cleanup: () => Promise<void> }> {
   // @ts-expect-error undocumented
   if (!adapter.basePath) {
     throw new Error('Can not determine base path of a vault')
@@ -100,19 +97,25 @@ async function createVaultSource(
   )
 
   await adapter.write(tmpPath, content)
-  return path.join(adapterBasePath, tmpPath)
+  return {
+    dataPath: path.join(adapterBasePath, tmpPath),
+    cleanup: () => adapter.remove(tmpPath),
+  }
 }
 
 async function createTmpSource(
   _adapter: DataAdapter,
   _basePath: string,
   content: string,
-): Promise<string> {
+): Promise<{ dataPath: string; cleanup: () => Promise<void> }> {
   const tmpPath = path.join(
     os.tmpdir(),
     `tabula_${crypto.randomBytes(6).toString('hex')}.md`,
   )
   await fs.writeFile(tmpPath, content)
 
-  return tmpPath
+  return {
+    dataPath: tmpPath,
+    cleanup: () => fs.unlink(tmpPath),
+  }
 }
