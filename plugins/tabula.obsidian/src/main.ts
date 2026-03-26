@@ -1,11 +1,4 @@
-import {
-  App,
-  Notice,
-  Plugin,
-  PluginManifest,
-  TFile,
-  WorkspaceLeaf,
-} from 'obsidian'
+import { Notice, Plugin, TFile, WorkspaceLeaf } from 'obsidian'
 
 import { TabulaSettings, DEFAULT_SETTINGS } from './types'
 import { TabulaSettingTab } from './settings'
@@ -18,12 +11,6 @@ export default class TabulaPlugin extends Plugin {
   settings: TabulaSettings = DEFAULT_SETTINGS
   private updatingFiles = new Set<string>()
   private lastErrorNotice: Notice | null = null
-
-  constructor(app: App, manifest: PluginManifest) {
-    super(app, manifest)
-  }
-
-  invalidate() {}
 
   onunload() {
     // @ts-expect-error wrong types
@@ -94,16 +81,22 @@ export default class TabulaPlugin extends Plugin {
 
   private async executeOnFile(file: TFile) {
     if (this.updatingFiles.has(file.path)) return
+    this.updatingFiles.add(file.path)
 
-    const content = await this.app.vault.read(file)
-    const executer = new Executer(
-      this.settings,
-      this.app.vault.adapter,
-      file.parent?.path || '',
-    )
+    try {
+      await this.runExecution(file)
+    } finally {
+      this.updatingFiles.delete(file.path)
+    }
+  }
+
+  private async runExecution(file: TFile): Promise<void> {
+    const executer = new Executer(this.settings, file)
+    const originalContent = await this.app.vault.read(file)
+
     let processed: string
     try {
-      processed = await executer.execute(content)
+      processed = await executer.execute()
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err))
       const isNotFound = (error as NodeJS.ErrnoException).code === 'ENOENT'
@@ -115,16 +108,12 @@ export default class TabulaPlugin extends Plugin {
       return
     }
 
-    try {
-      this.updatingFiles.add(file.path)
-      // vault.process ensures the write is serialized with other vault operations.
-      // The callback intentionally ignores the current content because `processed`
-      // was derived from the file content read above, and concurrent writes to this
-      // file are prevented by the `updatingFiles` guard.
-      await this.app.vault.process(file, () => processed)
-    } finally {
-      this.updatingFiles.delete(file.path)
-    }
+    // vault.process ensures the write is serialized with other vault operations.
+    // If the file was edited during execution, preserve user changes.
+    await this.app.vault.process(file, (currentContent) => {
+      if (currentContent !== originalContent) return currentContent
+      return processed
+    })
   }
 
   async loadSettings() {
