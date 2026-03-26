@@ -1,6 +1,6 @@
 {
   "name": "tabula-obsidian",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "description": "Tabula plugin for Obsidian - CSV transformation with spreadsheet-inspired scripting language",
   "main": "out/main.js",
   "scripts": {
