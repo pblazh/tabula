@@ -4,37 +4,28 @@ import * as path from 'node:path'
 import * as os from 'node:os'
 import * as fs from 'node:fs/promises'
 
-import { DataAdapter, normalizePath, Notice } from 'obsidian'
+import { Notice } from 'obsidian'
+import type { TFile } from 'obsidian'
 import { TabulaSettings } from './types'
 
 export class Executer {
   constructor(
     private settings: TabulaSettings,
-    private adapter: DataAdapter,
-    private path: string,
+    private file: TFile,
   ) {}
 
-  async execute(content: string): Promise<string> {
+  async execute(): Promise<string> {
     // @ts-expect-error undocumented
-    const createSource = this.adapter.basePath
-      ? createVaultSource
-      : createTmpSource
+    const basePath = this.file.vault.adapter.basePath as string | undefined
+    if (basePath) {
+      return runOnFile(this.settings, path.join(basePath, this.file.path))
+    }
 
-    const { dataPath, cleanup } = await createSource(
-      this.adapter,
-      this.path,
-      content,
+    const { dataPath, cleanup } = await createTmpSource(
+      await this.file.vault.read(this.file),
     )
-
     try {
-      const args = [
-        this.settings.autoFormat ? '-a' : '',
-        '-m',
-        '-i',
-        dataPath,
-      ].filter(Boolean)
-
-      return await run(this.settings.executablePath, args)
+      return await runOnFile(this.settings, dataPath)
     } finally {
       cleanup().catch((err) => {
         new Notice(`FAILED TO REMOVE ${dataPath}, ${err}`, 0)
@@ -43,11 +34,18 @@ export class Executer {
   }
 }
 
-function run(
-  cmd: string,
-  args: string[] = [],
-  input: string = '',
+function runOnFile(
+  settings: TabulaSettings,
+  dataPath: string,
 ): Promise<string> {
+  const args = [settings.autoFormat ? '-a' : '', '-m', '-i', dataPath].filter(
+    Boolean,
+  )
+
+  return run(settings.executablePath, args)
+}
+
+function run(cmd: string, args: string[] = []): Promise<string> {
   return new Promise((resolve, reject) => {
     const child = spawn(cmd, args)
 
@@ -72,39 +70,11 @@ function run(
       }
     })
 
-    if (input) {
-      child.stdin.write(input)
-    }
     child.stdin.end()
   })
 }
 
-async function createVaultSource(
-  adapter: DataAdapter,
-  basePath: string,
-  content: string,
-): Promise<{ dataPath: string; cleanup: () => Promise<void> }> {
-  // @ts-expect-error undocumented
-  if (!adapter.basePath) {
-    throw new Error('Can not determine base path of a vault')
-  }
-  // @ts-expect-error undocumented
-  const adapterBasePath: string = adapter.basePath
-
-  const tmpPath = normalizePath(
-    path.join(basePath, `tabula_${crypto.randomBytes(6).toString('hex')}.md`),
-  )
-
-  await adapter.write(tmpPath, content)
-  return {
-    dataPath: path.join(adapterBasePath, tmpPath),
-    cleanup: () => adapter.remove(tmpPath),
-  }
-}
-
 async function createTmpSource(
-  _adapter: DataAdapter,
-  _basePath: string,
   content: string,
 ): Promise<{ dataPath: string; cleanup: () => Promise<void> }> {
   const tmpPath = path.join(
