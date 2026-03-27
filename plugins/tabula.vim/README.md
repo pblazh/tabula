@@ -1,6 +1,6 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://stand-with-ukraine.pp.ua)
 
-# Tabula for Vim / Neovim
+# ![Tabula](./icon.png) Tabula for Vim / Neovim
 
 Vim/Neovim plugin for [Tabula](https://github.com/pblazh/tabula) - a spreadsheet-inspired CSV transformation tool.
 
@@ -220,6 +220,7 @@ Name,Age,Score
 John,25,85
 Jane,30,92
 ```
+<!-- Tabula: can not parse: unexpected { at README.md:1:5 -->
 
 Use Vim fold commands:
 
