@@ -1,6 +1,6 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://stand-with-ukraine.pp.ua)
 
-# ![Tabula](./gh-pages/favicon.png) Tabula - Spreadsheet-Inspired CSV Transformation
+# ![Tabula](./gh-pages/icon.png) Tabula - Spreadsheet-Inspired CSV Transformation
 
 **Transform CSV files using familiar spreadsheet formulas from the command line.**
 
