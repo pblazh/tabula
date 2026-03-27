@@ -161,7 +161,7 @@ _update_files_version version:
 _commit_version version:
   just webstorm-pack
   git checkout -b release/v{{version}}
-  git add "VERSION.txt" "cmd/cli/version.go" "plugins/tabula.vscode/package.json" "plugins/tabula.obsidian/package.json" "plugins/tabula.obsidian/manifest.json"
+  git add "VERSION.txt" "cmd/cli/version.go" "plugins/tabula.vscode/package.json"
   git add plugins/tabula.webstorm
   git commit -m "chore(release): bump version to {{version}}"
   echo "Committed version {{version}} on branch release/v{{version}}"
@@ -171,7 +171,7 @@ major:
   set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
-  cp ./VERSION.txt plugins/tabula.obsidian/
+  cp -f ./VERSION.txt plugins/tabula.obsidian/
 
   MAJOR=`echo $CUR_VERSION | cut -d. -f1`
 
@@ -190,7 +190,8 @@ minor:
   set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
-  cp ./VERSION.txt plugins/tabula.obsidian/
+  cp -f ./VERSION.txt plugins/tabula.obsidian/
+
   MAJOR=`echo $CUR_VERSION | cut -d. -f1`
   MINOR=`echo $CUR_VERSION | cut -d. -f2`
 
@@ -209,7 +210,7 @@ patch:
   set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
-  cp ./VERSION.txt plugins/tabula.obsidian/
+  cp -f ./VERSION.txt plugins/tabula.obsidian/
 
   MAJOR=`echo $CUR_VERSION | cut -d. -f1`
   MINOR=`echo $CUR_VERSION | cut -d. -f2`
