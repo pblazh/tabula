@@ -109,10 +109,8 @@ export default class TabulaPlugin extends Plugin {
     }
 
     const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
-    const cursor =
-      activeView?.file?.path === file.path
-        ? activeView.editor.getCursor()
-        : null
+    const isActiveFile = activeView?.file?.path === file.path
+    const cursor = isActiveFile ? activeView!.editor.getCursor() : null
 
     // vault.process ensures the write is serialized with other vault operations.
     // If the file was edited during execution, preserve user changes.
@@ -121,8 +119,13 @@ export default class TabulaPlugin extends Plugin {
       return processed
     })
 
-    if (cursor) {
-      activeView!.editor.setCursor(cursor)
+    if (isActiveFile) {
+      requestAnimationFrame(() => {
+        const view = this.app.workspace.getActiveViewOfType(MarkdownView)
+        if (view?.file?.path !== file.path) return
+        if (cursor) view.editor.setCursor(cursor)
+        view.editor.focus()
+      })
     }
   }
 
