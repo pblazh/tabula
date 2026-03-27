@@ -1,0 +1,3 @@
+[submodule "plugins/tabula.obsidian"]
+	path = plugins/tabula.obsidian
+	url = https://github.com/pblazh/tabula-obsidian.git
