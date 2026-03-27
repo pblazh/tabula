@@ -16,3 +16,4 @@ bin
 */**/.obsidian
 coverage.html
 **/dist
+plugins/tabula.obsidian

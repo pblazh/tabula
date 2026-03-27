@@ -150,7 +150,7 @@ For complete documentation, see **[doc/README.md](doc/README.md)**
 
 - **[Vim/Neovim](plugins/tabula.vim/README.md)** - Auto-execution on save of markdown and csv files. Markdown code-block support for CSV and **Tabula** scripts. Syntax highlighting for `*.tbl` files.
 - **[Visual Studio Code](plugins/tabula.vscode/README.md)** - Auto-execution on save of markdown and csv files. Markdown code-block support for CSV and **Tabula** scripts. Syntax highlighting for `*.tbl` files.
-- **[Obsidian](plugins/tabula.obsidian/README.md)** - Auto-execution on save of markdown files. Code-block support for CSV and **Tabula** scripts.
+- **[Obsidian](https://github.com/pblazh/tabula-obsidian)** - Auto-execution on save of markdown files. Code-block support for CSV and **Tabula** scripts.
 - **[Web Storm](plugins/tabula.webstorm/README.md)** - Auto-execution on save of markdown and csv files. Code-block support for CSV and **Tabula** scripts. Syntax highlighting for `*.tbl` files.
 
 ## Links

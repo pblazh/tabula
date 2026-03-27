@@ -171,6 +171,7 @@ major:
   set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
+  cp ./VERSION.txt plugins/tabula.obsidian/
 
   MAJOR=`echo $CUR_VERSION | cut -d. -f1`
 
@@ -189,6 +190,7 @@ minor:
   set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
+  cp ./VERSION.txt plugins/tabula.obsidian/
   MAJOR=`echo $CUR_VERSION | cut -d. -f1`
   MINOR=`echo $CUR_VERSION | cut -d. -f2`
 
@@ -207,6 +209,7 @@ patch:
   set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
+  cp ./VERSION.txt plugins/tabula.obsidian/
 
   MAJOR=`echo $CUR_VERSION | cut -d. -f1`
   MINOR=`echo $CUR_VERSION | cut -d. -f2`

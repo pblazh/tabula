@@ -62,47 +62,6 @@ jobs:
           path: bin/
 
   # --------------------
-  # Tabula Obsidian Plugin
-  # --------------------
-  tabula_obsidian:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: plugins/tabula.obsidian/package-lock.json
-
-      - uses: extractions/setup-just@v3
-
-      - name: Build tabula obsidian
-        run: just obsidian
-
-      - name: Read version
-        run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: tabula_obsidian
-          path: plugins/tabula.obsidian/dist/tabula.obsidian.${{ env.VERSION }}.tar.gz
-
-      - name: Upload Obsidian release files
-        uses: actions/upload-artifact@v4
-        with:
-          name: tabula_obsidian_release_files
-          path: |
-            plugins/tabula.obsidian/out/LICENSE.txt
-            plugins/tabula.obsidian/out/README.md
-            plugins/tabula.obsidian/out/main.js
-            plugins/tabula.obsidian/out/manifest.json
-            plugins/tabula.obsidian/out/versions.json
-            plugins/tabula.obsidian/out/styles.css
-
-  # --------------------
   # Tabula VSCode Plugin
   # --------------------
   tabula_vscode:
@@ -171,7 +130,7 @@ jobs:
   # --------------------
   version_check:
     runs-on: ubuntu-latest
-    needs: [tabula_go, tabula_obsidian, tabula_vscode, tabula_vim]
+    needs: [tabula_go, tabula_vscode, tabula_vim]
     outputs:
       skip_deploy: ${{ steps.check.outputs.skip_deploy }}
       version: ${{ steps.check.outputs.version }}
@@ -208,33 +167,6 @@ jobs:
           git push origin "${VERSION}"
 
   # --------------------
-  # Release Obsidian Plugin
-  # --------------------
-  release_obsidian:
-    runs-on: ubuntu-latest
-    needs: [version_check, tabula_obsidian]
-    if: needs.version_check.outputs.skip_deploy == 'false'
-    steps:
-      - name: Download Obsidian release files
-        uses: actions/download-artifact@v4
-        with:
-          name: tabula_obsidian_release_files
-          path: obsidian-release
-
-      - name: Create GitHub Release for Obsidian Plugin
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.version_check.outputs.version }}
-          name: ${{ needs.version_check.outputs.version }}
-          files: |
-            obsidian-release/LICENSE.txt
-            obsidian-release/README.md
-            obsidian-release/main.js
-            obsidian-release/manifest.json
-            obsidian-release/versions.json
-            obsidian-release/styles.css
-
-  # --------------------
   # Deploy Tabula GitHub pages
   # --------------------
   deploy_pages:
@@ -242,10 +174,8 @@ jobs:
       [
         version_check,
         tabula_go,
-        tabula_obsidian,
         tabula_vscode,
         tabula_vim,
-        release_obsidian,
       ]
     if: needs.version_check.outputs.skip_deploy == 'false'
     runs-on: ubuntu-latest
@@ -273,12 +203,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: tabula_go_bin
-          path: gh-pages/releases
-
-      - name: Download tabula_obsidian
-        uses: actions/download-artifact@v4
-        with:
-          name: tabula_obsidian
           path: gh-pages/releases
 
       - name: Download tabula_vscode
