@@ -1,4 +1,4 @@
-import { Notice, Plugin, TFile, WorkspaceLeaf } from 'obsidian'
+import { MarkdownView, Notice, Plugin, TFile, WorkspaceLeaf } from 'obsidian'
 
 import { TabulaSettings, DEFAULT_SETTINGS } from './types'
 import { TabulaSettingTab } from './settings'
@@ -108,12 +108,22 @@ export default class TabulaPlugin extends Plugin {
       return
     }
 
+    const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
+    const cursor =
+      activeView?.file?.path === file.path
+        ? activeView.editor.getCursor()
+        : null
+
     // vault.process ensures the write is serialized with other vault operations.
     // If the file was edited during execution, preserve user changes.
     await this.app.vault.process(file, (currentContent) => {
       if (currentContent !== originalContent) return currentContent
       return processed
     })
+
+    if (cursor) {
+      activeView!.editor.setCursor(cursor)
+    }
   }
 
   async loadSettings() {
