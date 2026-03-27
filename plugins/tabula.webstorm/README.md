@@ -1,6 +1,6 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://stand-with-ukraine.pp.ua)
 
-# Tabula for Web Storm
+# ![Tabula](./icon.png) Tabula for Web Storm
 
 How to use Tabula with **Web Storm**
 
@@ -83,7 +83,7 @@ Set up an auto execution on file save for `*.csv` and `*.md` files. For Markdown
 - **Numbers**: `42`, `3.14`
 - **Strings**: `"text"`, `'text'`
 - **Comments**: `// line comment`, `/* block comment */`
-- **Functions**: `EXEC`, `SUM`, `ADD`, `PRODUCT`, `AVERAGE`, `MAX`, `MAXA`, `MIN`, `MINA`, `ABS`, `CEILING`, `FLOOR`, `ROUND`, `POWER`, `INT`, `MOD`, `SQRT`, `CONCATENATE`, `LEN`, `LOWER`, `UPPER`, `TRIM`, `EXACT`, `FIND`, `LEFT`, `RIGHT`, `MID`, `SUBSTITUTE`, `VALUE`, `IF`, `NOT`, `AND`, `OR`, `TRUE`, `FALSE`, `TODATE`, `FROMDATE`, `DAY`, `HOUR`, `MINUTE`, `MONTH`, `SECOND`, `YEAR`, `WEEKDAY`, `NOW`, `DATE`, `DATEDIF`, `DAYS`, `DATEVALUE`, `COUNT`, `COUNTA`, `ISNUMBER`, `ISTEXT`, `ISLOGICAL`, `ISBLANK`, `ADDRESS`, `ROW`, `COLUMN`, `REF`, 
+- **Functions**: `EXEC`, `SUM`, `ADD`, `PRODUCT`, `AVERAGE`, `MAX`, `MAXA`, `MIN`, `MINA`, `ABS`, `CEILING`, `FLOOR`, `ROUND`, `POWER`, `INT`, `MOD`, `SQRT`, `CONCATENATE`, `LEN`, `LOWER`, `UPPER`, `TRIM`, `EXACT`, `FIND`, `LEFT`, `RIGHT`, `MID`, `SUBSTITUTE`, `VALUE`, `IF`, `NOT`, `AND`, `OR`, `TRUE`, `FALSE`, `TODATE`, `FROMDATE`, `DAY`, `HOUR`, `MINUTE`, `MONTH`, `SECOND`, `YEAR`, `WEEKDAY`, `NOW`, `DATE`, `DATEDIF`, `DAYS`, `DATEVALUE`, `COUNT`, `COUNTA`, `ISNUMBER`, `ISTEXT`, `ISLOGICAL`, `ISBLANK`, `ADDRESS`, `ROW`, `COLUMN`, `REF`,
 
 ## Links
 

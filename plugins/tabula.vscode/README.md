@@ -1,4 +1,4 @@
-# Tabula for Visual Studio Code
+# ![Tabula](./icon.png) Tabula for Visual Studio Code
 
 VS Code extension for [Tabula](https://github.com/pblazh/tabula) - a spreadsheet-inspired CSV transformation tool.
 
