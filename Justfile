@@ -90,8 +90,7 @@ vscode-pack:
   echo pack tabula.vscode.${VERSION}.tar.gz
 
   cd plugins/tabula.vscode
-  mkdir -p dist
-  tar -czf dist/tabula.vscode.${VERSION}.tar.gz -C out .
+  npm run package
 
 # Obsidian
 obsidian-setup:
