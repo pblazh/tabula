@@ -35,16 +35,6 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
           cache: true
 
-      - name: Cache Go modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/go/pkg/mod
-            ~/.cache/go-build
-          key: go-mod-cache-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            go-mod-cache-${{ runner.os }}-
-
       - uses: extractions/setup-just@v3
 
       - name: use golangci-lint
@@ -101,7 +91,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tabula_vscode
-          path: plugins/tabula.vscode/dist/tabula.vscode.${{ env.VERSION }}.tar.gz
+          path: plugins/tabula.vscode/dist/tabula-${{ env.VERSION }}.vsix
 
   # --------------------
   # Vim Plugin
@@ -167,16 +157,49 @@ jobs:
           git push origin "${VERSION}"
 
   # --------------------
+  # Create GitHub Release with compiled binaries
+  # --------------------
+  create_release:
+    needs: [version_check, tabula_go, tabula_vim, tabula_vscode]
+    if: needs.version_check.outputs.skip_deploy == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Go binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: tabula_go_bin
+          path: bin/
+
+      - name: Download Vim plugin
+        uses: actions/download-artifact@v4
+        with:
+          name: tabula_vim
+
+      - name: Download VSCode plugin
+        uses: actions/download-artifact@v4
+        with:
+          name: tabula_vscode
+
+      - name: Create release archive
+        run: |
+          cp -r bin/ tabula/
+          tar -czf tabula-${{ needs.version_check.outputs.version }}.tar.gz tabula/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.version_check.outputs.version }}
+          name: v${{ needs.version_check.outputs.version }}
+          files: |
+            tabula-${{ needs.version_check.outputs.version }}.tar.gz
+            tabula.vim.${{ needs.version_check.outputs.version }}.tar.gz
+            tabula-${{ needs.version_check.outputs.version }}.vsix
+
+  # --------------------
   # Deploy Tabula GitHub pages
   # --------------------
   deploy_pages:
-    needs:
-      [
-        version_check,
-        tabula_go,
-        tabula_vscode,
-        tabula_vim,
-      ]
+    needs: [version_check, tabula_go, tabula_vscode, tabula_vim]
     if: needs.version_check.outputs.skip_deploy == 'false'
     runs-on: ubuntu-latest
     environment: github-pages
