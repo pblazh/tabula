@@ -2,6 +2,7 @@ package markdown
 
 import (
 	"strings"
+	"sync"
 	"testing"
 )
 
@@ -335,6 +336,45 @@ func TestProcess(t *testing.T) {
 				"",
 			}, "\n"),
 		},
+		{
+			name: "multiple CSV with code concurrent",
+			input: strings.Join([]string{
+				"```csv",
+				"one,two,three",
+				"1,2,3",
+				"```",
+				"```tabula",
+				"let A2 = 10;",
+				"```",
+				"",
+				"```csv",
+				"one,two,three",
+				"4,5,6",
+				"```",
+				"```tabula",
+				"let A2 = 20;",
+				"```",
+				"",
+			}, "\n"),
+			output: strings.Join([]string{
+				"```csv",
+				"one,two,three",
+				"10,2,3",
+				"```",
+				"```tabula",
+				"let A2 = 10;",
+				"```",
+				"",
+				"```csv",
+				"one,two,three",
+				"20,5,6",
+				"```",
+				"```tabula",
+				"let A2 = 20;",
+				"```",
+				"",
+			}, "\n"),
+		},
 	}
 
 	for _, tc := range cases {
@@ -356,4 +396,66 @@ func TestProcess(t *testing.T) {
 			}
 		})
 	}
+}
+
+// TestProcessConcurrentChunks verifies that multiple processable chunks in a
+// single document are each executed with their own correct script and data.
+// This guards against closure variable capture bugs where goroutines share
+// loop variables and all end up processing the last chunk's data.
+func TestProcessConcurrentChunks(t *testing.T) {
+	input := strings.Join([]string{
+		"```csv",
+		"one,two,three",
+		"1,2,3",
+		"```",
+		"```tabula",
+		"let A2 = 10;",
+		"```",
+		"",
+		"```csv",
+		"one,two,three",
+		"4,5,6",
+		"```",
+		"```tabula",
+		"let A2 = 20;",
+		"```",
+		"",
+	}, "\n")
+
+	want := strings.Join([]string{
+		"```csv",
+		"one,two,three",
+		"10,2,3",
+		"```",
+		"```tabula",
+		"let A2 = 10;",
+		"```",
+		"",
+		"```csv",
+		"one,two,three",
+		"20,5,6",
+		"```",
+		"```tabula",
+		"let A2 = 20;",
+		"```",
+		"",
+	}, "\n")
+
+	const iterations = 100
+	var wg sync.WaitGroup
+	wg.Add(iterations)
+	for range iterations {
+		go func() {
+			defer wg.Done()
+			var writer strings.Builder
+			if err := Process(&Config{}, strings.NewReader(input), &writer); err != nil {
+				t.Errorf("unexpected error: %s", err)
+				return
+			}
+			if got := writer.String(); got != want {
+				t.Errorf("concurrent output mismatch:\nwant: %q\n got: %q", want, got)
+			}
+		}()
+	}
+	wg.Wait()
 }

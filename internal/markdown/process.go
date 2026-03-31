@@ -1,9 +1,11 @@
 package markdown
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"strings"
+	"sync"
 
 	"github.com/pblazh/tabula/internal/csv"
 )
@@ -18,60 +20,88 @@ func Process(
 		return err
 	}
 
-	var result []chunk
+	result := make([][]*chunk, len(chunks))
+	var wg sync.WaitGroup
+	var mu sync.Mutex
+	var errs []error
 
-	for i := range chunks {
-		ch := chunks[i]
-		write := csv.Write
-		wrap := wrapCodeBlock
-
-		if ch.kind == csvKind && config.Align {
-			write = csv.WriteAligned
-		}
-
-		if ch.kind == tableKind {
-			write = WriteAligned
-			wrap = wrapTable
-		}
-
+	for i, ch := range chunks {
+		result[i] = make([]*chunk, 0)
 		scriptChunk := getScriptChunk(chunks, i)
+
 		if chunkNeedsProcessing(&ch, scriptChunk) {
-			data, comments, err := execute(config, &ch, scriptChunk)
-			if err != nil {
-				result = append(result, ch)
-				result = append(
-					result,
-					chunk{
-						kind: messageKind,
-						text: []string{toMessage(err.Error())},
-					},
-				)
-				continue
-			}
-
-			// create a formatter depending on if align was requested
-			var sb strings.Builder
-			err = write(&sb, data, comments)
-			if err != nil {
-				return ErrWriteCSV(err)
-			}
-
-			lines := wrap(sb.String())
-
-			result = append(result, chunk{kind: csvKind, text: lines})
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				output, err := processChunk(config, &ch, scriptChunk)
+				if err != nil {
+					mu.Lock()
+					errs = append(errs, err)
+					mu.Unlock()
+					return
+				}
+				result[i] = output
+			}()
 			continue
 		}
-		result = append(result, ch)
+		result[i] = append(result[i], &ch)
 	}
 
-	for _, ch := range result {
-		_, err = fmt.Fprintf(writer, "%s\n", ch)
-		if err != nil {
-			return ErrWriteMD(err)
+	wg.Wait()
+
+	if err := errors.Join(errs...); err != nil {
+		return err
+	}
+
+	for _, chs := range result {
+		for _, ch := range chs {
+			_, err = fmt.Fprintf(writer, "%s\n", ch)
+			if err != nil {
+				return ErrWriteMD(err)
+			}
 		}
 	}
 
 	return nil
+}
+
+func processChunk(config *Config, data, script *chunk) ([]*chunk, error) {
+	var result []*chunk
+	lines, comments, err := execute(config, data, script)
+	if err != nil {
+		result = append(result, data)
+		result = append(
+			result,
+			&chunk{
+				kind: messageKind,
+				text: []string{toMessage(err.Error())},
+			},
+		)
+		return result, nil
+	}
+
+	write := csv.Write
+	wrap := wrapCodeBlock
+
+	if data.kind == csvKind && config.Align {
+		write = csv.WriteAligned
+	}
+
+	if data.kind == tableKind {
+		write = WriteAligned
+		wrap = wrapTable
+	}
+	// create a formatter depending on if align was requested
+	var sb strings.Builder
+	err = write(&sb, lines, comments)
+	if err != nil {
+		return nil, ErrWriteCSV(err)
+	}
+
+	output := wrap(sb.String())
+
+	result = append(result, &chunk{kind: csvKind, text: output})
+	return result, nil
 }
 
 func wrapCodeBlock(code string) []string {
