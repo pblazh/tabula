@@ -1,6 +1,7 @@
 package markdown
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"strings"
@@ -21,9 +22,10 @@ func Process(
 
 	result := make([][]*chunk, len(chunks))
 	var wg sync.WaitGroup
+	var mu sync.Mutex
+	var errs []error
 
-	for i := range chunks {
-		ch := chunks[i]
+	for i, ch := range chunks {
 		result[i] = make([]*chunk, 0)
 		scriptChunk := getScriptChunk(chunks, i)
 
@@ -33,7 +35,10 @@ func Process(
 				defer wg.Done()
 				output, err := processChunk(config, &ch, scriptChunk)
 				if err != nil {
-					fmt.Println(err)
+					mu.Lock()
+					errs = append(errs, err)
+					mu.Unlock()
+					return
 				}
 				result[i] = output
 			}()
@@ -43,6 +48,10 @@ func Process(
 	}
 
 	wg.Wait()
+
+	if err := errors.Join(errs...); err != nil {
+		return err
+	}
 
 	for _, chs := range result {
 		for _, ch := range chs {
