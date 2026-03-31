@@ -1,14 +1,13 @@
 GO_CMD := "go"
 
 # --- Build targets ---
-setup: go-setup vscode-setup obsidian-setup
+setup: go-setup vscode-setup
 go-build: build-darwin-arm64 build-darwin-amd64 build-linux-arm64 build-linux-amd64 build-linux-386 build-windows-arm64 build-windows-amd64 build-windows-386
-build: go-build vscode-build obsidian-build
-test: go-test vscode-test obsidian-test
-lint: go-lint vscode-lint obsidian-lint
+build: go-build vscode-build
+test: go-test vscode-test
+lint: go-lint vscode-lint
 
 go: go-setup go-lint go-test go-build
-obsidian: obsidian-setup obsidian-lint obsidian-test obsidian-build obsidian-pack
 vscode: vscode-setup vscode-lint vscode-test vscode-build vscode-pack
 vim: vim-pack
 
@@ -16,7 +15,6 @@ clean:
 	rm -rf bin
 	rm -f coverage.out coverage.html
 	rm -f plugins/tabula.vscode/node_modules
-	rm -f plugins/tabula.obsidian/node_modules
 
 build-darwin-arm64:
 	env GOOS=darwin GOARCH=arm64 {{GO_CMD}} build -o bin/darwin/arm64/tabula ./cmd/cli
@@ -92,30 +90,6 @@ vscode-pack:
   cd plugins/tabula.vscode
   npm run package
 
-# Obsidian
-obsidian-setup:
-  cd plugins/tabula.obsidian && npm ci && npm audit --omit=dev
-
-obsidian-build:
-  cd plugins/tabula.obsidian && npm run build
-
-obsidian-test:
-  cd plugins/tabula.obsidian && npm run test
-
-obsidian-lint:
-  cd plugins/tabula.obsidian && npm run lint:fix
-
-obsidian-pack:
-  #!/bin/sh
-  set -eu
-
-  VERSION=$(cat VERSION.txt)
-  echo pack tabula.obsidian.${VERSION}.tar.gz
-
-  cd plugins/tabula.obsidian
-  mkdir -p dist
-  tar -czf dist/tabula.obsidian.${VERSION}.tar.gz -C out .
-
 # Vim
 vim-pack:
   #!/bin/sh
@@ -170,15 +144,12 @@ major:
   set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
-  cp -f ./VERSION.txt plugins/tabula.obsidian/
 
   MAJOR=`echo $CUR_VERSION | cut -d. -f1`
 
   NEW_VERSION="$(($MAJOR + 1)).0.0"
   echo $CUR_VERSION "->" $NEW_VERSION
 
-  just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/package.json"
-  just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/manifest.json"
   just _update_json_version ${NEW_VERSION} "plugins/tabula.vscode/package.json"
   just _update_files_version ${NEW_VERSION}
   just _update_version ${NEW_VERSION}
@@ -189,7 +160,6 @@ minor:
   set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
-  cp -f ./VERSION.txt plugins/tabula.obsidian/
 
   MAJOR=`echo $CUR_VERSION | cut -d. -f1`
   MINOR=`echo $CUR_VERSION | cut -d. -f2`
@@ -197,8 +167,6 @@ minor:
   NEW_VERSION="${MAJOR}.$(($MINOR + 1)).0"
   echo $CUR_VERSION "->" $NEW_VERSION
 
-  just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/package.json"
-  just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/manifest.json"
   just _update_json_version ${NEW_VERSION} "plugins/tabula.vscode/package.json"
   just _update_files_version ${NEW_VERSION}
   just _update_version ${NEW_VERSION}
@@ -209,7 +177,6 @@ patch:
   set -eu
 
   CUR_VERSION=`cat ./VERSION.txt`
-  cp -f ./VERSION.txt plugins/tabula.obsidian/
 
   MAJOR=`echo $CUR_VERSION | cut -d. -f1`
   MINOR=`echo $CUR_VERSION | cut -d. -f2`
@@ -218,8 +185,6 @@ patch:
   NEW_VERSION="${MAJOR}.${MINOR}.$(($PATCH + 1))"
   echo $CUR_VERSION "->" $NEW_VERSION
 
-  just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/package.json"
-  just _update_json_version ${NEW_VERSION} "plugins/tabula.obsidian/manifest.json"
   just _update_json_version ${NEW_VERSION} "plugins/tabula.vscode/package.json"
   just _update_files_version ${NEW_VERSION}
   just _update_version ${NEW_VERSION}
