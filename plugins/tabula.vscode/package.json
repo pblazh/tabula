@@ -1,8 +1,8 @@
 {
   "name": "tabula",
-  "displayName": "Tabula",
-  "description": "Tabula - CSV transformation with spreadsheet-inspired scripting language",
-  "version": "0.2.21",
+  "displayName": "Tabula — CSV & Markdown Formulas",
+  "description": "Run spreadsheet-style formulas inside CSV and Markdown files. Recompute on save.",
+  "version": "0.2.22",
   "icon": "icon-128.png",
   "publisher": "tabula",
   "repository": {
@@ -15,16 +15,27 @@
   "categories": [
     "Data Science",
     "Formatters",
+    "Notebooks",
     "Other"
   ],
   "keywords": [
     "csv",
+    "markdown",
     "tabula",
     "spreadsheet",
-    "data"
+    "formulas",
+    "datascience",
+    "tables",
+    "notes",
+    "obsidian",
+    "excel",
+    "numbers",
+    "calc",
+    "notebook"
   ],
   "activationEvents": [
-    "onLanguage:csv"
+    "onLanguage:csv",
+    "onLanguage:markdown"
   ],
   "main": "./out/main.js",
   "contributes": {
@@ -79,7 +90,7 @@
         "tabula.autoExecution": {
           "type": "boolean",
           "default": true,
-          "description": "Automatically execute Tabula scripts when saving CSV files"
+          "description": "Automatically execute Tabula scripts when saving CSV or Markdown files"
         },
         "tabula.executablePath": {
           "type": "string",
