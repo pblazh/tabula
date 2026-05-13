@@ -1,6 +1,9 @@
 # ![Tabula](./icon.png) Tabula for Visual Studio Code
 
+![Tabula: save a CSV, formulas recompute in place](./demo.gif)
+
 VS Code extension for [Tabula](https://github.com/pblazh/tabula) - a spreadsheet-inspired CSV transformation tool.
+It adds Google spreadsheet / Excel functionality for CSV and markdown files
 
 ## Features
 
@@ -15,12 +18,15 @@ VS Code extension for [Tabula](https://github.com/pblazh/tabula) - a spreadsheet
 ## Prerequisites
 
 - **Tabula CLI** must be installed and in your `$PATH`
+  Download a suitable for your OS/architecture build from the [tabula web site](https://pblazh.github.io/tabula)
+
+For example for MacOS M1/M...
 
 ```bash
 # Download from GitHub Pages
-curl -LO https://pblazh.github.io/tabula/bin/darwin/arm64/tabula  # macOS M1/M2
-chmod +x tabula
-sudo mv tabula /usr/local/bin/
+curl -LO https://pblazh.github.io/tabula/bin/darwin/arm64/tabula  # fetch
+chmod +x tabula                                                   # make it executable
+sudo mv tabula /usr/local/bin/                                    # put into path location
 
 ```
 
@@ -28,29 +34,67 @@ Or build from source
 
 ## Usage
 
-### Auto-Execution on Save
+### Working with Markdown Files
 
-- Open a CSV file in VS Code
-- Add **Tabula** script directive:
+**Tabula** can also process Markdown files containing tables and CSV blocks,
+which makes it useful for note-taking workflows. When the active file is
+Markdown, the extension automatically passes the `-m` flag to **Tabula**.
 
+Supported data blocks:
+
+- **Markdown tables** - standard pipe-delimited syntax with header and separator rows
+- **CSV code blocks** - fenced code blocks tagged with `csv`
+
+There are two ways to attach a **Tabula** script to a data block:
+
+- A `tabula` code block placed immediately after the table or CSV code block:
+
+````markdown
+| A  | B  | AB |
+| -- | -- | -- |
+| 10 | 30 | 40 |
+| 20 | 40 | 0  |
+
+```tabula
+let C1 = A1 + B1;
+let C2 = A2 + B2;
+```
+````
+
+- An inline `#tabula` directive inside a CSV block (also supports `#include`):
+
+````markdown
 ```csv
+10, 30, 0
+20, 40, 0
+#tabula #include "script.tbl"
+```
+<!-- Tabula: can not parse: /Users/pavlo.blazhyievskyi/work/private/tabula/plugins/tabula.vscode/script.tbl: include file not found: /Users/pavlo.blazhyievskyi/work/private/tabula/plugins/tabula.vscode/script.tbl at README.md:1:2 -->
+
+````
+
+Save the Markdown file (Ctrl+S / Cmd+S) and **Tabula** updates the tables in place.
+Any errors are written as HTML comments (`<!-- ... -->`) next to the affected
+block, so they remain invisible in rendered Markdown and disappear once the
+script is fixed.
+
+See the [Tabula Markdown documentation](https://github.com/pblazh/tabula/blob/main/doc/markdown.md)
+for the full specification.
+
+### Working with CSV Files
+
+CSV files behave like a Markdown file containing a single data block, with a
+few differences:
+
+- No `-m` flag is passed - the whole file is treated as one table
+- Errors are surfaced as VS Code notifications rather than written into the file
+
+```markdown
 #tabula #include "process.tbl"
 A,B,C
 1,2,3
 4,5,6
-```
-
-- Create your **Tabula** script (`process.tbl`):
-
-```tabula
-// Calculate sum
-let D1 = "Total";
-let D2 = A2 + B2 + C2;
-let D3 = A3 + B3 + C3;
-```
-
-- Save the CSV file (Ctrl+S / Cmd+S)
-- **Tabula** runs automatically and updates the file!
+````
 
 ## How It Works
 
@@ -65,7 +109,7 @@ let D3 = A3 + B3 + C3;
 Access commands via Command Palette (Ctrl+Shift+P / Cmd+Shift+P):
 
 - **Tabula: execute** - Manually run Tabula on the active markdown file
-- **Tablua: toggle auto-execution: Toggle auto-execution on Save** - Enable/disable automatic execution
+- **Tabula: toggle auto-execution: Toggle auto-execution on Save** - Enable/disable automatic execution
 
 ### Configuration
 
@@ -175,7 +219,7 @@ npm run compile
 
 ## Recommended Companion Extensions
 
-For a better CSV editing experience, do recommend installing a CSV formatting extension:
+For a better CSV editing experience, we recommend installing a CSV formatting extension:
 This extension provides:
 
 - 📊 **Table view** - View CSV files in a formatted table
@@ -229,3 +273,4 @@ If you find this plugin useful, consider:
 - ⭐ Starring the [GitHub repository](https://github.com/pblazh/tabula)
 - 🐛 Reporting issues or suggesting features
 - 📖 Contributing to the documentation
+````

@@ -17,3 +17,5 @@ bin
 coverage.html
 **/dist
 plugins/tabula.obsidian
+demo/demo.gif
+demo/input.csv

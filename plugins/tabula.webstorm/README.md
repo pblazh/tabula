@@ -2,6 +2,8 @@
 
 # ![Tabula](./icon.png) Tabula for Web Storm
 
+![Tabula: save a CSV, formulas recompute in place](./demo.gif)
+
 How to use Tabula with **Web Storm**
 
 ## Features
@@ -48,6 +50,7 @@ A,B,C
 1,2,3
 4,5,6
 ```
+<!-- Tabula: can not parse: /Users/pavlo.blazhyievskyi/work/private/tabula/plugins/tabula.webstorm/process.tbl: include file not found: /Users/pavlo.blazhyievskyi/work/private/tabula/plugins/tabula.webstorm/process.tbl at README.md:1:2 -->
 
 1. Create your Tabula script (`process.tbl`):
 
@@ -83,7 +86,7 @@ Set up an auto execution on file save for `*.csv` and `*.md` files. For Markdown
 - **Numbers**: `42`, `3.14`
 - **Strings**: `"text"`, `'text'`
 - **Comments**: `// line comment`, `/* block comment */`
-- **Functions**: `EXEC`, `SUM`, `ADD`, `PRODUCT`, `AVERAGE`, `MAX`, `MAXA`, `MIN`, `MINA`, `ABS`, `CEILING`, `FLOOR`, `ROUND`, `POWER`, `INT`, `MOD`, `SQRT`, `CONCATENATE`, `LEN`, `LOWER`, `UPPER`, `TRIM`, `EXACT`, `FIND`, `LEFT`, `RIGHT`, `MID`, `SUBSTITUTE`, `VALUE`, `IF`, `NOT`, `AND`, `OR`, `TRUE`, `FALSE`, `TODATE`, `FROMDATE`, `DAY`, `HOUR`, `MINUTE`, `MONTH`, `SECOND`, `YEAR`, `WEEKDAY`, `NOW`, `DATE`, `DATEDIF`, `DAYS`, `DATEVALUE`, `COUNT`, `COUNTA`, `ISNUMBER`, `ISTEXT`, `ISLOGICAL`, `ISBLANK`, `ADDRESS`, `ROW`, `COLUMN`, `REF`, 
+- **Functions**: `EXEC`, `SUM`, `ADD`, `PRODUCT`, `AVERAGE`, `MAX`, `MAXA`, `MIN`, `MINA`, `ABS`, `CEILING`, `FLOOR`, `ROUND`, `POWER`, `INT`, `MOD`, `SQRT`, `CONCATENATE`, `LEN`, `LOWER`, `UPPER`, `TRIM`, `EXACT`, `FIND`, `LEFT`, `RIGHT`, `MID`, `SUBSTITUTE`, `VALUE`, `IF`, `NOT`, `AND`, `OR`, `TRUE`, `FALSE`, `TODATE`, `FROMDATE`, `DAY`, `HOUR`, `MINUTE`, `MONTH`, `SECOND`, `YEAR`, `WEEKDAY`, `NOW`, `DATE`, `DATEDIF`, `DAYS`, `DATEVALUE`, `COUNT`, `COUNTA`, `ISNUMBER`, `ISTEXT`, `ISLOGICAL`, `ISBLANK`, `ADDRESS`, `ROW`, `COLUMN`, `REF`,
 
 ## Links
 

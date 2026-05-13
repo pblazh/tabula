@@ -50,7 +50,10 @@ suite('Tabula Extension Tests', () => {
     const packageJSON = extension!.packageJSON
 
     assert.strictEqual(packageJSON.name, 'tabula')
-    assert.strictEqual(packageJSON.displayName, 'Tabula')
+    assert.strictEqual(
+      packageJSON.displayName,
+      'Tabula — CSV & Markdown Formulas',
+    )
     assert.ok(packageJSON.version)
     assert.ok(packageJSON.description)
 

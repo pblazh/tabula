@@ -1,0 +1,6 @@
+#tabula #include "script.tbl"
+Product , Price , Quantity , Total
+Apple   , $1.20 , 10       , $12.00
+Banana  , $0.80 , 17       , $13.60
+Pear    , $2.50 , 8        , $20.00
+TOTAL   ,       ,          , $45.60

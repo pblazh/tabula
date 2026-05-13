@@ -3,7 +3,93 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tabula - CSV Spreadsheet Language</title>
+    <title>
+      Tabula - CSV Spreadsheet Language | Transform CSV with Formulas
+    </title>
+    <meta
+      name="description"
+      content="Tabula is a command-line tool that transforms CSV files using spreadsheet formulas. Process data with familiar A1 cell references and 50+ functions, no bloat."
+    />
+    <meta
+      name="keywords"
+      content="CSV transformation, spreadsheet formulas, command-line CSV tool, CSV processing, data processing, CSV editor, formula language, batch CSV processing, data manipulation, text processing, Git-friendly data, version control CSV, plain text data, lightweight CSV tool, shell scripting, data automation, Excel alternative, Numbers alternative, Calc alternative, Google Sheets alternative, Google Sheets formulas, markdown tables, Unix pipeline, cross-platform CSV, open source CSV tool, data cleaning, vim plugin, neovim plugin, vscode extension, obsidian plugin, webstorm plugin, opensource, free"
+    />
+    <meta name="author" content="Pawel Blazejewski" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://pblazh.github.io/tabula/" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Tabula - Spreadsheet-Inspired CSV Transformation"
+    />
+    <meta
+      property="og:description"
+      content="Transform CSV files using spreadsheet formulas from the command line. Lightweight, open source, Git-friendly. 50+ built-in functions, editor plugins for Vim, VS Code, Obsidian, and WebStorm."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://pblazh.github.io/tabula/" />
+    <meta
+      property="og:image"
+      content="https://pblazh.github.io/tabula/demo.gif"
+    />
+    <meta
+      property="og:image:alt"
+      content="Tabula: save a CSV, formulas recompute in place"
+    />
+    <meta property="og:site_name" content="Tabula" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Tabula - CSV Transformation with Spreadsheet Formulas"
+    />
+    <meta
+      name="twitter:description"
+      content="Command-line CSV tool with 50+ spreadsheet functions. Process data locally, version control everything, no lock-in."
+    />
+    <meta
+      name="twitter:image"
+      content="https://pblazh.github.io/tabula/demo.gif"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Tabula: save a CSV, formulas recompute in place"
+    />
+
+    <!-- Structured Data: SoftwareApplication -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Tabula",
+        "description": "A command-line tool that transforms CSV files using spreadsheet formulas. Process data with familiar A1 cell references and 50+ built-in functions.",
+        "url": "https://pblazh.github.io/tabula/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "macOS, Linux, Windows",
+        "downloadUrl": "https://pblazh.github.io/tabula/",
+        "license": "https://github.com/pblazh/tabula/blob/main/LICENSE",
+        "softwareHelp": "https://github.com/pblazh/tabula/tree/main/doc",
+        "codeRepository": "https://github.com/pblazh/tabula",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Spreadsheet-style A1 cell references",
+          "50+ built-in functions (SUM, AVERAGE, IF, CONCATENATE, etc.)",
+          "Date and time functions",
+          "String manipulation functions",
+          "Logical and lookup functions",
+          "Markdown table support",
+          "Script include directive",
+          "Cross-platform single binary",
+          "Editor plugins for Vim, VS Code, Obsidian, WebStorm"
+        ]
+      }
+    </script>
     <link rel="icon" href="./favicon.ico" sizes="any" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="./favicon.png" />
@@ -123,6 +209,12 @@
         style="vertical-align: middle; margin-right: 0.4em; margin-bottom: 6px"
       />Tabula - CSV Spreadsheet Language
     </h1>
+
+    <img
+      src="./demo.gif"
+      alt="Tabula: save a CSV, formulas recompute in place"
+      style="max-width: 100%; height: auto; display: block; margin: 0 auto 2rem"
+    />
 
     <h2>What is Tabula?</h2>
     <p>

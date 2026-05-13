@@ -2,6 +2,8 @@
 
 # ![Tabula](./icon.png) Tabula for Vim / Neovim
 
+![Tabula: save a CSV, formulas recompute in place](./demo.gif)
+
 Vim/Neovim plugin for [Tabula](https://github.com/pblazh/tabula) - a spreadsheet-inspired CSV transformation tool.
 
 ## Features

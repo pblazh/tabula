@@ -2,6 +2,8 @@
 
 # ![Tabula](./gh-pages/icon.png) Tabula - Spreadsheet-Inspired CSV Transformation
 
+![Tabula: save a CSV, formulas recompute in place](./demo.gif)
+
 **Transform CSV files using familiar spreadsheet formulas from the command line.**
 
 ## 🎯 What is **Tabula**?
