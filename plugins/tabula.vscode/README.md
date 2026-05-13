@@ -1,5 +1,7 @@
 # ![Tabula](./icon.png) Tabula for Visual Studio Code
 
+![Tabula: save a CSV, formulas recompute in place](./demo.gif)
+
 VS Code extension for [Tabula](https://github.com/pblazh/tabula) - a spreadsheet-inspired CSV transformation tool.
 It adds Google spreadsheet / Excel functionality for CSV and markdown files
 
@@ -67,7 +69,9 @@ let C2 = A2 + B2;
 20, 40, 0
 #tabula #include "script.tbl"
 ```
-```
+<!-- Tabula: can not parse: /Users/pavlo.blazhyievskyi/work/private/tabula/plugins/tabula.vscode/script.tbl: include file not found: /Users/pavlo.blazhyievskyi/work/private/tabula/plugins/tabula.vscode/script.tbl at README.md:1:2 -->
+
+````
 
 Save the Markdown file (Ctrl+S / Cmd+S) and **Tabula** updates the tables in place.
 Any errors are written as HTML comments (`<!-- ... -->`) next to the affected
@@ -90,7 +94,7 @@ few differences:
 A,B,C
 1,2,3
 4,5,6
-```
+````
 
 ## How It Works
 
@@ -269,3 +273,4 @@ If you find this plugin useful, consider:
 - ⭐ Starring the [GitHub repository](https://github.com/pblazh/tabula)
 - 🐛 Reporting issues or suggesting features
 - 📖 Contributing to the documentation
+````

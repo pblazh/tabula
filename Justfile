@@ -90,6 +90,14 @@ vscode-pack:
   cd plugins/tabula.vscode
   npm run package
 
+demo:
+  cd demo && vhs demo.tape
+  cp demo.gif ./gh-pages/
+  cp demo.gif ./plugins/tabula.vim/
+  cp demo.gif ./plugins/tabula.vscode/
+  cp demo.gif ./plugins/tabula.obsidian/
+  cp demo.gif ./plugins/tabula.webstorm/
+
 # Vim
 vim-pack:
   #!/bin/sh
