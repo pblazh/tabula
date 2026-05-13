@@ -2,12 +2,13 @@
   "name": "tabula",
   "displayName": "Tabula — CSV & Markdown Formulas",
   "description": "Run spreadsheet-style formulas inside CSV and Markdown files. Recompute on save.",
-  "version": "0.2.22",
+  "version": "0.2.23",
   "icon": "icon-128.png",
   "publisher": "tabula",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pblazh/tabula"
+    "url": "https://github.com/pblazh/tabula",
+    "directory": "plugins/tabula.vscode"
   },
   "engines": {
     "vscode": "^1.103.0"
