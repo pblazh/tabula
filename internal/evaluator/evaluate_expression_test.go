@@ -360,6 +360,7 @@ func TestInfixExpressionEvaluate(t *testing.T) {
 				input,
 				make(map[string]string),
 				"target",
+				ast.NewRangeBounds(nil),
 			)
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
@@ -492,6 +493,7 @@ func TestPrefixExpressionEvaluate(t *testing.T) {
 				input,
 				make(map[string]string),
 				"target",
+				ast.NewRangeBounds(nil),
 			)
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
@@ -627,6 +629,7 @@ func TestOperationErrors(t *testing.T) {
 				input,
 				formats,
 				"target",
+				ast.NewRangeBounds(nil),
 			)
 
 			if err == nil && tc.expectsError != "" {

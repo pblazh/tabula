@@ -530,6 +530,7 @@ func TestNOW(t *testing.T) {
 				map[string]string{},
 				[][]string{},
 				map[string]string{},
+				ast.NewRangeBounds(nil),
 				call,
 				tc.Input...,
 			)

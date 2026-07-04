@@ -485,6 +485,7 @@ func TestFunctionExamples(t *testing.T) {
 						map[string]string{},
 						[][]string{},
 						map[string]string{},
+						ast.NewRangeBounds(nil),
 						ast.CallExpression{
 							Identifier: ast.IdentifierExpression{
 								Value: functionName,
@@ -576,6 +577,7 @@ func TestComplexExamples(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			result, err := DispatchMap[tc.functionName](
 				map[string]string{}, [][]string{}, map[string]string{},
+				ast.NewRangeBounds(nil),
 				ast.CallExpression{
 					Identifier: ast.IdentifierExpression{
 						Value: tc.functionName,
