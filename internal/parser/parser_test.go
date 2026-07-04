@@ -21,7 +21,7 @@ func TestParser(t *testing.T) {
 		{
 			name:   "range assign",
 			input:  `let A1:A3 = 1;`,
-			output: "let A1 = 1;let A2 = 1;let A3 = 1;",
+			output: "let A1:A3 = 1;",
 		},
 		{
 			name:   "multy values assign",
@@ -31,17 +31,17 @@ func TestParser(t *testing.T) {
 		{
 			name:   "multy range assign",
 			input:  `let A1:A3, B1:b3 = 1;`,
-			output: "let A1 = 1;let A2 = 1;let A3 = 1;let B1 = 1;let B2 = 1;let B3 = 1;",
+			output: "let A1:A3 = 1;let B1:B3 = 1;",
 		},
 		{
 			name:   "mixed range values assign",
 			input:  `let a, A1:A3, B1:b3, C2, b = 1;`,
-			output: "let a = 1;let A1 = 1;let A2 = 1;let A3 = 1;let B1 = 1;let B2 = 1;let B3 = 1;let C2 = 1;let b = 1;",
+			output: "let a = 1;let A1:A3 = 1;let B1:B3 = 1;let C2 = 1;let b = 1;",
 		},
 		{
 			name:   "range fmt",
 			input:  `fmt A1:A3 = "%s";`,
-			output: "fmt A1 = \"%s\";fmt A2 = \"%s\";fmt A3 = \"%s\";",
+			output: "fmt A1:A3 = \"%s\";",
 		},
 		{
 			name:   "multy values fmt",
@@ -51,12 +51,12 @@ func TestParser(t *testing.T) {
 		{
 			name:   "multy range fmt",
 			input:  `fmt A1:A3, B1:b3 = "%s";`,
-			output: "fmt A1 = \"%s\";fmt A2 = \"%s\";fmt A3 = \"%s\";fmt B1 = \"%s\";fmt B2 = \"%s\";fmt B3 = \"%s\";",
+			output: "fmt A1:A3 = \"%s\";fmt B1:B3 = \"%s\";",
 		},
 		{
 			name:   "mixed range values fmt",
 			input:  `fmt a, A1:A3, B1:b3, C2, b = "%s";`,
-			output: "fmt a = \"%s\";fmt A1 = \"%s\";fmt A2 = \"%s\";fmt A3 = \"%s\";fmt B1 = \"%s\";fmt B2 = \"%s\";fmt B3 = \"%s\";fmt C2 = \"%s\";fmt b = \"%s\";",
+			output: "fmt a = \"%s\";fmt A1:A3 = \"%s\";fmt B1:B3 = \"%s\";fmt C2 = \"%s\";fmt b = \"%s\";",
 		},
 		{
 			name:   "identifier",
@@ -153,7 +153,7 @@ let A2 = x;
 		{
 			name:   "range expression",
 			input:  `a1:B1;`,
-			output: "[A1, B1];",
+			output: "A1:B1;",
 		},
 		{
 			name:   "string expression",
@@ -165,7 +165,7 @@ let A2 = x;
 			input: `let A1 = 5.6;
 let A2 = x;
 let A3 = sum(A1:A2);`,
-			output: "let A1 = 5.60;let A2 = x;let A3 = sum(A1, A2);",
+			output: "let A1 = 5.60;let A2 = x;let A3 = sum(A1:A2);",
 		},
 		{
 			name:   "one statements",
@@ -188,9 +188,9 @@ let A3 = sum(A1:A2);`,
 				t.Errorf("Unexpected error '%s'", err)
 			}
 
-			literal := ""
+			var literal strings.Builder
 			for _, statement := range program {
-				literal += statement.String()
+				literal.WriteString(statement.String())
 			}
 
 			output := tc.output
@@ -198,8 +198,8 @@ let A3 = sum(A1:A2);`,
 				output = tc.input
 			}
 
-			if literal != output {
-				t.Errorf("Expected '%s' to equal '%s'", literal, output)
+			if literal.String() != output {
+				t.Errorf("Expected '%s' to equal '%s'", literal.String(), output)
 			}
 		})
 	}

@@ -491,7 +491,8 @@ func TestFunctionExamples(t *testing.T) {
 								Token: lexer.Token{Literal: functionName},
 							}, Arguments: tc.Input,
 						},
-						tc.Input...)
+						tc.Input...,
+					)
 
 					if tc.Error != "" {
 						if err == nil {
@@ -580,7 +581,8 @@ func TestComplexExamples(t *testing.T) {
 						Value: tc.functionName,
 						Token: lexer.Token{Literal: tc.functionName},
 					}, Arguments: tc.input,
-				}, tc.input...)
+				}, tc.input...,
+			)
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return

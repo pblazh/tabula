@@ -52,7 +52,8 @@ func readComments(f io.Reader) (string, map[int]string, error) {
 		line := strings.TrimSpace(scanner.Text())
 
 		if strings.HasPrefix(line, tabulaEmbedPrefix) {
-			script.WriteString(line[len(tabulaEmbedPrefix):] + "\n")
+			script.WriteString(line[len(tabulaEmbedPrefix):])
+			script.WriteString("\n")
 		}
 
 		// Store all comment lines
@@ -61,6 +62,9 @@ func readComments(f io.Reader) (string, map[int]string, error) {
 		}
 
 		lineNum++
+	}
+	if scanner.Err() != nil {
+		return "", nil, fmt.Errorf("failed to read file %w", scanner.Err())
 	}
 
 	return script.String(), comments, nil

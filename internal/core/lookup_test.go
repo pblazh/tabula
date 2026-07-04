@@ -176,6 +176,34 @@ func TestREF(t *testing.T) {
 			Expected: `[A1, B1, A2, B2]`,
 		},
 		{
+			Name: "open cell range",
+			Input: []ast.Node{
+				ast.StringExpression{Value: "A1:A"},
+			},
+			Expected: `[A1, A2]`,
+		},
+		{
+			Name: "open row range",
+			Input: []ast.Node{
+				ast.StringExpression{Value: "A1:1"},
+			},
+			Expected: `[A1, B1]`,
+		},
+		{
+			Name: "open sheet range",
+			Input: []ast.Node{
+				ast.StringExpression{Value: "A1:"},
+			},
+			Expected: `[A1, B1, A2, B2]`,
+		},
+		{
+			Name: "open start range",
+			Input: []ast.Node{
+				ast.StringExpression{Value: ":B1"},
+			},
+			Expected: `[A2, B2, A1, B1]`,
+		},
+		{
 			Name: "range with extra cell",
 			Input: []ast.Node{
 				ast.StringExpression{Value: "A1:B2,C3"},

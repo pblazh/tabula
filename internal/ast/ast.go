@@ -16,21 +16,30 @@ type Node interface {
 type LetStatement struct {
 	Node
 	Identifier IdentifierExpression
+	Target     Node
 	Value      Node
 }
 
 func (stmt LetStatement) String() string {
-	return fmt.Sprintf("let %s = %s;", stmt.Identifier.String(), stmt.Value)
+	return fmt.Sprintf("let %s = %s;", statementTarget(stmt.Target, stmt.Identifier), stmt.Value)
 }
 
 type FmtStatement struct {
 	Node
 	Identifier IdentifierExpression
+	Target     Node
 	Value      Node
 }
 
 func (stmt FmtStatement) String() string {
-	return fmt.Sprintf("fmt %s = %s;", stmt.Identifier.String(), stmt.Value)
+	return fmt.Sprintf("fmt %s = %s;", statementTarget(stmt.Target, stmt.Identifier), stmt.Value)
+}
+
+func statementTarget(target Node, identifier IdentifierExpression) Node {
+	if target != nil {
+		return target
+	}
+	return identifier
 }
 
 type ExpressionStatement struct {
@@ -162,10 +171,15 @@ func (expr CallExpression) String() string {
 type RangeExpression struct {
 	Node
 	Token lexer.Token
+	Start string
+	End   string
 	Value []string
 }
 
 func (expr RangeExpression) String() string {
+	if len(expr.Value) == 0 {
+		return fmt.Sprintf("%s:%s", expr.Start, expr.End)
+	}
 	return fmt.Sprintf("[%s]", strings.Join(expr.Value, ", "))
 }
 

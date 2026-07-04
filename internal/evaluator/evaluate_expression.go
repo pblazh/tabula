@@ -31,10 +31,26 @@ func EvaluateExpression(
 	case ast.CallExpression:
 		return evaluateCallExpression(node, context, input, formats, target)
 	case ast.RangeExpression:
-		return node, nil
+		return expandRangeExpression(node, ast.NewRangeBounds(input))
 	default:
 		return nil, ErrUnknownExpressionType(expr)
 	}
+}
+
+func expandRangeExpression(
+	expr ast.RangeExpression,
+	bounds ast.RangeBounds,
+) (ast.RangeExpression, error) {
+	if len(expr.Value) > 0 {
+		return expr, nil
+	}
+
+	cells, err := ast.ExpandRangeWithBounds(expr.Start, expr.End, bounds)
+	if err != nil {
+		return ast.RangeExpression{}, fmt.Errorf("failed to expand range, %s", err)
+	}
+
+	return ast.RangeExpression{Token: expr.Token, Value: cells}, nil
 }
 
 func evaluatePrefixExpression(
@@ -219,27 +235,4 @@ func evaluateCellExpression(
 	}
 	return expr, nil
 	// return core.ReadValue(value, formats[cellRef])
-}
-
-// EvaluateRangeExpression evaluates a range cell reference (like A1:A2, A1:B2) and returns the value from the CSV input
-func EvaluateRangeExpression(
-	expr ast.RangeExpression,
-	input [][]string,
-	formats map[string]string,
-) ([]ast.Node, error) {
-	cells := make([]ast.IdentifierExpression, len(expr.Value))
-	for i, cell := range expr.Value {
-		cells[i] = ast.IdentifierExpression{Token: expr.Token, Value: cell}
-	}
-
-	result := make([]ast.Node, len(expr.Value))
-
-	for i, cell := range cells {
-		res, err := evaluateCellExpression(cell.Value, input, formats)
-		if err != nil {
-			return nil, err
-		}
-		result[i] = res
-	}
-	return result, nil
 }

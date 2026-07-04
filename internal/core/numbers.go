@@ -112,6 +112,17 @@ func parseStringExpressions(
 	return converted, nil
 }
 
+func omitBlankStrings(values []ast.Node) []ast.Node {
+	var filtered []ast.Node
+	for _, value := range values {
+		if stringValue, ok := value.(ast.StringExpression); ok && stringValue.Value == "" {
+			continue
+		}
+		filtered = append(filtered, value)
+	}
+	return filtered
+}
+
 func count(call ast.CallExpression, values ...ast.Node) ast.IntExpression {
 	var result int
 	for _, value := range values {

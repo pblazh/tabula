@@ -66,7 +66,7 @@ C1 * 2;`,
 let B1 = 10;
 let C1 = 20;
 let E1 = 30;`,
-			output: "let B1 = 10;let C1 = 20;let D1 = SUM(A1, B1, C1);let E1 = 30;",
+			output: "let B1 = 10;let C1 = 20;let D1 = SUM(A1:C1);let E1 = 30;",
 		},
 		{
 			name: "prefix expression dependencies",
@@ -115,13 +115,13 @@ let C1 = A1;`,
 				return
 			}
 
-			literal := ""
+			var literal strings.Builder
 			for _, statement := range sorted {
-				literal += statement.String()
+				literal.WriteString(statement.String())
 			}
 
-			if literal != tc.output {
-				t.Errorf("Expected '%s' to equal '%s'", literal, tc.output)
+			if literal.String() != tc.output {
+				t.Errorf("Expected '%s' to equal '%s'", literal.String(), tc.output)
 			}
 		})
 	}

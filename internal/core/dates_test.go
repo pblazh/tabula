@@ -531,7 +531,8 @@ func TestNOW(t *testing.T) {
 				[][]string{},
 				map[string]string{},
 				call,
-				tc.Input...)
+				tc.Input...,
+			)
 			if err != nil {
 				t.Errorf("Unexpects error: %v", err)
 				return

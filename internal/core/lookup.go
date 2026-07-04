@@ -111,7 +111,7 @@ func Ref(
 			parts := strings.SplitN(segment, ":", 2)
 			start := strings.TrimSpace(parts[0])
 			end := strings.TrimSpace(parts[1])
-			expanded, err := ast.ExpandRange(start, end)
+			expanded, err := ast.ExpandRangeWithBounds(start, end, ast.NewRangeBounds(input))
 			if err != nil {
 				return nil, ErrExpand(err)
 			}

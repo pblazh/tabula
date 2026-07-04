@@ -109,6 +109,10 @@ Reference multiple cells at once:
 - `A1:C1` - Cells A1, B1, C1 (horizontal range)
 - `A1:A3` - Cells A1, A2, A3 (vertical range)
 - `A1:C3` - All cells from A1 to C3 (rectangular range)
+- `A1:A` - Cells from A1 through the last existing cell in column A
+- `A1:1` - Cells from A1 through the last existing cell in row 1
+- `A1:` - Cells from A1 through the bottom-right existing cell
+- `:C1` - Cells from the first column of the last existing row through C1
 
 ## Let Statements
 

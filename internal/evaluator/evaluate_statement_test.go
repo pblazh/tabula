@@ -91,7 +91,12 @@ func TestEvaluateStatement(t *testing.T) {
 			}
 			format := make(map[string]string)
 			for _, statement := range program {
-				err = EvaluateStatement(statement, tc.context, tc.input, format)
+				err = EvaluateStatement(
+					statement,
+					tc.context,
+					tc.input,
+					format,
+				)
 				if err != nil {
 					t.Errorf("Unexpected error: %v", err)
 					return
@@ -310,7 +315,12 @@ func TestEvaluateREL(t *testing.T) {
 			context := make(map[string]string)
 
 			for _, statement := range program {
-				err = EvaluateStatement(statement, context, tc.input, format)
+				err = EvaluateStatement(
+					statement,
+					context,
+					tc.input,
+					format,
+				)
 
 				// Error case
 				if tc.error != "" {

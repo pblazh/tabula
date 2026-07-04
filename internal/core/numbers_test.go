@@ -1318,7 +1318,8 @@ func TestMathFunctions(t *testing.T) {
 							Value: c.f,
 							Token: lexer.Token{Literal: c.f},
 						}, Arguments: tc.input,
-					}, tc.input...)
+					}, tc.input...,
+				)
 
 				if c.error != "" {
 					if err == nil {
