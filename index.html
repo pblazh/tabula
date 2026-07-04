@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Tabula - CSV Spreadsheet Language | Transform CSV with Formulas
+    </title>
+    <meta
+      name="description"
+      content="Tabula is a command-line tool that transforms CSV files using spreadsheet formulas. Process data with familiar A1 cell references and 50+ functions, no bloat."
+    />
+    <meta
+      name="keywords"
+      content="CSV transformation, spreadsheet formulas, command-line CSV tool, CSV processing, data processing, CSV editor, formula language, batch CSV processing, data manipulation, text processing, Git-friendly data, version control CSV, plain text data, lightweight CSV tool, shell scripting, data automation, Excel alternative, Numbers alternative, Calc alternative, Google Sheets alternative, Google Sheets formulas, markdown tables, Unix pipeline, cross-platform CSV, open source CSV tool, data cleaning, vim plugin, neovim plugin, vscode extension, obsidian plugin, webstorm plugin, opensource, free"
+    />
+    <meta name="author" content="Pawel Blazejewski" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://pblazh.github.io/tabula/" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Tabula - Spreadsheet-Inspired CSV Transformation"
+    />
+    <meta
+      property="og:description"
+      content="Transform CSV files using spreadsheet formulas from the command line. Lightweight, open source, Git-friendly. 50+ built-in functions, editor plugins for Vim, VS Code, Obsidian, and WebStorm."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://pblazh.github.io/tabula/" />
+    <meta
+      property="og:image"
+      content="https://pblazh.github.io/tabula/demo.gif"
+    />
+    <meta
+      property="og:image:alt"
+      content="Tabula: save a CSV, formulas recompute in place"
+    />
+    <meta property="og:site_name" content="Tabula" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Tabula - CSV Transformation with Spreadsheet Formulas"
+    />
+    <meta
+      name="twitter:description"
+      content="Command-line CSV tool with 50+ spreadsheet functions. Process data locally, version control everything, no lock-in."
+    />
+    <meta
+      name="twitter:image"
+      content="https://pblazh.github.io/tabula/demo.gif"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Tabula: save a CSV, formulas recompute in place"
+    />
+
+    <!-- Structured Data: SoftwareApplication -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Tabula",
+        "description": "A command-line tool that transforms CSV files using spreadsheet formulas. Process data with familiar A1 cell references and 50+ built-in functions.",
+        "url": "https://pblazh.github.io/tabula/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "macOS, Linux, Windows",
+        "downloadUrl": "https://pblazh.github.io/tabula/",
+        "license": "https://github.com/pblazh/tabula/blob/main/LICENSE",
+        "softwareHelp": "https://github.com/pblazh/tabula/tree/main/doc",
+        "codeRepository": "https://github.com/pblazh/tabula",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Spreadsheet-style A1 cell references",
+          "50+ built-in functions (SUM, AVERAGE, IF, CONCATENATE, etc.)",
+          "Date and time functions",
+          "String manipulation functions",
+          "Logical and lookup functions",
+          "Markdown table support",
+          "Script include directive",
+          "Cross-platform single binary",
+          "Editor plugins for Vim, VS Code, Obsidian, WebStorm"
+        ]
+      }
+    </script>
+    <link rel="icon" href="./favicon.ico" sizes="any" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./favicon.png" />
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+          "Ubuntu", "Cantarell", sans-serif;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        color: #333;
+      }
+      h1 {
+        color: #2c3e50;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 0.5rem;
+      }
+      h2 {
+        color: #34495e;
+        margin-top: 2rem;
+      }
+      ul {
+        padding-left: 1.5rem;
+      }
+      li {
+        margin-bottom: 0.5rem;
+      }
+      .download-section {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 2rem 0;
+        border: 2px solid #e9ecef;
+      }
+      .download-section h2 {
+        margin-top: 0;
+        color: #2c3e50;
+      }
+      .download-links {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .download-links a {
+        background-color: #3498db;
+        color: white;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+      .download-links a:hover {
+        background-color: #2980b9;
+      }
+      .feature-list li {
+        margin-bottom: 0.8rem;
+      }
+      .feature-list strong {
+        color: #2c3e50;
+      }
+      .ukraine-banner {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .ukraine-banner a {
+        display: inline-block;
+        width: 100%;
+      }
+      .ukraine-banner img {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-W5RNW2JZ");
+    </script>
+    <!-- End Google Tag Manager -->
+  </head>
+  <body>
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-W5RNW2JZ"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <div class="ukraine-banner">
+      <a
+        href="https://stand-with-ukraine.pp.ua"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          src="https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg"
+          alt="Stand With Ukraine"
+        />
+      </a>
+    </div>
+
+    <h1>
+      <img
+        src="./favicon.png"
+        alt="Tabula"
+        style="vertical-align: middle; margin-right: 0.4em; margin-bottom: 6px"
+      />Tabula - CSV Spreadsheet Language
+    </h1>
+
+    <img
+      src="./demo.gif"
+      alt="Tabula: save a CSV, formulas recompute in place"
+      style="max-width: 100%; height: auto; display: block; margin: 0 auto 2rem"
+    />
+
+    <h2>What is Tabula?</h2>
+    <p>
+      Tabula is a command-line tool that lets you transform and manipulate CSV
+      files using a simple scripting language. Think of it as a way to apply
+      Excel-like formulas and calculations to your CSV data from the command
+      line.
+    </p>
+
+    <h2>Why Use Tabula?</h2>
+    <ul class="feature-list">
+      <li>
+        <strong>Automate CSV processing</strong> - Perfect for data pipelines
+        and batch operations
+      </li>
+      <li>
+        <strong>Familiar syntax</strong> - Uses spreadsheet-style cell
+        references (A1, B2, etc.)
+      </li>
+      <li>
+        <strong>Powerful functions</strong> - Built-in mathematical, text, and
+        logical functions
+      </li>
+      <li>
+        <strong>Flexible</strong> - Works with files or standard input/output
+      </li>
+      <li><strong>Lightweight</strong> - Single binary, no dependencies</li>
+      <li>
+        <strong>Vim/Neovim plugin</strong> - Syntax highlighting and
+        auto-execution for Tabula scripts
+      </li>
+      <li>
+        <strong>Visual Studio Code plugin</strong> - Syntax highlighting and
+        auto-execution for Tabula scripts
+      </li>
+    </ul>
+
+    <div class="download-section">
+      <h2>Download Latest Builds (0.3.0)</h2>
+
+      <h3>Tabula CLI</h3>
+
+      <h4>macOS</h4>
+      <div class="download-links">
+        <a href="./releases/darwin/arm64/tabula" download
+          >Apple Silicon (M1 ...)</a
+        >
+        <a href="./releases/darwin/amd64/tabula" download>Intel</a>
+      </div>
+
+      <h4>Linux</h4>
+      <div class="download-links">
+        <a href="./releases/linux/arm64/tabula" download>ARM64</a>
+        <a href="./releases/linux/amd64/tabula" download>x86_64</a>
+        <a href="./releases/linux/386/tabula" download>i386</a>
+      </div>
+
+      <h4>Windows</h4>
+      <div class="download-links">
+        <a href="./releases/windows/arm64/tabula.exe" download>ARM64</a>
+        <a href="./releases/windows/amd64/tabula.exe" download>x86_64</a>
+        <a href="./releases/windows/386/tabula.exe" download>i386</a>
+      </div>
+
+      <h3 style="margin-top: 2rem">Editor Plugins</h3>
+      <div class="download-links">
+        <a href="./releases/tabula.vim.0.3.0.tar.gz">Vim/Neovim</a>
+        <a href="https://github.com/pblazh/tabula-obsidian">Obsidian</a>
+        <a href="./releases/tabula-0.3.0.vsix">Visual studio code</a>
+      </div>
+    </div>
+
+    <h2>Further Reading</h2>
+    <ul>
+      <li>
+        <a href="https://github.com/pblazh/tabula">GitHub Repository</a>
+        - Source code, issues, and contributions
+      </li>
+      <li>
+        <a href="https://github.com/pblazh/tabula/tree/main/doc">Full Guide</a>
+        - Complete language reference, usage examples and tutorials
+      </li>
+    </ul>
+  </body>
+</html>
