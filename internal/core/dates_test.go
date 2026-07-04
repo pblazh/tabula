@@ -530,8 +530,10 @@ func TestNOW(t *testing.T) {
 				map[string]string{},
 				[][]string{},
 				map[string]string{},
+				ast.NewRangeBounds(nil),
 				call,
-				tc.Input...)
+				tc.Input...,
+			)
 			if err != nil {
 				t.Errorf("Unexpects error: %v", err)
 				return

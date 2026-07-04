@@ -22,7 +22,7 @@ func RunFunctionTest(t *testing.T, functionName string, testcases []InfoTestCase
 	t.Helper()
 	for _, tc := range testcases {
 		t.Run(tc.Name, func(t *testing.T) {
-			result, err := DispatchMap[functionName](context, input, formats, ast.CallExpression{
+			result, err := DispatchMap[functionName](context, input, formats, ast.NewRangeBounds(input), ast.CallExpression{
 				Identifier: ast.IdentifierExpression{
 					Value: functionName,
 					Token: lexer.Token{Literal: functionName},

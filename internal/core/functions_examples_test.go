@@ -485,13 +485,15 @@ func TestFunctionExamples(t *testing.T) {
 						map[string]string{},
 						[][]string{},
 						map[string]string{},
+						ast.NewRangeBounds(nil),
 						ast.CallExpression{
 							Identifier: ast.IdentifierExpression{
 								Value: functionName,
 								Token: lexer.Token{Literal: functionName},
 							}, Arguments: tc.Input,
 						},
-						tc.Input...)
+						tc.Input...,
+					)
 
 					if tc.Error != "" {
 						if err == nil {
@@ -575,12 +577,14 @@ func TestComplexExamples(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			result, err := DispatchMap[tc.functionName](
 				map[string]string{}, [][]string{}, map[string]string{},
+				ast.NewRangeBounds(nil),
 				ast.CallExpression{
 					Identifier: ast.IdentifierExpression{
 						Value: tc.functionName,
 						Token: lexer.Token{Literal: tc.functionName},
 					}, Arguments: tc.input,
-				}, tc.input...)
+				}, tc.input...,
+			)
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return

@@ -57,6 +57,30 @@ func TestProcess(t *testing.T) {
 			input:  "one,two,three\n1,2,3\n#tabula let A1=\"ONE\"\n",
 			output: "ONE,two,three\n1,2,3\n#tabula let A1=\"ONE\"\n",
 		},
+		{
+			name:   "open range expression",
+			config: Config{Execute: `let C1 = SUM(A1:A);`},
+			input:  "1,4\n2,5\n3,6\n",
+			output: "1,4,6\n2,5,\n3,6,\n",
+		},
+		{
+			name:   "open row range expression",
+			config: Config{Execute: `let D1 = SUM(A1:1);`},
+			input:  "1,2,3\n4,5,6",
+			output: "1,2,3,6\n4,5,6,\n",
+		},
+		{
+			name:   "open sheet range expression",
+			config: Config{Execute: `let D1 = SUM(A1:);`},
+			input:  "1,2,3\n4,5,6\n",
+			output: "1,2,3,21\n4,5,6,\n",
+		},
+		{
+			name:   "open start range expression",
+			config: Config{Execute: `let D1 = SUM(:C1);`},
+			input:  "1,2,3\n4,5,6\n",
+			output: "1,2,3,21\n4,5,6,\n",
+		},
 	}
 
 	for _, tc := range cases {
