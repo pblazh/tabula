@@ -24,6 +24,7 @@ var DispatchMap dispatchMap = dispatchMap{
 	) (ast.Node, error) {
 		format := "SUM(values:number...):number"
 		guard := MakeSameTypeGuard(format, ast.IsNumeric)
+		values = omitBlankStrings(values)
 		return callNumbersFunction(format, sum, sum, guard, call, values...)
 	},
 
@@ -38,6 +39,7 @@ var DispatchMap dispatchMap = dispatchMap{
 	"PRODUCT": func(context map[string]string, input [][]string, formats map[string]string,
 		call ast.CallExpression, values ...ast.Node,
 	) (ast.Node, error) {
+		values = omitBlankStrings(values)
 		return callNumbersFunction(
 			"PRODUCT(values:number...):number",
 			product,
@@ -51,6 +53,7 @@ var DispatchMap dispatchMap = dispatchMap{
 	"AVERAGE": func(context map[string]string, input [][]string, formats map[string]string,
 		call ast.CallExpression, values ...ast.Node,
 	) (ast.Node, error) {
+		values = omitBlankStrings(values)
 		return callNumbersFunction(
 			"AVERAGE(values:number...):number",
 			average,
@@ -64,6 +67,7 @@ var DispatchMap dispatchMap = dispatchMap{
 	"MAX": func(context map[string]string, input [][]string, formats map[string]string,
 		call ast.CallExpression, values ...ast.Node,
 	) (ast.Node, error) {
+		values = omitBlankStrings(values)
 		return callNumbersFunction(
 			"MAX(values:number...):number",
 			max,
@@ -95,13 +99,15 @@ var DispatchMap dispatchMap = dispatchMap{
 	"MIN": func(context map[string]string, input [][]string, formats map[string]string,
 		call ast.CallExpression, values ...ast.Node,
 	) (ast.Node, error) {
+		values = omitBlankStrings(values)
 		return callNumbersFunction(
 			"MIN(values:number...):number",
 			min,
 			min,
 			EmptyGuard,
 			call,
-			values...)
+			values...,
+		)
 	},
 
 	"MINA": func(context map[string]string, input [][]string, formats map[string]string,
@@ -118,7 +124,8 @@ var DispatchMap dispatchMap = dispatchMap{
 			min,
 			EmptyGuard,
 			call,
-			converted...)
+			converted...,
+		)
 	},
 
 	"ABS": func(context map[string]string, input [][]string, formats map[string]string,

@@ -115,13 +115,13 @@ let C1 = A1;`,
 				return
 			}
 
-			literal := ""
+			var literal strings.Builder
 			for _, statement := range sorted {
-				literal += statement.String()
+				literal.WriteString(statement.String())
 			}
 
-			if literal != tc.output {
-				t.Errorf("Expected '%s' to equal '%s'", literal, tc.output)
+			if literal.String() != tc.output {
+				t.Errorf("Expected '%s' to equal '%s'", literal.String(), tc.output)
 			}
 		})
 	}

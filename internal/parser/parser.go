@@ -52,6 +52,7 @@ func New(lex *lexer.Lexer) *Parser {
 	parser.registerPrefix(lexer.FALSE, parser.parseBool)
 	parser.registerPrefix(lexer.STRING, parser.parseString)
 	parser.registerPrefix(lexer.LPAREN, parser.parseLparen)
+	parser.registerPrefix(lexer.COLUMN, parser.parseOpenStartRange)
 
 	parser.registerPrefix(lexer.MINUS, parser.parsePrefix)
 	parser.registerPrefix(lexer.NOT, parser.parsePrefix)
@@ -184,7 +185,7 @@ func (p *Parser) parseLetStatement() ([]ast.Node, error) {
 		return nil, err
 	}
 
-	identifiers, err := p.parseAssignmentTarget()
+	targets, err := p.parseAssignmentTarget()
 	if err != nil {
 		return nil, err
 	}
@@ -219,10 +220,13 @@ func (p *Parser) parseLetStatement() ([]ast.Node, error) {
 
 	// Convert to slice of individual LetStatements
 	var statements []ast.Node
-	for _, identifier := range identifiers {
+	for _, target := range targets {
 		stmt := ast.LetStatement{
-			Identifier: identifier,
-			Value:      expression,
+			Target: target,
+			Value:  expression,
+		}
+		if identifier, ok := target.(ast.IdentifierExpression); ok {
+			stmt.Identifier = identifier
 		}
 		statements = append(statements, stmt)
 	}
@@ -230,7 +234,7 @@ func (p *Parser) parseLetStatement() ([]ast.Node, error) {
 	return statements, nil
 }
 
-func (p *Parser) parseAssignmentTarget() ([]ast.IdentifierExpression, error) {
+func (p *Parser) parseAssignmentTarget() ([]ast.Node, error) {
 	// Parse the first identifier or range
 	target, err := p.parseIdentifierOrRange()
 	if err != nil {
@@ -246,29 +250,37 @@ func (p *Parser) parseAssignmentTarget() ([]ast.IdentifierExpression, error) {
 		}
 
 		// Parse this identifier or range
-		identifiers, err := p.parseIdentifierOrRange()
+		identifier, err := p.parseIdentifierOrRange()
 		if err != nil {
 			return nil, err
 		}
-		target = append(target, identifiers...)
+		target = append(target, identifier...)
 	}
 	return target, nil
 }
 
-func (p *Parser) parseIdentifierOrRange() ([]ast.IdentifierExpression, error) {
-	var identifiers []ast.IdentifierExpression
+func (p *Parser) parseIdentifierOrRange() ([]ast.Node, error) {
+	if p.expectCurrentToken(lexer.COLUMN) {
+		return p.parseOpenStartIdentifierRange()
+	}
+
 	if !p.expectCurrentToken(lexer.IDENT) {
 		return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
 	}
 	// Current token is an identifier
-	firstIdent := ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal}
+	firstToken := p.cur
+	firstValue := p.cur.Literal
+	if ast.IsCellIdentifier(firstValue) {
+		firstValue = strings.ToUpper(firstValue)
+		firstToken.Literal = firstValue
+	}
+	firstIdent := ast.IdentifierExpression{Token: firstToken, Value: firstValue}
 
 	if !p.nextTokenIs(lexer.COLUMN) {
 		// Just a single identifier
-		identifiers = append(identifiers, firstIdent)
 		p.identifiers = append(p.identifiers, firstIdent.Value)
 
-		return identifiers, nil
+		return []ast.Node{firstIdent}, nil
 	}
 
 	// This is a range, advance to ':'
@@ -277,38 +289,67 @@ func (p *Parser) parseIdentifierOrRange() ([]ast.IdentifierExpression, error) {
 		return nil, err
 	}
 
-	// Advance to second identifier
+	if p.nextTokenIs(lexer.ASSIGN) || p.nextTokenIs(lexer.COMMA) {
+		return p.parseTargetRange(firstIdent.Token, firstIdent.Value, "")
+	}
+
+	// Advance to second range endpoint
 	err = p.advance(1)
 	if err != nil {
 		return nil, err
 	}
 
-	if !p.expectCurrentToken(lexer.IDENT) {
+	if !p.expectCurrentToken(lexer.IDENT) && !p.expectCurrentToken(lexer.INT) {
 		return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
 	}
 
-	secondIdent := ast.IdentifierExpression{Token: p.cur, Value: p.cur.Literal}
+	endValue := p.cur.Literal
 
-	// Expand the range to get all identifiers
-	cells, err := ast.ExpandRange(firstIdent.Value, secondIdent.Value)
+	return p.parseTargetRange(firstIdent.Token, firstIdent.Value, endValue)
+}
+
+func (p *Parser) parseOpenStartIdentifierRange() ([]ast.Node, error) {
+	colonToken := p.cur
+	err := p.advance(1)
 	if err != nil {
+		return nil, err
+	}
+
+	if !p.expectCurrentToken(lexer.IDENT) && !p.expectCurrentToken(lexer.INT) {
+		return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
+	}
+
+	endValue := p.cur.Literal
+	return p.parseTargetRange(colonToken, "", endValue)
+}
+
+func (p *Parser) parseTargetRange(token lexer.Token, start, end string) ([]ast.Node, error) {
+	if ast.IsCellIdentifier(start) {
+		start = strings.ToUpper(start)
+	}
+	if ast.IsCellIdentifier(end) {
+		end = strings.ToUpper(end)
+	}
+	if !ast.IsValidOpenRangeSyntax(start, end) {
 		return nil, fmt.Errorf(
-			"failed to parse indent %s:%s, %s at %s",
-			firstIdent,
-			secondIdent,
-			err,
-			lexer.FormatPosition(firstIdent.Token.Position),
+			"failed to parse range %s:%s, %s at %s",
+			start,
+			end,
+			ast.ErrInvalidRange(start, end),
+			lexer.FormatPosition(token.Position),
 		)
 	}
+	p.addRangeBoundaryIdentifiers(start, end)
+	return []ast.Node{ast.RangeExpression{Token: token, Start: start, End: end}}, nil
+}
 
-	// Add all cells to the identifiers list
-	for _, cell := range cells {
-		ident := ast.IdentifierExpression{Token: firstIdent.Token, Value: cell}
-		identifiers = append(identifiers, ident)
-		p.identifiers = append(p.identifiers, cell)
+func (p *Parser) addRangeBoundaryIdentifiers(start, end string) {
+	if ast.IsCellIdentifier(start) {
+		p.identifiers = append(p.identifiers, start)
 	}
-
-	return identifiers, nil
+	if ast.IsCellIdentifier(end) {
+		p.identifiers = append(p.identifiers, strings.ToUpper(end))
+	}
 }
 
 func (p *Parser) parseFmtStatement() ([]ast.Node, error) {
@@ -318,7 +359,7 @@ func (p *Parser) parseFmtStatement() ([]ast.Node, error) {
 		return nil, err
 	}
 
-	identifiers, err := p.parseAssignmentTarget()
+	targets, err := p.parseAssignmentTarget()
 	if err != nil {
 		return nil, err
 	}
@@ -357,10 +398,13 @@ func (p *Parser) parseFmtStatement() ([]ast.Node, error) {
 
 	// Convert to slice of individual FmtStatements
 	var statements []ast.Node
-	for _, identifier := range identifiers {
+	for _, target := range targets {
 		stmt := ast.FmtStatement{
-			Identifier: identifier,
-			Value:      expression,
+			Target: target,
+			Value:  expression,
+		}
+		if identifier, ok := target.(ast.IdentifierExpression); ok {
+			stmt.Identifier = identifier
 		}
 		statements = append(statements, stmt)
 	}
@@ -401,7 +445,7 @@ func (p *Parser) parseExpression(precedence int) (ast.Node, error) {
 		return nil, err
 	}
 
-	for !p.nextTokenIs(lexer.SEMI) && precedence < p.currentPrecedence() {
+	for (!p.nextTokenIs(lexer.SEMI) || p.cur.Type == lexer.COLUMN) && precedence < p.currentPrecedence() {
 		infix := p.infixParsers[p.cur.Type]
 		if infix == nil {
 			return leftExpr, nil
@@ -553,10 +597,21 @@ func (p *Parser) parseRange(left ast.Node) (ast.Node, error) {
 		return nil, err
 	}
 
-	// parse the right side
-	right, err := p.parseExpression(LOWEST)
-	if err != nil {
-		return nil, err
+	rightValue := ""
+	rightRecordedIdentifier := false
+	identifiersBeforeRight := len(p.identifiers)
+	emptyEndpoint := isEmptyRangeEndpointToken(p.cur.Type)
+	if !emptyEndpoint {
+		right, err := p.parseExpression(LOWEST)
+		if err != nil {
+			return nil, err
+		}
+
+		var ok bool
+		rightValue, rightRecordedIdentifier, ok = rangeEndpoint(right)
+		if !ok {
+			return nil, ErrExpectedIdentifier(right.String(), p.cur.Position)
+		}
 	}
 
 	leftIdent, ok := left.(ast.IdentifierExpression)
@@ -564,21 +619,72 @@ func (p *Parser) parseRange(left ast.Node) (ast.Node, error) {
 		return nil, ErrExpectedIdentifier(left.String(), p.cur.Position)
 	}
 
-	rightIdent, ok := right.(ast.IdentifierExpression)
-	if !ok {
-		return nil, ErrExpectedIdentifier(right.String(), p.cur.Position)
+	if rightRecordedIdentifier && len(p.identifiers) > identifiersBeforeRight {
+		p.identifiers = append(p.identifiers[:identifiersBeforeRight], rightValue)
+		if !ast.IsCellIdentifier(rightValue) {
+			p.identifiers = p.identifiers[:identifiersBeforeRight]
+		}
 	}
-
-	cells, err := ast.ExpandRange(leftIdent.Value, rightIdent.Value)
-	if err != nil {
+	if !ast.IsValidOpenRangeSyntax(leftIdent.Value, rightValue) {
 		return nil, fmt.Errorf(
 			"failed to expand, %s at %s",
-			err,
+			ast.ErrInvalidRange(leftIdent.Value, rightValue),
 			lexer.FormatPosition(colonToken.Position),
 		)
 	}
 
-	return ast.RangeExpression{Token: colonToken, Value: cells}, nil
+	return ast.RangeExpression{Token: colonToken, Start: leftIdent.Value, End: rightValue}, nil
+}
+
+func (p *Parser) parseOpenStartRange() (ast.Node, error) {
+	colonToken := p.cur
+	if err := p.advance(1); err != nil {
+		return nil, err
+	}
+
+	rightValue := ""
+	if !isEmptyRangeEndpointToken(p.cur.Type) {
+		if !p.expectCurrentToken(lexer.IDENT) && !p.expectCurrentToken(lexer.INT) {
+			return nil, ErrExpectedIdentifier(p.cur.Literal, p.cur.Position)
+		}
+
+		rightValue = p.cur.Literal
+		if ast.IsCellIdentifier(rightValue) {
+			rightValue = strings.ToUpper(rightValue)
+		}
+
+		if err := p.advance(1); err != nil {
+			return nil, err
+		}
+	}
+
+	if ast.IsCellIdentifier(rightValue) {
+		p.identifiers = append(p.identifiers, rightValue)
+	}
+	if !ast.IsValidOpenRangeSyntax("", rightValue) {
+		return nil, fmt.Errorf(
+			"failed to expand, %s at %s",
+			ast.ErrInvalidRange("", rightValue),
+			lexer.FormatPosition(colonToken.Position),
+		)
+	}
+
+	return ast.RangeExpression{Token: colonToken, Start: "", End: rightValue}, nil
+}
+
+func isEmptyRangeEndpointToken(typ lexer.TokenType) bool {
+	return typ == lexer.SEMI || typ == lexer.RPAREN || typ == lexer.COMMA || typ == lexer.EOF
+}
+
+func rangeEndpoint(node ast.Node) (string, bool, bool) {
+	switch expr := node.(type) {
+	case ast.IdentifierExpression:
+		return expr.Value, true, true
+	case ast.IntExpression:
+		return expr.String(), false, true
+	default:
+		return "", false, false
+	}
 }
 
 func (p *Parser) parseCallExpression(left ast.Node) (ast.Node, error) {
@@ -588,22 +694,7 @@ func (p *Parser) parseCallExpression(left ast.Node) (ast.Node, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	expandedArguments := make([]ast.Node, 0, len(arguments))
-	for _, arg := range arguments {
-		if rangeExpr, ok := arg.(ast.RangeExpression); ok {
-			for _, expandedArg := range rangeExpr.Value {
-				expandedArguments = append(
-					expandedArguments,
-					ast.IdentifierExpression{Value: expandedArg, Token: rangeExpr.Token},
-				)
-			}
-		} else {
-			expandedArguments = append(expandedArguments, arg)
-		}
-	}
-
-	expr.Arguments = expandedArguments
+	expr.Arguments = arguments
 	return expr, nil
 }
 

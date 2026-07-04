@@ -61,6 +61,78 @@ func EnsureProgramDimensions(identifiers []string, records [][]string) [][]strin
 	return records
 }
 
+func programCellIdentifiers(program ast.Program, bounds ast.RangeBounds) []string {
+	var identifiers []string
+	for _, statement := range program {
+		identifiers = append(identifiers, statementCellIdentifiers(statement, bounds)...)
+	}
+	return identifiers
+}
+
+func statementCellIdentifiers(statement ast.Node, bounds ast.RangeBounds) []string {
+	switch stmt := statement.(type) {
+	case ast.LetStatement:
+		return append(
+			targetCellIdentifiers(statementTarget(stmt.Target, stmt.Identifier), bounds),
+			expressionCellIdentifiers(stmt.Value, bounds)...,
+		)
+	case ast.FmtStatement:
+		return append(
+			targetCellIdentifiers(statementTarget(stmt.Target, stmt.Identifier), bounds),
+			expressionCellIdentifiers(stmt.Value, bounds)...,
+		)
+	case ast.ExpressionStatement:
+		return expressionCellIdentifiers(stmt.Value, bounds)
+	default:
+		return nil
+	}
+}
+
+func targetCellIdentifiers(target ast.Node, bounds ast.RangeBounds) []string {
+	switch t := target.(type) {
+	case ast.IdentifierExpression:
+		if ast.IsCellIdentifier(t.Value) {
+			return []string{t.Value}
+		}
+	case ast.RangeExpression:
+		return rangeCellIdentifiers(t, bounds)
+	}
+	return nil
+}
+
+func expressionCellIdentifiers(expression ast.Node, bounds ast.RangeBounds) []string {
+	switch expr := expression.(type) {
+	case ast.IdentifierExpression:
+		if ast.IsCellIdentifier(expr.Value) {
+			return []string{expr.Value}
+		}
+	case ast.PrefixExpression:
+		return expressionCellIdentifiers(expr.Value, bounds)
+	case ast.InfixExpression:
+		return append(
+			expressionCellIdentifiers(expr.Left, bounds),
+			expressionCellIdentifiers(expr.Right, bounds)...,
+		)
+	case ast.CallExpression:
+		var identifiers []string
+		for _, arg := range expr.Arguments {
+			identifiers = append(identifiers, expressionCellIdentifiers(arg, bounds)...)
+		}
+		return identifiers
+	case ast.RangeExpression:
+		return rangeCellIdentifiers(expr, bounds)
+	}
+	return nil
+}
+
+func rangeCellIdentifiers(expr ast.RangeExpression, bounds ast.RangeBounds) []string {
+	expanded, err := expandRangeExpression(expr, bounds)
+	if err != nil {
+		return nil
+	}
+	return expanded.Value
+}
+
 func getProgramDimensions(identifiers []string) (int, int) {
 	if len(identifiers) == 0 {
 		return 0, 0

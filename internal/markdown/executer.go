@@ -63,9 +63,7 @@ func executeChunk(
 	scriptReader io.Reader,
 	records [][]string,
 ) ([][]string, error) {
-	program, identifiers, err := evaluator.ParseProgram(scriptReader, config.Input)
-	records = evaluator.EnsureProgramDimensions(identifiers, records)
-
+	program, _, err := evaluator.ParseProgram(scriptReader, config.Input)
 	if err != nil {
 		return nil, fmt.Errorf("%s", err)
 	}

@@ -33,7 +33,16 @@ func ExtractDependencies(expr Node) []string {
 			deps = append(deps, ExtractDependencies(arg)...)
 		}
 	case RangeExpression:
-		deps = append(deps, e.Value...)
+		if len(e.Value) > 0 {
+			deps = append(deps, e.Value...)
+			break
+		}
+		if IsCellIdentifier(e.Start) {
+			deps = append(deps, e.Start)
+		}
+		if IsCellIdentifier(e.End) {
+			deps = append(deps, e.End)
+		}
 	default:
 		// No dependencies for literal expressions
 	}
@@ -44,6 +53,12 @@ func ExtractDependencies(expr Node) []string {
 func GetStatementName(stmt Node) string {
 	switch s := stmt.(type) {
 	case LetStatement:
+		if target, ok := s.Target.(IdentifierExpression); ok {
+			return target.Value
+		}
+		if s.Target != nil {
+			return ""
+		}
 		return s.Identifier.Value
 	default:
 		return ""

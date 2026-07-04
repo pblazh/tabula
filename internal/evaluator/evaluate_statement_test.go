@@ -5,7 +5,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pblazh/tabula/internal/ast"
 	"github.com/pblazh/tabula/internal/testutil"
 )
 
@@ -92,7 +91,12 @@ func TestEvaluateStatement(t *testing.T) {
 			}
 			format := make(map[string]string)
 			for _, statement := range program {
-				err = EvaluateStatement(statement, tc.context, tc.input, format, ast.NewRangeBounds(nil))
+				err = EvaluateStatement(
+					statement,
+					tc.context,
+					tc.input,
+					format,
+				)
 				if err != nil {
 					t.Errorf("Unexpected error: %v", err)
 					return
@@ -152,7 +156,7 @@ func TestEvaluateStatementErrors(t *testing.T) {
 			format := make(map[string]string)
 			context := make(map[string]string)
 			for _, statement := range program {
-				err = EvaluateStatement(statement, context, input, format, ast.NewRangeBounds(nil))
+				err = EvaluateStatement(statement, context, input, format)
 				if err == nil {
 					t.Errorf("Expected error, got none")
 					return
@@ -311,7 +315,12 @@ func TestEvaluateREL(t *testing.T) {
 			context := make(map[string]string)
 
 			for _, statement := range program {
-				err = EvaluateStatement(statement, context, tc.input, format, ast.NewRangeBounds(nil))
+				err = EvaluateStatement(
+					statement,
+					context,
+					tc.input,
+					format,
+				)
 
 				// Error case
 				if tc.error != "" {

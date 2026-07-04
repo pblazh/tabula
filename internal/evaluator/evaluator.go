@@ -15,6 +15,9 @@ import (
 func Evaluate(program ast.Program, input [][]string) ([][]string, error) {
 	context := make(map[string]string)
 	formats := make(map[string]string)
+	bounds := ast.NewRangeBounds(input)
+	input = EnsureProgramDimensions(programCellIdentifiers(program, bounds), input)
+
 	for _, statement := range program {
 		error := EvaluateStatement(statement, context, input, formats)
 		if error != nil {
@@ -24,10 +27,13 @@ func Evaluate(program ast.Program, input [][]string) ([][]string, error) {
 	return input, nil
 }
 
-func ParseProgram(r io.Reader, input string) (ast.Program, []string, error) {
+func ParseProgram(
+	r io.Reader,
+	input string,
+) (program ast.Program, identifiers []string, err error) {
 	lex := lexer.New(r, input)
 	p := parser.New(lex)
-	program, identifiers, err := p.Parse()
+	program, identifiers, err = p.Parse()
 	if err != nil {
 		return nil, nil, ErrParsing(input, err)
 	}

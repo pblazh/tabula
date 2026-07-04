@@ -11,6 +11,8 @@ import (
 var (
 	cellIdentifierRegex = regexp.MustCompile(`^[A-Za-z]+[0-9]+$`)
 	cellParseRegex      = regexp.MustCompile(`^([A-Za-z]+)([0-9]+)$`)
+	columnRegex         = regexp.MustCompile(`^[A-Za-z]+$`)
+	rowRegex            = regexp.MustCompile(`^[0-9]+$`)
 )
 
 // IsCellIdentifier returns true if the identifier matches A1 cell name format
@@ -18,22 +20,52 @@ func IsCellIdentifier(identifier string) bool {
 	return cellIdentifierRegex.MatchString(identifier)
 }
 
-// ParseCell parses a cell reference like "A1" into a zero based column and row components
-func ParseCell(cell string) (c, r int) {
-	matches := cellParseRegex.FindStringSubmatch(cell)
-	if len(matches) != 3 {
-		return -1, -1
+// IsColumnIdentifier returns true if the identifier matches spreadsheet column format.
+func IsColumnIdentifier(identifier string) bool {
+	return columnRegex.MatchString(identifier)
+}
+
+// IsRowIdentifier returns true if the identifier matches spreadsheet row format.
+func IsRowIdentifier(identifier string) bool {
+	return rowRegex.MatchString(identifier)
+}
+
+// ParseColumn parses a spreadsheet column reference like "A" or "AA" into a zero based column.
+func ParseColumn(columnName string) int {
+	if !IsColumnIdentifier(columnName) {
+		return -1
 	}
 
-	columnName := strings.ToUpper(matches[1])
-	row, _ := strconv.Atoi(matches[2])
+	columnName = strings.ToUpper(columnName)
 
 	letters := int('Z'-'A') + 1
 	column := 0
 	for _, c := range columnName {
 		column = column*letters + int(c-'A') + 1
 	}
-	return column - 1, row - 1
+	return column - 1
+}
+
+// ParseRow parses a spreadsheet row reference like "1" into a zero based row.
+func ParseRow(rowName string) int {
+	if !IsRowIdentifier(rowName) {
+		return -1
+	}
+
+	row, _ := strconv.Atoi(rowName)
+	return row - 1
+}
+
+// ParseCell parses a cell reference like "A1" into a zero based column and row components
+func ParseCell(cell string) (column, row int) {
+	matches := cellParseRegex.FindStringSubmatch(cell)
+	if len(matches) != 3 {
+		return -1, -1
+	}
+
+	columnName := matches[1]
+	rowName := matches[2]
+	return ParseColumn(columnName), ParseRow(rowName)
 }
 
 // ToCell converts 0-based column, row to cell like 0, 0 to "A1", 1,1 to "B2", etc.

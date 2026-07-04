@@ -261,7 +261,7 @@ func TestExpandRangeWithBounds(t *testing.T) {
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			result, _, err := ExpandRangeWithBounds(tc.start, tc.end, bounds)
+			result, err := ExpandRangeWithBounds(tc.start, tc.end, bounds)
 
 			if tc.error == "" && err != nil {
 				t.Errorf("Unexpected error %s", err)
@@ -321,7 +321,7 @@ func TestExpandRangeWithWrongBounds(t *testing.T) {
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			result, _, err := ExpandRangeWithBounds(tc.start, tc.end, bounds)
+			result, err := ExpandRangeWithBounds(tc.start, tc.end, bounds)
 
 			if err == nil {
 				t.Errorf("Expected error")
