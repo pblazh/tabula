@@ -2,7 +2,7 @@
   "name": "tabula",
   "displayName": "Tabula — CSV & Markdown Formulas",
   "description": "Run spreadsheet-style formulas inside CSV and Markdown files. Recompute on save.",
-  "version": "0.2.23",
+  "version": "0.3.0",
   "icon": "icon-128.png",
   "publisher": "tabula",
   "repository": {
